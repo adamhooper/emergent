@@ -4,5 +4,6 @@
   ],
   "hooks": {
     "postdeploy": "./npm-install-components.sh"
+    "postcreate": "deploy/install/postcreate.sh"
   }
 }
