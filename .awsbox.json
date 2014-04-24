@@ -1,5 +1,8 @@
 {
   "processes": [
     "editor/app.js"
+  ],
+  "postdeploy": [
+    "npm-install-components.sh"
   ]
 }

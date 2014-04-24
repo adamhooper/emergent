@@ -1,3 +1,4 @@
+process.chdir(__dirname);
 /**
  * app.js
  *
