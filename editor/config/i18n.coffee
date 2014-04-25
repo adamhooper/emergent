@@ -1,2 +1,2 @@
 module.exports.i18n =
-  locals: [ 'en' ]
+  locales: [ 'en' ]
