@@ -1,4 +1,3 @@
-Story = require('api/models/Story')
+Story = require('../../api/models/Story')
 
 describe 'Story', ->
-

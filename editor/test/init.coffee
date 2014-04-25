@@ -1,21 +1,36 @@
-sails = require('sails/lib/app')
+Sails = require('sails/lib/app')
 
-global.app = sails()
+global.sails = null
 
 before (done) ->
-  global.app.lift(
+  global.sails = Sails()
+  global.sails.lift(
+    port: 1338
+
     log:
       level: 'error'
 
-    adapters:
-      default: 'memory'
+    connections:
+      default: 'main'
 
-      memory:
-        module: 'sails-memory'
+      main:
+        adapter: 'sails-memory'
 
     hooks:
       grunt: false
+
+    express:
+      customMiddleware: (app) ->
+        global.app = app
+
+        # Circumvent passport by adding a user to each request
+        app.use (req, res, next) ->
+          req.user =
+            email: 'user@example.org'
+          next()
   , done)
 
 after (done) ->
-  app.lower(done) if app?
+  sails = global.sails
+  delete global.sails
+  sails.lower(done)
