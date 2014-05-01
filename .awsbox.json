@@ -3,7 +3,7 @@
     "editor/app.js"
   ],
   "hooks": {
-    "postdeploy": "./npm-install-components.sh"
+    "postdeploy": "./npm-install-components.sh",
     "postcreate": "deploy/install/postcreate.sh"
   }
 }
