@@ -9,4 +9,4 @@ module.exports.express =
     app.use(passport.session())
 
 module.exports.cache =
-	maxAge: 31557600000
+	maxAge: 0

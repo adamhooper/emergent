@@ -1,0 +1,19 @@
+{
+  "name": "truthmaker-editor",
+  "version": "0.0.0",
+  "homepage": "https://github.com/adamhooper/truthmaker",
+  "authors": [
+    "Adam Hooper <adam@adamhooper.com>"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "assets/js/bower_components",
+  ],
+  "dependencies": {
+    "backbone": "~1.1.2",
+    "marionette": "~1.8.3",
+    "requirejs": "~2.1.11"
+  }
+}
