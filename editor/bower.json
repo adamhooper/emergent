@@ -9,7 +9,7 @@
   "private": true,
   "ignore": [
     "**/.*",
-    "assets/js/bower_components",
+    "assets/js/bower_components"
   ],
   "dependencies": {
     "backbone": "~1.1.2",
