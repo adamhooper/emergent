@@ -1,7 +1,7 @@
 module.exports = (config) ->
   config.set
     basePath: ''
-    frameworks: ['mocha', 'requirejs', 'chai' ]
+    frameworks: ['mocha', 'requirejs' ]
     files: [
       'test-js/test-main.coffee',
       {pattern: 'assets/js/**/*.js', included: false}
@@ -11,7 +11,8 @@ module.exports = (config) ->
     ]
     exclude: [
       'assets/js/main.js'
-      'assets/js/bower_components/**/spec/**/*.*' # marionette libs come with specs...
+      'assets/js/bower_components/**/*spec.js'
+      'assets/js/bower_components/**/*test.js'
     ]
     preprocessors: {
       '**/*.coffee': ['coffee']

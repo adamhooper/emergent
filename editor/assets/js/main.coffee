@@ -5,8 +5,8 @@ require.config
     'backbone.babysitter': 'bower_components/backbone.babysitter/lib/backbone.babysitter'
     'backbone.wreqr': 'bower_components/backbone.wreqr/lib/backbone.wreqr'
     jquery: 'bower_components/jquery/dist/jquery'
-    marionette: 'bower_components/marionette/lib/backbone.marionette'
+    marionette: 'bower_components/marionette/lib/core/amd/backbone.marionette'
     underscore: 'bower_components/underscore/underscore'
 
 require [ 'app' ], (App) ->
-  new App()
+  App.start()
