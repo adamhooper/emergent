@@ -7,6 +7,7 @@ describe 'StoryController', ->
   mockStory = (options) ->
     _.extend(
       slug: 'slug-a',
+      headline: 'headline'
       description: 'foo'
       createdBy: 'foo@example.org'
       updatedBy: 'bar@example.org'
@@ -43,6 +44,7 @@ describe 'StoryController', ->
     req = (object) ->
       object ?= {}
       object.slug ?= 'slug-a'
+      object.headline ?= 'headline'
 
       supertest(app)
         .post('/story')

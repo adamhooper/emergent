@@ -1,10 +1,16 @@
-# A single news story, as defined by a curator. Many articles can be written about it.
+# A single news story, as defined by a curator.
+#
+# Many articles can be written about it.
 module.exports =
   attributes:
     slug:
       type: 'alphanumericdashed'
       required: true
       unique: true
+
+    headline:
+      type: 'string'
+      required: true
 
     createdBy:
       type: 'email'
