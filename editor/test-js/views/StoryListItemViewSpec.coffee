@@ -18,8 +18,8 @@ define [
 
     describe 'with window.confirm spied', ->
       beforeEach ->
-        @sandbox = sinon.sandbox.create()
         @userAnswer = false # what we'll give window.confirm()
+        @sandbox = sinon.sandbox.create()
         @sandbox.stub(window, 'confirm', => @userAnswer)
 
       afterEach ->
