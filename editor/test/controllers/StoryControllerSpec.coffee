@@ -16,7 +16,7 @@ describe 'StoryController', ->
   describe '#index', ->
     req = ->
       supertest(app)
-        .get('/story')
+        .get('/stories')
         .set('Accept', 'application/json')
 
     it 'should return JSON with a JSONish request', (done) ->
@@ -47,7 +47,7 @@ describe 'StoryController', ->
       object.headline ?= 'headline'
 
       supertest(app)
-        .post('/story')
+        .post('/stories')
         .set('Accept', 'application/json')
         .send(object)
 
@@ -99,7 +99,7 @@ describe 'StoryController', ->
   describe '#destroy', ->
     req = (slug) ->
       supertest(app)
-        .delete("/story/#{slug}")
+        .delete("/stories/#{slug}")
         .set('Accept', 'application/json')
 
     it 'should return OK when the object does not exist', ->
@@ -131,7 +131,7 @@ describe 'StoryController', ->
         toSend[k] = v
       delete toSend.slug
       supertest(app)
-        .put("/story/#{slug}")
+        .put("/stories/#{slug}")
         .set('Accept', 'application/json')
         .send(toSend)
 
@@ -144,7 +144,7 @@ describe 'StoryController', ->
 
     it 'should return 400 when the slug is wrong', (done) ->
       supertest(app)
-        .put('/story/slug-a')
+        .put('/stories/slug-a')
         .set('Accept', 'application/json')
         .send(slug: 'slug-b')
         .expect(400, done)

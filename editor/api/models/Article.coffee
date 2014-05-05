@@ -5,6 +5,8 @@ validator = require('validator')
 # An Article may belong to multiple Stories, but usually it will belong to
 # just one.
 module.exports =
+  identity: 'article'
+
   types:
     url: (s) -> validator.isURL(s, protocols: [ 'http', 'https' ], require_tld: true, require_protocol: true)
 
@@ -30,3 +32,7 @@ module.exports =
 
     body:
       type: 'text'
+
+    stories:
+      collection: 'story'
+      via: 'articles'

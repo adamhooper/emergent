@@ -1,7 +1,7 @@
 define [ 'backbone' ], (Backbone) ->
   class Story extends Backbone.Model
     idAttribute: 'slug'
-    urlRoot: '/story'
+    urlRoot: '/stories'
 
     defaults:
       slug: ''

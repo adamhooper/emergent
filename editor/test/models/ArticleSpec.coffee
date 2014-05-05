@@ -1,7 +1,8 @@
 describe 'Article', ->
   beforeEach ->
+    @Article = sails.models.article
     # Start with a valid Article
-    @article = new Article._model
+    @article = new @Article._model
       url: 'http://example.org/story'
       createdBy: 'adam@adamhooper.com'
       updatedBy: 'adam@adamhooper.com'

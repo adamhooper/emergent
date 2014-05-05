@@ -2,6 +2,8 @@
 #
 # Many articles can be written about it.
 module.exports =
+  identity: 'story'
+
   attributes:
     slug:
       type: 'alphanumericdashed'
@@ -22,3 +24,8 @@ module.exports =
 
     description:
       type: 'text'
+
+    articles:
+      collection: 'article'
+      via: 'stories'
+      dominant: true

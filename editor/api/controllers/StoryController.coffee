@@ -1,5 +1,7 @@
 module.exports = self =
   index: (req, res) ->
+    Story = sails.models.story
+
     if req.method == 'POST'
       # FIXME aren't blueprints supposed to handle this for us?
       # This shouldn't be an if-statement
@@ -11,6 +13,8 @@ module.exports = self =
         .done()
 
   create: (req, res) ->
+    Story = sails.models.story
+
     if !req.body?
       res.json(400, 'You must send the JSON properties to create')
     else if req.body.createdBy?
@@ -39,11 +43,15 @@ module.exports = self =
         .done()
 
   destroy: (req, res) ->
+    Story = sails.models.story
+
     slug = req.param('id') || ''
     Story.destroy(slug: slug)
       .then -> res.json({})
 
   update: (req, res) ->
+    Story = sails.models.story
+
     slug = req.param('id') || ''
     if !req.body?
       res.json(400, 'You must send the JSON properties to update')
