@@ -1,4 +1,4 @@
-define [ 'marionette' ], (Marionette) ->
+define [ 'underscore', 'marionette' ], (_, Marionette) ->
   class NewStoryView extends Marionette.ItemView
     tagName: 'form'
     className: 'new-story'

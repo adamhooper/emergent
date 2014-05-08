@@ -16,6 +16,7 @@ require.config
     'backbone.wreqr': 'bower_components/backbone.wreqr/lib/backbone.wreqr'
     jquery: 'bower_components/jquery/dist/jquery'
     marionette: 'bower_components/marionette/lib/core/amd/backbone.marionette'
+    q: 'bower_components/q/q'
     underscore: 'bower_components/underscore/underscore'
 
   callback: ->

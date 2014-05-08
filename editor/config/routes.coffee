@@ -14,4 +14,5 @@ module.exports.routes =
   # Sails doesn't do nested routes nicely
   'get /stories/:slug/articles': 'ArticleController.index'
   'post /stories/:slug/articles': 'ArticleController.create'
+  'put /stories/:slug/articles/:id': 'ArticleController.update'
   'delete /stories/:slug/articles/:id': 'ArticleController.destroy'

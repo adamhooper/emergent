@@ -40,6 +40,27 @@ describe 'StoryController', ->
             undefined
           .end(done)
 
+  describe '#find', ->
+    req = (slug) ->
+      supertest(app)
+        .get("/stories/#{slug}")
+        .set('Accept', 'application/json')
+
+    beforeEach -> model().create(mockStory(slug: 'slug-a'))
+
+    it 'should return the story by slug', (done) ->
+      req('slug-a')
+        .expect(200)
+        .expect (res) ->
+          res.body.slug.should.equal('slug-a')
+          undefined
+        .end(done)
+
+    it 'should return a 404 for a missing story', (done) ->
+      req('invalid-slug')
+        .expect(404)
+        .end(done)
+
   describe '#create', ->
     req = (object) ->
       object ?= {}

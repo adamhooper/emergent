@@ -11,6 +11,15 @@ define [ 'jquery' ], ($) ->
             error: (err) -> d.reject(err)
         d.promise()
 
+      'stories/show': (slug) ->
+        d = $.Deferred()
+        require [ 'models/Story' ], (Story) ->
+          story = new Story(slug: slug)
+          story.fetch
+            success: -> d.resolve(story)
+            error: (err) -> d.reject(err)
+        d.promise()
+
       'stories/create': (data) ->
         d = $.Deferred()
         require [ 'models/Story' ], (Story) ->

@@ -27,11 +27,11 @@ module.exports =
     httpResponse:
       type: 'text'
 
-    headline:
-      type: 'text'
-
-    body:
-      type: 'text'
+    source: 'string'
+    author: 'string'
+    headline: 'string'
+    body: 'text'
+    truthiness: 'string'
 
     stories:
       collection: 'story'

@@ -4,14 +4,19 @@ define [ 'marionette' ], (Marionette) ->
     className: 'story-list-item'
 
     template: _.template('''
-      <h4 class="slug"><%- slug %></h4>
-      <h3 class="headline"><%- headline %></h3>
+      <h4 class="slug"><a href="#"><%- slug %></a></h4>
+      <h3 class="headline"><a href="#"><%- headline %></a></h3>
       <p class="description"><%- description %></p>
       <button class="delete btn btn-danger">Delete</button>
     ''')
 
     events:
+      'click a': 'onClick'
       'click .delete': 'onDelete'
+
+    onClick: (e) ->
+      e.preventDefault()
+      @trigger('click')
 
     onDelete: (e) ->
       e.preventDefault()

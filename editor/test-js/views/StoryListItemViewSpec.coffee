@@ -16,6 +16,13 @@ define [
     it 'should show the headline', -> expect(@view.$('.headline')).to.have.text('Headline')
     it 'should show the description', -> expect(@view.$('.description')).to.have.text('description')
 
+    it 'should trigger click from slug or headline', ->
+      spy = sinon.spy()
+      @view.on('click', spy)
+      @view.$('.headline a').click()
+      @view.$('.slug a').click()
+      expect(spy).to.have.been.calledTwice
+
     describe 'with window.confirm spied', ->
       beforeEach ->
         @userAnswer = false # what we'll give window.confirm()

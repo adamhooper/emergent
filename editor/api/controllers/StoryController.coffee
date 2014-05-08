@@ -12,6 +12,19 @@ module.exports = self =
         .fail (err) -> res.json(500, err)
         .done()
 
+  find: (req, res) ->
+    Story = sails.models.story
+
+    slug = req.param('id') || ''
+    Story.findOne(slug: slug)
+      .then (val) ->
+        if val?
+          res.json(val)
+        else
+          res.json(404, "Could not find a story with slug '#{slug}'")
+      .fail (err) -> res.json(err?.status || 500, err)
+      .done()
+
   create: (req, res) ->
     Story = sails.models.story
 

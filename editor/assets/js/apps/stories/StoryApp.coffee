@@ -1,4 +1,4 @@
-define [ 'app', 'api/stories' ], (App, StoriesApi) ->
+define [ 'app', 'api/stories', 'api/articles' ], (App, StoriesApi, ArticlesApi) ->
   App.module 'StoryApp', (StoryApp, App, Backbone, Marionette, $, _) ->
     StoryApp.startWithParent = false
 
@@ -32,4 +32,5 @@ define [ 'app', 'api/stories' ], (App, StoriesApi) ->
 
     App.addInitializer ->
       StoriesApi.installToReqres(App.reqres)
+      ArticlesApi.installToReqres(App.reqres)
       new StoryAppRouter.Router(controller: API)

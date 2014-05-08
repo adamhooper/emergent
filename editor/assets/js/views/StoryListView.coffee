@@ -9,5 +9,8 @@ define [
     emptyView: StoryListNoItemView
 
     initialize: ->
-      @on 'itemview:delete', (itemView) =>
-        @trigger('delete', itemView.model.id)
+      propagateEventWithSlug = (event) =>
+        @on "itemview:#{event}", (itemView) =>
+          @trigger(event, itemView.model.id)
+
+      propagateEventWithSlug(event) for event in [ 'click', 'delete' ]

@@ -14,16 +14,14 @@
   "dependencies": {
     "backbone": "~1.1.2",
     "marionette": "~1.8.3",
-    "requirejs": "~2.1.11"
+    "requirejs": "~2.1.11",
+    "q": "~1.0"
   },
   "devDependencies": {
     "sinon-chai": "~2.5.0",
     "chai-as-promised": "~4.1.1",
     "chai": "~1.9.1",
     "chai-jquery": "~1.2.1",
-    "sinon": "495cefbb3f3b9013b07d004deb76d7198d0060c6"
-  },
-  "resolutions": {
     "sinon": "495cefbb3f3b9013b07d004deb76d7198d0060c6"
   }
 }

@@ -1,11 +1,11 @@
 define [ 'app' ], (App) ->
   go: ->
     require [ 'models/Story', 'views/StoryListLayout' ], (Story, StoryListLayout) ->
-      fetching = App.request('stories/index')
-        .done (collection) ->
+      App.request('stories/index')
+        .then (collection) ->
           layout = StoryListLayout.forCollectionInRegion(collection, App.mainRegion)
 
-          # TODO fix leaks with `.on` calls
+          # TODO are there leaks with `.on` calls?
           layout.on 'items:delete', (model) ->
             collection.remove(model)
 
@@ -16,6 +16,9 @@ define [ 'app' ], (App) ->
             model = new Story(data, isNew: true)
             collection.add(model)
             model.save()
+
+          layout.on 'list:click', (slug) ->
+            App.trigger('stories:show', slug)
 
           layout.on 'list:delete', (slug) ->
             model = collection.get(slug)

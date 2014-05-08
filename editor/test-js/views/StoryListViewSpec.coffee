@@ -32,7 +32,13 @@ define [
         expect(@view.children.first()).to.be.an.instanceOf(StoryListItemView)
 
       it 'should trigger delete when a sub-view does', ->
-        cb = sinon.spy()
-        @view.on('delete', cb)
+        spy = sinon.spy()
+        @view.on('delete', spy)
         @view.children.first().trigger('delete')
-        expect(cb).to.have.been.calledWith('slug-a')
+        expect(spy).to.have.been.calledWith('slug-a')
+
+      it 'should trigger click when a sub-view does', ->
+        spy = sinon.spy()
+        @view.on('click', spy)
+        @view.children.first().trigger('click')
+        expect(spy).to.have.been.calledWith('slug-a')

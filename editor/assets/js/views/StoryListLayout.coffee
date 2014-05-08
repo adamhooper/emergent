@@ -24,8 +24,8 @@ define [
 
       @list.on 'show', (view) =>
         if view?
-          @listenTo view, 'delete', (slug) =>
-            @trigger('list:delete', slug)
+          @listenTo(view, 'delete', ((slug) => @trigger('list:delete', slug)))
+          @listenTo(view, 'click', ((slug) => @trigger('list:click', slug)))
 
       @list.on 'close', (view) =>
         @stopListening(view) if view?
