@@ -6,13 +6,16 @@ define [
   StoryArticleListItemView
 ) ->
   describe 'views/StoryArticleListItemView', ->
+    DefaultAttributes =
+      url: 'http://example.org'
+      truthiness: 'myth'
+      source: 'source'
+      author: 'author'
+      headline: 'headline'
+      body: 'body'
+
     class MockArticle extends Backbone.Model
-      defaults:
-        source: 'soruce'
-        headline: 'headline'
-        author: 'author'
-        url: 'http://example.org'
-        truthiness: ''
+      defaults: DefaultAttributes
 
     beforeEach ->
       @model = new MockArticle()
@@ -35,6 +38,14 @@ define [
 
       it 'should have class article-expanded', -> expect(@view.$el).to.have.class('article-expanded')
       it 'should have a form', -> expect(@view.$('form').length).to.equal(1)
+
+      it 'should fill in the form values', ->
+        actual = {}
+        actual[x.name] = x.value for x in @view.$('form').serializeArray()
+
+        expected = DefaultAttributes
+        expect(actual).to.deep.equal(expected)
+
       it 'should let the user edit the model and submit the changes on form submit', ->
         spy = sinon.spy()
         @model.on('change', spy)

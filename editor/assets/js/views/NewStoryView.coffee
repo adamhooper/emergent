@@ -23,7 +23,7 @@ define [ 'underscore', 'marionette' ], (_, Marionette) ->
         <label for="new-story-description">Two-line description</label>
         <textarea name="description" rows="3" id="new-story-description" class="form-control" placeholder="e.g. A man bit a dog, then the Internet wised up."></textarea>
       </div>
-      <button type="submit" class="btn btn-default">Add Story</button>
+      <button type="submit" class="btn btn-primary">Add Story</button>
       '''
 
     events:

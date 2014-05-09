@@ -8,10 +8,10 @@ define [ 'underscore', 'marionette' ], (_, Marionette) ->
 
     template: _.template '''
       <legend>Add a new Article</legend>
-      <p class="explanation">Every time you see this story online, add its URL and say whether the article got it right.</p>
+      <p class="explanation">Every time you see this story online, add the URL and say whether the article got it right.</p>
       <div class="form-group">
         <label for="new-article-url">URL</label>
-        <input id="new-article-url" name="url" class="form-control" placeholder="http://example.org/story.html">
+        <input id="new-article-url" name="url" class="form-control" placeholder="e.g. http://example.org/story.html">
       </div>
       <div class="form-group">
         <label for="new-article-truthiness">Truthiness</label>
@@ -38,22 +38,22 @@ define [ 'underscore', 'marionette' ], (_, Marionette) ->
         <legend>Truthmaker should fill these in automatically</legend>
         <div class="form-group">
           <label for="new-article-source">Source (publication)</label>
-          <input id="new-article-source" name="source" class="form-control" placeholder="New York Times">
+          <input id="new-article-source" name="source" class="form-control" placeholder="e.g. The New York Times">
         </div>
         <div class="form-group">
           <label for="new-article-author">Author (byline)</label>
-          <input id="new-article-author" name="author" class="form-control" placeholder="Stephen Glass">
+          <input id="new-article-author" name="author" class="form-control" placeholder="e.g. Stephen Glass">
         </div>
         <div class="form-group">
           <label for="new-article-headline">Headline</label>
-          <input id="new-article-headline" name="headline" class="form-control" placeholder="Man bites dog">
+          <input id="new-article-headline" name="headline" class="form-control" placeholder="e.g. Man bites dog">
         </div>
         <div class="form-group">
           <label for="new-article-body">Body text</label>
-          <textarea id="new-article-body" name="body" class="form-control" rows="5"></textarea>
+          <textarea id="new-article-body" name="body" class="form-control" rows="5" placeholder="e.g. Each paragraph was separated from its neighbors by two newlines."></textarea>
         </div>
       </fieldset>
-      <button type="submit" class="btn btn-default">Create Article</button>
+      <button type="submit" class="btn btn-primary">Create Article</button>
       '''
 
     events:
