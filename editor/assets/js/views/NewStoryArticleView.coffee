@@ -64,6 +64,7 @@ define [ 'underscore', 'marionette' ], (_, Marionette) ->
       data = {}
       data[x.name] = x.value for x in @$el.serializeArray()
       @trigger('submit', data)
+      @reset()
 
     reset: ->
       @el.reset()
