@@ -7,6 +7,8 @@ define [ 'underscore', 'marionette' ], (_, Marionette) ->
       action: '#'
 
     template: _.template '''
+      <legend>Add a new Article</legend>
+      <p class="explanation">Every time you see this story online, add its URL and say whether the article got it right.</p>
       <div class="form-group">
         <label for="new-article-url">URL</label>
         <input id="new-article-url" name="url" class="form-control" placeholder="http://example.org/story.html">

@@ -19,6 +19,9 @@ define [ 'app', 'q' ], (App, Q) ->
             article = story.articles.get(cid)
             article.destroy()
 
+          layout.on 'story:back', ->
+            App.trigger('stories:list')
+
           story.articles.on 'change', (model, options) ->
             if options?.userInput
               console.log('Changed model', model)

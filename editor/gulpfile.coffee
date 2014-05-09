@@ -28,6 +28,11 @@ paths =
     src: 'assets/styles/main.less'
     dest: '.tmp/dev/styles'
 
+  # Fonts go straight to public/, in any environment.
+  fonts:
+    src: 'assets/fonts/**/*'
+    dest: '.tmp/public/fonts'
+
   # For watching, we need to watch every .less file
   allLess:
     src: 'assets/styles/**/*.less'
@@ -66,9 +71,10 @@ gulp.task 'clean', ->
 gulp.task('coffee', compileCoffee)
 gulp.task('less', compileLess)
 gulp.task('js', -> copyDir(paths.js.src, paths.js.dest))
+gulp.task('fonts', -> copyDir(paths.fonts.src, paths.fonts.dest))
 gulp.task('dev-to-public', -> copyDir(paths.dev.src, paths.dev.dest))
 
-gulp.task('compileAssets', [ 'coffee', 'js', 'less' ])
+gulp.task('compileAssets', [ 'coffee', 'js', 'less', 'fonts' ])
 
 gulp.task 'linkAssets', [ 'compileAssets' ], ->
   copyDir(paths.dev.src, paths.dev.dest)
@@ -100,9 +106,10 @@ gulp.task 'realDefault', [ 'compileAssets', 'linkAssets' ], ->
   gulp.watch(paths.coffee.src, [ 'coffee' ])
   gulp.watch(paths.js.src, [ 'js' ])
   gulp.watch(paths.allLess.src, [ 'less' ])
+  gulp.watch(paths.fonts.src, [ 'fonts' ])
   gulp.watch(paths.dev.src, [ 'dev-to-public' ])
 
-gulp.task('realProd', [ 'deployJs', 'deployRjsLoader', 'deployCss' ])
+gulp.task('realProd', [ 'deployJs', 'deployRjsLoader', 'deployCss', 'fonts' ])
 
 gulp.task 'default', [ 'clean' ], ->
   gulp.start('realDefault')

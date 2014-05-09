@@ -1,0 +1,48 @@
+.story-list-layout {
+  &>.explanation {
+    .text-muted();
+  }
+
+  ul.story-list {
+    .list-unstyled();
+    margin-bottom: 8em;
+  }
+
+  li.story-list-item {
+    padding: 1em 0;
+
+    &:hover {
+      background-color: @table-bg-hover;
+    }
+
+    .slug {
+      display: inline;
+      font-family: @font-family-monospace;
+      font-weight: bold;
+      font-size: @font-size-large;
+
+      a {
+        color: @text-color;
+      }
+    }
+
+    .headline {
+      display: inline;
+      font-size: @font-size-large;
+      padding-left: 1em;
+    }
+
+    .description {
+      .text-muted;
+      margin-bottom: 0;
+    }
+
+    button.delete {
+      float: right;
+    }
+  }
+
+  input[name=slug] {
+    font-family: @font-family-monospace;
+  }
+}

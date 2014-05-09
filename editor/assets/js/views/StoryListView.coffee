@@ -5,6 +5,7 @@ define [
 ], (Marionette, StoryListItemView, StoryListNoItemView) ->
   class StoryListView extends Marionette.CollectionView
     tagName: 'ul'
+    className: 'story-list'
     itemView: StoryListItemView
     emptyView: StoryListNoItemView
 

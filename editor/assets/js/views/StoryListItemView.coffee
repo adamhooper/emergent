@@ -4,10 +4,10 @@ define [ 'marionette' ], (Marionette) ->
     className: 'story-list-item'
 
     template: _.template('''
+      <button class="delete btn btn-danger">Delete</button>
       <h4 class="slug"><a href="#"><%- slug %></a></h4>
       <h3 class="headline"><a href="#"><%- headline %></a></h3>
       <p class="description"><%- description %></p>
-      <button class="delete btn btn-danger">Delete</button>
     ''')
 
     events:

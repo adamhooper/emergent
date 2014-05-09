@@ -1,0 +1,50 @@
+.story-show-layout {
+  .story-metadata {
+    .slug {
+      font-family: @font-family-monospace;
+      font-weight: bold;
+    }
+  }
+
+  .explanation {
+    .text-muted();
+  }
+
+  ul.story-articles {
+    .list-unstyled();
+  }
+
+  li.article {
+    display: block;
+    .panel();
+    .panel-default();
+
+    &.article-collapsed {
+      .summary {
+        .panel-body();
+      }
+    }
+
+    &.article-expanded {
+      .panel-primary();
+
+      .summary {
+        .panel-heading(); // get the colors right
+        .panel-body();    // get the spacing right
+      }
+    }
+
+    .summary {
+      display: block;
+    }
+
+    form {
+      display: block;
+      .panel-body();
+    }
+  }
+
+  .new-article {
+    margin-top: 8em;
+  }
+}

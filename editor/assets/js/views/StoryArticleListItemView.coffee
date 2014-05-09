@@ -2,6 +2,7 @@ define [ 'underscore', 'marionette' ], (_, Marionette) ->
   Templates =
     collapsed: _.template('''
       <a class="summary detail-hidden" href="#">
+        ▸
         <span class="source"><%- source %></span>
         <span class="headline"><%- headline %></span>
         <span class="author"><%- author %></span>
@@ -10,6 +11,7 @@ define [ 'underscore', 'marionette' ], (_, Marionette) ->
     ''')
     expanded: _.template('''
       <a class="summary detail-visible" href="#">
+        ▾
         <span class="source"><%- source %></span>
         <span class="headline"><%- headline %></span>
         <span class="author"><%- author %></span>
