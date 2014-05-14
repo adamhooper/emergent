@@ -51,10 +51,6 @@ module.exports = {
 
   port: process.env.PORT || 1337,
 
-  proxyHost: ((process.env.NODE_ENV == 'production') && 'truthmaker.adamhooper-projects.com' || null),
-  proxyPort: ((process.env.NODE_ENV == 'production') && 443 || null),
-
-
   // The runtime "environment" of your Sails app is either 'development' or 'production'.
   //
   // In development, your Sails app will go out of its way to help you
