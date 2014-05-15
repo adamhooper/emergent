@@ -4,6 +4,7 @@
 # http://sailsjs.org/#documentation
 module.exports.express =
   customMiddleware: (app) ->
+    app.enable('trust proxy')
     # Use Passport
     app.use(passport.initialize())
     app.use(passport.session())

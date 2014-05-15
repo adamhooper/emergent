@@ -11,7 +11,7 @@
     "test-js": "node_modules/karma/bin/karma start"
   },
   "dependencies": {
-    "sails": "~0.10.0-rc7",
+    "sails": "git+https://github.com/adamhooper/sails#get-baseUrl-from-http-host",
     "rc": "~0.3.3",
     "include-all": "~0.1.3",
     "ejs": "~0.8.8",
