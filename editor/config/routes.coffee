@@ -11,6 +11,12 @@ module.exports.routes =
   'get /auth/:provider': 'AuthController.provider',
   'get /auth/:provider/callback': 'AuthController.callback',
 
+  'get /stories': 'StoryController.index'
+  'get /stories/:slug': 'StoryController.find'
+  'post /stories': 'StoryController.create'
+  'put /stories/:slug': 'StoryController.update'
+  'delete /stories/:slug': 'StoryController.destroy'
+
   # Sails doesn't do nested routes nicely
   'get /stories/:slug/articles': 'ArticleController.index'
   'post /stories/:slug/articles': 'ArticleController.create'

@@ -1,9 +1,6 @@
 describe 'StoryController', ->
   model = () -> sails.models.story
 
-  afterEach ->
-    model().destroy()
-
   mockStory = (options) ->
     _.extend(
       slug: 'slug-a',

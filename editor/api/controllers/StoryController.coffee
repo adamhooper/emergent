@@ -15,7 +15,7 @@ module.exports = self =
   find: (req, res) ->
     Story = sails.models.story
 
-    slug = req.param('id') || ''
+    slug = req.param('slug') || ''
     Story.findOne(slug: slug)
       .then (val) ->
         if val?
@@ -58,14 +58,14 @@ module.exports = self =
   destroy: (req, res) ->
     Story = sails.models.story
 
-    slug = req.param('id') || ''
+    slug = req.param('slug') || ''
     Story.destroy(slug: slug)
       .then -> res.json({})
 
   update: (req, res) ->
     Story = sails.models.story
 
-    slug = req.param('id') || ''
+    slug = req.param('slug') || ''
     if !req.body?
       res.json(400, 'You must send the JSON properties to update')
     else if req.body.slug?

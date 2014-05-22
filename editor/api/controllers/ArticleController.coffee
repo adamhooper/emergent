@@ -46,15 +46,18 @@ validBody = (req, res, next) ->
 
 module.exports = self =
   index: (req, res) ->
-    findStory(req)
-      .populate('articles')
-      .exec (err, story) ->
-        if err?
+    findStoryThen req, res, (story) ->
+      sails.models.article_story.find().where(storyId: story.id)
+        .then (assoc) ->
+          if assoc.length
+            sails.models.article.find().where(id: (x.articleId for x in assoc))
+          else
+            []
+        .then (articles) ->
+          res.json(articles)
+        .fail (err) ->
           res.json(err.status || 500, err)
-        else if !story?
-          res.json(404, "Story '#{req.param('slug')}' not found")
-        else
-          res.json(story.toJSON().articles)
+        .done()
 
   create: (req, res) ->
     validBody req, res, (body) ->
@@ -65,14 +68,12 @@ module.exports = self =
         data.createdBy = req.user.email
         data.updatedBy = req.user.email
 
-        Q(sails.models.article.findOrCreate(data, data))
+        sails.models.article.findOrCreate({ url: data.url }, data)
           .then (article) ->
             assoc =
-              story_articles: story.id
-              article_stories: article.id
-
-            Q(sails.models.article_stories__story_articles.findOrCreate(assoc, assoc))
-              .then(-> article)
+              storyId: story.id
+              articleId: article.id
+            sails.models.article_story.findOrCreate(assoc, assoc).then(-> article)
           .then (article) ->
             res.json(article.toJSON())
           .catch (err) ->
@@ -111,9 +112,9 @@ module.exports = self =
 
     findStoryThen req, res, (story) ->
       assoc = 
-        story_articles: story.id
-        article_stories: articleId
-      Q(sails.models.article_stories__story_articles.destroy(assoc))
+        storyId: story.id
+        articleId: articleId
+      Q(sails.models.article_story.destroy(assoc))
         .then(-> res.json({}))
         .catch((err) -> res.json(err.status || 500, err))
         .done()

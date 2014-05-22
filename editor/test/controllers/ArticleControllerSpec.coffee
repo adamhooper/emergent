@@ -1,8 +1,11 @@
+ObjectID = require('../../node_modules/sails-mongo/node_modules/mongodb/index').ObjectID
+
 describe 'ArticleController', ->
   model = -> sails.models.article
 
   mockStoryInDb = (options) ->
     _.extend(
+      id: new ObjectID()
       slug: 'slug-a'
       headline: 'headline'
       description: 'foo'
@@ -12,7 +15,7 @@ describe 'ArticleController', ->
 
   mockArticleInDb = (options) ->
     _.extend(
-      id: 123
+      id: new ObjectID()
       url: null
       createdBy: 'foo@example.org'
       updatedBy: 'foo@example.org'
@@ -29,13 +32,6 @@ describe 'ArticleController', ->
 
     @Story.create(mockStoryInDb(slug: 'slug-a'))
       .then (story) => @story1 = story
-
-  afterEach ->
-    Q.all([
-      @Story.destroy()
-      @Article.destroy()
-      sails.models.article_stories__story_articles.destroy()
-    ])
 
   describe '#index', ->
     req = ->
@@ -59,11 +55,25 @@ describe 'ArticleController', ->
 
     describe 'when there are Articles', ->
       beforeEach ->
-        @story1.articles.add(mockArticleInDb(id: 123, url: 'http://example.org'))
-        @story1.articles.add(mockArticleInDb(id: 124, url: 'http://example2.org'))
-        @story1.save()
+        @article1 = null
+        @article2 = null
 
-      it 'should return the stories', (done) ->
+        Q.all([
+          @Article.create(mockArticleInDb(url: 'http://example.org'))
+          @Article.create(mockArticleInDb(url: 'http://example2.org'))
+        ])
+          .spread (x, y) =>
+            @article1 = x
+            @article2 = y
+          .then =>
+            Q.all([
+              sails.models.article_story.create(storyId: @story1.id, articleId: @article1.id)
+              sails.models.article_story.create(storyId: @story1.id, articleId: @article2.id)
+            ])
+          .fail (e) -> console.log(e)
+          .done()
+
+      it 'should return the articles', (done) ->
         req()
           .expect (res) ->
             res.body.map((x) -> x.url).should.deep.equal(['http://example.org', 'http://example2.org'])
@@ -120,8 +130,8 @@ describe 'ArticleController', ->
 
       it 'should not store a duplicate association', ->
         reqPromise(url: @url)
-          .then(=> @Story.findOne(slug: 'slug-a').populate('articles'))
-          .then((x) -> x.articles.length)
+          .then(-> sails.models.article_story.find(where: null))
+          .then((x) -> x.length)
           .should.eventually.equal(1)
 
       it 'should return the Article', (done) ->
@@ -174,27 +184,25 @@ describe 'ArticleController', ->
     beforeEach ->
       @article1 = null
 
-      @story1.articles.add(mockArticleInDb(id: 123, url: 'http://example.org'))
-      @story1.save()
-        .then(=> @Story.findOne(slug: @story1.slug).populate('articles'))
-        .then((s) => @article1 = s.toJSON().articles[0])
-        .should.eventually.be.fulfilled
+      @Article.create(mockArticleInDb(url: 'http://example.org'))
+        .then (article) => @article1 = article
+        .then (article) => sails.models.article_story.create(articleId: article.id, storyId: @story1.id)
 
     it 'should return a 404 when the Story does not exist', (done) ->
       supertest(app)
-        .put('/stories/invalid-slug/articles/123')
+        .put("/stories/invalid-slug/articles/#{@article1.id}")
         .set('Accept', 'application/json')
         .send(mockArticle(url: 'http://example.org'))
         .expect(404)
         .end(done)
 
     it 'should return a 404 when the Article does not exist', (done) ->
-      req(id: 122, url: 'http://example.org')
+      req(id: "not#{@article1.id}", url: 'http://example.org')
         .expect(404)
         .end(done)
 
     it 'should return a JSON response with the changed Article', (done) ->
-      req(id: 123, url: 'http://example2.org')
+      req(id: @article1.id, url: 'http://example2.org')
         .expect(200)
         .expect('Content-Type', 'application/json; charset=utf-8')
         .expect (res) ->
@@ -203,25 +211,25 @@ describe 'ArticleController', ->
         .end(done)
 
     it 'should store the article', ->
-      reqAndFetchFromDb(id: 123, url: 'http://example2.org')
+      reqAndFetchFromDb(id: @article1.id, url: 'http://example2.org')
         .should.eventually.contain(url: 'http://example2.org')
 
     it 'should add the user to the story as updatedBy', ->
-      reqAndFetchFromDb(id: 123, url: 'http://example2.org')
+      reqAndFetchFromDb(id: @article1.id, url: 'http://example2.org')
         .should.eventually.contain(createdBy: 'foo@example.org', updatedBy: 'user@example.org')
 
     it 'should not let the user manually set createdBy or updatedBy', ->
       Q.all([
-        Q.npost(req(id: 123, url: 'http://example2.org', createdBy: 'user2@example.org'), 'end')
+        Q.npost(req(id: @article1.id, url: 'http://example2.org', createdBy: 'user2@example.org'), 'end')
           .then((x) -> x.body)
           .should.eventually.contain(createdBy: 'foo@example.org')
-        Q.npost(req(id: 123, url: 'http://example2.org', updatedBy: 'user2@example.org'), 'end')
+        Q.npost(req(id: @article1.id, url: 'http://example2.org', updatedBy: 'user2@example.org'), 'end')
           .then((x) -> x.body)
           .should.eventually.contain(updatedBy: 'user@example.org')
       ])
 
     it 'should return a JSON error when the URL is invalid', (done) ->
-      req(id: 123, url: 'htt://example.org')
+      req(id: @article1.id, url: 'htt://example.org')
         .expect(400)
         .expect (res) ->
           Object.keys(res.body.invalidAttributes).should.deep.equal(['url'])
@@ -240,11 +248,9 @@ describe 'ArticleController', ->
     beforeEach ->
       @article1 = null
 
-      @story1.articles.add(mockArticleInDb(url: 'http://example.org'))
-      @story1.save()
-        .then(=> @Story.findOne(slug: @story1.slug).populate('articles'))
-        .then((s) => @article1 = s.toJSON().articles[0])
-        .should.eventually.be.fulfilled
+      @Article.create(mockArticleInDb(url: 'http://example.org'))
+        .then (article) => @article1 = article
+        .then (article) => sails.models.article_story.create(articleId: article.id, storyId: @story1.id)
 
     it 'should return 404 when the Story does not exist', ->
       reqPromise('some-slug', 'abcdef')
@@ -265,6 +271,6 @@ describe 'ArticleController', ->
 
     it 'should delete the association', ->
       reqPromise(@story1.slug, @article1.id)
-        .then(=> @Story.findOne(slug: @story1.slug).populate('articles'))
-        .then((s) -> s.toJSON().articles.length)
+        .then(-> sails.models.article_story.find(where: null))
+        .then((x) -> x.length)
         .should.eventually.equal(0)

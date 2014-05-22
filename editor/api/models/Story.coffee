@@ -24,8 +24,3 @@ module.exports =
 
     description:
       type: 'text'
-
-    articles:
-      collection: 'article'
-      via: 'stories'
-      dominant: true

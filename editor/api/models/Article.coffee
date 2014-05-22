@@ -32,7 +32,3 @@ module.exports =
     headline: 'string'
     body: 'text'
     truthiness: 'string'
-
-    stories:
-      collection: 'story'
-      via: 'articles'
