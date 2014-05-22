@@ -30,7 +30,15 @@ scheduleUrls = (urls, queue, done) ->
     return done(err) if err?
     async.each(urls, scheduleUrl, done)
 
+# Pushes all URLs to the queue.
+#
+# Be sure to empty out the queue beforehand!
 module.exports = class Startup
+  # Arguments:
+  #
+  # * `articles` a Mongo `Collection`
+  # * `urls` a Mongo `Collection`
+  # * `queue` a `Queue`
   constructor: (options) ->
     @articles = options.articles
     @urls = options.urls

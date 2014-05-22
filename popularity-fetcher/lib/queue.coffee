@@ -1,4 +1,4 @@
-# A job queue, backed by [kue](https://github.com/learnboost/kue)
+# A push-only job queue backed by [kue](https://github.com/learnboost/kue)
 #
 # Usage:
 #
@@ -10,7 +10,7 @@
 #   # fetch 1 second from now
 #   queue.pushWithDelay('facebook', urlObjectId, 1000, callback)
 #
-#   # (You don't pop from this queue. Use kueQueue's methods to handle jobs.)
+# You don't pop from this queue. Use `kueQueue` methods to handle jobs.
 #
 # We use Kue because we expect to scale to lots and lots of URLs, all with
 # different timings. setTimeout() would cost too much memory for all the
