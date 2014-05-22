@@ -6,14 +6,20 @@ describe 'startup', ->
 
   beforeEach ->
     @articles =
-      find: sinon.stub().callsArgWith(2, null, [])
+      find: sinon.stub().returns(toArray: (cb) -> cb(null, []))
     @urls =
       update: sinon.stub()
-      find: sinon.stub().callsArgWith(0, null, [])
+      find: sinon.stub().returns({ toArray: (cb) -> cb(null, []) })
+      createIndex: sinon.stub().callsArgWith(2, null, null)
     @queue =
       push: sinon.stub()
       pushWithDelay: sinon.stub()
     @startup = new Startup(articles: @articles, urls: @urls, queue: @queue)
+
+  it 'should index urls', (done) ->
+    @startup.run (err) =>
+      expect(@urls.createIndex).to.have.been.calledWith('url', unique: true)
+      done()
 
   it 'should search for articles', (done) ->
     @startup.run (err) =>
@@ -26,7 +32,7 @@ describe 'startup', ->
       done()
 
   it 'should error when articles cannot be searched', (done) ->
-    @articles.find.callsArgWith(2, 'err', null)
+    @articles.find.returns(toArray: (cb) -> cb('err'))
     @startup.run (err) ->
       expect(err).to.equal('err')
       done()
@@ -34,16 +40,15 @@ describe 'startup', ->
   describe 'with some articles', ->
     beforeEach ->
       @foundArticles = []
-      @articles.find.callsArgWith(2, null, @foundArticles)
+      @articles.find.returns(toArray: (cb) => cb(null, @foundArticles))
       @urls.update.callsArgWith(3, null)
-      @urls.find.callsArgWith(0, null, [])
 
     it 'should upsert the urls', (done) ->
       @foundArticles.push(url: 'http://example.org')
       @foundArticles.push(url: 'http://example2.org')
       @startup.run =>
-        expect(@urls.update).to.have.been.calledWith({ url: 'http://example.org' }, { url: 'http://example.org' }, upsert: true)
-        expect(@urls.update).to.have.been.calledWith({ url: 'http://example2.org' }, { url: 'http://example2.org' }, upsert: true)
+        expect(@urls.update).to.have.been.calledWith({ url: 'http://example.org' }, { $set: { url: 'http://example.org' } }, upsert: true)
+        expect(@urls.update).to.have.been.calledWith({ url: 'http://example2.org' }, { $set: { url: 'http://example2.org' } }, upsert: true)
         done()
 
     it 'should error if upserting a url fails', (done) ->
@@ -62,13 +67,13 @@ describe 'startup', ->
   describe 'with some urls', ->
     beforeEach ->
       @foundUrls = []
-      @articles.find.callsArgWith(2, null, [])
-      @urls.find.callsArgWith(0, null, @foundUrls)
+      @articles.find.returns(toArray: (cb) -> cb(null, []))
+      @urls.find.returns(toArray: (cb) => cb(null, @foundUrls))
       @queue.push.callsArgWith(2, null)
       @queue.pushWithDelay.callsArgWith(3, null)
 
     it 'should error if url-finding fails', (done) ->
-      @urls.find.callsArgWith(0, 'err')
+      @urls.find.returns(toArray: (cb) => cb('err'))
       @startup.run (err) ->
         expect(err).to.equal('err')
         done()

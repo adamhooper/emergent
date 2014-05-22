@@ -1,4 +1,5 @@
 async = require('async')
+ObjectID = require('mongodb').ObjectID
 
 insertData = (urlFetches, urls, service, urlId, data, done) ->
   now = new Date()
@@ -12,8 +13,8 @@ insertData = (urlFetches, urls, service, urlId, data, done) ->
   $set["shares.#{service}.updatedAt"] = now
 
   async.parallel([
-    async.apply(urlFetches.insert, data)
-    async.apply(urls.update, { _id: urlId }, { '$set': $set })
+    (done) -> urlFetches.insert(data, done)
+    (done) -> urls.update({ _id: urlId }, { '$set', $set }, done)
   ], done)
 
 # Finds URL popularity and updates the `url` and `url_fetch` collections.
@@ -35,7 +36,10 @@ module.exports = class UrlPopularityFetcher
     @queue = options.queue
     @fetchLogic = options.fetchLogic
 
+    @urlFetches.createIndex('urlId', ->) # No hurry. It'll just be nice to have it.
+
   fetch: (service, urlId, done) ->
+    urlId = new ObjectID(urlId)
     @urls.findOne { _id: urlId }, { url: 1 }, (err, data) =>
       return done(err) if err?
       return done("Could not find URL with id #{urlId}") if !data?.url?

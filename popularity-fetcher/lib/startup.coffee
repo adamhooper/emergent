@@ -5,9 +5,9 @@ DelayInMs = 2 * 3600 * 1000 # 2hrs
 
 populateUrlsFromArticles = (articles, urls, done) ->
   upsertArticleUrl = (article, cb2) ->
-    urls.update({ url: article.url }, { url: article.url }, { upsert: true }, cb2)
+    urls.update({ url: article.url }, { $set: { url: article.url } }, { upsert: true }, cb2)
 
-  articles.find {}, { url: 1 }, (err, entries) ->
+  articles.find({}, { url: 1 }).toArray (err, entries) ->
     return done(err) if err?
 
     async.each(entries, upsertArticleUrl, done)
@@ -26,7 +26,7 @@ scheduleUrls = (urls, queue, done) ->
   scheduleUrl = (url, callback) ->
     async.map(Services, ((service, cb) -> scheduleUrlService(url, service, cb)), callback)
 
-  urls.find (err, urls) ->
+  urls.find().toArray (err, urls) ->
     return done(err) if err?
     async.each(urls, scheduleUrl, done)
 
@@ -45,7 +45,10 @@ module.exports = class Startup
     @queue = options.queue
 
   run: (done) ->
-    populateUrlsFromArticles @articles, @urls, (err) =>
+    @urls.createIndex 'url', { unique: true }, (err) =>
       return done(err) if err?
 
-      scheduleUrls(@urls, @queue, done)
+      populateUrlsFromArticles @articles, @urls, (err) =>
+        return done(err) if err?
+
+        scheduleUrls(@urls, @queue, done)
