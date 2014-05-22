@@ -7,9 +7,9 @@ module.exports =
 
   attributes:
     articleId:
-      type: 'objectid'
+      type: 'string'
       required: true
 
     storyId:
-      type: 'objectid'
+      type: 'string'
       required: true

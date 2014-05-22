@@ -1,3 +1,7 @@
+kue = require('kue')
+
+global.kueQueue = kue.createQueue()
+
 module.exports.bootstrap = (next) ->
   ObjectIdRegex = /^[a-z0-9]{24}$/
 

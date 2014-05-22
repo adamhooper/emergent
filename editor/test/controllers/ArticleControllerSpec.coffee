@@ -30,8 +30,17 @@ describe 'ArticleController', ->
     @Story = sails.models.story
     @Article = sails.models.article
 
+    # A hack to simulate @kueQueue.createJob(...).save()
+    @oldKueQueue = global.kueQueue
+    global.kueQueue =
+      createJob: sinon.stub().returnsThis()
+      save: sinon.stub().callsArgWith(0, null)
+
     @Story.create(mockStoryInDb(slug: 'slug-a'))
       .then (story) => @story1 = story
+
+  afterEach ->
+    global.kueQueue = @oldKueQueue
 
   describe '#index', ->
     req = ->
@@ -88,13 +97,12 @@ describe 'ArticleController', ->
         .set('Accept', 'application/json')
         .send(object)
 
-    reqPromise = (options) ->
-      Q.npost(req(options), 'end')
+    reqPromise = (options) -> Q.nsend(req(options), 'end')
 
     reqAndFetchFromDb = (options) ->
       throw 'Must set options.url' if !options.url?
-      Q.npost(req(options), 'end')
-        .then -> model().findOne(url: options.url)
+      reqPromise(options)
+        .then(-> model().findOne(url: options.url))
 
     it 'should return a 404 when the Story does not exist', (done) ->
       supertest(app)
@@ -116,6 +124,11 @@ describe 'ArticleController', ->
     it 'should store the article', ->
       reqAndFetchFromDb(url: 'http://example.org')
         .should.eventually.contain(url: 'http://example.org')
+
+    it 'should queue the url for fetching', ->
+      reqPromise(url: 'http://example.org')
+        .then -> global.kueQueue.createJob.should.have.been.calledWith('new-url', url: 'http://example.org')
+        .then -> global.kueQueue.save.should.have.been.called
 
     describe 'when an article is already there', ->
       beforeEach ->
@@ -148,10 +161,10 @@ describe 'ArticleController', ->
 
     it 'should not let the user manually set createdBy or updatedBy', ->
       Q.all([
-        Q.npost(req(url: 'http://example.org', createdBy: 'user2@example.org'), 'end')
+        Q.nsend(req(url: 'http://example.org', createdBy: 'user2@example.org'), 'end')
           .then((x) -> x.body)
           .should.eventually.contain(createdBy: 'user@example.org')
-        Q.npost(req(url: 'http://example.org', updatedBy: 'user2@example.org'), 'end')
+        Q.nsend(req(url: 'http://example.org', updatedBy: 'user2@example.org'), 'end')
           .then((x) -> x.body)
           .should.eventually.contain(updatedBy: 'user@example.org')
       ])
@@ -174,11 +187,10 @@ describe 'ArticleController', ->
         .set('Accept', 'application/json')
         .send(object)
 
-    reqPromise = (options) ->
-      Q.npost(req(options), 'end')
+    reqPromise = (options) -> Q.nsend(req(options), 'end')
 
     reqAndFetchFromDb = (options) ->
-      Q.npost(req(options), 'end')
+      reqPromise(options)
         .then -> model().findOne(url: options.url)
 
     beforeEach ->
@@ -220,10 +232,10 @@ describe 'ArticleController', ->
 
     it 'should not let the user manually set createdBy or updatedBy', ->
       Q.all([
-        Q.npost(req(id: @article1.id, url: 'http://example2.org', createdBy: 'user2@example.org'), 'end')
+        Q.nsend(req(id: @article1.id, url: 'http://example2.org', createdBy: 'user2@example.org'), 'end')
           .then((x) -> x.body)
           .should.eventually.contain(createdBy: 'foo@example.org')
-        Q.npost(req(id: @article1.id, url: 'http://example2.org', updatedBy: 'user2@example.org'), 'end')
+        Q.nsend(req(id: @article1.id, url: 'http://example2.org', updatedBy: 'user2@example.org'), 'end')
           .then((x) -> x.body)
           .should.eventually.contain(updatedBy: 'user@example.org')
       ])
@@ -236,14 +248,23 @@ describe 'ArticleController', ->
           undefined
         .end(done)
 
+    # Waterline doesn't make this implementation easy; and it really isn't important for now
+    #it 'should not queue the url for fetching when the URL does not change', ->
+    #  reqPromise(id: @article1.id, url: 'http://example.org', body: 'new body')
+    #    .then -> global.kueQueue.save.should.not.have.been.called
+
+    it 'should queue the url for fetching when the URL changes', ->
+      reqPromise(id: @article1.id, url: 'http://example.org/1')
+        .then -> global.kueQueue.createJob.should.have.been.calledWith('new-url', url: 'http://example.org/1')
+        .then -> global.kueQueue.save.should.have.been.called
+
   describe '#destroy', ->
     req = (slug, id) ->
       supertest(app)
         .delete("/stories/#{slug}/articles/#{id}")
         .set('Accept', 'application/json')
 
-    reqPromise = (slug, id) ->
-      Q.npost(req(slug, id), 'end')
+    reqPromise = (slug, id) -> Q.nsend(req(slug, id), 'end')
 
     beforeEach ->
       @article1 = null

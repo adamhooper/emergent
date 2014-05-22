@@ -1,6 +1,11 @@
 Sails = require('sails/lib/app')
 
+global.sinon = require('sinon')
 global.sails = null
+
+chai = require('chai')
+chai.use(require('chai-as-promised'))
+chai.use(require('sinon-chai'))
 
 before (done) ->
   global.sails = Sails()

@@ -47,10 +47,10 @@ validBody = (req, res, next) ->
 module.exports = self =
   index: (req, res) ->
     findStoryThen req, res, (story) ->
-      sails.models.article_story.find().where(storyId: story.id)
+      sails.models.article_story.find().where(storyId: story.id.toString())
         .then (assoc) ->
           if assoc.length
-            sails.models.article.find().where(id: (x.articleId for x in assoc))
+            sails.models.article.find().where(id: (x.articleId.toString() for x in assoc))
           else
             []
         .then (articles) ->
@@ -71,9 +71,11 @@ module.exports = self =
         sails.models.article.findOrCreate({ url: data.url }, data)
           .then (article) ->
             assoc =
-              storyId: story.id
-              articleId: article.id
+              storyId: story.id.toString()
+              articleId: article.id.toString()
             sails.models.article_story.findOrCreate(assoc, assoc).then(-> article)
+          .then (article) ->
+            Q.nsend(global.kueQueue.createJob('new-url', url: article.url), 'save').then(-> article)
           .then (article) ->
             res.json(article.toJSON())
           .catch (err) ->
@@ -104,7 +106,8 @@ module.exports = self =
             if !articles.length
               res.json(404, "Could not find Article with if #{articleId} in Story with slug #{req.param('slug')}")
             else
-              res.json(articles[0])
+              Q.nsend(global.kueQueue.createJob('new-url', url: data.url), 'save')
+                .then(-> res.json(articles[0]))
           .catch((err) -> res.json(err.status || 500, err))
 
   destroy: (req, res) ->

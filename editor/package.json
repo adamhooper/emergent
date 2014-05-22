@@ -32,7 +32,9 @@
     "bcrypt": "~0.7.8",
     "passport": "~0.2.0",
     "validator": "~3.11.0",
-    "q": "~1.0.1"
+    "q": "~1.0.1",
+    "kue": "~0.7.7",
+    "hiredis": "~0.1.16"
   },
   "main": "app.js",
   "repository": {
@@ -53,6 +55,8 @@
     "karma-requirejs": "~0.2.1",
     "karma-phantomjs-launcher": "~0.1.4",
     "karma-coffee-preprocessor": "~0.2.1",
-    "chai-as-promised": "~4.1.1"
+    "chai-as-promised": "~4.1.1",
+    "sinon": "~1.10.0",
+    "sinon-chai": "~2.5.0"
   }
 }
