@@ -1,6 +1,6 @@
 {
   "processes": [
-    "editor/app.js"
+    "editor/app.js --prod"
   ],
   "hooks": {
     "postdeploy": "./npm-install-components.sh",
