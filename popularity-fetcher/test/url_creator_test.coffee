@@ -4,7 +4,7 @@ ObjectID = require('mongodb').ObjectID
 describe 'url_creator', ->
   beforeEach ->
     @urls =
-      update: sinon.stub().callsArgWith(3, null, {})
+      update: sinon.stub().callsArgWith(3, null, 1, {})
     @queue =
       push: sinon.stub().callsArgWith(2, null, {})
 
@@ -26,7 +26,7 @@ describe 'url_creator', ->
       done()
 
   it 'should queue the URL fetch when the URL is new', (done) ->
-    @urls.update.callsArgWith(3, null, { updatedExisting: false, upserted: new ObjectID('537f42523757cc8ce9ed462e') })
+    @urls.update.callsArgWith(3, null, 1, { updatedExisting: false, upserted: new ObjectID('537f42523757cc8ce9ed462e') })
     @creator.create 'http://example.org', =>
       expect(@queue.push).to.have.been.calledWith('facebook', new ObjectID('537f42523757cc8ce9ed462e'))
       expect(@queue.push).to.have.been.calledWith('twitter', new ObjectID('537f42523757cc8ce9ed462e'))
@@ -34,7 +34,7 @@ describe 'url_creator', ->
       done()
 
   it 'should do nothing when the URL is already present', (done) ->
-    @urls.update.callsArgWith(3, null, { updatedExisting: true })
+    @urls.update.callsArgWith(3, null, 1, { updatedExisting: true })
     @creator.create 'http://example.org', =>
       expect(@queue.push).not.to.have.been.called
       done()
