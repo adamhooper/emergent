@@ -4,7 +4,9 @@ mongodb = require('mongodb')
 
 Queue = require('./lib/queue')
 Startup = require('./lib/startup')
+UrlCreator = require('./lib/url_creator')
 UrlPopularityFetcher = require('./lib/url_popularity_fetcher')
+Services = [ 'facebook', 'twitter', 'google' ]
 
 require('./lib/fetch-logic/facebook').access_token = require('fs').readFileSync('../../facebook-app-token', 'ascii').trim()
 
@@ -15,7 +17,6 @@ queue = new Queue(kueQueue)
 
 # Set up Kue to delete jobs once they're complete
 kueQueue.on 'job complete', (id) ->
-  console.log("Job #{id} complete. Deleting...")
   kue.Job.get id, (err, job) ->
     throw err if err?
     job.remove() # whenever -- no callback
@@ -39,18 +40,28 @@ async.series [
 
   (cb) -> # Process the queue
     console.log('Initializing fetchers')
+
+    creator = new UrlCreator
+      urls: db.collection('url')
+      queue: queue
+      services: Services
+
+    fetchLogic = {}
+    for service in Services
+      fetchLogic[service] = require("./lib/fetch-logic/#{service}")
+
     fetcher = new UrlPopularityFetcher
       urls: db.collection('url')
       urlFetches: db.collection('url_fetch')
-      fetchLogic:
-        facebook: require('./lib/fetch-logic/facebook')
-        twitter: require('./lib/fetch-logic/twitter')
-        google: require('./lib/fetch-logic/google')
+      fetchLogic: fetchLogic
       queue: queue
 
     kueQueue.process 'url', 20, (job, done) ->
       console.log('Processing', job.data)
-      fetcher.fetch(job.data.service, job.data.urlId, done)
+      if (url = job.data.incoming)?
+        creator.create(url, done)
+      else
+        fetcher.fetch(job.data.service, job.data.urlId, done)
     # This never ends
 ], (err) ->
   throw err if err?

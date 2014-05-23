@@ -127,7 +127,7 @@ describe 'ArticleController', ->
 
     it 'should queue the url for fetching', ->
       reqPromise(url: 'http://example.org')
-        .then -> global.kueQueue.createJob.should.have.been.calledWith('new-url', url: 'http://example.org')
+        .then -> global.kueQueue.createJob.should.have.been.calledWith('url', incoming: 'http://example.org')
         .then -> global.kueQueue.save.should.have.been.called
 
     describe 'when an article is already there', ->
@@ -255,7 +255,7 @@ describe 'ArticleController', ->
 
     it 'should queue the url for fetching when the URL changes', ->
       reqPromise(id: @article1.id, url: 'http://example.org/1')
-        .then -> global.kueQueue.createJob.should.have.been.calledWith('new-url', url: 'http://example.org/1')
+        .then -> global.kueQueue.createJob.should.have.been.calledWith('url', incoming: 'http://example.org/1')
         .then -> global.kueQueue.save.should.have.been.called
 
   describe '#destroy', ->

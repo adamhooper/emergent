@@ -75,7 +75,7 @@ module.exports = self =
               articleId: article.id.toString()
             sails.models.article_story.findOrCreate(assoc, assoc).then(-> article)
           .then (article) ->
-            Q.nsend(global.kueQueue.createJob('new-url', url: article.url), 'save').then(-> article)
+            Q.nsend(global.kueQueue.createJob('url', incoming: article.url), 'save').then(-> article)
           .then (article) ->
             res.json(article.toJSON())
           .catch (err) ->
@@ -106,7 +106,7 @@ module.exports = self =
             if !articles.length
               res.json(404, "Could not find Article with if #{articleId} in Story with slug #{req.param('slug')}")
             else
-              Q.nsend(global.kueQueue.createJob('new-url', url: data.url), 'save')
+              Q.nsend(global.kueQueue.createJob('url', incoming: data.url), 'save')
                 .then(-> res.json(articles[0]))
           .catch((err) -> res.json(err.status || 500, err))
 
