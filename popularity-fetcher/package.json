@@ -2,8 +2,8 @@
   "name": "truthmaker-popularity-fetcher",
   "version": "0.0.0",
   "description": "Counts social interactions at various URLs",
-  "main": "index.js",
   "scripts": {
+    "start": "node_modules/coffee-script/bin/coffee index.coffee",
     "test": "mocha"
   },
   "repository": {

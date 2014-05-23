@@ -1,6 +1,7 @@
 {
   "processes": [
-    "editor/app.js"
+    "editor/app.js",
+    "bin/popularity-fetcher.sh"
   ],
   "hooks": {
     "postdeploy": "./npm-install-components.sh",
