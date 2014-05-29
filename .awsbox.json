@@ -5,7 +5,7 @@
     "bin/popularity-fetcher.js"
   ],
   "hooks": {
-    "postdeploy": "bin/npm-install-components.sh",
+    "postdeploy": "deploy/postdeploy.sh",
     "postcreate": "deploy/install/postcreate.sh"
   }
 }
