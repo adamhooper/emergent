@@ -1,4 +1,5 @@
 async = require('async')
+fs = require('fs')
 kue = require('kue')
 mongodb = require('mongodb')
 
@@ -7,8 +8,12 @@ Startup = require('./lib/startup')
 UrlCreator = require('./lib/url_creator')
 UrlPopularityFetcher = require('./lib/url_popularity_fetcher')
 Services = [ 'facebook', 'twitter', 'google' ]
-
-require('./lib/fetch-logic/facebook').access_token = require('fs').readFileSync('../../facebook-app-token', 'ascii').trim()
+FetchLogic = {}
+(->
+  for service in Services
+    FetchLogic[service] = require("./lib/fetch-logic/#{service}")
+  FetchLogic.facebook.access_token = fs.readFileSync(__dirname + '/../../facebook-app-token', 'ascii').trim()
+)()
 
 kueQueue = kue.createQueue()
 db = undefined
@@ -46,14 +51,10 @@ async.series [
       queue: queue
       services: Services
 
-    fetchLogic = {}
-    for service in Services
-      fetchLogic[service] = require("./lib/fetch-logic/#{service}")
-
     fetcher = new UrlPopularityFetcher
       urls: db.collection('url')
       urlFetches: db.collection('url_fetch')
-      fetchLogic: fetchLogic
+      fetchLogic: FetchLogic
       queue: queue
 
     kueQueue.process 'url', 20, (job, done) ->
