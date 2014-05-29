@@ -29,15 +29,19 @@ module.exports =
           y.push(articlesById[x.articleId])
 
         for story in stories
-          story.truthyShares = {}
+          story.truthyShares =
+            myth: { facebook: 0, twitter: 0, google: 0 }
+            truth: { facebook: 0, twitter: 0, google: 0 }
+            '': { facebook: 0, twitter: 0, google: 0 }
+
+          story.nShares = 0
           for article in articlesByStoryId[story._id] || []
             truthiness = article.truthiness
             shares = urlsByUrl[article.url]?.shares || {}
             for service, info of shares
               n = info.n || 0
-              key = "#{truthiness}.#{service}"
-              story.truthyShares[key] ||= 0
-              story.truthyShares[key] += n
+              story.truthyShares[truthiness][service] += n
+              story.nShares += n
 
         stories
       .then (stories) ->

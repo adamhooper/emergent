@@ -1,9 +1,14 @@
 extend ../layout
 block main
+  h1 Stories
   ul.stories
     each story in stories
       li.story(id="story-#{story._id}", data-truthy-shares=JSON.stringify(story.truthyShares))
         h3= story.slug
-        ul.truthiness-vs-service
-          each n, key in story.truthyShares
-            li #{key}: #{n} shares
+        p Truthiness:
+        ul.truthiness
+          each truthiness in [ 'truth', 'myth', '' ]
+            each service in [ 'facebook', 'twitter', 'google' ]
+              - var n = story.truthyShares[truthiness] && story.truthyShares[truthiness][service] || 0
+              if n
+                li(class="#{truthiness} #{service}", style="flex-grow: #{n/story.nShares}", title="#{service}: #{n} #{truthiness} shares")= n

@@ -1,0 +1,28 @@
+ul.stories {
+  .list-unstyled;
+}
+
+ul.truthiness {
+  .list-unstyled;
+
+  display: flex;
+  height: 2em;
+
+  li {
+    display: inline-block;
+    width: 0; // flex-grow will override this
+    //color: #bbb;
+    color: transparent;
+    overflow: hidden;
+
+    background-color: #aaa;
+
+    &.myth {
+      background-color: #a33333;
+    }
+
+    &.truth {
+      background-color: #417d30;
+    }
+  }
+}
