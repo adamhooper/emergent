@@ -7,7 +7,7 @@ module.exports = class UrlCreator
     @services = options.services
 
   create: (url, done) ->
-    @urls.update { url: url }, { $set: {} }, { w: 1, upsert: true }, (err, result, extra) =>
+    @urls.update { url: url }, { $set: { url: url } }, { w: 1, upsert: true }, (err, result, extra) =>
       return done(err) if err?
 
       if extra.updatedExisting
@@ -15,5 +15,5 @@ module.exports = class UrlCreator
         # refresh of its popularity.
         done()
       else
-        id = extra.upserted
+        id = extra.upserted[0]._id
         async.each(@services, ((s, cb) => @queue.push(s, id, cb)), done)
