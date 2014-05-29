@@ -28,7 +28,9 @@ module.exports = class UrlFetcherQueue
     @kueQueue.createJob('url', data)
 
   push: (service, objectId, done) ->
+    console.log("Scheduling #{service}/#{objectId} right away")
     @_createJob(service, objectId).save(done)
 
   pushWithDelay: (service, objectId, delayMs, done) ->
+    console.log("Scheduling #{service}/#{objectId} for #{delayMs}ms from now")
     @_createJob(service, objectId).delay(delayMs).save(done)
