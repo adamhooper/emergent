@@ -1,6 +1,7 @@
 {
   "processes": [
     "editor/app.js",
+    "bin/viewer.js",
     "bin/popularity-fetcher.js"
   ],
   "hooks": {

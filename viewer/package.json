@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "description": "Shows charts based on Truthmaker data",
   "scripts": {
-    "test": "mocha"
+    "start": "node_modules/coffee-script/bin/coffee app.coffee",
   },
   "repository": {
     "type": "git",
