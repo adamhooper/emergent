@@ -125,6 +125,15 @@ describe 'ArticleController', ->
       reqAndFetchFromDb(url: 'http://example.org')
         .should.eventually.contain(url: 'http://example.org')
 
+    it 'should store publishedAt', ->
+      reqAndFetchFromDb(url: 'http://example.org', publishedAt: '1985-04-12T23:20:50.52-0500')
+        .then ((x) -> x.publishedAt.getTime())
+        .should.eventually.eq(482214050520)
+
+    it 'should store empty publishedAt as null', ->
+      reqAndFetchFromDb(url: 'http://example.org', publishedAt: '')
+        .should.eventually.contain(publishedAt: null)
+
     it 'should queue the url for fetching', ->
       reqPromise(url: 'http://example.org')
         .then -> global.kueQueue.createJob.should.have.been.calledWith('url', incoming: 'http://example.org')

@@ -32,3 +32,4 @@ module.exports =
     headline: 'string'
     body: 'text'
     truthiness: 'string'
+    publishedAt: 'datetime'

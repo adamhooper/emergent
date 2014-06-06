@@ -1,13 +1,26 @@
 Q = require('q')
 
-ValidAttributesAndDefaults = {
+ValidAttributesAndDefaults =
   url: null
   truthiness: ''
   source: ''
   author: ''
   headline: ''
   body: ''
-}
+  publishedAt: (v) ->
+    if !v? || v == ''
+      null
+    else
+      new Date(v)
+
+attributesToArticle = (attrs) ->
+  ret = {}
+  for k, v of ValidAttributesAndDefaults
+    ret[k] = if _.isFunction(v)
+      v(attrs[k])
+    else
+      attrs[k] || v
+  ret
 
 # Returns a Story.findOne() query. Call .exec() or treat it as a Promise.
 findStory = (req) ->
@@ -62,9 +75,7 @@ module.exports = self =
   create: (req, res) ->
     validBody req, res, (body) ->
       findStoryThen req, res, (story) ->
-        data = {}
-        for k, v of ValidAttributesAndDefaults
-          data[k] = body[k] || v
+        data = attributesToArticle(body)
         data.createdBy = req.user.email
         data.updatedBy = req.user.email
 
@@ -93,9 +104,7 @@ module.exports = self =
 
     validBody req, res, (body) ->
       findStoryThen req, res, (story) ->
-        data = {}
-        for k, v of ValidAttributesAndDefaults
-          data[k] = body[k] || v
+        data = attributesToArticle(body)
         data.updatedBy = req.user.email
 
         # We don't check whether the article belongs to this story. That opens
