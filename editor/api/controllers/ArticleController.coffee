@@ -69,6 +69,7 @@ module.exports = self =
         .then (articles) ->
           res.json(articles)
         .fail (err) ->
+          console.log(err)
           res.json(err.status || 500, err)
         .done()
 
@@ -116,7 +117,7 @@ module.exports = self =
               res.json(404, "Could not find Article with if #{articleId} in Story with slug #{req.param('slug')}")
             else
               Q.nsend(global.kueQueue.createJob('url', incoming: data.url), 'save')
-                .then(-> res.json(articles[0]))
+                .then(-> res.json(articles[0].toJSON()))
           .catch((err) -> res.json(err.status || 500, err))
 
   destroy: (req, res) ->

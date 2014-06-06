@@ -58,6 +58,11 @@ define [ 'underscore', 'marionette' ], (_, Marionette) ->
             <input id="new-article-headline" name="headline" class="form-control" placeholder="e.g. Man bites dog" value="<%- headline %>">
           </div>
           <div class="form-group">
+            <label for="new-article-published-at">Published/updated date</label>
+            <input type="datetime-local" id="new-article-published-at" name="publishedAt" class="form-control" value="<%- publishedAt %>">
+            <small class="help-block">(in your timezone)</small>
+          </div>
+          <div class="form-group">
             <label for="new-article-body">Body text</label>
             <textarea id="new-article-body" name="body" class="form-control" rows="5" placeholder="e.g. Each paragraph was separated from its neighbors by two newlines."><%- body %></textarea>
           </div>
@@ -82,6 +87,7 @@ define [ 'underscore', 'marionette' ], (_, Marionette) ->
       source: 'input[name=source]'
       author: 'input[name=author]'
       headline: 'input[name=headline]'
+      publishedAt: 'input[name=publishedAt]'
       body: 'textarea[name=body]'
       truthiness: 'input[name=truthiness]'
 
@@ -104,7 +110,10 @@ define [ 'underscore', 'marionette' ], (_, Marionette) ->
       @render()
 
     serializeData: ->
-      _.extend({ 'expanded?': @expanded }, super())
+      json = super()
+      json['expanded?'] = @expanded
+      json['publishedAt'] = @model.get('publishedAt') # and not what toJSON() gives
+      json
 
     render: ->
       super()
@@ -118,6 +127,7 @@ define [ 'underscore', 'marionette' ], (_, Marionette) ->
         source: @ui.source.val()
         author: @ui.author.val()
         headline: @ui.headline.val()
+        publishedAt: @ui.publishedAt.val()
         body: @ui.body.val()
         truthiness: @ui.truthiness.filter(':checked').val()
       }, userInput: true)

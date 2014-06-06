@@ -19,6 +19,7 @@ describe 'ArticleController', ->
       url: null
       createdBy: 'foo@example.org'
       updatedBy: 'foo@example.org'
+      publishedAt: new Date('2014-05-22T04:00:00') # in whichever time zone
     , options)
 
   mockArticle = (options) ->
@@ -79,7 +80,7 @@ describe 'ArticleController', ->
               sails.models.article_story.create(storyId: @story1.id, articleId: @article1.id)
               sails.models.article_story.create(storyId: @story1.id, articleId: @article2.id)
             ])
-          .fail (e) -> console.log(e)
+          .fail((e) -> console.log(e))
           .done()
 
       it 'should return the articles', (done) ->

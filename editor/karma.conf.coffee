@@ -3,7 +3,8 @@ module.exports = (config) ->
     basePath: ''
     frameworks: ['mocha', 'requirejs' ]
     files: [
-      'test-js/test-main.coffee',
+      'test-js/phantomjs/phantomjs_dateparse_polyfill.js'
+      'test-js/test-main.coffee'
       {pattern: 'assets/js/**/*.js', included: false}
       {pattern: 'assets/js/**/*.coffee', included: false}
       {pattern: 'test-js/**/*Spec.js', included: false}
@@ -12,7 +13,6 @@ module.exports = (config) ->
     exclude: [
       'assets/js/main.js'
       'assets/js/bower_components/**/*spec.js'
-      'assets/js/bower_components/**/*test.js'
     ]
     preprocessors: {
       '**/*.coffee': ['coffee']

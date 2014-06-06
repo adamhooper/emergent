@@ -49,6 +49,11 @@ define [ 'underscore', 'marionette' ], (_, Marionette) ->
           <input id="new-article-headline" name="headline" class="form-control" placeholder="e.g. Man bites dog">
         </div>
         <div class="form-group">
+          <label for="new-article-published-at">Published/updated date</label>
+          <input type="datetime-local" id="new-article-published-at" name="publishedAt" class="form-control">
+          <small class="help-block">(in your timezone)</small>
+        </div>
+        <div class="form-group">
           <label for="new-article-body">Body text</label>
           <textarea id="new-article-body" name="body" class="form-control" rows="5" placeholder="e.g. Each paragraph was separated from its neighbors by two newlines."></textarea>
         </div>

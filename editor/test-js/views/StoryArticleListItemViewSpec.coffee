@@ -13,9 +13,15 @@ define [
       author: 'author'
       headline: 'headline'
       body: 'body'
+      publishedAt: '1985-04-12T23:20'
 
     class MockArticle extends Backbone.Model
       defaults: DefaultAttributes
+
+      toJSON: ->
+        json = super()
+        json.publishedAt = new Date(json.publishedAt) + '-04:00'
+        json
 
     beforeEach ->
       @model = new MockArticle()
@@ -54,6 +60,7 @@ define [
         @view.$('input[name=headline]').val('new headline')
         @view.$('input[name=author]').val('new author')
         @view.$('textarea[name=body]').val('new body')
+        @view.$('input[name=publishedAt]').val('1985-04-12T23:20')
         @view.$('input[name=truthiness][value=truth]').prop('checked', true)
         expect(spy).not.to.have.been.called
         @view.$('form').submit()

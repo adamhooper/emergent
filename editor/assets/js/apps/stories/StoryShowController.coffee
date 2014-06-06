@@ -24,5 +24,4 @@ define [ 'app', 'q' ], (App, Q) ->
 
           story.articles.on 'change', (model, options) ->
             if options?.userInput
-              console.log('Changed model', model)
               model.save()

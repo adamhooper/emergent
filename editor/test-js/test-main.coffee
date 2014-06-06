@@ -1,5 +1,5 @@
 allTestFiles = []
-TEST_REGEXP = /(spec|test)\.js$/i
+TEST_REGEXP = /Spec\.js$/
 
 for file, __ of window.__karma__.files
   if TEST_REGEXP.test(file)
