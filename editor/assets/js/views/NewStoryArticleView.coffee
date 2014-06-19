@@ -33,6 +33,12 @@ define [ 'underscore', 'marionette' ], (_, Marionette) ->
             Truth
           </label>
         </div>
+        <div class="radio">
+          <label>
+            <input type="radio" name="truthiness" value="claim">
+            Claim
+          </label>
+        </div>
       </div>
       <fieldset class="article-automatic-fields">
         <legend>Truthmaker should fill these in automatically</legend>
