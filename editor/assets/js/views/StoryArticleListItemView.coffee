@@ -52,14 +52,6 @@ define [ 'underscore', 'marionette' ], (_, Marionette) ->
         <fieldset class="article-automatic-fields">
           <legend>Truthmaker should fill these in automatically</legend>
           <div class="form-group">
-            <label for="new-article-source">Source (publication)</label>
-            <input id="new-article-source" name="source" class="form-control" placeholder="e.g. The New York Times" value="<%- source %>">
-          </div>
-          <div class="form-group">
-            <label for="new-article-author">Author (byline)</label>
-            <input id="new-article-author" name="author" class="form-control" placeholder="e.g. Stephen Glass" value="<%- author %>">
-          </div>
-          <div class="form-group">
             <label for="new-article-headline">Headline</label>
             <input id="new-article-headline" name="headline" class="form-control" placeholder="e.g. Man bites dog" value="<%- headline %>">
           </div>
@@ -67,6 +59,14 @@ define [ 'underscore', 'marionette' ], (_, Marionette) ->
             <label for="new-article-published-at">Published/updated date</label>
             <input type="datetime-local" id="new-article-published-at" name="publishedAt" class="form-control" value="<%- publishedAt %>">
             <small class="help-block">(in your timezone)</small>
+          </div>
+          <div class="form-group">
+            <label for="new-article-author">Author (byline)</label>
+            <input id="new-article-author" name="author" class="form-control" placeholder="e.g. Stephen Glass" value="<%- author %>">
+          </div>
+          <div class="form-group">
+            <label for="new-article-source">Source (publication)</label>
+            <input id="new-article-source" name="source" class="form-control" placeholder="e.g. The New York Times" value="<%- source %>">
           </div>
           <div class="form-group">
             <label for="new-article-body">Body text</label>
