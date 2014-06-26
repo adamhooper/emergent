@@ -33,3 +33,4 @@ module.exports =
     body: 'text'
     truthiness: 'string'
     publishedAt: 'datetime'
+    comments: 'text'

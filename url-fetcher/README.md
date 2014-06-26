@@ -55,7 +55,7 @@ All Redis needs to know is the URL's ObjectId, the service ("facebook",
 "twitter" or "google") and how far in the future to run it.
 
 Starting up
------------
+===========
 
 This service runs independently of the `truthmaker-editor`. It doesn't listen
 on any port.
