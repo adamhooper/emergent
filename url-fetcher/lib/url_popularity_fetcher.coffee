@@ -1,6 +1,8 @@
 async = require('async')
 ObjectID = require('mongodb').ObjectID
 
+DelayInMs = 2 * 3600 * 1000 # 2hrs
+
 insertData = (urlFetches, urls, service, urlId, data, done) ->
   now = new Date()
 
@@ -38,17 +40,12 @@ module.exports = class UrlPopularityFetcher
 
     @urlFetches.createIndex('urlId', ->) # No hurry. It'll just be nice to have it.
 
-  fetch: (service, urlId, done) ->
-    urlId = new ObjectID(urlId)
-    @urls.findOne { _id: urlId }, { url: 1 }, (err, data) =>
+  fetch: (service, urlId, url, done) ->
+    @fetchLogic[service] url, (err, data) =>
       return done(err) if err?
-      return done("Could not find URL with id #{urlId}") if !data?.url?
-      url = data.url
 
-      @fetchLogic[service] url, (err, data) =>
+      insertData @urlFetches, @urls, service, urlId, data, (err) =>
         return done(err) if err?
 
-        insertData @urlFetches, @urls, service, urlId, data, (err) =>
-          return done(err) if err?
-
-          @queue.pushWithDelay(service, urlId, 2 * 3600 * 1000, done)
+        @queue.queue(service, urlId, url, new Date(new Date().valueOf() + DelayInMs))
+        done?()

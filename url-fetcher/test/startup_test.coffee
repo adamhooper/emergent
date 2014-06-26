@@ -12,8 +12,7 @@ describe 'startup', ->
       find: sinon.stub().returns({ toArray: (cb) -> cb(null, []) })
       createIndex: sinon.stub().callsArgWith(2, null, null)
     @queue =
-      push: sinon.stub()
-      pushWithDelay: sinon.stub()
+      queue: sinon.spy()
     @startup = new Startup(articles: @articles, urls: @urls, queue: @queue)
 
   it 'should index urls', (done) ->
@@ -69,8 +68,6 @@ describe 'startup', ->
       @foundUrls = []
       @articles.find.returns(toArray: (cb) -> cb(null, []))
       @urls.find.returns(toArray: (cb) => cb(null, @foundUrls))
-      @queue.push.callsArgWith(2, null)
-      @queue.pushWithDelay.callsArgWith(3, null)
 
     it 'should error if url-finding fails', (done) ->
       @urls.find.returns(toArray: (cb) => cb('err'))
@@ -84,25 +81,25 @@ describe 'startup', ->
 
       it 'should schedule immediate facebook, google and twitter jobs', (done) ->
         @startup.run =>
-          expect(@queue.push).to.have.been.calledWith('google', 'abcdef')
-          expect(@queue.push).to.have.been.calledWith('facebook', 'abcdef')
-          expect(@queue.push).to.have.been.calledWith('twitter', 'abcdef')
+          expect(@queue.queue).to.have.been.calledWith('google', 'abcdef')
+          expect(@queue.queue).to.have.been.calledWith('facebook', 'abcdef')
+          expect(@queue.queue).to.have.been.calledWith('twitter', 'abcdef')
           done()
 
     describe 'with a partially fetched url', ->
       beforeEach ->
-        @foundUrls.push(_id: 'abcdef', url: 'http://example.org', shares: { facebook: { n: 3, updatedAt: new Date() }})
-        @clock.tick(1 * 3600 * 1000 + 1) # 1hr
+        @foundUrls.push(_id: 'abcdef', url: 'http://example.org', shares: { facebook: { n: 3, updatedAt: new Date(123) }})
+        @clock.tick(3600 * 1000) # 1hr
 
       it 'should schedule an immediate job for the missing parts', (done) ->
         @startup.run =>
-          expect(@queue.push).to.have.been.calledWith('google', 'abcdef')
-          expect(@queue.push).to.have.been.calledWith('twitter', 'abcdef')
+          expect(@queue.queue).to.have.been.calledWith('google', 'abcdef', 'http://example.org', new Date(3600 * 1000))
+          expect(@queue.queue).to.have.been.calledWith('twitter', 'abcdef', 'http://example.org', new Date(3600 * 1000))
           done()
 
       it 'should schedule a delayed job for the fresh parts at the proper time', (done) ->
         @startup.run =>
-          expect(@queue.pushWithDelay).to.have.been.calledWith('facebook', 'abcdef', 3600 * 1000 - 1) # I can't be bothered to figure out why the -1ms
+          expect(@queue.queue).to.have.been.calledWith('facebook', 'abcdef', 'http://example.org', new Date(123 + 2 * 3600 * 1000)) # I can't be bothered to figure out why the -1ms
           done()
 
     describe 'with a long-ago fetched url', ->
@@ -112,5 +109,5 @@ describe 'startup', ->
 
       it 'should schedule an immediate job for the missing parts', (done) ->
         @startup.run =>
-          expect(@queue.push).to.have.been.calledWith('facebook', 'abcdef')
+          expect(@queue.queue).to.have.been.calledWith('facebook', 'abcdef')
           done()

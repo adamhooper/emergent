@@ -16,4 +16,6 @@ module.exports = class UrlCreator
         done()
       else
         id = extra.upserted[0]._id
-        async.each(@services, ((s, cb) => @queue.push(s, id, cb)), done)
+        for service in @services
+          @queue.queue(service, id, url)
+        done()

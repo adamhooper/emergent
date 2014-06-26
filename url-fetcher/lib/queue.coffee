@@ -1,36 +1,73 @@
-# A push-only job queue backed by [kue](https://github.com/learnboost/kue)
+PriorityQueue = require('js-priority-queue')
+
+# A job queue for URLs.
 #
 # Usage:
 #
-#   kueQueue = require('kue').createQueue()
-#   queue = new Queue(kueQueue)
+#   queue = new Queue
+#     handlers:
+#       facebook: (urlObjectId, url) -> ...
+#       twitter: (urlObjectId, url) -> ...
+#       ...
 #
-#   # fetch URL ASAP
-#   queue.push('facebook', urlObjectId, callback)
-#   # fetch 1 second from now
-#   queue.pushWithDelay('facebook', urlObjectId, 1000, callback)
+#   queue.queue('facebook', new ObjectId('123456789012'), 'http://example.org', new Date(new Date().valueOf() + 1000))
+#   queue.queue('twitter', ..., ..., ...)
 #
-# You don't pop from this queue. Use `kueQueue` methods to handle jobs.
+#   queue.startHandling()
+#   ...
+#   queue.stopHandling()
 #
-# We use Kue because we expect to scale to lots and lots of URLs, all with
-# different timings. setTimeout() would cost too much memory for all the
-# closures; a more clever implementation of a priority queue is doable, but
-# we'd be reinventing the wheel.
-module.exports = class UrlFetcherQueue
-  constructor: (@kueQueue) ->
+# Handlers may push items to the queue; it's entirely okay for a queue to last
+# forever.
+#
+# Notice that the handlers are executed synchronously. They may call background
+# tasks (which may even push more stuff onto the queue), but UrlQueue does not
+# track which tasks have completed.
+module.exports = class UrlQueue
+  constructor: (@options) ->
+    @handlers = @options.handlers || {}
+    @priorityQueue = new PriorityQueue
+      comparator: (a, b) -> a.at - b.at # earliest first
 
-  _createJob: (service, objectId) ->
-    objectId = objectId.str if objectId.str?
-    data =
-      service: service
-      urlId: objectId
+  queue: (type, objectId, url, at) ->
+    at ?= new Date()
+    @priorityQueue.queue(type: type, id: objectId, url: url, at: at)
 
-    @kueQueue.createJob('url', data)
+    if @_handling
+      @_tick()
 
-  push: (service, objectId, done) ->
-    console.log("Scheduling #{service}/#{objectId} right away")
-    @_createJob(service, objectId).save(done)
+  _scheduleNextHandle: (ms) ->
+    if @_timeout?
+      clearTimeout(@_timeout)
 
-  pushWithDelay: (service, objectId, delayMs, done) ->
-    console.log("Scheduling #{service}/#{objectId} for #{delayMs}ms from now")
-    @_createJob(service, objectId).delay(delayMs).save(done)
+    @_timeout = if ms?
+      setTimeout((=> @_handleOne()), ms)
+    else
+      null
+
+  _tick: ->
+    if @priorityQueue.length
+      now = new Date()
+      next = @priorityQueue.peek().at
+      if now >= next
+        @_handleOne()
+      else
+        @_scheduleNextHandle(next - now)
+
+  _handleOne: ->
+    @_timeout = null
+
+    job = @priorityQueue.dequeue()
+    handler = @handlers[job.type]
+    throw "Missing handler for job type #{job.type}" if !handler?
+    handler(job.id, job.url)
+
+    setImmediate(=> @_tick())
+
+  startHandling: ->
+    @_handling = true
+    @_tick()
+
+  stopHandling: ->
+    @_scheduleNextHandle(null)
+    @_handling = false

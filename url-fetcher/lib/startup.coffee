@@ -15,20 +15,21 @@ populateUrlsFromArticles = (articles, urls, done) ->
 scheduleUrls = (urls, queue, done) ->
   t1 = new Date()
 
-  scheduleUrlService = (url, service, callback) ->
+  scheduleUrlService = (url, service) ->
     updatedAt = url.shares?[service]?.updatedAt
-    delay = updatedAt - t1 + DelayInMs # if !updatedAt?, this is NaN
-    if delay > -1 # if NaN, this is false
-      queue.pushWithDelay(service, url._id, delay, callback)
+    if !updatedAt
+      queue.queue(service, url._id, url.url, t1)
     else
-      queue.push(service, url._id, callback)
-
-  scheduleUrl = (url, callback) ->
-    async.map(Services, ((service, cb) -> scheduleUrlService(url, service, cb)), callback)
+      t2 = new Date(updatedAt.valueOf() + DelayInMs)
+      t2 = t1 if t2 < t1
+      queue.queue(service, url._id, url.url, t2)
 
   urls.find().toArray (err, urls) ->
     return done(err) if err?
-    async.each(urls, scheduleUrl, done)
+    for url in urls
+      for service in Services
+        scheduleUrlService(url, service)
+    done()
 
 # Pushes all URLs to the queue.
 #

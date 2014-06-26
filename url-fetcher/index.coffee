@@ -17,8 +17,7 @@ FetchLogic = {}
 
 kueQueue = kue.createQueue()
 db = undefined
-
-queue = new Queue(kueQueue)
+queue = undefined
 
 # Set up Kue to delete jobs once they're complete
 kueQueue.on 'job complete', (id) ->
@@ -26,30 +25,22 @@ kueQueue.on 'job complete', (id) ->
     throw err if err?
     job.remove() # whenever -- no callback
 
+console.log('Emptying redis...')
+kueQueue.client.flushdb()
+
 async.series [
-  (cb) -> # Connect to MongoDB
-    console.log('Connecting to mongodb://localhost/truthmaker')
+  (cb) ->
+    console.log('Connecting to mongodb://localhost/truthmaker...')
     mongodb.MongoClient.connect 'mongodb://localhost/truthmaker', (err, result) ->
       db = result
       cb(err, result)
 
-  (cb) -> # Start with a clear slate
-    # Empty Redis first
-    console.log('Emptying redis')
-    kueQueue.client.flushdb()
-    startup = new Startup
-      articles: db.collection('article')
-      urls: db.collection('url')
-      queue: queue
-    startup.run(cb)
+  (cb) ->
+    console.log('Initializing work queue...')
 
-  (cb) -> # Process the queue
-    console.log('Initializing fetchers')
-
-    creator = new UrlCreator
-      urls: db.collection('url')
-      queue: queue
-      services: Services
+    handlers = {}
+    queue = new Queue
+      handlers: handlers
 
     fetcher = new UrlPopularityFetcher
       urls: db.collection('url')
@@ -57,12 +48,34 @@ async.series [
       fetchLogic: FetchLogic
       queue: queue
 
+    buildHandler = (service) -> ((id, url) -> fetcher.fetch(service, id, url))
+    (handlers[service] = buildHandler(service)) for service in Services
+
+    cb()
+
+  (cb) ->
+    console.log('Loading URLs...')
+    startup = new Startup
+      articles: db.collection('article')
+      urls: db.collection('url')
+      queue: queue
+    startup.run(cb)
+
+  (cb) -> # Process the queue
+    console.log('Running...')
+
+    creator = new UrlCreator
+      urls: db.collection('url')
+      queue: queue
+      services: Services
+
     kueQueue.process 'url', 20, (job, done) ->
       console.log('Processing', job.data)
       if (url = job.data.incoming)?
         creator.create(url, done)
       else
-        fetcher.fetch(job.data.service, job.data.urlId, done)
-    # This never ends
+        throw "Invalid job: " + JSON.stringify(job)
+
+    queue.startHandling()
 ], (err) ->
   throw err if err?
