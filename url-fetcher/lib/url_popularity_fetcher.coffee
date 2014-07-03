@@ -1,5 +1,4 @@
 async = require('async')
-ObjectID = require('mongodb').ObjectID
 
 DelayInMs = 2 * 3600 * 1000 # 2hrs
 
@@ -23,14 +22,13 @@ insertData = (urlFetches, urls, service, urlId, data, done) ->
 #
 # Usage:
 #
-#   fetcher.fetch('facebook', '53763c763cb763ec6b604920', callback)
+#   fetcher.fetch('facebook', new ObjectID('53763c763cb763ec6b604920'), 'http://example.org', callback)
 #
 # This will:
 #
-# 1. Fetch the URL with ID '53763c763cb763ec6b604920'
-# 2. Query facebook for that URL's popularity (returning a number)
-# 3. Update the `url` and `url_fetch` collections with the new popularity
-# 4. Queue another update in the future
+# 1. Query facebook for the URL's popularity (returning a number)
+# 2. Update the `url` and `url_fetch` collections with the new popularity
+# 3. Queue another update in the future
 module.exports = class UrlPopularityFetcher
   constructor: (options) ->
     @urls = options.urls
