@@ -39,6 +39,8 @@ module.exports = class UrlPopularityFetcher
     @urlFetches.createIndex('urlId', ->) # No hurry. It'll just be nice to have it.
 
   fetch: (service, urlId, url, done) ->
+    done ?= (->)
+
     @fetchLogic[service] url, (err, data) =>
       return done(err) if err?
 
@@ -46,4 +48,4 @@ module.exports = class UrlPopularityFetcher
         return done(err) if err?
 
         @queue.queue(service, urlId, url, new Date(new Date().valueOf() + DelayInMs))
-        done?()
+        done()

@@ -6,6 +6,7 @@ mongodb = require('mongodb')
 Queue = require('./lib/queue')
 Startup = require('./lib/startup')
 UrlCreator = require('./lib/url_creator')
+UrlFetcher = require('./lib/url_fetcher')
 UrlPopularityFetcher = require('./lib/url_popularity_fetcher')
 Services = [ 'facebook', 'twitter', 'google' ]
 FetchLogic = {}
@@ -42,14 +43,19 @@ async.series [
     queue = new Queue
       handlers: handlers
 
-    fetcher = new UrlPopularityFetcher
+    urlFetcher = new UrlFetcher
+      urls: db.collection('url')
+      urlGets: db.collection('url_get')
+
+    popularityFetcher = new UrlPopularityFetcher
       urls: db.collection('url')
       urlFetches: db.collection('url_fetch')
       fetchLogic: FetchLogic
       queue: queue
 
-    buildHandler = (service) -> ((id, url) -> fetcher.fetch(service, id, url))
+    buildHandler = (service) -> ((id, url) -> popularityFetcher.fetch(service, id, url))
     (handlers[service] = buildHandler(service)) for service in Services
+    handlers.fetch = (id, url) -> urlFetcher.fetch(id, url)
 
     cb()
 

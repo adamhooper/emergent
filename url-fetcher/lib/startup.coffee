@@ -1,6 +1,6 @@
 async = require 'async'
 
-Services = [ 'facebook', 'twitter', 'google' ]
+Services = [ 'fetch', 'facebook', 'twitter', 'google' ]
 DelayInMs = 2 * 3600 * 1000 # 2hrs
 
 populateUrlsFromArticles = (articles, urls, done) ->

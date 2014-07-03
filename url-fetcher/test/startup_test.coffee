@@ -79,8 +79,9 @@ describe 'startup', ->
       beforeEach ->
         @foundUrls.push(_id: 'abcdef', url: 'http://example.org')
 
-      it 'should schedule immediate facebook, google and twitter jobs', (done) ->
+      it 'should schedule immediate fetch, facebook, google and twitter jobs', (done) ->
         @startup.run =>
+          expect(@queue.queue).to.have.been.calledWith('fetch', 'abcdef')
           expect(@queue.queue).to.have.been.calledWith('google', 'abcdef')
           expect(@queue.queue).to.have.been.calledWith('facebook', 'abcdef')
           expect(@queue.queue).to.have.been.calledWith('twitter', 'abcdef')

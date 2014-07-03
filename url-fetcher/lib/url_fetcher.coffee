@@ -21,9 +21,10 @@ class UrlFetcher
 
     @urlGets.createIndex('urlId', ->) # No hurry. It'll just be nice to have it.
 
-  fetch: (id, url, callback) ->
+  fetch: (id, url, done) ->
+    done ?= (->)
     UrlFetcher.request.get url, (err, response) =>
-      return callback(err) if err?
+      return done(err) if err?
 
       data =
         urlId: id
@@ -33,15 +34,15 @@ class UrlFetcher
         body: response.body
 
       @urlGets.insert data, (err, urlGetResponse) =>
-        return callback(err) if err?
+        return done(err) if err?
 
         $set =
           'urlGet.id': urlGetResponse._id
           'urlGet.updatedAt': data.createdAt
 
         @urls.update { _id: data.urlId }, { $set: $set }, (err) ->
-          return callback(err) if err?
-          callback(null, urlGetResponse)
+          return done(err) if err?
+          done(null, urlGetResponse)
 
 UrlFetcher.request = require('request') # so we can stub it out during tests
 
