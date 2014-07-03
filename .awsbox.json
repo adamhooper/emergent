@@ -2,7 +2,7 @@
   "processes": [
     "editor/app.js",
     "bin/viewer.js",
-    "bin/popularity-fetcher.js"
+    "bin/url-fetcher.js"
   ],
   "hooks": {
     "postdeploy": "deploy/postdeploy.sh",
