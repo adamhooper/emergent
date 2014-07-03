@@ -1,3 +1,5 @@
+zlib = require('zlib')
+
 # Requests a URL and fills in the `url_get` collection.
 #
 # Usage:
@@ -8,7 +10,7 @@
 #
 # 1. Fetch the URL.
 # 2. Insert the `statusCode`, `headers` and `body` into the `url_get`
-#    collection, timestamped.
+#    collection, timestamped. `body` will be gzip-compressed.
 # 3. Update the `url` to have `urlGet.id` and `urlGet.updatedAt`.
 # 4. Call the callback with the `url_get` record.
 class UrlFetcher
@@ -26,23 +28,26 @@ class UrlFetcher
     UrlFetcher.request.get url, (err, response) =>
       return done(err) if err?
 
-      data =
-        urlId: id
-        createdAt: new Date()
-        statusCode: response.statusCode
-        headers: response.headers
-        body: response.body
-
-      @urlGets.insert data, (err, urlGetResponse) =>
+      zlib.gzip response.body, (err, compressedBody) =>
         return done(err) if err?
 
-        $set =
-          'urlGet.id': urlGetResponse._id
-          'urlGet.updatedAt': data.createdAt
+        data =
+          urlId: id
+          createdAt: new Date()
+          statusCode: response.statusCode
+          headers: response.headers
+          body: compressedBody
 
-        @urls.update { _id: data.urlId }, { $set: $set }, (err) ->
+        @urlGets.insert data, (err, urlGetResponse) =>
           return done(err) if err?
-          done(null, urlGetResponse)
+
+          $set =
+            'urlGet.id': urlGetResponse._id
+            'urlGet.updatedAt': data.createdAt
+
+          @urls.update { _id: data.urlId }, { $set: $set }, (err) ->
+            return done(err) if err?
+            done(null, urlGetResponse)
 
 UrlFetcher.request = require('request') # so we can stub it out during tests
 

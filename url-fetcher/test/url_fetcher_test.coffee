@@ -1,8 +1,9 @@
 UrlFetcher = require('../lib/url_fetcher')
+zlib = require('zlib')
 ObjectID = require('mongodb').ObjectID
 
 describe 'url_fetcher', ->
-  beforeEach ->
+  beforeEach (done) ->
     @response =
       statusCode: 200
       headers: { connection: 'keep-alive' }
@@ -22,6 +23,12 @@ describe 'url_fetcher', ->
     @fetcher = new UrlFetcher
       urls: @urls
       urlGets: @urlGets
+
+    # Actually, we'll be inserting a compressed version of the body
+    zlib.gzip @response.body, (err, compressedBody) =>
+      @compressedBody = compressedBody
+      @insertResponse.body = compressedBody
+      done(err)
 
   afterEach -> @sandbox.restore()
 
@@ -46,12 +53,13 @@ describe 'url_fetcher', ->
   it 'should insert the request into the urlGets collection', (done) ->
     id = new ObjectID()
     @fetcher.fetch id, 'http://example.org', =>
-      expect(@urlGets.insert).to.have.been.calledWith
-        urlId: id
-        createdAt: new Date()
-        headers: @response.headers
-        statusCode: @response.statusCode
-        body: @response.body
+      expect(@urlGets.insert).to.have.been.called
+      data = @urlGets.insert.lastCall.args[0]
+      expect(data.urlId).to.eq(id)
+      expect(data.createdAt).to.deep.eq(new Date())
+      expect(data.statusCode).to.eq(@response.statusCode)
+      expect(data.headers).to.deep.eq(@response.headers)
+      expect(data.body.toString('base64')).to.eq(@compressedBody.toString('base64'))
       done()
 
   it 'should set url.urlGet.id when the urlGets insertion succeeds', (done) ->
@@ -79,7 +87,10 @@ describe 'url_fetcher', ->
       expect(@urls.update).not.to.have.been.called
       done()
 
-  it 'should call the callback with the status, headers and body', (done) ->
+  it 'should call the callback with the url_get record', (done) ->
     @fetcher.fetch new ObjectID(), 'http://example.org', (err, data) =>
-      expect(data).to.deep.eq(@response)
+      expect(data._id).to.eq(@insertResponse._id)
+      expect(data.statusCode).to.eq(@insertResponse.statusCode)
+      expect(data.headers).to.deep.eq(@insertResponse.headers)
+      expect(data.body.toString('base64')).to.eq(@insertResponse.body.toString('base64'))
       done()
