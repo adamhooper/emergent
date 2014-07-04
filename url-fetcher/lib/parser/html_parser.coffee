@@ -1,24 +1,24 @@
 cheerio = require('cheerio')
 moment = require('moment-timezone')
 
-# Joins the text of all elements with the given join string
+# Returns the text of each element in the Cheerio object.
 #
 # For instance,
 #
-#   joinTexts($('<ul><li>foo</li><li>bar</li></ul>').children(), "\n")
+#   texts($, $('<ul><li>foo</li><li>bar</li></ul>').children())
 #
 # Will return:
 #
 #   [ 'foo', 'bar' ]
-texts = ($, $els, s) -> $els.map(-> $(@).text().trim()).toArray()
+texts = ($, $els) -> $els.map(-> $(@).text().trim()).toArray()
 
 HtmlParser =
   parse: (url, html, done) ->
-    if /^https?:\/\/www\.npr\.org\//.test(url)
-      $ = cheerio.load(html, normalizeWhitespace: true)
-      $article = $('article').first()
+    $ = cheerio.load(html, normalizeWhitespace: true)
+    ret = {}
 
-      ret = {}
+    if /^https?:\/\/www\.npr\.org\//.test(url)
+      $article = $('article').first()
 
       ret.source = 'NPR'
       ret.headline = $article.find('h1').text()
@@ -30,14 +30,8 @@ HtmlParser =
       timeText = $article.find('time').text() # e.g., "April 18, 2014 3:49 PM ET"
       m = moment.tz(timeText, 'MMMM D, YYYY h:mm A', 'America/New_York')
       ret.publishedAt = m.toDate()
-
-      done(null, ret)
-
     else if /^https?:\/\/www\.bbc\.com\/news\//.test(url)
-      $ = cheerio.load(html, normalizeWhitespace: true)
       $article = $('div.story-body').first()
-
-      ret = {}
 
       ret.source = 'BBC'
       ret.headline = $article.find('h1').text()
@@ -49,7 +43,20 @@ HtmlParser =
       # e.g., "19 April 2014 10:25 ET"
       m = moment.tz(timeText, 'D MMMM YYYY HH:mm', 'America/New_York')
       ret.publishedAt = m.toDate()
+    else if /^https?:\/\/www\.washingtonpost\.com\//.test(url)
+      ret.source = 'The Washington Post'
+      ret.headline = $('h1').text()
+      ret.byline = texts($, $('span.pb-byline').children('a', 'span')).join(', ')
+      $article = $('article')
+      $content = $article.find('p, h2') # blockquotes contain ps
+      ret.body = texts($, $content).join("\n\n")
 
-      done(null, ret)
+      # The time string in the article, e.g., "April 17", doesn't have enough
+      # information. Let's use the URL. (We're missing 'Updated at'.)
+      if (m = /\/(\d\d\d\d)\/(\d\d)\/(\d\d)/.exec(url))?
+        m = moment.utc([ +m[1], +m[2] - 1, +m[3] ])
+        ret.publishedAt = m.toDate()
+
+    done(null, ret)
 
 module.exports = HtmlParser
