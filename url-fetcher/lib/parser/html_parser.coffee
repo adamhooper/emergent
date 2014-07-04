@@ -47,11 +47,13 @@ class HtmlParser
     h = new Helpers($)
     ret = siteParser.parse(url, $, h)
 
-    source: ret.source
-    headline: ret.headline
-    byline: ret.byline.join(', ')
+    # All but publishedAt must be non-null in actual code. But null can be
+    # handy during test-driven development, so we handle it on byline/body.
+    source: ret.source ? ''
+    headline: ret.headline ? ''
+    byline: ret.byline?.join(', ') ? ''
     publishedAt: ret.publishedAt?.toDate?() ? ret.publishedAt
-    body: ret.body.join("\n\n")
+    body: ret.body?.join("\n\n") ? ''
 
   # Parses the HTML at the given URL. Returns an Object like this:
   #
