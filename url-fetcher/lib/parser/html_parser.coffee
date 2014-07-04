@@ -1,6 +1,22 @@
 cheerio = require('cheerio')
 moment = require('moment-timezone')
 
+# Western news websites use a few abbreviations for timezones. In theory there
+# could be conflicts, but most of the time these are correct. (If there are
+# conflicts on a particular news website, we can specify different date-parsing
+# logic in that news website's parse() method.)
+#
+# Wonky syntax is because moment-timezone breaks if we re-link the same zone.
+for [ short, long ] in [
+  [ 'ET', 'America/New_York' ]
+  [ 'EDT', 'America/New_York' ]
+  [ 'EST', 'America/New_York' ]
+  [ 'PDT', 'America/Los_Angeles' ]
+  [ 'PST', 'America/Los_Angeles' ]
+]
+  if !moment.tz.zone(short)?
+    moment.tz.link("#{long}|#{short}")
+
 class Helpers
   constructor: (@$) ->
 
@@ -62,61 +78,6 @@ class HtmlParser
       done(null, ret)
     else
       done(new Error("No SiteParser exists to handle the URL #{url}"))
-
-    #else if /^https?:\/\/(?:www\.)?snopes\.com\//.test(url)
-    #  $article = $('td.contentColumn')
-    #  ret.source = 'Snopes'
-    #  ret.headline = $article.find('h1').text()
-    #  ret.byline = ''
-    #  # Search for "Last updated:" in a <b> within a <font>. The next text node is the date.
-    #  for b in $article.find('b')
-    #    if b.children[0]?.data == 'Last updated:'
-    #      timeText = b.parent.next?.data
-    #      break
-    #  if timeText?
-    #    m = moment.tz(timeText, 'D MMMM YYYY', 'America/Los_Angeles')
-    #    ret.publishedAt = m.toDate()
-    #  # Parse the body. This is hard.
-    #  lines = []
-    #  thisLine = []
-    #  endLine = ->
-    #    s = thisLine.map((s) -> s.trim()).filter((s) -> s != '').join(' ')
-    #    if s != ''
-    #      lines.push(s)
-    #    thisLine = []
-    #  walk = (parent) ->
-    #    for el in parent.children # walk the DOM: we need text nodes
-    #      if el.type == 'text'
-    #        thisLine.push(el.data)
-    #      else if el.type == 'tag'
-    #        if el.name == 'br'
-    #          endLine()
-    #        else if el.name == 'noindex' # MIXTURE / TRUE / FALSE lines
-    #          lines.push(line) for line in texts($, $(el).find('td[valign=TOP]'))
-    #        else if el.name == 'font'
-    #          walk(el)
-    #        else if el.name == 'div'
-    #          endLine()
-    #          walk(el)
-    #          endLine()
-    #        else if el.name == 'table'
-    #          # do not parse. This is an ad.
-    #        else
-    #          thisLine.push($(el).text())
-    #  walk($('.article_text')[0])
-    #  endLine()
-    #  lines.pop() # copyright
-    #  lines.pop() # "last updated"
-    #  $table = $('.article_text').next().next()
-    #  lines.push($table.text().trim())
-    #  $sources = $table.next()
-    #  for el in $sources.find('dt, dd')
-    #    thisLine.push($(el).text())
-    #    if el.name == 'dd'
-    #      endLine()
-    #  ret.body = lines.join("\n\n")
-    #
-    #done(null, ret)
 
 singleton = new HtmlParser()
 
