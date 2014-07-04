@@ -56,6 +56,21 @@ HtmlParser =
       if (m = /\/(\d\d\d\d)\/(\d\d)\/(\d\d)/.exec(url))?
         m = moment.utc([ +m[1], +m[2] - 1, +m[3] ])
         ret.publishedAt = m.toDate()
+    else if /^https?:\/\/www\.usatoday\.com\//.test(url)
+      $article = $('article.story')
+      ret.source = 'USA Today'
+      ret.headline = $article.find('h1').text()
+      $metabar = $article.find('div[itemprop=author]')
+      $bylines = $metabar.find('span[itemprop=name]') # e.g., "Oren Dorell, USA TODAY"
+      ret.byline = texts($, $bylines).map((s) -> s.split(/,/)[0]).join(', ')
+      timeText = $metabar.find('span.asset-metabar-time').text() # e.g., "7:49 p.m. EDT April 17, 2014"
+      # Moment can't parse the 'EDT' properly.
+      if (m = /^(\d\d?):(\d\d) ([ap])\.m\. ([A-Z][A-Z][A-Z]) (\w+) (\d\d?), (\d\d\d\d)$/.exec(timeText))?
+        # To parse the 'April' part, we rewrite the date in a format moment will understand
+        s = "#{m[7]} #{m[5]} #{m[6]} #{m[1]} #{m[2]} #{m[3]}m" # e.g., "2014 April 17 7:49 pm"
+        m = moment.tz(s, 'YYYY MMMM D h:mm a', m[4])
+        ret.publishedAt = m.toDate()
+      ret.body = texts($, $article.find('div[itemprop=articleBody]>p')).join("\n\n")
 
     done(null, ret)
 
