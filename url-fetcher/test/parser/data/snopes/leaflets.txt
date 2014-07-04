@@ -1,0 +1,49 @@
+Claim: Jews in eastern Ukraine have been ordered to register with the government.
+
+MIXTURE:
+
+TRUE: A small group of people in the Ukrainian city of Donetsk passed out leaflets ordering local Jews to register with the government.
+
+FALSE: The government of Ukraine has officially ordered Jews in that country to register.
+
+Examples: [Collected via e-mail, April 2014]
+
+Is this true? 'Jews must register or face deportation,' demands a flyer signed by Donetsk's pro-Russian interim government and handed out Passover evening in the eastern Ukraine city.
+
+Origins: On 16 April 2014, English-language news media (picking up on accounts from Israeli news media) began reporting that Jews in the eastern Ukrainian city of Donetsk (where some government buildings had been seized by pro-Russian separatists advocating for independence from Ukraine following Russia's annexation of the Crimean peninsula) had been given leaflets ordering them to "register" with the (unrecognized) Donetsk government, declare their assets, and pay a registration fee or face severe penalties (including loss of citizenship and deportation). Some of the leaflets were posted near a local synagogue; others were reportedly distributed outside a Jewish center by "three unidentified men wearing balaclavas and carrying the flag of the Russian Federation":
+
+Jews in the eastern Ukrainian city of Donetsk where pro-Russian militants have taken over government buildings were told they have to "register" with the Ukrainians who are trying to make the city become part of Russia, according to Israeli media.
+
+Jews emerging from a synagogue say they were handed leaflets that ordered the city's Jews to provide a list of property they own and pay a registration fee "or else have their citizenship revoked, face deportation and see their assets confiscated," reported Ynet News, Israel's largest news website.
+
+Donetsk is the site of an "anti-terrorist" operation by the Ukraine government, which has moved military columns into the region to force out militants who are demanding a referendum be held on joining Russia.
+
+Exactly who distributed the leaflets, and why, is still unclear. The material purportedly bore the signature of Denis Pushilin, supposedly the self-proclaimed leader of the pro-Russian separatist group, but he has maintained that his group had nothing to do with the leaflets and that they were put out by someone else to discredit the separatists as being anti-Semitic:
+
+Novosti Donbassa reported that the leaflet was distributed by "three unidentified men wearing balaclavas and carrying the flag of the Russian Federation" with the aim of causing a conflict, then "to blame the attack on separatists".
+
+The authenticity of the leaflet could not be independently verified.
+
+The purported anti-Semitic leaflet comes after a UN investigation found that ethnic Russians in eastern Ukraine intentionally seized on exaggerated reports of attacks by Ukrainian nationalists to justify Russian involvement in the region.
+
+The report also dismissed the fears of the far right Pravy Sektor (Right Sector), which has been at the forefront of the Ukraine revolution and accused of acts of violence against ethnic Russians, as "disproportionate".
+
+Pushilin has denied the Novosti Donbassa's report and assured reporters that the flyer is not from his organisation.
+
+In the event, it appears that whoever distributed the leaflets simply fabricated the alarming documents for the purpose of yanking people's chains, generating negative publicity, and/or making some money, without having either the means or the intent of actually enforcing the provisions outlined therein:
+
+But even if it looked like the start of some racist purge, the flier was more likely part of an ill-conceived extortion plot or a propaganda ploy against the separatists. For one thing, the sign-off at the bottom of the flier — "Yours, the People's Governor of Donetsk, Denis Pushilin" — seemed off. This was a reference to the so-called Donetsk People's Republic, which was formed a week and a half ago by a group of armed separatists who seized the headquarters of the regional government. Theirs is perhaps the smallest breakaway republic in the world, as its territory is confined to that one building and a small patch of the plaza around it. Since April 7, they have barricaded themselves inside with a cache of weapons and demanded a referendum on secession from Ukraine. At the bottom of the flier was a reproduction of the stamp these separatists use on the press badges they have issued to journalists.
+
+Denis Pushilin, however, is not the man who calls himself the "People’s Governor" of this pseudo-state. That would be Pavel Gubarev, who bestowed that title on himself in early March, during a separatist rally in the center of Donetsk. Three days later, he was arrested on charges of separatism and taken to jail in Kiev, where he remains. The alleged author of the anti-Semitic flier, Pushilin, is his ally and comrade-in-arms. But he has never gone by the title of "People’s Governor." (His preferred title is the "co-chairman of the temporary coalition government" that he and his allies declared inside that building.) For his part, Pushilin denied that he or his organization had anything to do with these fliers. "In reality this is a fake, and a pretty unsuccessful one," Pushilin said. "It was all done with Photoshop."
+
+Suspicion fell on their political opponents as soon as the fliers started making the rounds online. Dmitro Tkachenko, who helped organize a large rally in Donetsk to support the unity of Ukraine, called the flier "a brilliant piece of disinformation" against the separatists. Asked if one of his fellow activists for Ukrainian unity could have staged it, Tkachenko says it's possible. "But this is a sophisticated trick, and to be honest, I don’t think any of our folks are that smart," he [said].
+
+More likely, Tkachenko says, the fliers were the work of an opportunistic splinter group, from separatists who just want to make money from their newfound impunity. Over the past week, they have managed to seize numerous government buildings in Donetsk, most recently the city hall, without any resistance from the police. "But their movement is very divided," says Tkachenko. It includes various groups of armed thugs who answer to no single leader. So it's quite possible that some of the more entrepreneurial goons among them just felt like making a bit of extortion money on the side.
+
+Sources:
+
+Dorell, Owen. "Jews Ordered to Register in East Ukraine." USA Today. 17 April 2014.
+
+Mezzofiore, Gianluca. "Donetsk Pro-Russians Order Jews to 'Register or be Deported'." International Business Times. 16 April 2014.
+
+Shuster, Simon. "Ukraine's 'Jew Register' Either a Hoax or a Crude Extortion Scheme." Time. 17 April 2014.
