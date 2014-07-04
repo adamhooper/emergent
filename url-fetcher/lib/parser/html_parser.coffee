@@ -31,7 +31,9 @@ class Helpers
   #   [ 'foo', 'bar' ]
   texts: ($els) ->
     $ = @$
-    $els.map(-> $(@).text().trim()).toArray()
+    $els.map(-> $(@).text().trim())
+      .toArray()
+      .filter((s) -> s) # trim empty lines
 
   moment: moment
 
