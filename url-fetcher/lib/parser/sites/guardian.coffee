@@ -1,16 +1,25 @@
 module.exports =
   domains: [ 'www.theguardian.com' ]
   parse: (url, $, h) ->
-    $header = $('div#article-header')
-
-    timeText = $('.timestamp').text() # e.g., 'Wednesday 9 April 2014 15.45 BST'
-      # BST 
-      .replace('BST', '+01:00')
-      .replace('GMT', 'Z')
-    m = h.moment(timeText, 'dddd D MMMM YYYY H.mm Z')
+    publishedAt = if (timeText = $('span.timestamp').text())
+      # Blog post
+      # e.g., 'Wednesday 9 April 2014 15.45 BST'
+      timeText = timeText
+        .replace('BST', '+01:00')
+        .replace('GMT', 'Z')
+      h.moment(timeText, 'dddd D MMMM YYYY H.mm Z')
+    else if (timeText = $('time[itemprop=datePublished]').attr('datetime'))
+      # News article
+      # e.g., '2014-07-04T16:22BST'
+      timeText = timeText
+        .replace('BST', '+01:00')
+        .replace('GMT', 'Z')
+      new Date(timeText)
+    else
+      null
 
     source: 'The Guardian'
-    headline: $header.find('h1').text()
+    headline: $('div#article-header h1').text()
     byline: h.texts($('[itemprop=author]'))
-    publishedAt: m
+    publishedAt: publishedAt
     body: h.texts($('div#article-body-blocks p'))
