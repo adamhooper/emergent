@@ -11,12 +11,12 @@ module.exports = class SiteParser
   testUrl: (url) ->
     # When optimizing: assume we'll be calling many different testUrl() methods
     # on the same URL.
-    m = /^https?:\/\/([^\/]+)\//.exec(url)
-    urlDomain = m[1]
+    if (m = /^https?:\/\/([^\/]+)/.exec(url))?
+      urlDomain = m[1]
 
-    # When optimizing: assume there are one or two @domains.
-    for domain in @domains
-      return true if domain == urlDomain
+      # When optimizing: assume there are one or two @domains.
+      for domain in @domains
+        return true if domain == urlDomain
 
     false
 
