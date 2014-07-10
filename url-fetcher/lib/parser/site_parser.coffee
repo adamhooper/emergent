@@ -46,4 +46,5 @@ module.exports = class SiteParser
   # Arguments:
   #   url: the URL being parsed.
   #   $: a Cheerio object. (https://matthewmueller.github.io/cheerio/)
-  parse: (url, $) -> throw new Error('not implemented')
+  #   h: a Helper object.
+  parse: (url, $, h) -> throw new Error('not implemented')
