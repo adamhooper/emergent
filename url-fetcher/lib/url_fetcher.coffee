@@ -12,7 +12,8 @@ zlib = require('zlib')
 # 2. Insert the `statusCode`, `headers` and `body` into the `url_get`
 #    collection, timestamped. `body` will be gzip-compressed.
 # 3. Update the `url` to have `urlGet.id` and `urlGet.updatedAt`.
-# 4. Call the callback with the `url_get` record.
+# 4. Call the callback with the `url_get` record. (The record will be slightly
+#    modified: its `body` will not be gzipped.)
 class UrlFetcher
   constructor: (options) ->
     throw 'Must pass urlGets, a MongoDB Collection' if !options.urlGets
@@ -47,6 +48,8 @@ class UrlFetcher
 
           @urls.update { _id: data.urlId }, { $set: $set }, (err) ->
             return done(err) if err?
+
+            urlGetResponse.body = response.body
             done(null, urlGetResponse)
 
 UrlFetcher.request = require('request') # so we can stub it out during tests

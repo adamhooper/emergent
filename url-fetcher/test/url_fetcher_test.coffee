@@ -11,13 +11,16 @@ describe 'url_fetcher', ->
     @insertResponse = {}
     @insertResponse[k] = v for k, v of @response
 
-    @sandbox = sinon.sandbox.create(useFakeTimers: true)
+    @sandbox = sinon.sandbox.create()
     @sandbox.stub(UrlFetcher.request, 'get').callsArgWith(1, null, @response)
 
     @urls =
       update: sinon.stub().callsArgWith(2, null, {})
     @urlGets =
       insert: sinon.stub().callsArgWith(1, null, @insertResponse)
+      createIndex: sinon.stub()
+    @urlVersions =
+      insert: sinon.stub().callsArgWith(1, null, {})
       createIndex: sinon.stub()
 
     @fetcher = new UrlFetcher
@@ -87,10 +90,10 @@ describe 'url_fetcher', ->
       expect(@urls.update).not.to.have.been.called
       done()
 
-  it 'should call the callback with the url_get record', (done) ->
+  it 'should call the callback with the url_get record with an un-gzipped body', (done) ->
     @fetcher.fetch new ObjectID(), 'http://example.org', (err, data) =>
       expect(data._id).to.eq(@insertResponse._id)
       expect(data.statusCode).to.eq(@insertResponse.statusCode)
       expect(data.headers).to.deep.eq(@insertResponse.headers)
-      expect(data.body.toString('base64')).to.eq(@insertResponse.body.toString('base64'))
+      expect(data.body.toString('base64')).to.eq(@response.body)
       done()
