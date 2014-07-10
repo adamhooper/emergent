@@ -17,7 +17,7 @@ describe 'url_fetcher', ->
     @urls =
       update: sinon.stub().callsArgWith(2, null, {})
     @urlGets =
-      insert: sinon.stub().callsArgWith(1, null, @insertResponse)
+      insert: sinon.stub().callsArgWith(1, null, [@insertResponse])
       createIndex: sinon.stub()
     @urlVersions =
       insert: sinon.stub().callsArgWith(1, null, {})

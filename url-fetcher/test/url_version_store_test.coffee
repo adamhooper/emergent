@@ -46,7 +46,7 @@ describe 'url_version_store', ->
           expect(err).to.exist
           done()
 
-    it 'should call urlVersions.insert() with a sha1', (done) ->
+    it 'should call urlVersions.insert() with a sha1 and date', (done) ->
       expected = {}
       for k, v of @example
         expected[k] = v
@@ -54,7 +54,11 @@ describe 'url_version_store', ->
 
       @go (err) =>
         expect(err).to.be.null
-        expect(@urlVersions.insert).to.have.been.calledWith(expected)
+        expect(@urlVersions.insert).to.have.been.called
+        arg = @urlVersions.insert.lastCall.args[0]
+        expect(arg.createdAt).to.be.an.instanceOf(Date)
+        expected.createdAt = arg.createdAt # we don't know exactly what the date will be
+        expect(arg).to.deep.eq(expected)
         done()
 
     it 'should throw an error if insert fails', (done) ->

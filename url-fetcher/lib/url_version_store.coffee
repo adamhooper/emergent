@@ -10,7 +10,7 @@ module.exports = class UrlVersionStore
     @urlVersions.createIndex('sha1', { unique: true, dropDups: true }, (->))
 
   insert: (urlVersion, callback) ->
-    object = {} # what we'll write to the collection
+    object = { createdAt: new Date() } # what we'll write to the collection
 
     for key in [ 'urlId', 'source', 'headline', 'byline', 'body', 'publishedAt' ]
       return callback(new Error('You must set urlVersion.urlId')) if key not of urlVersion

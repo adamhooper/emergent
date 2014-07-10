@@ -15,7 +15,7 @@ module.exports = class UrlCreator
         # refresh of its popularity.
         done()
       else
-        id = extra.upserted[0]._id
+        id = extra.upserted
         for service in @services
           @queue.queue(service, id, url)
         done()

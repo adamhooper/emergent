@@ -39,8 +39,10 @@ class UrlFetcher
           headers: response.headers
           body: compressedBody
 
-        @urlGets.insert data, (err, urlGetResponse) =>
+        @urlGets.insert data, (err, urlGetResponses) =>
           return done(err) if err?
+
+          urlGetResponse = urlGetResponses[0]
 
           $set =
             'urlGet.id': urlGetResponse._id

@@ -3,12 +3,17 @@ fs = require('fs')
 kue = require('kue')
 mongodb = require('mongodb')
 
+FetchDelay = 2 * 3600 * 1000 # 2h, in ms. Time after a fetch before the next fetch of the same URL.
+
 Queue = require('./lib/queue')
 Startup = require('./lib/startup')
+HtmlParser = require('./lib/parser/html_parser')
 UrlCreator = require('./lib/url_creator')
 UrlFetcher = require('./lib/url_fetcher')
 UrlPopularityFetcher = require('./lib/url_popularity_fetcher')
+UrlVersionStore = require('./lib/url_version_store')
 Services = [ 'facebook', 'twitter', 'google' ]
+UrlSubJobs = [ 'fetch', 'facebook', 'twitter', 'google' ]
 FetchLogic = {}
 (->
   for service in Services
@@ -53,9 +58,29 @@ async.series [
       fetchLogic: FetchLogic
       queue: queue
 
+    urlVersionStore = new UrlVersionStore
+      urlVersions: db.collection('url_version')
+
     buildHandler = (service) -> ((id, url) -> popularityFetcher.fetch(service, id, url))
     (handlers[service] = buildHandler(service)) for service in Services
-    handlers.fetch = (id, url) -> urlFetcher.fetch(id, url)
+
+    handlers.fetch = (id, url) ->
+      # Fetch the request and store it
+      urlFetcher.fetch id, url, (err, urlGetRecord) ->
+        # Do it again in the future
+        queue.queue('fetch', id, url, new Date(new Date().valueOf() + FetchDelay))
+
+        return console.log("urlFetcher error for #{url}:", err) if err?
+        return console.log("bad response for #{url}: #{urlGetRecord.statusCode}") if urlGetRecord.statusCode != 200
+
+        # Parse the HTML
+        HtmlParser.parse url, urlGetRecord.body, (err, data) ->
+          return console.log("parse error for #{url}:", err) if err?
+
+          # Store the parsed HTML
+          data.urlId = id
+          urlVersionStore.insert data, (err) ->
+            return console.log("error inserting parsed #{url}", err) if err?
 
     cb()
 
@@ -73,7 +98,7 @@ async.series [
     creator = new UrlCreator
       urls: db.collection('url')
       queue: queue
-      services: Services
+      services: UrlSubJobs
 
     kueQueue.process 'url', 20, (job, done) ->
       console.log('Processing', job.data)
