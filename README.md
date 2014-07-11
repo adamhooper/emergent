@@ -5,6 +5,7 @@ Deploy with `deploy/deploy`
 Components:
 
 * `editor`: interface for editors to add Stories and Articles.
-* `popularity-fetcher`: fetches Twitter/Facebook/Google+ popularity for URLs
+* `url-fetcher`: handles popularity and article content in the background.
+* `viewer`: visualizations, for end-users.
 
 Licence: proprietary
