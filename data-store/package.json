@@ -1,0 +1,24 @@
+{
+  "name": "truthmaker-data-store",
+  "version": "0.0.0",
+  "description": "Loads and stores data for Truthmaker",
+  "scripts": {
+    "test": "mocha"
+  },
+  "author": "Adam Hooper <adam@adamhooper.com>",
+  "license": "Proprietary",
+  "bugs": {
+    "url": "https://github.com/craigsilverman/truthmaker/issues"
+  },
+  "homepage": "https://github.com/craigsilverman/truthmaker",
+  "devDependencies": {
+    "mocha": "~1.20.1",
+    "sinon-chai": "~2.5.0",
+    "sinon": "~1.10.3",
+    "chai": "~1.9.1"
+  },
+  "dependencies": {
+    "coffee-script": "~1.7.1",
+    "sequelize": "2.0.0-dev12"
+  }
+}

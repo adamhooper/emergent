@@ -1,0 +1,5 @@
+--compilers coffee:coffee-script/register
+--reporter dot
+--recursive
+#--require test/test_helper
+--timeout 1000
