@@ -1,20 +1,26 @@
-describe 'StoryController', ->
-  model = () -> sails.models.story
+Promise = require('bluebird')
 
-  mockStory = (options) ->
-    _.extend(
-      slug: 'slug-a',
-      headline: 'headline'
-      description: 'foo'
-      createdBy: 'foo@example.org'
-      updatedBy: 'bar@example.org'
-    , options)
+Promise.onPossiblyUnhandledRejection(->)
+
+describe 'StoryController', ->
+  Story = require('../../../data-store').models.Story
+
+  beforeEach ->
+    @sandbox = sinon.sandbox.create()
+
+  afterEach ->
+    @sandbox.restore()
+
+  mockStory = (options) -> Story.build(options)
 
   describe '#index', ->
     req = ->
       supertest(app)
         .get('/stories')
         .set('Accept', 'application/json')
+
+    beforeEach ->
+      @sandbox.stub(Story, 'findAll').returns(Promise.resolve([]))
 
     it 'should return JSON with a JSONish request', (done) ->
       req()
@@ -25,10 +31,10 @@ describe 'StoryController', ->
 
     describe 'when there are Stories', ->
       beforeEach ->
-        Q.all([
-          model().create(mockStory(slug: 'slug-a'))
-          model().create(mockStory(slug: 'slug-b'))
-        ])
+        Story.findAll.returns(Promise.resolve([
+          mockStory(slug: 'slug-a')
+          mockStory(slug: 'slug-b')
+        ]))
 
       it 'should return the stories', (done) ->
         req()
@@ -43,17 +49,20 @@ describe 'StoryController', ->
         .get("/stories/#{slug}")
         .set('Accept', 'application/json')
 
-    beforeEach -> model().create(mockStory(slug: 'slug-a'))
+    beforeEach ->
+      @sandbox.stub(Story, 'find').returns(Promise.resolve(mockStory(slug: 'slug-a')))
 
     it 'should return the story by slug', (done) ->
       req('slug-a')
         .expect(200)
         .expect (res) ->
+          Story.find.should.have.been.calledWith(slug: 'slug-a')
           res.body.slug.should.equal('slug-a')
           undefined
         .end(done)
 
     it 'should return a 404 for a missing story', (done) ->
+      Story.find.returns(Promise.resolve(null))
       req('invalid-slug')
         .expect(404)
         .end(done)
@@ -69,11 +78,19 @@ describe 'StoryController', ->
         .set('Accept', 'application/json')
         .send(object)
 
-    reqAndFetchFromDb = (object) ->
-      Q.npost(req(object), 'end')
-        .then -> model().findOne(slug: 'slug-a')
+    beforeEach ->
+      @sandbox.stub(Story, 'create')
 
-    it 'should return a JSON response with the given object', (done) ->
+    it 'should create the story', (done) ->
+      Story.create.returns(Promise.resolve(mockStory(slug: 'slug-a')))
+      req().end ->
+        Story.create.should.have.been.called
+        Story.create.lastCall.args[0].slug.should.eq('slug-a')
+        Story.create.lastCall.args[1].should.eq('user@example.org')
+        done()
+
+    it 'should return a JSON response with the created story', (done) ->
+      Story.create.returns(Promise.resolve(mockStory(slug: 'slug-a')))
       req()
         .expect(200)
         .expect('Content-Type', 'application/json; charset=utf-8')
@@ -82,37 +99,12 @@ describe 'StoryController', ->
           undefined
         .end(done)
 
-    it 'should store the story', ->
-      reqAndFetchFromDb()
-        .should.eventually.contain(slug: 'slug-a')
-
-    it 'should add the user to the story as createdBy and updatedBy', ->
-      reqAndFetchFromDb()
-        .should.eventually.contain(createdBy: 'user@example.org', updatedBy: 'user@example.org')
-
-    it 'should not let the user manually set createdBy', ->
-      Q.npost(req(slug: 'slug-a', createdBy: 'user2@example.org'), 'end')
-        .should.eventually.contain(status: 400)
-
-    it 'should return a JSON error when there is no slug', (done) ->
+    it 'should return a 400 error when creating fails', (done) ->
+      Story.create.returns(Promise.reject(message: 'oh no'))
       req(slug: '')
         .expect(400)
         .expect('Content-Type', 'application/json; charset=utf-8')
-        .expect (res) ->
-          Object.keys(res.body.invalidAttributes).should.deep.equal(['slug'])
-          undefined
         .end(done)
-
-    it 'should return an error when the slug is not permalink-ish', ->
-      Q.npost(req(slug: 'a/b'), 'end')
-        .should.eventually.contain(status: 400)
-
-    it 'should return a JSON error when adding two', (done) ->
-      req(slug: 'slug-a').end ->
-        req(slug: 'slug-a')
-          .expect(400)
-          .expect('Content-Type', 'application/json; charset=utf-8')
-          .end(done)
 
   describe '#destroy', ->
     req = (slug) ->
@@ -120,26 +112,22 @@ describe 'StoryController', ->
         .delete("/stories/#{slug}")
         .set('Accept', 'application/json')
 
-    it 'should return OK when the object does not exist', ->
+    beforeEach ->
+      @sandbox.stub(Story, 'destroy').returns(Promise.resolve(undefined))
+
+    it 'should return OK', ->
       Q.npost(req('foo'), 'end')
         .should.eventually.contain(status: 200)
 
-    it 'should return ok when the object exists', ->
-      model().create(mockStory(slug: 'foo'))
-        .then -> Q.npost(req('foo'), 'end')
-        .should.eventually.contain(status: 200)
+    it 'should destroy the story', ->
+      Q.npost(req('foo'), 'end')
+        .then(-> Story.destroy.should.have.been.calledWith(slug: 'foo'))
 
-    it 'should delete the story when it exists', ->
-      model().create(mockStory(slug: 'foo'))
-        .then -> Q.npost(req('foo'), 'end')
-        .then -> model().findOne(slug: 'foo')
-        .should.eventually.equal(undefined)
-
-    it 'should do nothing when the slug is missing from the request', ->
-      model().create(mockStory(slug: 'foo'))
-        .then -> Q.npost(req(''), 'end')
-        .then -> model().findOne(slug: 'foo')
-        .should.eventually.contain(slug: 'foo')
+    it 'should return 500 error if the story cannot be destroyed', (done) ->
+      Story.destroy.returns(Promise.reject('foo'))
+      req('foo')
+        .expect(500)
+        .end(done)
 
   describe '#update', ->
     req = (object, slug) ->
@@ -154,10 +142,17 @@ describe 'StoryController', ->
         .send(toSend)
 
     beforeEach ->
-      model().create(mockStory(slug: 'slug-a', description: 'foo'))
+      @sandbox.stub(Story, 'find')
+      @sandbox.stub(Story, 'update')
+      Story.find.returns(Promise.resolve(mockStory(slug: 'slug-a', description: 'foo')))
+      Story.update.returns(Promise.resolve(mockStory(slug: 'slug-a', description: 'bar')))
 
     it 'should return 404 when the object does not exist', ->
+      Story.find.returns(Promise.resolve(null))
       Q.npost(req(slug: 'slug-b'), 'end')
+        .then (x) ->
+          Story.find.should.have.been.calledWith(where: { slug: 'slug-b' })
+          x
         .should.eventually.contain(status: 404)
 
     it 'should return 400 when the slug is wrong', (done) ->
@@ -171,30 +166,17 @@ describe 'StoryController', ->
       Q.npost(req(slug: 'slug-a', description: 'bar'), 'end')
         .should.eventually.contain(status: 200)
 
-    it 'should not update other objects', ->
-      Q.npost(req(slug: 'slug-b', description: 'bar'), 'end')
-        .then -> model().findOne(slug: 'slug-a')
-        .should.eventually.contain(description: 'foo')
-
-    it 'should update the object in question', ->
+    it 'should update the object in question', (done) ->
       Q.npost(req(slug: 'slug-a', description: 'bar'), 'end')
-        .then -> model().findOne(slug: 'slug-a')
-        .should.eventually.contain(description: 'bar')
+        .then ->
+          Story.update.should.have.been.called
+          args = Story.update.lastCall.args
+          args[0].slug.should.eq('slug-a')
+          args[1].description.should.eq('bar')
+          args[2].should.eq('user@example.org')
+          done()
 
     it 'should return the updated object', ->
       Q.npost(req(slug: 'slug-a', description: 'bar'), 'end')
         .then((res) -> res.body)
         .should.eventually.contain(description: 'bar')
-
-    it 'should set updatedBy', ->
-      Q.npost(req(slug: 'slug-a', description: 'foo'), 'end')
-        .then -> model().findOne(slug: 'slug-a')
-        .should.eventually.contain(updatedBy: 'user@example.org')
-
-    it 'should not let the user set updatedBy', ->
-      Q.npost(req(slug: 'slug-a', updatedBy: 'user2@example.org'), 'end')
-        .should.eventually.contain(status: 400)
-
-    it 'should not let the user set createdBy', ->
-      Q.npost(req(slug: 'slug-a', createdBy: 'user2@exampel.org'), 'end')
-        .should.eventually.contain(status: 400)
