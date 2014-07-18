@@ -1,4 +1,4 @@
-DataTypes = require('sequelize').DataTypes
+Sequelize = require('sequelize')
 
 # How a URL relates to a Story.
 #
@@ -12,22 +12,22 @@ DataTypes = require('sequelize').DataTypes
 #   (Editors do this in ArticleVersions.)
 module.exports =
   storyId:
-    type: DataTypes.UUID
+    type: Sequelize.UUID
     allowNull: false
     references: 'Story'
     referencesId: 'id'
 
   urlId:
-    type: DataTypes.UUID
+    type: Sequelize.UUID
     allowNull: false
     references: 'Url'
     referencesId: 'id'
 
   createdAt:
-    type: DataTypes.DATE
+    type: Sequelize.DATE
     allowNull: false
 
   createdBy:
-    type: DataTypes.STRING
+    type: Sequelize.STRING
     allowNull: false
     validate: { isEmail: true }

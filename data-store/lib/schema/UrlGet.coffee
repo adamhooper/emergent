@@ -1,4 +1,4 @@
-DataTypes = require('sequelize').DataTypes
+Sequelize = require('sequelize')
 
 # An HTTP response from a GET of the give URL.
 #
@@ -11,27 +11,27 @@ DataTypes = require('sequelize').DataTypes
 # pop.
 module.exports =
   urlId:
-    type: DataTypes.INTEGER
+    type: Sequelize.INTEGER
     references: 'Url'
     reterencesKey: 'id'
 
   createdAt:
-    type: DataTypes.DATE
+    type: Sequelize.DATE
     allowNull: false
-    defaultValue: DataTypes.NOW
+    defaultValue: Sequelize.NOW
 
   statusCode:
-    type: DataTypes.INTEGER
+    type: Sequelize.INTEGER
     allowNull: false
 
   responseHeaders:
     # JSON
-    type: DataTypes.TEXT
+    type: Sequelize.TEXT
     allowNull: false
 
     get: -> JSON.parse(@getDataValue('responseHeaders'))
     set: (v) -> @setDataValue(JSON.stringify(v))
 
   body:
-    type: DataTypes.TEXT
+    type: Sequelize.TEXT
     allowNull: false

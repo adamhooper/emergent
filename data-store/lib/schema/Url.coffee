@@ -1,4 +1,4 @@
-DataTypes = require('sequelize').DataTypes
+Sequelize = require('sequelize')
 
 # Something on the Internet.
 #
@@ -6,6 +6,6 @@ DataTypes = require('sequelize').DataTypes
 # we store the info we parse from those in UrlVersions.
 module.exports =
   url:
-    type: DataTypes.STRING
+    type: Sequelize.STRING
     allowNull: false
     validate: { isUrl: true }

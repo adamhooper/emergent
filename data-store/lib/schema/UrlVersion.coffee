@@ -1,4 +1,4 @@
-DataTypes = require('sequelize').DataTypes
+Sequelize = require('sequelize')
 
 # What we've parsed from a UrlGet.
 #
@@ -6,66 +6,66 @@ DataTypes = require('sequelize').DataTypes
 # ArticleVersion is true or false.
 module.exports =
   urlId:
-    type: DataTypes.UUID
+    type: Sequelize.UUID
     allowNull: false
     references: 'Url'
     referencesId: 'id'
     comment: 'Cached value, so we can read UrlVersions without reading UrlGets'
 
   urlGetId:
-    type: DataTypes.UUID
+    type: Sequelize.UUID
     allowNull: false
     references: 'UrlGet'
     referencesId: 'id'
     comment: 'The source that we parsed'
 
   createdAt:
-    type: DataTypes.DATE
+    type: Sequelize.DATE
     allowNull: false
 
   createdBy:
-    type: DataTypes.STRING
+    type: Sequelize.STRING
     allowNull: true
     validate: { isEmail: true }
     comment: 'null means this was automatically parsed'
 
   updatedAt:
-    type: DataTypes.DATE
+    type: Sequelize.DATE
     allowNull: false
 
   updatedBy:
-    type: DataTypes.STRING
+    type: Sequelize.STRING
     allowNull: true
     validate: { isEmail: true }
     comment: 'null means this was automatically parsed and never updated'
 
   source:
-    type: DataTypes.STRING
+    type: Sequelize.STRING
     allowNull: false
     comment: 'parsed name of the publication at this URL'
 
   headline:
-    type: DataTypes.STRING
+    type: Sequelize.STRING
     allowNull: false
     comment: 'parsed headline at this URL'
 
   byline:
-    type: DataTypes.STRING
+    type: Sequelize.STRING
     allowNull: false
     comment: 'parsed comma-separated list of author names at this URL'
 
   publishedAt:
-    type: DataTypes.DATE
+    type: Sequelize.DATE
     allowNull: false
     comment: 'parsed published/updated date for this URL'
 
   body:
-    type: DataTypes.TEXT
+    type: Sequelize.TEXT
     allowNull: false
     comment: 'parsed body text for this URL'
 
   sha1:
-    type: DataTypes.STRING(20).BINARY
+    type: Sequelize.STRING(20).BINARY
     allowNull: false
     validate: { len: 20 }
     comment: 'SHA-1 digest of "urlId\\0source\\0headline\\0byline\\0publishedAt.toISOString()\0body"'
