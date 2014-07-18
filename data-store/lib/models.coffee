@@ -6,6 +6,8 @@ Model = require('./model')
 env = process.env.NODE_ENV || 'development'
 options = require('./config')[env]
 
+options.logging &&= console.log
+
 sequelize = new Sequelize(options.database, options.username, options.password, options)
 
 SequelizeModelOptions =
