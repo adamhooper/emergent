@@ -1,0 +1,29 @@
+{
+  "development": {
+    "coffee": true,
+    "logging": true,
+    "username": "truthmaker",
+    "password": "truthmaker",
+    "database": "truthmaker_development",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
+  "test": {
+    "coffee": true,
+    "logging": true,
+    "username": "truthmaker",
+    "password": "truthmaker",
+    "database": "truthmaker_test",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
+  "production": {
+    "coffee": true,
+    "logging": true,
+    "username": "truthmaker",
+    "password": "truthmaker",
+    "database": "truthmaker",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  }
+}

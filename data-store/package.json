@@ -19,6 +19,9 @@
   },
   "dependencies": {
     "coffee-script": "~1.7.1",
-    "sequelize": "2.0.0-dev12"
+    "sequelize": "2.0.0-dev12",
+    "sequelize-cli": "0.1.0",
+    "pg": "git://github.com/adamhooper/node-pg-pure-alias.git#v3.4.0",
+    "pg.js": "~3.4.1"
   }
 }
