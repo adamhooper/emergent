@@ -1,114 +1,63 @@
 Startup = require('../lib/startup')
+Promise = require('bluebird')
+models = require('../../data-store/lib/models')
+
+Url = models.Url
 
 describe 'startup', ->
-  beforeEach -> @clock = sinon.useFakeTimers()
-  afterEach -> @clock.restore()
+  beforeEach ->
+    @sandbox = sinon.sandbox.create(useFakeTimers: true)
+    @clock = @sandbox.clock
+  afterEach ->
+    @sandbox.restore()
 
   beforeEach ->
-    @articles =
-      find: sinon.stub().returns(toArray: (cb) -> cb(null, []))
-    @urls =
-      update: sinon.stub()
-      find: sinon.stub().returns({ toArray: (cb) -> cb(null, []) })
-      createIndex: sinon.stub().callsArgWith(2, null, null)
+    @sandbox.stub(Url, 'findAllRaw')
+
     @queue =
       queue: sinon.spy()
-    @startup = new Startup(articles: @articles, urls: @urls, queue: @queue)
 
-  it 'should index urls', (done) ->
-    @startup.run (err) =>
-      expect(@urls.createIndex).to.have.been.calledWith('url', unique: true)
-      done()
-
-  it 'should search for articles', (done) ->
-    @startup.run (err) =>
-      expect(@articles.find).to.have.been.calledWith({}, url: 1)
-      done()
+    @startup = new Startup(queue: @queue)
 
   it 'should run a callback', (done) ->
+    Url.findAllRaw.returns(Promise.resolve([]))
     @startup.run (err) ->
-      expect(err).to.be.falsy
+      expect(err).to.be.null
       done()
 
-  it 'should error when articles cannot be searched', (done) ->
-    @articles.find.returns(toArray: (cb) -> cb('err'))
+  it 'should search for URLs', (done) ->
+    Url.findAllRaw.returns(Promise.resolve([]))
+    @startup.run (err) =>
+      expect(Url.findAllRaw).to.have.been.called
+      done()
+
+  it 'should error when URLs cannot be searched', (done) ->
+    Url.findAllRaw.returns(Promise.reject('err'))
     @startup.run (err) ->
       expect(err).to.equal('err')
       done()
 
-  describe 'with some articles', ->
-    beforeEach ->
-      @foundArticles = []
-      @articles.find.returns(toArray: (cb) => cb(null, @foundArticles))
-      @urls.update.callsArgWith(3, null)
-
-    it 'should upsert the urls', (done) ->
-      @foundArticles.push(url: 'http://example.org')
-      @foundArticles.push(url: 'http://example2.org')
-      @startup.run =>
-        expect(@urls.update).to.have.been.calledWith({ url: 'http://example.org' }, { $set: { url: 'http://example.org' } }, upsert: true)
-        expect(@urls.update).to.have.been.calledWith({ url: 'http://example2.org' }, { $set: { url: 'http://example2.org' } }, upsert: true)
-        done()
-
-    it 'should error if upserting a url fails', (done) ->
-      @foundArticles.push(url: 'http://example.org')
-      @urls.update.callsArgWith(3, 'err')
-      @startup.run (err) ->
-        expect(err).to.equal('err')
-        done()
-
-    it 'should move on to finding urls', (done) ->
-      @foundArticles.push(url: 'http://example.org')
-      @startup.run =>
-        expect(@urls.find).to.have.been.called
-        done()
-
   describe 'with some urls', ->
     beforeEach ->
       @foundUrls = []
-      @articles.find.returns(toArray: (cb) -> cb(null, []))
-      @urls.find.returns(toArray: (cb) => cb(null, @foundUrls))
+      Url.findAllRaw.returns(Promise.resolve(@foundUrls))
 
-    it 'should error if url-finding fails', (done) ->
-      @urls.find.returns(toArray: (cb) => cb('err'))
-      @startup.run (err) ->
-        expect(err).to.equal('err')
+    it 'should schedule immediate fetch, facebook, google and twitter jobs', (done) ->
+      @foundUrls.push(id: 'abcdef', url: 'https://example.org')
+      @startup.run =>
+        expect(@queue.queue).to.have.been.calledWith('fetch', 'abcdef', 'https://example.org', new Date())
+        expect(@queue.queue).to.have.been.calledWith('google', 'abcdef', 'https://example.org', new Date())
+        expect(@queue.queue).to.have.been.calledWith('facebook', 'abcdef', 'https://example.org', new Date())
+        expect(@queue.queue).to.have.been.calledWith('twitter', 'abcdef', 'https://example.org', new Date())
         done()
 
-    describe 'with an unfetched url', ->
-      beforeEach ->
-        @foundUrls.push(_id: 'abcdef', url: 'http://example.org')
+    it 'should schedule a second fetch a few milliseconds later', (done) ->
+      @foundUrls.push(id: 'abcdef', url: 'https://example.org')
+      @foundUrls.push(id: 'ghijkl', url: 'https://example.com')
+      @startup.run =>
+        expect(@queue.queue).to.have.been.calledWith('fetch', 'ghijkl', 'https://example.com', new Date(619))
+        expect(@queue.queue).to.have.been.calledWith('google', 'ghijkl', 'https://example.com', new Date(619))
+        expect(@queue.queue).to.have.been.calledWith('facebook', 'ghijkl', 'https://example.com', new Date(619))
+        expect(@queue.queue).to.have.been.calledWith('twitter', 'ghijkl', 'https://example.com', new Date(619))
+        done()
 
-      it 'should schedule immediate fetch, facebook, google and twitter jobs', (done) ->
-        @startup.run =>
-          expect(@queue.queue).to.have.been.calledWith('fetch', 'abcdef')
-          expect(@queue.queue).to.have.been.calledWith('google', 'abcdef')
-          expect(@queue.queue).to.have.been.calledWith('facebook', 'abcdef')
-          expect(@queue.queue).to.have.been.calledWith('twitter', 'abcdef')
-          done()
-
-    describe 'with a partially fetched url', ->
-      beforeEach ->
-        @foundUrls.push(_id: 'abcdef', url: 'http://example.org', shares: { facebook: { n: 3, updatedAt: new Date(123) }})
-        @clock.tick(3600 * 1000) # 1hr
-
-      it 'should schedule an immediate job for the missing parts', (done) ->
-        @startup.run =>
-          expect(@queue.queue).to.have.been.calledWith('google', 'abcdef', 'http://example.org', new Date(3600 * 1000))
-          expect(@queue.queue).to.have.been.calledWith('twitter', 'abcdef', 'http://example.org', new Date(3600 * 1000))
-          done()
-
-      it 'should schedule a delayed job for the fresh parts at the proper time', (done) ->
-        @startup.run =>
-          expect(@queue.queue).to.have.been.calledWith('facebook', 'abcdef', 'http://example.org', new Date(123 + 2 * 3600 * 1000)) # I can't be bothered to figure out why the -1ms
-          done()
-
-    describe 'with a long-ago fetched url', ->
-      beforeEach ->
-        @foundUrls.push(_id: 'abcdef', url: 'http://example.org', shares: { facebook: { n: 3, updatedAt: new Date() }})
-        @clock.tick(2 * 3600 * 1000 + 1) # 2hrs + 1ms
-
-      it 'should schedule an immediate job for the missing parts', (done) ->
-        @startup.run =>
-          expect(@queue.queue).to.have.been.calledWith('facebook', 'abcdef')
-          done()

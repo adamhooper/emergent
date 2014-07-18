@@ -1,75 +1,68 @@
 UrlPopularityFetcher = require('../lib/url_popularity_fetcher')
-ObjectID = require('mongodb').ObjectID
+Promise = require('bluebird')
+models = require('../../data-store').models
+
+UrlPopularityGet = models.UrlPopularityGet
 
 describe 'url_popularity_fetcher', ->
   beforeEach -> @clock = sinon.useFakeTimers()
   afterEach -> @clock.restore()
 
   beforeEach ->
-    @urls =
-      update: sinon.stub().callsArgWith(2, null, {})
-    @urlFetches =
-      insert: sinon.stub().callsArgWith(1, null, {})
-      createIndex: sinon.stub()
+    @sandbox = sinon.sandbox.create(useFakeTimers: true)
+    @sandbox.stub(UrlPopularityGet, 'create').returns(Promise.resolve(null))
+
     @queue =
       queue: sinon.spy()
     @fetchLogic =
       facebook: sinon.stub().callsArgWith(1, null, { n: 10, rawData: { foo: 'bar' }})
 
     @fetcher = new UrlPopularityFetcher
-      urls: @urls
-      urlFetches: @urlFetches
       queue: @queue
       fetchLogic: @fetchLogic
 
-  it 'should create an index on urlFetches, ignoring errors', ->
-    @urlFetches.createIndex.callsArgWith(1, 'err')
-    fetcher2 = new UrlPopularityFetcher
-      urls: @urls
-      urlFetches: @urlFetches
-      queue: @queue
-      fetchLogic: @fetchLogic
-    expect(@urlFetches.createIndex).to.have.been.calledWith('urlId')
+  afterEach ->
+    @sandbox.restore()
 
   it 'should call the appropriate fetch logic', (done) ->
-    @fetcher.fetch 'facebook', new ObjectID().toString(), 'http://example.org', =>
+    @fetcher.fetch 'facebook', '04808471-2828-467c-a6f3-c36754b2406d', 'http://example.org', =>
       expect(@fetchLogic.facebook).to.have.been.calledWith('http://example.org')
       done()
 
   it 'should error when the fetch logic errors', (done) ->
     @fetchLogic.facebook.callsArgWith(1, 'err')
-    @fetcher.fetch 'facebook', new ObjectID().toString(), 'http://example.org', (err) =>
-      expect(err).to.equal('err')
+    @fetcher.fetch 'facebook', '04808471-2828-467c-a6f3-c36754b2406d', 'http://example.org', (err) =>
+      expect(err.message).to.equal('err')
       done()
 
-  it 'should insert into the urlFetches collection', (done) ->
-    @fetchLogic.facebook.callsArgWith(1, null, { n: 10, rawData: { foo: 'bar' } })
-    id = new ObjectID()
+  it 'should create a UrlPopularityGet', (done) ->
+    id = '04808471-2828-467c-a6f3-c36754b2406d'
     @fetcher.fetch 'facebook', id, 'http://example.org', =>
-      expect(@urlFetches.insert).to.have.been.calledWith({ urlId: id, n: 10, service: 'facebook', createdAt: new Date(), rawData: { foo: 'bar' }})
+      expect(UrlPopularityGet.create).to.have.been.calledWith(urlId: id, shares: 10, service: 'facebook', rawData: { foo: 'bar' })
       done()
 
   it 'should error when the urlFetches insertion errors', (done) ->
-    @urlFetches.insert.callsArgWith(1, 'err')
-    @fetcher.fetch 'facebook', new ObjectID().toString(), 'http://example.org', (err) ->
+    UrlPopularityGet.create.returns(Promise.reject('err'))
+    @fetcher.fetch 'facebook', '04808471-2828-467c-a6f3-c36754b2406d', 'http://example.org', (err) ->
       expect(err).to.equal('err')
       done()
 
-  it 'should update the urls collection', (done) ->
-    @fetchLogic.facebook.callsArgWith(1, null, { n: 10, rawData: { foo: 'bar' } })
-    id = new ObjectID()
+  it 'should queue another fetch in two hours on success', (done) ->
+    id = '04808471-2828-467c-a6f3-c36754b2406d'
     @fetcher.fetch 'facebook', id, 'http://example.org', =>
-      expect(@urls.update).to.have.been.calledWith({ _id: id }, { '$set': { 'shares.facebook.n': 10, 'shares.facebook.updatedAt': new Date() }})
+      expect(@queue.queue).to.have.been.calledWith('facebook', id, 'http://example.org', new Date(2 * 3600 * 1000))
       done()
 
-  it 'should error when the urls update errors', (done) ->
-    @urls.update.callsArgWith(2, 'err')
-    @fetcher.fetch 'facebook', new ObjectID().toString(), 'http://example.org', (err) ->
-      expect(err).to.equal('err')
+  it 'should queue another fetch in two hours on fetching error', (done) ->
+    @fetchLogic.facebook.callsArgWith(1, 'err')
+    id = '04808471-2828-467c-a6f3-c36754b2406d'
+    @fetcher.fetch 'facebook', id, 'http://example.org', =>
+      expect(@queue.queue).to.have.been.calledWith('facebook', id, 'http://example.org', new Date(2 * 3600 * 1000))
       done()
 
-  it 'should queue another fetch in two hours', (done) ->
-    id = new ObjectID()
+  it 'should queue another fetch in two hours on database error', (done) ->
+    UrlPopularityGet.create.returns(Promise.reject('db error'))
+    id = '04808471-2828-467c-a6f3-c36754b2406d'
     @fetcher.fetch 'facebook', id, 'http://example.org', =>
       expect(@queue.queue).to.have.been.calledWith('facebook', id, 'http://example.org', new Date(2 * 3600 * 1000))
       done()

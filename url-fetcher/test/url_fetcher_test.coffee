@@ -1,9 +1,12 @@
 UrlFetcher = require('../lib/url_fetcher')
-zlib = require('zlib')
-ObjectID = require('mongodb').ObjectID
+Promise = require('bluebird')
+models = require('../../data-store').models
+
+Url = models.Url
+UrlGet = models.UrlGet
 
 describe 'url_fetcher', ->
-  beforeEach (done) ->
+  beforeEach ->
     @response =
       statusCode: 200
       headers: { connection: 'keep-alive' }
@@ -12,87 +15,48 @@ describe 'url_fetcher', ->
     @insertResponse[k] = v for k, v of @response
 
     @sandbox = sinon.sandbox.create()
+
     @sandbox.stub(UrlFetcher.request, 'get').callsArgWith(1, null, @response)
+    @sandbox.stub(UrlGet, 'create')
 
-    @urls =
-      update: sinon.stub().callsArgWith(2, null, {})
-    @urlGets =
-      insert: sinon.stub().callsArgWith(1, null, [@insertResponse])
-      createIndex: sinon.stub()
-    @urlVersions =
-      insert: sinon.stub().callsArgWith(1, null, {})
-      createIndex: sinon.stub()
-
-    @fetcher = new UrlFetcher
-      urls: @urls
-      urlGets: @urlGets
-
-    # Actually, we'll be inserting a compressed version of the body
-    zlib.gzip @response.body, (err, compressedBody) =>
-      @compressedBody = compressedBody
-      @insertResponse.body = compressedBody
-      done(err)
+    @fetcher = new UrlFetcher()
 
   afterEach -> @sandbox.restore()
 
-  it 'should create an index on urlGets, ignoring errors', ->
-    @urlGets.createIndex.callsArgWith(1, 'err')
-    fetcher2 = new UrlFetcher
-      urls: @urls
-      urlGets: @urlGets
-    expect(@urlGets.createIndex).to.have.been.calledWith('urlId')
-
   it 'should GET the page', (done) ->
-    @fetcher.fetch new ObjectID(), 'http://example.org', ->
+    UrlGet.create.returns(Promise.reject(null))
+    @fetcher.fetch '560f5f77-5b44-46cf-a3a8-1722917184de', 'http://example.org', ->
       expect(UrlFetcher.request.get).to.have.been.calledWith('http://example.org')
       done()
 
   it 'should error when the GET errors', (done) ->
     UrlFetcher.request.get.callsArgWith(1, 'err')
-    @fetcher.fetch new ObjectID(), 'http://example.org', (err) ->
+    @fetcher.fetch '560f5f77-5b44-46cf-a3a8-1722917184de', 'http://example.org', (err) ->
       expect(err).to.eq('err')
       done()
 
-  it 'should insert the request into the urlGets collection', (done) ->
-    id = new ObjectID()
+  it 'should create the UrlGet', (done) ->
+    id = 'ebe55890-aea7-4130-84f6-1ad31251fa0f'
+    UrlGet.create.returns(Promise.resolve(null))
     @fetcher.fetch id, 'http://example.org', =>
-      expect(@urlGets.insert).to.have.been.called
-      data = @urlGets.insert.lastCall.args[0]
+      expect(UrlGet.create).to.have.been.called
+      data = UrlGet.create.lastCall.args[0]
       expect(data.urlId).to.eq(id)
-      expect(data.createdAt).to.deep.eq(new Date())
       expect(data.statusCode).to.eq(@response.statusCode)
-      expect(data.headers).to.deep.eq(@response.headers)
-      expect(data.body.toString('base64')).to.eq(@compressedBody.toString('base64'))
+      expect(data.headers).to.eq(JSON.stringify(@response.headers))
+      expect(data.body).to.eq(@response.body)
       done()
 
-  it 'should set url.urlGet.id when the urlGets insertion succeeds', (done) ->
-    id = new ObjectID()
-    @insertResponse._id = new ObjectID()
-    @fetcher.fetch id, 'http://example.org', =>
-      expect(@urls.update).to.have.been.calledWith({ _id: id }, { '$set': { 'urlGet.id': @insertResponse._id, 'urlGet.updatedAt': new Date() }})
-      done()
-
-  it 'should error when the urlFetches insertion errors', (done) ->
-    @urlGets.insert.callsArgWith(1, 'err')
-    @fetcher.fetch new ObjectID(), 'http://example.org', (err) ->
+  it 'should error when the UrlGet creation errors', (done) ->
+    UrlGet.create.returns(Promise.reject('err'))
+    @fetcher.fetch '560f5f77-5b44-46cf-a3a8-1722917184de', 'http://example.org', (err) ->
       expect(err).to.eq('err')
       done()
 
-  it 'should error when url.urlGet.id update fails', (done) ->
-    @urls.update.callsArgWith(2, 'err')
-    @fetcher.fetch new ObjectID(), 'http://example.org', (err) ->
-      expect(err).to.eq('err')
-      done()
-
-  it 'should not update url.urlGetId if urlFetches insertion errors', (done) ->
-    @urlGets.insert.callsArgWith(1, 'err')
-    @fetcher.fetch new ObjectID(), 'http://example.org', =>
-      expect(@urls.update).not.to.have.been.called
-      done()
-
-  it 'should call the callback with the url_get record with an un-gzipped body', (done) ->
-    @fetcher.fetch new ObjectID(), 'http://example.org', (err, data) =>
-      expect(data._id).to.eq(@insertResponse._id)
+  it 'should call the callback with the url_get record', (done) ->
+    UrlGet.create.returns(Promise.resolve(@insertResponse))
+    @fetcher.fetch '560f5f77-5b44-46cf-a3a8-1722917184de', 'http://example.org', (err, data) =>
+      expect(data.id).to.eq(@insertResponse.id)
       expect(data.statusCode).to.eq(@insertResponse.statusCode)
       expect(data.headers).to.deep.eq(@insertResponse.headers)
       expect(data.body.toString('base64')).to.eq(@response.body)
