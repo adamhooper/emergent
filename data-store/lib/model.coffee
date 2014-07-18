@@ -21,6 +21,16 @@ module.exports = class Model
     instance = @build(attrs)
     @insert(instance, email)
 
+  # Returns a Promise of an Instance or `null`.
+  find: (idOrOptions) ->
+    @_impl.find(idOrOptions)
+      .then((row) -> row && new Instance(row))
+
+  # Returns a Promise of an Array of Instances
+  findAll: (options) ->
+    @_impl.findAll(options)
+      .then((rows) -> rows.map((row) -> new Instance(row)))
+
   # Returns a Promise of the Instance
   insert: (instance, email) ->
     instance = instanceWithTracking(instance, email, true)
