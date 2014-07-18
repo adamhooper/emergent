@@ -52,7 +52,6 @@ module.exports = class Model
   upsert: (whereClause, instance, email) ->
     throw new Error('not implemented')
 
-  # Returns a Promise of null
-  destroy: (instance, email) ->
-    model._impl.destroy()
-      .then(null)
+  # Returns a Promise of undefined
+  destroy: (where) ->
+    @_impl.destroy(where)
