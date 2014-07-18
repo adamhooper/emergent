@@ -31,6 +31,10 @@ module.exports = class Model
     @_impl.findAll(options)
       .then((rows) -> rows.map((row) -> new Instance(row)))
 
+  # Returns a Promise of an Array of Objects
+  findAllRaw: (options) ->
+    @_impl.findAll(options, raw: true)
+
   # Returns a Promise of the Instance
   insert: (instance, email) ->
     instance = instanceWithTracking(instance, email, true)

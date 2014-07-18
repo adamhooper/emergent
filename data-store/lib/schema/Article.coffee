@@ -11,23 +11,24 @@ Sequelize = require('sequelize')
 # * The editor will deem, for each UrlVersion, whether it is true or false.
 #   (Editors do this in ArticleVersions.)
 module.exports =
-  storyId:
-    type: Sequelize.UUID
-    allowNull: false
-    references: 'Story'
-    referencesId: 'id'
+  columns:
+    storyId:
+      type: Sequelize.UUID
+      allowNull: false
+      references: 'Story'
+      referencesId: 'id'
 
-  urlId:
-    type: Sequelize.UUID
-    allowNull: false
-    references: 'Url'
-    referencesId: 'id'
+    urlId:
+      type: Sequelize.UUID
+      allowNull: false
+      references: 'Url'
+      referencesId: 'id'
 
-  createdAt:
-    type: Sequelize.DATE
-    allowNull: false
+    createdAt:
+      type: Sequelize.DATE
+      allowNull: false
 
-  createdBy:
-    type: Sequelize.STRING
-    allowNull: false
-    validate: { isEmail: true }
+    createdBy:
+      type: Sequelize.STRING
+      allowNull: false
+      validate: { isEmail: true }

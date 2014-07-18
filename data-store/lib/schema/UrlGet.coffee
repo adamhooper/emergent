@@ -10,28 +10,26 @@ Sequelize = require('sequelize')
 # (it'll be a TOAST column), but even compressed, some URLs will take 20kb a
 # pop.
 module.exports =
-  urlId:
-    type: Sequelize.INTEGER
-    references: 'Url'
-    reterencesKey: 'id'
+  columns:
+    urlId:
+      type: Sequelize.INTEGER
+      references: 'Url'
+      reterencesKey: 'id'
 
-  createdAt:
-    type: Sequelize.DATE
-    allowNull: false
-    defaultValue: Sequelize.NOW
+    createdAt:
+      type: Sequelize.DATE
+      allowNull: false
+      defaultValue: Sequelize.NOW
 
-  statusCode:
-    type: Sequelize.INTEGER
-    allowNull: false
+    statusCode:
+      type: Sequelize.INTEGER
+      allowNull: false
 
-  responseHeaders:
-    # JSON
-    type: Sequelize.TEXT
-    allowNull: false
+    responseHeaders:
+      # JSON
+      type: Sequelize.TEXT
+      allowNull: false
 
-    get: -> JSON.parse(@getDataValue('responseHeaders'))
-    set: (v) -> @setDataValue(JSON.stringify(v))
-
-  body:
-    type: Sequelize.TEXT
-    allowNull: false
+    body:
+      type: Sequelize.TEXT
+      allowNull: false

@@ -6,8 +6,6 @@ Model = require('./model')
 env = process.env.NODE_ENV || 'development'
 options = require('./config')[env]
 
-options.logging &&= console.log
-
 sequelize = new Sequelize(options.database, options.username, options.password, options)
 
 SequelizeModelOptions =
@@ -25,10 +23,13 @@ for codeFile in fs.readdirSync("#{__dirname}/schema")
   modelName = codeFile.split(/\./)[0]
   schema = require("#{__dirname}/schema/#{modelName}")
 
+  nonColumns = {}
+  nonColumns[k] = v for k, v of schema when k != 'columns'
+
   modelImpl = sequelize.define(
     modelName,
-    _.extend({}, IdColumn, schema),
-    SequelizeModelOptions
+    _.extend({}, IdColumn, schema.columns),
+    _.extend({}, SequelizeModelOptions, nonColumns)
   )
 
   module.exports[modelName] = new Model(modelImpl)

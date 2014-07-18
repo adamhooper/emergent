@@ -6,36 +6,37 @@ Sequelize = require('sequelize')
 #
 # We track that via Articles: one per URL.
 module.exports =
-  slug:
-    type: Sequelize.STRING
-    allowNull: false
-    unique: true
-    comment: 'Unique identifier for building URLs that use this story'
+  columns:
+    slug:
+      type: Sequelize.STRING
+      allowNull: false
+      unique: true
+      comment: 'Unique identifier for building URLs that use this story'
 
-  headline:
-    type: Sequelize.STRING
-    allowNull: false
-    comment: 'The one-line bit of text we show the user'
+    headline:
+      type: Sequelize.STRING
+      allowNull: false
+      comment: 'The one-line bit of text we show the user'
 
-  description:
-    type: Sequelize.STRING
-    allowNull: false
-    comment: 'The two-line bit of text we show the user'
+    description:
+      type: Sequelize.STRING
+      allowNull: false
+      comment: 'The two-line bit of text we show the user'
 
-  createdAt:
-    type: Sequelize.DATE
-    allowNull: false
+    createdAt:
+      type: Sequelize.DATE
+      allowNull: false
 
-  createdBy:
-    type: Sequelize.STRING
-    allowNull: false
-    validate: { isEmail: true }
+    createdBy:
+      type: Sequelize.STRING
+      allowNull: false
+      validate: { isEmail: true }
 
-  updatedAt:
-    type: Sequelize.DATE
-    allowNull: false
+    updatedAt:
+      type: Sequelize.DATE
+      allowNull: false
 
-  updatedBy:
-    type: Sequelize.STRING
-    allowNull: false
-    validate: { isEmail: true }
+    updatedBy:
+      type: Sequelize.STRING
+      allowNull: false
+      validate: { isEmail: true }
