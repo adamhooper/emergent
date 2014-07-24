@@ -61,15 +61,19 @@ module.exports = self =
     validUrl req, res, (url) ->
       findStoryThen req, res, (story) ->
         Url.upsert({ url: url }, req.user.email)
+          .spread (urlObject, isNew) ->
+            if isNew
+              job = global.kueQueue.createJob('url', incoming: urlObject.toJSON())
+              Promise.promisify(job.save, job)()
+                .then(-> urlObject)
+            else
+              urlObject
           .then (urlObject) ->
             Article.upsert({ storyId: story.id, urlId: urlObject.id }, req.user.email)
-              .then (article) ->
+              .spread (article) ->
                 json = article.toJSON()
                 json.url = url
                 json
-          .tap ->
-            job = global.kueQueue.createJob('url', incoming: url)
-            Promise.promisify(job.save)()
           .then((json) -> res.json(json))
           .catch (err) ->
             if /^Validation/.test(err?.url?[0]?.message || '')
@@ -82,7 +86,7 @@ module.exports = self =
               #
               # If the queueing didn't work, we've left an Article in the
               # database and reported an error to the user. That will have to do.
-              console.warn(err)
+              console.warn(err, err.stack)
               res.json(err.status || 500, err)
 
   destroy: (req, res) ->

@@ -109,7 +109,9 @@ describe 'ArticleController', ->
 
     it 'should queue the url for fetching', ->
       reqPromise(url: 'http://example.org')
-        .then -> global.kueQueue.createJob.should.have.been.calledWith('url', incoming: 'http://example.org')
+        .then(-> Url.find(where: {}))
+        .then((u) -> u.id)
+        .then (urlId) -> global.kueQueue.createJob.should.have.been.calledWith('url', incoming: { id: urlId, url: 'http://example.org' })
         .then -> global.kueQueue.save.should.have.been.called
 
     it 'should not store a duplicate Url', ->
@@ -122,6 +124,7 @@ describe 'ArticleController', ->
         .tap((r) -> expect(r).to.have.deep.property('res.body.url', 'http://example.org'))
         .then(-> Url.findAll())
         .then((urls) -> expect(urls).to.have.property('length', 1))
+        .then(-> expect(global.kueQueue.createJob).not.to.have.been.called)
 
     it 'should not store a duplicate Article', ->
       url = null
