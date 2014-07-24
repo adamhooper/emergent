@@ -1,6 +1,8 @@
 var passport = require('passport')
   , path     = require('path')
-  , url      = require('url');
+  , url      = require('url')
+  , Promise  = require('bluebird')
+  , sessions = {};
 
 /**
  * Passport Service
@@ -87,70 +89,55 @@ passport.connect = function (req, query, profile, next) {
     return next(new Error('Neither a username or email was available', null));
   }
 
-  Passport.findOne({
-    provider   : profile.provider
-  , identifier : query.identifier.toString()
-  })
-  .populate('user')
-  .exec(function (err, passport) {
-    if (err) return next(err);
+  var sessionId = profile.provider + '/' + query.identifier.toString();
+  var session = sessions[sessionId];
 
-    if (!req.user) {
+  function createSession(user) {
+    session = sessions[sessionId] = {
+      provider: profile.provider,
+      identifier: query.identifier,
+      user: user
+    };
+  }
+
+  if (!req.user) {
+    if (!session) {
       // Scenario: A new user is attempting to sign up using a third-party
       //           authentication provider.
       // Action:   Find the user in the database and assign them a passport.
-      if (!passport) {
-        User.findOne().where({ email: user.email })
-          .then(function(dbUser) {
-            if (dbUser) {
-              query.user = dbUser.id;
-              return Passport.create(query).then(function() { return dbUser; });
-            } else {
-              return false;
-            }
-          })
-          .nodeify(next);
-      }
+      models.User.find({ where: { email: user.email } })
+        .then(function(dbUser) {
+          if (dbUser) {
+            createSession(dbUser);
+            next(null, dbUser);
+          } else {
+            next(null, false);
+          }
+        });
+    } else {
       // Scenario: An existing user is trying to log in using an already
       //           connected passport.
       // Action:   Get the user associated with the passport.
-      else {
-        User.findOne().where({ id: passport.user })
-          .then(function(dbUser) {
-            if (dbUser) {
-              // If the tokens have changed since the last session, update them
-              if (query.hasOwnProperty('tokens') && query.tokens !== passport.tokens) {
-                passport.tokens = query.tokens;
-              }
-              // Save any updates to the Passport before moving on
-              return passport.save().then(function() { return dbUser; });
-            } else {
-              return false;
-            }
-          })
-          .nodeify(next);
+      var user = session.user;
+      if (query.hasOwnProperty('tokens') && query.tokens !== session.tokens) {
+        passport.tokens = query.tokens;
       }
-    } else {
-      // Scenario: A user is currently logged in and trying to connect a new
-      //           passport.
-      // Action:   Create and assign a new passport to the user.
-      if (!passport) {
-        query.user = req.user.id;
-
-        Passport.create(query, function (err, passport) {
-          // If a passport wasn't created, bail out
-          if (err) return next(err);
-
-          next(err, req.user);
-        });
-      }
-      // Scenario: The user is a nutjob or spammed the back-button.
-      // Action:   Simply pass along the already established session.
-      else {
-        next(null, req.user);
-      }
+      next(null, user);
     }
-  });
+  } else {
+    // Scenario: A user is currently logged in and trying to connect a new
+    //           passport.
+    // Action:   Create and assign a new passport to the user.
+    if (!session) {
+      createSession(req.user);
+      next(err, req.user);
+    }
+    // Scenario: The user is a nutjob or spammed the back-button.
+    // Action:   Simply pass along the already established session.
+    else {
+      next(null, req.user);
+    }
+  }
 };
 
 /**
@@ -303,7 +290,7 @@ passport.serializeUser(function (user, next) {
 });
 
 passport.deserializeUser(function (id, next) {
-  User.findOne(id, next);
+  models.User.find(id).nodeify(next);
 });
 
 module.exports = passport;

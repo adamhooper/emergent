@@ -10,7 +10,6 @@ module.exports = self =
       Story.findAll()
         .then (val) -> res.json(val)
         .catch (err) -> res.json(500, err)
-        .done()
 
   find: (req, res) ->
     slug = req.param('slug') || ''
@@ -21,7 +20,6 @@ module.exports = self =
         else
           res.json(404, "Could not find a story with slug '#{slug}'")
       .catch (err) -> res.json(400, err)
-      .done()
 
   create: (req, res) ->
     if !req.body?
@@ -31,14 +29,12 @@ module.exports = self =
         .then (val) -> res.json(val)
         .catch (err) ->
           res.json(400, err)
-        .done()
 
   destroy: (req, res) ->
     slug = req.param('slug') || ''
     Story.destroy(slug: slug)
       .then -> res.json({})
       .catch (err) -> res.json(500, err)
-      .done()
 
   update: (req, res) ->
     slug = req.param('slug') || ''
@@ -55,4 +51,3 @@ module.exports = self =
             Story.update(story, req.body, req.user.email)
               .then (updatedStory) -> res.json(updatedStory)
         .catch (err) -> res.json(500, err)
-        .done()
