@@ -44,7 +44,7 @@ module.exports = class Model
     instance._impl.save()
       .then(-> instance)
 
-  # Returns a Promise of the Instance
+  # Returns a Promise of [Instance, isNew].
   #
   # An upsert will insert a new row if an insert fails because of a conflict.
   #
@@ -52,12 +52,14 @@ module.exports = class Model
   # but before the SELECT.
   upsert: (instance, email) ->
     @create(instance, email)
+      .then((x) -> [ x, true ])
       .catch (e) =>
-        if e.code == 'SQLITE_CONSTRAINT' && e.errno == 19
+        if (e.code == 'SQLITE_CONSTRAINT' && e.errno == 19) || (e.severity == 'ERROR' && e.code == '23505')
           uniqueCols = (col for col, props of @_impl.attributes when props.unique)
           where = {}
           (where[col] = instance[col]) for col in uniqueCols
           @find(where: where)
+            .then((x) -> [ x, false ])
         else
           Promise.reject(e)
 
