@@ -18,3 +18,5 @@ module.exports = class Instance
     newAttrs = _.extend({}, @_impl.get(), attrs)
     impl = @_impl.Model.build(newAttrs, isNewRecord: @_impl.isNewRecord)
     new Instance(impl)
+
+  toJSON: -> @_impl.get()

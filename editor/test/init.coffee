@@ -1,4 +1,5 @@
 Sails = require('sails/lib/app')
+Promise = require('bluebird')
 
 global.sinon = require('sinon')
 global.sails = null
@@ -33,21 +34,20 @@ before (done) ->
           req.user =
             email: 'user@example.org'
           next()
-  , ->
-    # sails-mongo will give valid ObjectIDs, but sails-memory won't.
-    # Pretend the sails-memory IDs are valid.
-    require('../node_modules/sails/node_modules/anchor/index').define('objectid', -> true)
-    done()
-  )
+  , done)
 
 after (done) ->
   sails = global.sails
   delete global.sails
   sails.lower(done)
 
-beforeEach ->
-  Q.all([
-    sails.models.article.destroy({})
-    sails.models.article_story.destroy({})
-    sails.models.story.destroy({})
-  ])
+before (done) ->
+  migrator = global.models.sequelize.getMigrator
+    path: __dirname + '/../../data-store/migrations'
+    filesFilter: /\.coffee$/
+  migrator.migrate().done(done)
+
+beforeEach (done) ->
+  tables = [ 'UrlPopularityGet', 'ArticleVersion', 'UrlVersion', 'UrlGet', 'Article', 'Url', 'Story' ]
+  truncate = (table) -> global.models[table].destroy({}, truncate: true)
+  Promise.each(tables, truncate).nodeify(done)

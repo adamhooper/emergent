@@ -1,4 +1,5 @@
 Instance = require('./instance')
+Promise = require('sequelize').Promise
 _ = require('sequelize').Utils._
 
 instanceWithTracking = (instance, email, creating) ->
@@ -19,7 +20,8 @@ module.exports = class Model
   # Returns a Promise of an Instance
   create: (attrs, email) ->
     instance = @build(attrs)
-    @insert(instance, email)
+    instance = instanceWithTracking(instance, email, true)
+    instance._impl.save()
 
   # Returns a Promise of an Instance or `null`.
   find: (idOrOptions) ->
@@ -29,17 +31,11 @@ module.exports = class Model
   # Returns a Promise of an Array of Instances
   findAll: (options) ->
     @_impl.findAll(options)
-      .then((rows) -> rows.map((row) -> new Instance(row)))
+      .then((rows) -> new Instance(row) for row in rows)
 
   # Returns a Promise of an Array of Objects
   findAllRaw: (options) ->
     @_impl.findAll(options, raw: true)
-
-  # Returns a Promise of the Instance
-  insert: (instance, email) ->
-    instance = instanceWithTracking(instance, email, true)
-    instance._impl.save()
-      .then(-> instance)
 
   # Returns a Promise of the Instance
   update: (instance, attrs, email) ->
@@ -49,8 +45,21 @@ module.exports = class Model
       .then(-> instance)
 
   # Returns a Promise of the Instance
-  upsert: (whereClause, instance, email) ->
-    throw new Error('not implemented')
+  #
+  # An upsert will insert a new row if an insert fails because of a conflict.
+  #
+  # It won't handle a race in which the instance is deleted after the INSERT
+  # but before the SELECT.
+  upsert: (instance, email) ->
+    @create(instance, email)
+      .catch (e) =>
+        if e.code == 'SQLITE_CONSTRAINT' && e.errno == 19
+          uniqueCols = (col for col, props of @_impl.attributes when props.unique)
+          where = {}
+          (where[col] = instance[col]) for col in uniqueCols
+          @find(where: where)
+        else
+          Promise.reject(e)
 
   # Returns a Promise of undefined
   destroy: (where) ->

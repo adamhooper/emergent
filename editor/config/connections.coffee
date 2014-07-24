@@ -5,5 +5,10 @@ module.exports.connections =
   default: 'main'
 
   main:
-    adapter: 'sails-mongo'
+    adapter: 'sails-postgresql'
     database: 'truthmaker'
+    host: 'localhost'
+    user: 'truthmaker'
+    password: 'truthmaker'
+    port: 5432
+    pool: true

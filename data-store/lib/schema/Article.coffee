@@ -17,12 +17,14 @@ module.exports =
       allowNull: false
       references: 'Story'
       referencesId: 'id'
+      unique: 'storyId_urlId'
 
     urlId:
       type: Sequelize.UUID
       allowNull: false
       references: 'Url'
       referencesId: 'id'
+      unique: 'storyId_urlId'
 
     createdAt:
       type: Sequelize.DATE
