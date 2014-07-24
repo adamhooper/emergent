@@ -16,12 +16,6 @@ before (done) ->
     log:
       level: 'error'
 
-    connections:
-      default: 'main'
-
-      main:
-        adapter: 'sails-memory'
-
     hooks:
       grunt: false
 
