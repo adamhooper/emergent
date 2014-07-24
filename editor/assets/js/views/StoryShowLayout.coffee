@@ -11,14 +11,18 @@ define [
 ) ->
   class StoryShowLayout extends Marionette.Layout
     template: -> '''
-      <div class="story-show-layout row">
-        <div class="col-md-5">
-          <div class="story-metadata"></div>
+      <div class="story-show-layout">
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="story-metadata"></div>
+          </div>
         </div>
-        <div class="col-md-7">
-          <h3>Articles about this story</h3>
-          <div class="article-list"></div>
-          <div class="new-article"></div>
+        <div class="row">
+          <div class="col-md-4">
+            <h3>Articles about this story</h3>
+            <div class="article-list"></div>
+            <div class="new-article"></div>
+          </div>
         </div>
       </div>
       '''

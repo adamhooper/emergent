@@ -1,14 +1,13 @@
 define [ 'underscore', 'marionette' ], (_, Marionette) ->
   class StoryView extends Marionette.ItemView
-    className: 'story'
-
     template: _.template('''
-      <h3 class="slug"><%- slug %></h3>
-      <p class="actions"><a href="#" class="back"><span class="glyphicon glyphicon-arrow-left"></span> Back to all Stories</a></p>
+      <div class="slug">
+        <h3 class="slug"><%- slug %></h3>
+        <a href="#" class="back"><i class="glyphicon glyphicon-arrow-left"></i> Back to all Stories</a>
+      </div>
       <h2 class="headline"><%- headline %></h2>
       <p class="description"><%- description %></p>
       <p class="explanation">FIXME you should be able to edit these settings.</p>
-      <p class="explanation">Add Articles on the right to get a sense of how this story was told.</p>
     ''')
 
     events:

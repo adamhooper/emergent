@@ -1,8 +1,29 @@
 .story-show-layout {
+  h3 {
+    font-size: 1.2em;
+    font-weight: bold;
+  }
+
   .story-metadata {
+    border-bottom: 1px solid @navbar-default-border;
+    text-align: center;
+
     .slug {
-      font-family: @font-family-monospace;
-      font-weight: bold;
+      h3 {
+        display: inline;
+        font-family: @font-family-monospace;
+        font-weight: bold;
+        font-size: 1.2em;
+      }
+
+      a {
+        display: inline-block;
+        margin-left: 1em;
+      }
+    }
+
+    h2 {
+      font-size: 1.2em;
     }
   }
 
@@ -12,35 +33,16 @@
 
   ul.story-articles {
     .list-unstyled();
-  }
 
-  li.article {
-    display: block;
-    .panel();
-    .panel-default();
+    &>li {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
 
-    &.article-collapsed {
-      .summary {
-        .panel-body();
+      a {
+        display: block;
+        line-height: 2.5em;
       }
-    }
-
-    &.article-expanded {
-      .panel-primary();
-
-      .summary {
-        .panel-heading(); // get the colors right
-        .panel-body();    // get the spacing right
-      }
-    }
-
-    .summary {
-      display: block;
-    }
-
-    form {
-      display: block;
-      .panel-body();
     }
   }
 
