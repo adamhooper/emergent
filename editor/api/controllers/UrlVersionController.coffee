@@ -1,5 +1,3 @@
-Promise = require('bluebird')
-
 Url = global.models.Url
 UrlVersion = global.models.UrlVersion
 
