@@ -6,7 +6,8 @@
     "database": "truthmaker_development",
     "host": "127.0.0.1",
     "dialect": "postgres",
-    "native": true
+    "native": true,
+    "logging": false
   },
   "test": {
     "coffee": true,
