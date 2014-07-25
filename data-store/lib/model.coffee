@@ -19,6 +19,12 @@ module.exports = class Model
 
   # Returns a Promise of an Instance
   create: (attrs, email) ->
+    delete attrs.id
+    delete attrs.createdAt
+    delete attrs.updatedAt
+    delete attrs.createdBy
+    delete attrs.updatedBy
+
     instance = @build(attrs)
     instance = instanceWithTracking(instance, email, true)
     instance._impl.save()
