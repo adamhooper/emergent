@@ -71,4 +71,4 @@ module.exports = class Model
 
   # Returns a Promise of undefined
   destroy: (where) ->
-    @_impl.destroy(where)
+    @_impl.destroy(arguments...)

@@ -44,5 +44,5 @@ before (done) ->
 
 beforeEach (done) ->
   tables = [ 'UrlPopularityGet', 'ArticleVersion', 'UrlVersion', 'UrlGet', 'Article', 'Url', 'Story' ]
-  truncate = (table) -> global.models[table].destroy({}, truncate: true)
+  truncate = (table) -> global.models[table].destroy({})#, truncate: true)
   Promise.each(tables, truncate).nodeify(done)
