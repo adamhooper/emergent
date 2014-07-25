@@ -29,7 +29,7 @@ module.exports =
 
     urlGetId:
       type: Sequelize.UUID
-      allowNull: false
+      allowNull: true
       references: 'UrlGet'
       referencesId: 'id'
       comment: 'The source that we parsed'
@@ -80,12 +80,14 @@ module.exports =
       comment: 'parsed body text for this URL'
 
     sha1:
-      type: Sequelize.STRING(20).BINARY
+      type: Sequelize.STRING.BINARY
       allowNull: false
-      #validate: { len: 20 }
       comment: 'SHA-1 digest of "urlId\\0source\\0headline\\0byline\\0publishedAt.toISOString()\0body"'
+      get: -> @getDataValue('sha1')?.toString('hex') || null
+      set: (v) -> v && @setDataValue('sha1', new Buffer(v, 'hex')) || null
 
   hooks:
-    beforeValidate: (row, done) ->
-      row.sha1 = rowToSha1(row)
-      done(null, row)
+    beforeValidate: (row) ->
+      sha1 = rowToSha1(row)
+      row.setDataValue('sha1', sha1)
+      Sequelize.Promise.resolve(row)
