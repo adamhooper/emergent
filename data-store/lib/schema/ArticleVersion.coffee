@@ -22,10 +22,12 @@ module.exports =
 
     createdAt:
       type: Sequelize.DATE
-      allowNull: true
-      comment: 'createdAt, from the UrlGet, which is when we actually read stuff'
+      allowNull: false
 
-    # createdBy not necessary: it's always Truthmaker.
+    createdBy:
+      type: Sequelize.STRING
+      allowNull: true # NULL means Truthmaker created it automatically
+      validate: { isEmail: true }
 
     updatedAt:
       type: Sequelize.DATE
@@ -34,7 +36,7 @@ module.exports =
 
     updatedBy:
       type: Sequelize.STRING
-      allowNull: false
+      allowNull: true # NULL means Truthmaker created it automatically
       validate: { isEmail: true }
 
     truthiness:
