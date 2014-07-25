@@ -15,8 +15,7 @@
     "mocha": "~1.20.1",
     "sinon-chai": "~2.5.0",
     "sinon": "~1.10.3",
-    "chai": "~1.9.1",
-    "sqlite3": "~2.2.4"
+    "chai": "~1.9.1"
   },
   "dependencies": {
     "coffee-script": "~1.7.1",

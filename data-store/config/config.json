@@ -10,7 +10,12 @@
   },
   "test": {
     "coffee": true,
-    "dialect": "sqlite",
+    "username": "truthmaker",
+    "password": "truthmaker",
+    "database": "truthmaker_test",
+    "host": "127.0.0.1",
+    "dialect": "postgres",
+    "native": true,
     "logging": false
   },
   "production": {
