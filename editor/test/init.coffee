@@ -39,7 +39,8 @@ before (done) ->
   migrator = global.models.sequelize.getMigrator
     path: __dirname + '/../../data-store/migrations'
     filesFilter: /\.coffee$/
-  migrator.migrate().done(done)
+
+  migrator.migrate().complete(done)
 
 beforeEach (done) ->
   tables = [ 'UrlPopularityGet', 'ArticleVersion', 'UrlVersion', 'UrlGet', 'Article', 'Url', 'Story' ]
