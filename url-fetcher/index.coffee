@@ -59,6 +59,10 @@ async.series [
         .then (urlGet) ->
           parseHtmlAsync(url, urlGet.body)
             .then((data) -> models.UrlVersion.create(_.extend({ urlId: id, urlGetId: urlGet.id }, data)))
+            .then (urlVersion) ->
+              articles = models.Article.findAllRaw({ where: { urlId: id } })
+              createVersion = (article) -> models.ArticleVersion.create(articleId: article.id, urlVersionId: urlVersion.id)
+              Promise.map(articles, createVersion)
         .catch((err) -> console.warn("non-fatal error fetching #{url}", err))
         .finally(-> queue.queue('fetch', id, url, new Date(new Date().valueOf() + FetchDelay)))
 

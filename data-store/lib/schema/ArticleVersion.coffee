@@ -42,4 +42,5 @@ module.exports =
     comment:
       type: Sequelize.TEXT
       allowNull: false # but empty string is okay
+      defaultValue: ''
       comment: 'The editor may explain his/her reasoning here'
