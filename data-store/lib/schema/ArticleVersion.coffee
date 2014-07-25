@@ -15,11 +15,6 @@ module.exports =
       references: 'UrlVersion'
       referencesId: 'id'
 
-    publishedAt:
-      type: Sequelize.DATE
-      allowNull: true
-      comment: 'publishedAt, according to the URL and our parsers'
-
     createdAt:
       type: Sequelize.DATE
       allowNull: false

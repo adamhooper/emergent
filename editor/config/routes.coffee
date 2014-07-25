@@ -24,3 +24,7 @@ module.exports.routes =
   'get /urls/:urlId/versions': 'UrlVersionController.index'
   'post /urls/:urlId/versions': 'UrlVersionController.create'
   'put /urls/:urlId/versions/:urlVersionId': 'UrlVersionController.update'
+
+  'get /articles/:articleId/versions': 'ArticleVersionController.index'
+  'post /articles/:articleId/versions': 'ArticleVersionController.create'
+  'put /articles/:articleId/versions/:versionId': 'ArticleVersionController.update'
