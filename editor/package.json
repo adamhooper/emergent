@@ -28,7 +28,6 @@
     "gulp-minify-css": "~0.3.4",
     "gulp-clean": "~0.2.4",
     "requirejs": "~2.1.11",
-    "bcrypt": "~0.7.8",
     "passport": "~0.2.0",
     "validator": "~3.11.0",
     "q": "~1.0.1",
