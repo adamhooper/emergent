@@ -83,15 +83,17 @@ gulp.task 'deployJs', [ 'coffee', 'js' ], (cb) ->
   requirejs.optimize({
     appDir: '.tmp/dev'
     baseUrl: 'js'
-    dir: '.tmp/rjs'
+    dir: '.tmp/public'
+    mainConfigFile: '.tmp/dev/js/requirejs-config.js'
     modules: [
       { name: 'main' }
     ]
-  }, (s) ->
-    gulp.src('.tmp/rjs/js/main.js')
-      .pipe(gulp.dest('.tmp/public/js'))
-      .on('end', cb)
-  , cb)
+  }, (output) ->
+    cb()
+  , (err) ->
+    console.warn(err)
+    cb(err)
+  )
 
 gulp.task 'deployRjsLoader', [ 'js' ], ->
   gulp.src('.tmp/dev/js/bower_components/requirejs/require.js')
