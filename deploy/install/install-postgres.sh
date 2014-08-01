@@ -3,7 +3,7 @@
 set -e
 set -x
 
-sudo yum -y install postgresql postgresql-server
+sudo yum -y install postgresql postgresql-server postgresql-devel
 sudo service postgresql initdb
 sudo chkconfig postgresql on
 sudo service postgresql start
