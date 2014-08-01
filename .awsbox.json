@@ -1,6 +1,6 @@
 {
   "processes": [
-    "editor/app.js",
+    "bin/editor.js",
     "bin/url-fetcher.js"
   ],
   "hooks": {
