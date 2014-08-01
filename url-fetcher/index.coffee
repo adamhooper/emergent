@@ -65,7 +65,7 @@ async.series [
             null # We already have this version of the URL
           else
             console.log("UrlVersion.create #{url}")
-            models.UrlVersion.create(data)
+            models.UrlVersion.create(urlData)
 
     handlers.fetch = (id, url) ->
       urlFetchAsync(id, url)
