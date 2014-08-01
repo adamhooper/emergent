@@ -28,6 +28,7 @@ define [
           <div class="article-list"></div>
         </div>
         <div class="col-md-6">
+          <h3>Versions</h3>
           <div class="article-version-list"></div>
         </div>
       </div>
@@ -41,7 +42,7 @@ define [
     initialize: ->
       @story.on 'show', (view) =>
         if view?
-          @listenTo(view, 'back', -> @trigger('story:back'))
+          @listenTo(view, 'back', => @trigger('story:back'))
       @story.on('close', ((view) => @stopListening(view) if view?))
 
       @articleList.on 'show', (view) =>
@@ -64,7 +65,7 @@ define [
 
     layout.story.show(new StoryView(model: story))
     layout.articleList.show(new StoryArticleListView(collection: story.articles))
-    layout.articleVersionList.show(new ArticleListPlaceholderView)
+    layout.articleVersionList.show(new ArticleVersionListPlaceholderView)
 
     layout
 
