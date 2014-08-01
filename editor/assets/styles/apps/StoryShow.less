@@ -35,6 +35,9 @@
     .list-unstyled();
 
     li.article {
+      box-sizing: border-box;
+      height: 2.5em;
+
       a {
         display: block;
         line-height: 2.5em;
@@ -47,19 +50,29 @@
         font-weight: bold;
       }
     }
+
+    form {
+      // Make the input line up with everything else
+      margin-left: -@padding-base-horizontal - 1px;
+    }
   }
 
   &.article-focused ul.story-articles {
     background: @well-bg;
+    margin-left: @grid-gutter-width / -2;
+    padding-left: @grid-gutter-width / 2;
 
     li.article {
-      padding-left: 1em;
-    }
+      margin-left: @grid-gutter-width / -2;
+      padding-left: @grid-gutter-width / 2;
 
-    li.article.focus {
-      border-top-left-radius: 1em;
-      border-bottom-left-radius: 1em;
-      background: @body-bg;
+      &.focus {
+        border: 1px solid @table-border-color;
+        border-right: none;
+        border-top-left-radius: 1em;
+        border-bottom-left-radius: 1em;
+        background: @body-bg;
+      }
     }
   }
 
