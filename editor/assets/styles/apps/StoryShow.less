@@ -33,6 +33,7 @@
 
   ul.story-articles {
     .list-unstyled();
+    border-top: 1px solid transparent;
 
     li.article {
       box-sizing: border-box;
@@ -61,10 +62,12 @@
     background: @well-bg;
     margin-left: @grid-gutter-width / -2;
     padding-left: @grid-gutter-width / 2;
+    border-top-color: @table-border-color;
 
     li.article {
       margin-left: @grid-gutter-width / -2;
       padding-left: @grid-gutter-width / 2;
+      border-right: 1px solid @table-border-color;
 
       &.focus {
         border: 1px solid @table-border-color;
@@ -163,6 +166,13 @@
       &.editing {
         .read-only { display: none; }
       }
+    }
+  }
+
+  .article-version-list-placeholder {
+    .help {
+      .text-muted();
+      line-height: 2.5em;
     }
   }
 }
