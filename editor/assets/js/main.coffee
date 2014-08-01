@@ -1,2 +1,2 @@
-require [ './app' ], (App) ->
+define [ './app' ], (App) ->
   App.start()
