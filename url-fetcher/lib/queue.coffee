@@ -60,6 +60,7 @@ module.exports = class UrlQueue
     job = @priorityQueue.dequeue()
     handler = @handlers[job.type]
     throw "Missing handler for job type #{job.type}" if !handler?
+    console.log("Queue.dequeue #{job.type} #{job.url}")
     handler(job.id, job.url)
 
     setImmediate(=> @_tick())
