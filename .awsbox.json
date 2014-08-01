@@ -7,5 +7,8 @@
   "hooks": {
     "postdeploy": "deploy/postdeploy.sh",
     "postcreate": "deploy/install/postcreate.sh"
+  },
+  "env": {
+    "NODE_ENV": "production"
   }
 }
