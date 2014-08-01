@@ -40,8 +40,3 @@ define [
         @collection.push(url: 'http://example2.org')
 
       it 'should render items', -> expect(@view.children.first()).to.be.an.instanceOf(StoryArticleListItemView)
-      it 'should trigger delete from a sub-view, adding the CID', ->
-        spy = sinon.spy()
-        @view.on('delete', spy)
-        @view.children.first().trigger('delete', 'foo')
-        expect(spy).to.have.been.calledWith(@collection.at(0).cid, 'foo')

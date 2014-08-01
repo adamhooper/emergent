@@ -1,4 +1,6 @@
-define [ 'underscore', 'backbone' ], (_, Backbone) ->
+define [
+  'backbone'
+], (Backbone) ->
   class Article extends Backbone.Model
     defaults:
       url: ''

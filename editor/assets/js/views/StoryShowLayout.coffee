@@ -1,13 +1,19 @@
 define [
   'marionette'
+  'collections/ArticleVersions'
   'views/StoryView'
   'views/StoryArticleListView'
   'views/NewStoryArticleView'
+  'views/ArticleVersionListView'
+  'views/ArticleVersionListPlaceholderView'
 ], (
   Marionette
+  ArticleVersions
   StoryView
   StoryArticleListView
   NewStoryArticleView
+  ArticleVersionListView
+  ArticleVersionListPlaceholderView
 ) ->
   class StoryShowLayout extends Marionette.Layout
     template: -> '''
@@ -23,6 +29,9 @@ define [
             <div class="article-list"></div>
             <div class="new-article"></div>
           </div>
+          <div class="col-md-8">
+            <div class="article-version-list"></div>
+          </div>
         </div>
       </div>
       '''
@@ -31,6 +40,7 @@ define [
       story: '.story-metadata'
       articleList: '.article-list'
       newArticle: '.new-article'
+      articleVersionList: '.article-version-list'
 
     initialize: ->
       @story.on 'show', (view) =>
@@ -40,13 +50,20 @@ define [
 
       @newArticle.on 'show', (view) =>
         if view?
+          @listenTo(view, 'show', (data) -> @trigger('articles:show', data))
           @listenTo(view, 'submit', (data) -> @trigger('articles:new', data))
       @newArticle.on('close', ((view) => @stopListening(view) if view?))
 
       @articleList.on 'show', (view) =>
         if view?
-          @listenTo(view, 'delete', (cid) -> @trigger('articles:delete', cid))
+          @listenTo(view, 'click', (model) => @focusArticle(model))
       @articleList.on('close', ((view) => @stopListening(view) if view?))
+
+    focusArticle: (article) ->
+      versions = new ArticleVersions([], articleId: article.id)
+      versions.fetch
+        success: -> versions.add({}) # a placeholder
+      @articleVersionList.show(new ArticleVersionListView(collection: versions))
 
   StoryShowLayout.forStoryInRegion = (story, region) ->
     layout = new StoryShowLayout
@@ -55,6 +72,7 @@ define [
     layout.story.show(new StoryView(model: story))
     layout.articleList.show(new StoryArticleListView(collection: story.articles))
     layout.newArticle.show(new NewStoryArticleView)
+    layout.articleVersionList.show(new ArticleListPlaceholderView)
 
     layout
 

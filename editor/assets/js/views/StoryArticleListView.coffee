@@ -1,10 +1,8 @@
 define [
-  'underscore'
   'marionette'
   'views/StoryArticleListItemView'
   'views/StoryArticleListNoItemView'
 ], (
-  _
   Marionette
   StoryArticleListItemView
   StoryArticleListNoItemView
@@ -16,5 +14,4 @@ define [
     emptyView: StoryArticleListNoItemView
 
     initialize: ->
-      @on 'itemview:delete', (itemView, args...) =>
-        @trigger('delete', itemView.model.cid, args...)
+      @on('itemview:click', (view, model) => @trigger('click', model))

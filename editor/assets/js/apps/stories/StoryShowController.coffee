@@ -15,10 +15,6 @@ define [ 'app', 'q' ], (App, Q) ->
           layout.on 'articles:new', (data) ->
             story.articles.create(data)
 
-          layout.on 'articles:delete', (cid) ->
-            article = story.articles.get(cid)
-            article.destroy()
-
           layout.on 'story:back', ->
             App.trigger('stories:list')
 

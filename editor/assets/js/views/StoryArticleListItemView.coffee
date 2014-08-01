@@ -12,7 +12,7 @@ define [ 'underscore', 'marionette' ], (_, Marionette) ->
 
     onClick: (e) ->
       e.preventDefault()
-      console.log('CLICKED', e)
+      @trigger('click', @model)
 
     render: ->
       super()

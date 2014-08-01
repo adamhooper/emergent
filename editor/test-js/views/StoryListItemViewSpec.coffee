@@ -34,14 +34,12 @@ define [
 
       it 'should send no delete signal when confirm fails', ->
         @userAnswer = false
-        cb = sinon.spy()
-        @view.on('delete', cb)
+        @view.on('delete', cb = sinon.spy())
         @view.$('.delete').click()
         expect(cb).not.to.have.been.called
 
       it 'should send a delete signal when confirm succeeds', ->
         @userAnswer = true
-        cb = sinon.spy()
-        @view.on('delete', cb)
+        @view.on('delete', cb = sinon.spy())
         @view.$('.delete').click()
         expect(cb).to.have.been.called
