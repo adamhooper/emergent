@@ -53,17 +53,31 @@ async.series [
     urlFetchAsync = Promise.promisify(urlFetcher.fetch)
     parseHtmlAsync = Promise.promisify(HtmlParser.parse)
 
+    maybeCreateUrlVersion = (urlId, url, urlData) ->
+      # Creates a UrlVersion if the given urlData has a different sha1 than the
+      # most recent UrlVersion in the database for the given url.
+      sha1 = models.UrlVersion.calculateSha1Hex(urlData)
+
+      models.UrlVersion.find({ where: { urlId: urlId } }, order: [[ 'createdAt', 'DESC' ]])
+        .then (previousUrlVersion) ->
+          if previousUrlVersion?.sha1 == sha1
+            console.log("UrlVersion.ignore #{url}")
+            null # We already have this version of the URL
+          else
+            console.log("UrlVersion.create #{url}")
+            models.UrlVersion.create(data)
+
     handlers.fetch = (id, url) ->
       urlFetchAsync(id, url)
         .then((urlGet) -> throw new Error("bad response for #{url}: #{urlGet.statusCode}") if urlGet.statusCode != 200; urlGet)
-        .then (urlGet) ->
-          parseHtmlAsync(url, urlGet.body)
-            .then((data) -> models.UrlVersion.create(_.extend({ urlId: id, urlGetId: urlGet.id }, data)))
-            .then (urlVersion) ->
-              articles = models.Article.findAllRaw({ where: { urlId: id } })
-              createVersion = (article) -> models.ArticleVersion.create(articleId: article.id, urlVersionId: urlVersion.id)
-              Promise.map(articles, createVersion)
-        .catch((err) -> console.warn("non-fatal error fetching #{url}", err))
+        .then((urlGet) -> parseHtmlAsync(url, urlGet.body))
+        .then((urlData) -> maybeCreateUrlVersion(id, url, urlData))
+        .then (newUrlVersion) ->
+          return if !newUrlVersion
+          articles = models.Article.findAllRaw({ where: { urlId: id } })
+          createVersion = (article) -> models.ArticleVersion.create(articleId: article.id, urlVersionId: newUrlVersion.id)
+          Promise.map(articles, createVersion)
+        .catch((err) -> console.warn("error fetching #{url}", err))
         .finally(-> queue.queue('fetch', id, url, new Date(new Date().valueOf() + FetchDelay)))
 
     cb()
