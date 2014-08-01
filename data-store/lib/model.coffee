@@ -12,6 +12,8 @@ instanceWithTracking = (instance, email, creating) ->
 
 module.exports = class Model
   constructor: (@_impl) ->
+    for k, v of @_impl.options.classMethods
+      @[k] = v
 
   # Returns an Instance
   build: (attrs) ->
