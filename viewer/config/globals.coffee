@@ -1,4 +1,4 @@
-db = require('monk')('localhost/truthmaker')
+models = require("#{__dirname}/../../data-store").models
 
 module.exports =
-  db: db
+  models: models
