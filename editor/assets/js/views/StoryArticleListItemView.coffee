@@ -1,6 +1,7 @@
 define [ 'underscore', 'marionette' ], (_, Marionette) ->
   class StoryArticleListItemCollapsedView extends Marionette.ItemView
     tagName: 'li'
+    className: 'article'
 
     template: _.template('''
       <a href="#"><%- url %></a>
@@ -13,8 +14,3 @@ define [ 'underscore', 'marionette' ], (_, Marionette) ->
     onClick: (e) ->
       e.preventDefault()
       @trigger('click', @model)
-
-    render: ->
-      super()
-      @el.className = if @expanded then 'article article-expanded' else 'article article-collapsed'
-      this

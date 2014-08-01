@@ -14,4 +14,13 @@ define [
     emptyView: StoryArticleListNoItemView
 
     initialize: ->
-      @on('itemview:click', (view, model) => @trigger('click', model))
+      @on('itemview:click', @onClick)
+
+    onClick: (view, model) ->
+      @setFocusView(view)
+      @trigger('focus', model)
+
+    setFocusView: (view) ->
+      @focusView.$el.removeClass('focus') if @focusView?
+      @focusView = view
+      @focusView.$el.addClass('focus') if @focusView?

@@ -34,15 +34,32 @@
   ul.story-articles {
     .list-unstyled();
 
-    &>li {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-
+    li.article {
       a {
         display: block;
         line-height: 2.5em;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
+
+      &.focus {
+        font-weight: bold;
+      }
+    }
+  }
+
+  &.article-focused ul.story-articles {
+    background: @well-bg;
+
+    li.article {
+      padding-left: 1em;
+    }
+
+    li.article.focus {
+      border-top-left-radius: 1em;
+      border-bottom-left-radius: 1em;
+      background: @body-bg;
     }
   }
 
@@ -67,6 +84,8 @@
     article {
       max-height: 20em;
       overflow: auto;
+      padding: 1em;
+      background: @well-bg;
 
       h4.headline {
         font-size: 1em;
@@ -124,6 +143,7 @@
 
     fieldset.url-version {
       &:not(.editing) {
+        legend { margin-bottom: 0; }
         .edit { display: none; }
       }
 

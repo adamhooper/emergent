@@ -16,22 +16,22 @@ define [
   ArticleVersionListPlaceholderView
 ) ->
   class StoryShowLayout extends Marionette.Layout
+    className: 'story-show-layout'
+
     template: -> '''
-      <div class="story-show-layout">
-        <div class="row">
-          <div class="col-xs-12">
-            <div class="story-metadata"></div>
-          </div>
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="story-metadata"></div>
         </div>
-        <div class="row">
-          <div class="col-md-4">
-            <h3>Articles about this story</h3>
-            <div class="article-list"></div>
-            <div class="new-article"></div>
-          </div>
-          <div class="col-md-8">
-            <div class="article-version-list"></div>
-          </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <h3>Articles about this story</h3>
+          <div class="article-list"></div>
+          <div class="new-article"></div>
+        </div>
+        <div class="col-md-6">
+          <div class="article-version-list"></div>
         </div>
       </div>
       '''
@@ -56,7 +56,7 @@ define [
 
       @articleList.on 'show', (view) =>
         if view?
-          @listenTo(view, 'click', (model) => @focusArticle(model))
+          @listenTo(view, 'focus', (model) => @focusArticle(model))
       @articleList.on('close', ((view) => @stopListening(view) if view?))
 
     focusArticle: (article) ->
@@ -64,6 +64,7 @@ define [
       versions.fetch
         success: -> versions.add({}) # a placeholder
       @articleVersionList.show(new ArticleVersionListView(collection: versions))
+      @$el.addClass('article-focused')
 
   StoryShowLayout.forStoryInRegion = (story, region) ->
     layout = new StoryShowLayout

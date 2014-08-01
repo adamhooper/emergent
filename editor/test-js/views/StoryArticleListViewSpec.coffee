@@ -40,3 +40,19 @@ define [
         @collection.push(url: 'http://example2.org')
 
       it 'should render items', -> expect(@view.children.first()).to.be.an.instanceOf(StoryArticleListItemView)
+
+      describe 'on click', ->
+        beforeEach ->
+          @view.on('focus', @focusSpy = sinon.spy())
+          @view.$('a:eq(1)').click()
+
+        it 'should trigger a "focus" event with the model', ->
+          expect(@focusSpy).to.have.been.calledWith(@collection.at(1))
+
+        it 'should add the "focus" class to the view', ->
+          expect(@view.$('li:eq(1)')).to.have.class('focus')
+
+        it 'should remove the "focus" element from other views', ->
+          @view.$('a:eq(0)').click()
+          expect(@view.$('li:eq(0)')).to.have.class('focus')
+          expect(@view.$('li:eq(1)')).not.to.have.class('focus')
