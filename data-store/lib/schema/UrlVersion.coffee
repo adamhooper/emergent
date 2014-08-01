@@ -3,7 +3,6 @@ crypto = require('crypto')
 
 rowToSha1 = (row) ->
   s = [
-    row.urlId
     row.source
     row.headline
     row.byline
@@ -82,9 +81,13 @@ module.exports =
     sha1:
       type: Sequelize.STRING.BINARY
       allowNull: false
-      comment: 'SHA-1 digest of "urlId\\0source\\0headline\\0byline\\0publishedAt.toISOString()\0body"'
+      comment: 'SHA-1 digest of "source\\0headline\\0byline\\0publishedAt.toISOString()\0body"'
       get: -> @getDataValue('sha1')?.toString('hex') || null
       set: (v) -> v && @setDataValue('sha1', new Buffer(v, 'hex')) || null
+
+  classMethods:
+    calculateSha1Hex: (attributes) ->
+      rowToSha1(attributes).toString('hex')
 
   hooks:
     beforeValidate: (row) ->

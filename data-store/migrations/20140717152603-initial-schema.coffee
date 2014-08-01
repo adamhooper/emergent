@@ -195,7 +195,7 @@ initialSchema = (DataTypes) -> [
         type: 'BYTEA'
         allowNull: false
         validate: { len: 20 }
-        comment: 'SHA-1 digest of urlId\\0source\\0headline\\0byline\\0publishedAt.toISOString()\\0body'
+        comment: 'SHA-1 digest of source\\0headline\\0byline\\0publishedAt.toISOString()\\0body'
   }
   {
     name: 'ArticleVersion'
