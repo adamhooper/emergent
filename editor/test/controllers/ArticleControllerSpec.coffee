@@ -174,7 +174,7 @@ describe 'ArticleController', ->
         .should.eventually.contain(status: 404)
 
     it 'should return 200 OK when the Article does not exist', ->
-      reqPromise(@story1.slug, 'abcdef')
+      reqPromise(@story1.slug, 'e76b2d33-2eb4-42cf-b50f-9453de057671')
         .should.eventually.contain(status: 200)
 
     it 'should return 200 OK when the Article exists', ->
