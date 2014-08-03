@@ -1,6 +1,0 @@
-<p>You need to be logged in as a valid user to access any page.</p>
-
-<% Object.keys(providers).forEach(function(key) { %>
-  <% var provider = providers[key]; %>
-  <a href="/auth/<%= provider.slug %>" role="button">Log in via <%= provider.name %></a>
-<% }) %>

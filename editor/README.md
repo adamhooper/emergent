@@ -14,7 +14,7 @@ We prefer CoffeeScript, but plain JavaScript shouldn't break anything.
 
 First, install NodeJS. Then, in this directory:
 
-    npm install -g mocha karma-cli bower
+    npm install -g mocha karma-cli bower supervise
     bower install
     npm install
 
@@ -25,8 +25,18 @@ First, install NodeJS. Then, in this directory:
 
 # Developing
 
-`sails lift` or `sails lift --verbose` will start things in development mode: it will recompile CoffeeScript and Less files as they change.
+In one terminal, run `gulp`. This will recompile the assets as they change.
+
+In another terminal, run `supervise index.coffee`. This will run the server
+and restart it when any files change.
 
 Browse to http://localhost:1337 to see the result.
 
-You may (nay, *should*) run Mocha, Karma and Sails simultaneously when developing.
+You may (nay, *should*) run Mocha, Karma and Sails simultaneously when
+developing.
+
+# Deploying
+
+Run `gulp prod` to compile assets. (This can whir for a minute.)
+
+Run `coffee index.coffee` (or `npm start`). This will run the server.

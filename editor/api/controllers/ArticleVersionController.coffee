@@ -49,8 +49,8 @@ module.exports =
             for v in versions
               v.urlVersion = idToUrlVersion[v.urlVersionId]
               v
-      .then((versions) -> res.json(200, versions))
-      .catch((e) -> res.json(e.status || 500, e))
+      .then((versions) -> res.json(versions))
+      .catch((e) -> res.status(e.status || 500).json(e))
 
   create: (req, res) ->
     validArticle(req)
@@ -69,8 +69,8 @@ module.exports =
                 json = articleVersion.toJSON()
                 json.urlVersion = urlVersion.toJSON()
                 json
-      .then((json) -> res.json(200, json))
-      .catch((e) -> res.json(e.status || 500, e))
+      .then((json) -> res.json(json))
+      .catch((e) -> res.status(e.status || 500).json(e))
 
   update: (req, res) ->
     validArticleVersion(req)
@@ -88,5 +88,5 @@ module.exports =
                 json = av.toJSON()
                 json.urlVersion = uv.toJSON()
                 json
-      .then((json) -> res.json(200, json))
-      .catch((e) -> res.json(e.status || 500, e))
+      .then((json) -> res.json(json))
+      .catch((e) -> res.status(e.status || 500).json(e))

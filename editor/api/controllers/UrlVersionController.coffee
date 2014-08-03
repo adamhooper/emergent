@@ -32,8 +32,8 @@ module.exports =
   index: (req, res) ->
     getValidUrlId(req)
       .then (urlId) -> UrlVersion.findAll(where: { urlId: urlId }, order: [ 'createdAt' ])
-      .then (versions) -> res.json(200, versions)
-      .catch (e) -> res.json(e.status || 500, e)
+      .then (versions) -> res.json(versions)
+      .catch (e) -> res.status(e.status || 500).json(e)
 
   create: (req, res) ->
     getValidUrlId(req)
@@ -41,8 +41,8 @@ module.exports =
         row = parseRow(req.body)
         row.urlId = urlId
         UrlVersion.create(row, req.user.email)
-      .then (version) -> res.json(200, version)
-      .catch (e) -> res.json(e.status || 500, e)
+      .then (version) -> res.json(version)
+      .catch (e) -> res.status(e.status || 500).json(e)
 
   update: (req, res) ->
     urlId = req.param('urlId') || '0000000-0000-0000-0000-000000000000'
@@ -54,5 +54,5 @@ module.exports =
           UrlVersion.update(urlVersion, row, req.user.email)
         else
           throw { status: 404, message: "UrlVersion not found" }
-      .then (version) -> res.json(200, version)
-      .catch (e) -> res.json(e.status || 500, e)
+      .then (version) -> res.json(version)
+      .catch (e) -> res.status(e.status || 500).json(e)

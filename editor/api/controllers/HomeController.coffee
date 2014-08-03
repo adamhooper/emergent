@@ -1,3 +1,3 @@
 module.exports =
   home: (req, res) ->
-    res.view()
+    res.render('home/home.jade')

@@ -21,17 +21,17 @@ findStoryThen = (req, res, cb) ->
   Story.find(where: { slug: slug })
     .then (story) ->
       if !story
-        res.json(404, "Story '#{slug}' not found")
+        res.status(404).json("Story '#{slug}' not found")
       else
         cb(story)
-    .catch((err) -> res.json(err.status || 500, err))
+    .catch((err) -> res.status(err.status || 500).json(err))
 
 # Sends a 400 error if request body is invalid; otherwise calls next(validBody)
 validUrl = (req, res, next) ->
   url = req.body?.url
 
   if !_.isString(url)
-    res.json(400, 'You must send a JSON object that looks like "{ url: \"http://example.org\" }"')
+    res.status(400).json(message: 'You must send a JSON object that looks like "{ url: \"http://example.org\" }"')
   else
     next(url)
 
@@ -55,7 +55,7 @@ module.exports = self =
             res.json([])
         .catch (err) ->
           console.log(err)
-          res.json(err.status || 500, err)
+          res.status(err.status || 500).json(err)
 
   create: (req, res) ->
     validUrl req, res, (url) ->
@@ -77,7 +77,7 @@ module.exports = self =
           .then((json) -> res.json(json))
           .catch (err) ->
             if /^Validation/.test(err?.url?[0]?.message || '')
-              res.json(400, err)
+              res.status(400).json(err)
             else
               # If the Url wasn't created, we return that error.
               #
@@ -87,7 +87,7 @@ module.exports = self =
               # If the queueing didn't work, we've left an Article in the
               # database and reported an error to the user. That will have to do.
               console.warn(err, err.stack)
-              res.json(err.status || 500, err)
+              res.status(err.status || 500).json(err)
 
   destroy: (req, res) ->
     articleId = req.param('id')
@@ -95,4 +95,4 @@ module.exports = self =
     findStoryThen req, res, (story) ->
       Article.destroy(storyId: story.id, id: articleId)
         .then(-> res.json({}))
-        .catch((e) -> res.json(e.status || 500, e))
+        .catch((e) -> res.status(e.status || 500).json(e))

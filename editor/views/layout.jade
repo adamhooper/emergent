@@ -1,0 +1,30 @@
+doctype html
+html(lang='en')
+  head
+    title Truthmaker
+    meta(charset='utf-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1, maximum-scale=1')
+    link(rel='stylesheet', href='/styles/main.css')
+
+  body
+    nav.navbar.navbar-default(role='navigation')
+      .container
+        .navbar-header
+          a.navbar-brand Truthmaker
+        .navbar-collapse.collapse
+          ul.nav.navbar-nav.navbar-right.nav-login
+            if user
+              li
+                a
+                  strong= user.email
+              li
+                a(href='/logout' role='button') Log out
+            else
+              li
+                a
+                  strong not logged in
+              li
+                a(href='/login' role='button') Log in
+
+    .container
+      block content
