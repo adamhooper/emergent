@@ -1,7 +1,3 @@
-Promise = require('bluebird')
-
-Promise.onPossiblyUnhandledRejection(->)
-
 describe 'StoryController', ->
   Story = require('../../../data-store').models.Story
 
@@ -112,15 +108,19 @@ describe 'StoryController', ->
         .delete("/stories/#{slug}")
         .set('Accept', 'application/json')
 
+    reqPromise = (slug) ->
+      r = req(slug)
+      Promise.promisify(r.end, r)()
+
     beforeEach ->
       @sandbox.stub(Story, 'destroy').returns(Promise.resolve(undefined))
 
     it 'should return OK', ->
-      Q.npost(req('foo'), 'end')
+      reqPromise('foo')
         .should.eventually.contain(status: 200)
 
     it 'should destroy the story', ->
-      Q.npost(req('foo'), 'end')
+      reqPromise('foo')
         .then(-> Story.destroy.should.have.been.calledWith(slug: 'foo'))
 
     it 'should return 500 error if the story cannot be destroyed', (done) ->
@@ -141,6 +141,10 @@ describe 'StoryController', ->
         .set('Accept', 'application/json')
         .send(toSend)
 
+    reqPromise = (object, slug) ->
+      r = req(object, slug)
+      Promise.promisify(r.end, r)()
+
     beforeEach ->
       @sandbox.stub(Story, 'find')
       @sandbox.stub(Story, 'update')
@@ -149,7 +153,7 @@ describe 'StoryController', ->
 
     it 'should return 404 when the object does not exist', ->
       Story.find.returns(Promise.resolve(null))
-      Q.npost(req(slug: 'slug-b'), 'end')
+      reqPromise(slug: 'slug-b')
         .then (x) ->
           Story.find.should.have.been.calledWith(where: { slug: 'slug-b' })
           x
@@ -162,21 +166,21 @@ describe 'StoryController', ->
         .send(slug: 'slug-b')
         .expect(400, done)
 
-    it 'should return 200 OK', ->
-      Q.npost(req(slug: 'slug-a', description: 'bar'), 'end')
-        .should.eventually.contain(status: 200)
+    describe 'with a valid request', ->
+      beforeEach ->
+        @response = reqPromise(slug: 'slug-a', description: 'bar')
 
-    it 'should update the object in question', (done) ->
-      Q.npost(req(slug: 'slug-a', description: 'bar'), 'end')
-        .then ->
-          Story.update.should.have.been.called
-          args = Story.update.lastCall.args
-          args[0].slug.should.eq('slug-a')
-          args[1].description.should.eq('bar')
-          args[2].should.eq('user@example.org')
-          done()
+      it 'should return 200 OK', ->
+        @response.should.eventually.contain(status: 200)
 
-    it 'should return the updated object', ->
-      Q.npost(req(slug: 'slug-a', description: 'bar'), 'end')
-        .then((res) -> res.body)
-        .should.eventually.contain(description: 'bar')
+      it 'should update the object in question', (done) ->
+        Story.update.should.have.been.called
+        args = Story.update.lastCall.args
+        args[0].slug.should.eq('slug-a')
+        args[1].description.should.eq('bar')
+        args[2].should.eq('user@example.org')
+        done()
+
+      it 'should return the updated object', ->
+        @response.then((res) -> res.body)
+          .should.eventually.contain(description: 'bar')
