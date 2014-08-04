@@ -89,6 +89,7 @@ gulp.task 'deployJs', [ 'coffee', 'js' ], (cb) ->
       { name: 'main' }
     ]
   }, (output) ->
+    console.log(output)
     cb()
   , (err) ->
     console.warn(err)

@@ -65,6 +65,6 @@ addRoutes = (app) ->
 
 addRoutes(app)
 
-app.use(express.static("#{__dirname}/.tmp/public"))
+app.use(express.static("#{__dirname}/../.tmp/public"))
 
 module.exports = app

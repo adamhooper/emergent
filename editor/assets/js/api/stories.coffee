@@ -1,32 +1,33 @@
-define [ 'jquery' ], ($) ->
+define [
+  'jquery'
+  '../collections/Stories'
+  '../models/Story'
+], ($, Stories, Story) ->
   # Exposes server-side API methods to a Backbone.Wreqr.RequestResponse
   installToReqres: (reqres) ->
     API =
       'stories/index': ->
         d = $.Deferred()
-        require [ 'collections/Stories' ], (Stories) ->
-          stories = new Stories()
-          stories.fetch
-            success: (data) -> d.resolve(data)
-            error: (err) -> d.reject(err)
+        stories = new Stories()
+        stories.fetch
+          success: (data) -> d.resolve(data)
+          error: (err) -> d.reject(err)
         d.promise()
 
       'stories/show': (slug) ->
         d = $.Deferred()
-        require [ 'models/Story' ], (Story) ->
-          story = new Story(slug: slug)
-          story.fetch
-            success: -> d.resolve(story)
-            error: (err) -> d.reject(err)
+        story = new Story(slug: slug)
+        story.fetch
+          success: -> d.resolve(story)
+          error: (err) -> d.reject(err)
         d.promise()
 
       'stories/create': (data) ->
         d = $.Deferred()
-        require [ 'models/Story' ], (Story) ->
-          story = new Story(data, isNew: true)
-          story.save
-            success: -> d.resolve(story)
-            error: (err) -> d.reject(err)
+        story = new Story(data, isNew: true)
+        story.save
+          success: -> d.resolve(story)
+          error: (err) -> d.reject(err)
         d.promise()
 
     for key, cb of API when !reqres.hasHandler(key)

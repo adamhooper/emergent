@@ -24,10 +24,4 @@ define [
       App.currentApp = currentApp
       App.currentApp?.start(args)
 
-  App.on 'initialize:after', ->
-    if Backbone.history?
-      require [ 'apps/stories/StoryApp' ], ->
-        Backbone.history.start()
-
-        if App.getCurrentRoute() == ''
-          App.trigger('stories:list')
+  App

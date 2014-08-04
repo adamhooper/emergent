@@ -1,2 +1,2 @@
-define [ 'app' ], (App) ->
-  App.start()
+define [ 'app', 'startup' ], (App) ->
+  App.start() # invoke 'startup' code

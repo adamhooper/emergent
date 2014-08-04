@@ -1,4 +1,10 @@
-define [ 'app', 'api/stories', 'api/articles' ], (App, StoriesApi, ArticlesApi) ->
+define [
+  'app'
+  'api/stories'
+  'api/articles'
+  'apps/stories/StoryListController'
+  'apps/stories/StoryShowController'
+], (App, StoriesApi, ArticlesApi, StoryListController, StoryShowController) ->
   App.module 'StoryApp', (StoryApp, App, Backbone, Marionette, $, _) ->
     StoryApp.startWithParent = false
 
@@ -14,13 +20,9 @@ define [ 'app', 'api/stories', 'api/articles' ], (App, StoriesApi, ArticlesApi) 
       App.execute('set:active:header', 'stories')
 
     API =
-      list: ->
-        require [ 'apps/stories/StoryListController' ], (StoryListController) ->
-          executeAction(StoryListController.go, null)
+      list: -> executeAction(StoryListController.go, null)
 
-      show: (slug) ->
-        require [ 'apps/stories/StoryShowController' ], (StoryShowController) ->
-          executeAction(StoryShowController.go, slug)
+      show: (slug) -> executeAction(StoryShowController.go, slug)
 
     App.on 'stories:list', ->
       App.navigate('stories')
