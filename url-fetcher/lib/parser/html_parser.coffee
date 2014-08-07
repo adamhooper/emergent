@@ -89,7 +89,7 @@ singleton = new HtmlParser()
 fs = require('fs')
 SiteParser = require('./site_parser')
 for codeFile in fs.readdirSync("#{__dirname}/sites")
-  m = require("#{__dirname}/sites/#{codeFile.split(/\./)[0]}")
+  m = require("#{__dirname}/sites/#{codeFile.substring(0, codeFile.length - ".coffee".length)}")
   siteParser = new SiteParser()
   siteParser[k] = v for k, v of m
   singleton.addSiteParser(siteParser)
