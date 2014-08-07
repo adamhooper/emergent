@@ -16,14 +16,16 @@ if app.get('env') != 'test'
 
   app.use(morgan('tiny'))
 
+  SessionAgeInS = 86400 * 7 # one week
   sess =
-    store: new RedisStore()
+    store: new RedisStore
+      ttl: SessionAgeInS
     # FIXME this isn't really secret. It's published on GitHub.
     secret: 'b8a167887d3da5131f161cd0447741d18595163c0ec4fa820cb87c31098d10639accaf90242db27c6b077c17f5615a2ce70c5cece66a1b1210db83bfc8187ec542580379d2142785764692b5532d3acc710fa2612a27b943384aebdf68ebce558baf0f1d73c53f729762d8e5718480256e06c96ddbd635d8'
     resave: true
     saveUninitialized: true
     cookie:
-      maxAge: 3600000 # 1hr
+      maxAge: SessionAgeInS * 1000
 
   if app.get('env') == 'production'
     app.enable('trust proxy')
