@@ -1,4 +1,5 @@
 Sequelize = require('sequelize')
+_ = require('lodash')
 
 # Something on the Internet.
 #
@@ -11,3 +12,12 @@ module.exports =
       allowNull: false
       unique: true
       validate: { isUrl: true }
+
+  classMethods:
+    findAllUnparsed: (options={}, queryOptions={}) ->
+      options = _.extend({
+        where: 'id NOT IN (SELECT DISTINCT "urlId" FROM "UrlVersion" WHERE "createdBy" IS NULL)'
+        order: [[ 'url' ]]
+      }, options)
+      queryOptions = _.extend({}, queryOptions)
+      @findAll(options, queryOptions)

@@ -37,9 +37,13 @@ module.exports = class Model
       .then((row) -> row && new Instance(row))
 
   # Returns a Promise of an Array of Instances
-  findAll: (options) ->
-    @_impl.findAll(options)
-      .then((rows) -> new Instance(row) for row in rows)
+  findAll: (options, queryOptions) ->
+    ret = @_impl.findAll(options, queryOptions)
+
+    if !queryOptions?.raw
+      ret = ret.then((rows) -> new Instance(row) for row in rows)
+
+    ret
 
   # Returns a Promise of an Array of Objects
   findAllRaw: (options) ->
