@@ -28,7 +28,7 @@ module.exports = class FetchHandler
       .then (data) ->
         sha1 = models.UrlVersion.calculateSha1Hex(data)
         # Check the last-stored UrlVersion. Create a new one if it's different.
-        models.UrlVersion.find({ where: { urlId: id } }, order: [[ 'createdAt', 'DESC' ]])
+        models.UrlVersion.find(where: { urlId: id }, order: [[ 'createdAt', 'DESC' ]])
           .then (prev) ->
             if prev?.sha1 == sha1
               null

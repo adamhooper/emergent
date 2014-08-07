@@ -85,7 +85,7 @@ describe 'FetchHandler', ->
 
       it 'should check the UrlVersion', (done) ->
         @go =>
-          expect(models.UrlVersion.find).to.have.been.calledWith({ where: { urlId: @id } }, order: [[ 'createdAt', 'DESC' ]])
+          expect(models.UrlVersion.find).to.have.been.calledWith(where: { urlId: @id }, order: [[ 'createdAt', 'DESC' ]])
           done()
 
       it 'should not insert a new UrlVersion', (done) ->
