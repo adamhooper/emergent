@@ -18,8 +18,7 @@ define [
     events:
       'click a.toggle-expand': 'onToggleExpand'
       'click a.toggle-edit-url-version': 'onToggleEditUrlVersion'
-      'click form.create button.save': 'onCreate'
-      'click form.update button.save': 'onUpdate'
+      'submit form': 'onSubmit'
       'click button.delete': 'onDelete'
 
     ui:
@@ -58,24 +57,24 @@ define [
           <div class="edit">
             <div class="form-group">
               <label for="version-<%- cid %>-source">Source (publication)</label>
-              <input id="version-<%- cid %>-source" name="source" class="form-control" placeholder="e.g., The New York Times" value="<%- urlVersion.source %>">
+              <input id="version-<%- cid %>-source" name="source" class="form-control" placeholder="e.g., The New York Times" value="<%- urlVersion.source %>" required>
             </div>
             <div class="form-group">
               <label for="version-<%- cid %>-headline">Headline</label>
-              <input id="version-<%- cid %>-headline" name="headline" class="form-control" placeholder="e.g., Man Bites Dog" value="<%- urlVersion.headline %>">
+              <input id="version-<%- cid %>-headline" name="headline" class="form-control" placeholder="e.g., Man Bites Dog" value="<%- urlVersion.headline %>" required>
             </div>
             <div class="form-group">
               <label for="version-<%- cid %>-published-at">Published/Updated date</label>
-              <input type="datetime-local" id="version-<%- cid %>-published-at" name="published-at" class="form-control" value="<%- urlVersion.publishedAt %>">
+              <input type="datetime-local" id="version-<%- cid %>-published-at" name="published-at" class="form-control" value="<%- urlVersion.publishedAt %>" required>
               <small class="help-block">(in your timezone)</small>
             </div>
             <div class="form-group">
               <label for="version-<%- cid %>-byline">Byline</label>
-              <input id="version-<%- cid %>-byline" name="byline" class="form-control" placeholder="e.g., Adam Hooper, Craig Silverman" value="<%- urlVersion.byline %>">
+              <input id="version-<%- cid %>-byline" name="byline" class="form-control" placeholder="e.g., Adam Hooper, Craig Silverman" value="<%- urlVersion.byline %>" required>
             </div>
             <div class="form-group">
               <label for="version-<%- cid %>-body">Body</label>
-              <textarea id="version-<%- cid %>-body" name="body" class="form-control" rows="5" placeholder="e.g. Each paragraph was separated from its neighbors by two newlines."><%- urlVersion.body %></textarea>
+              <textarea id="version-<%- cid %>-body" name="body" class="form-control" rows="5" placeholder="e.g. Each paragraph was separated from its neighbors by two newlines." required><%- urlVersion.body %></textarea>
             </div>
           </div>
         </fieldset>
@@ -122,20 +121,15 @@ define [
       e.preventDefault()
       @ui.urlVersion.toggleClass('editing')
 
-    onCreate: (e) ->
+    onSubmit: (e) ->
       e.preventDefault()
-      @model.save(@getDataFromForm(), {
-        success: =>
-          @render() # isNew will change
-          @model.collection.add({})
-      })
+      isCreate = @model.isNew()
 
-    onUpdate: (e) ->
-      e.preventDefault()
-      @model.save(@getDataFromForm(), {
+      @model.save @getDataFromForm(),
         success: =>
-          @render() # so form reset comes back to this state
-      })
+          @render() # isNew may change; form must reset
+          if isCreate
+            @model.collection.add({}) # new placeholder
 
     onDelete: (e) ->
       e.preventDefault()
