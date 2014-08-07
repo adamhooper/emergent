@@ -127,7 +127,7 @@ define [
       @model.save(@getDataFromForm(), {
         success: =>
           @render() # isNew will change
-          @model.collection.create({})
+          @model.collection.add({})
       })
 
     onUpdate: (e) ->
