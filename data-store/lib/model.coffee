@@ -2,10 +2,10 @@ Instance = require('./instance')
 Promise = require('sequelize').Promise
 _ = require('sequelize').Utils._
 
-instanceWithTracking = (instance, email, creating) ->
+instanceWithTracking = (instance, email, creating, options) ->
   tracking = {}
-  tracking.createdAt = new Date() if 'createdAt' of instance
-  tracking.updatedAt = new Date() if 'updatedAt' of instance
+  tracking.createdAt = (options?.createdAt || new Date()) if 'createdAt' of instance
+  tracking.updatedAt = (options?.updatedAt || new Date()) if 'updatedAt' of instance
   tracking.createdBy = email if 'createdBy' of instance
   tracking.updatedBy = email if 'updatedBy' of instance
   instance.copy(tracking)
@@ -20,7 +20,7 @@ module.exports = class Model
     new Instance(@_impl.build(attrs))
 
   # Returns a Promise of an Instance
-  create: (attrs, email) ->
+  create: (attrs, email, options={}) ->
     delete attrs.id
     delete attrs.createdAt
     delete attrs.updatedAt
@@ -28,8 +28,8 @@ module.exports = class Model
     delete attrs.updatedBy
 
     instance = @build(attrs)
-    instance = instanceWithTracking(instance, email, true)
-    instance._impl.save()
+    instance = instanceWithTracking(instance, email, true, options)
+    instance._impl.save(null, options)
 
   # Returns a Promise of an Instance or `null`.
   find: (idOrOptions) ->
