@@ -8,7 +8,7 @@ MaxUrlGetAgeInMs = 86400 * 1000 * 21 # DELETE  all UrlGets older than this
 #
 # Usage:
 #
-#   fetcher.fetch(new ObjectID('53763c763cb763ec6b604920'), 'http://example.org', callback)
+#   fetcher.fetch('393dc48b-6c2b-4fdb-b1cd-9882e5f94616', 'http://example.org', callback)
 #
 # This will:
 #
