@@ -145,3 +145,22 @@ describe 'ArticleVersionController', ->
             t("urlVersion.#{k}", v)
           expect(json.urlVersion.sha1).to.be.a('String')
           expect(json.urlVersion.sha1).to.have.length(40)
+
+  describe '#destroy', ->
+    destroyReq = (articleId, versionId) -> req('delete', "/articles/#{articleId}/versions/#{versionId}")
+
+    it 'should delete an ArticleVersion and accompanying UrlVersion', ->
+      destroyReq(@article.id, @articleVersion.id)
+        .should.eventually.have.property('status', 204)
+        .then(=> ArticleVersion.find(@articleVersion.id)).should.eventually.be.null
+        .then(=> UrlVersion.find(@urlVersion.id)).should.eventually.be.null
+
+    it 'should return 404 when the ArticleVersion does not exist', ->
+      destroyReq(@article.id, 'f208fbd6-d6c9-4446-a1cd-0b1a8819b6b4')
+        .should.eventually.have.property('status', 404)
+        .then(=> ArticleVersion.find(@articleVersion.id)).should.eventually.exist
+
+    it 'should return 404 when the Article does not exist', ->
+      destroyReq('f208fbd6-d6c9-4446-a1cd-0b1a8819b6b4', @articleVersion.id)
+        .should.eventually.have.property('status', 404)
+        .then(=> ArticleVersion.find(@articleVersion.id)).should.eventually.exist

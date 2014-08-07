@@ -51,7 +51,7 @@ authenticate = (role) ->
 addRoutes = (app) ->
   # Adds ('user', 'get /', 'HomeController.home') to app
   addRoute = (role, k, v) ->
-    [ method, path ] = k.split(/\s/)
+    [ method, path ] = k.split(/\s+/)
     [ controllerName, funcName ] = v.split(/\./)
     func = require("../api/controllers/#{controllerName}")[funcName]
     app[method](path, authenticate(role), func)

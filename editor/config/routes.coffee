@@ -21,6 +21,7 @@ module.exports =
     'post /urls/:urlId/versions': 'UrlVersionController.create'
     'put /urls/:urlId/versions/:urlVersionId': 'UrlVersionController.update'
 
-    'get /articles/:articleId/versions': 'ArticleVersionController.index'
-    'post /articles/:articleId/versions': 'ArticleVersionController.create'
-    'put /articles/:articleId/versions/:versionId': 'ArticleVersionController.update'
+    'get    /articles/:articleId/versions'           : 'ArticleVersionController.index'
+    'post   /articles/:articleId/versions'           : 'ArticleVersionController.create'
+    'put    /articles/:articleId/versions/:versionId': 'ArticleVersionController.update'
+    'delete /articles/:articleId/versions/:versionId': 'ArticleVersionController.destroy'

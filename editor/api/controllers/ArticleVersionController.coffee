@@ -91,3 +91,11 @@ module.exports =
                 json
       .then((json) -> res.json(json))
       .catch((e) -> res.status(e.status || 500).json(e))
+
+  destroy: (req, res) ->
+    validArticleVersion(req)
+      .then (av) ->
+        ArticleVersion.destroy(id: av.id)
+          .then -> UrlVersion.destroy(id: av.urlVersionId)
+      .then(-> res.status(204).send(''))
+      .catch((e) -> res.status(e.status || 500).json(e))
