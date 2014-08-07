@@ -30,6 +30,7 @@ define [
       byline: 'input[name=byline]'
       body: 'textarea[name=body]'
       truthiness: 'input[name=truthiness]'
+      headlineTruthiness: 'input[name=headline-truthiness]'
       comment: 'textarea[name=comment]'
 
     template: _.template('''
@@ -81,7 +82,14 @@ define [
         <fieldset class="article-version">
           <legend>What Truthmaker editors say</legend>
           <div class="form-group">
-            <label for="version-<%- cid %>-truthiness">Truthiness</label>
+            <label for="version-<%- cid %>-headline-truthiness">Truthiness of the headline</label>
+            <div class="radio"><label><input id="version-<%- cid %>-headline-truthiness" type="radio" name="headline-truthiness" value="" <%- headlineTruthiness ? '' : 'checked' %>> I haven't looked</label></div>
+            <div class="radio"><label><input type="radio" name="headline-truthiness" value="truth" <%- headlineTruthiness == 'truth' ? 'checked' : '' %>> Truth</label></div>
+            <div class="radio"><label><input type="radio" name="headline-truthiness" value="myth" <%- headlineTruthiness == 'myth' ? 'checked' : '' %>> Myth</label></div>
+            <div class="radio"><label><input type="radio" name="headline-truthiness" value="claim" <%- headlineTruthiness == 'claim' ? 'checked' : '' %>> Claim</label></div>
+          </div>
+          <div class="form-group">
+            <label for="version-<%- cid %>-truthiness">Truthiness of the body</label>
             <div class="radio"><label><input id="version-<%- cid %>-truthiness" type="radio" name="truthiness" value="" <%- truthiness ? '' : 'checked' %>> I haven't looked</label></div>
             <div class="radio"><label><input type="radio" name="truthiness" value="truth" <%- truthiness == 'truth' ? 'checked' : '' %>> Truth</label></div>
             <div class="radio"><label><input type="radio" name="truthiness" value="myth" <%- truthiness == 'myth' ? 'checked' : '' %>> Myth</label></div>
@@ -102,7 +110,7 @@ define [
     render: ->
       super()
 
-      @$el.toggleClass('complete', !!@model.get('truthiness'))
+      @$el.toggleClass('complete', !!@model.get('truthiness') && !!@model.get('headlineTruthiness'))
 
       @
 
@@ -173,6 +181,7 @@ define [
         body: json.urlVersion.body
         bodyHtml: @getBodyHtml()
       truthiness: json.truthiness ? ''
+      headlineTruthiness: json.headlineTruthiness ? ''
       comment: json.comment
       createdAt: json.urlVersion.createdAt
       createdAtString: moment(json.urlVersion.createdAt).format('YYYY-MM-DD \\a\\t h:mm A')
@@ -185,4 +194,5 @@ define [
         byline: @ui.byline.val().trim()
         body: @ui.body.val().trim()
       truthiness: @ui.truthiness.filter(':checked').val() || null
+      headlineTruthiness: @ui.headlineTruthiness.filter(':checked').val() || null
       comment: @ui.comment.val().trim()

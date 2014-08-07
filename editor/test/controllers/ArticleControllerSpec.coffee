@@ -43,18 +43,13 @@ describe 'ArticleController', ->
         @article1 = null
         @article2 = null
 
-        Promise.all([
-          Url.create({ url: 'http://example.org' }, 'user@example.org')
-          Url.create({ url: 'http://example2.org' }, 'user@example.org')
-        ])
-          .spread (url1, url2) =>
-            Promise.all([
-              Article.create({ storyId: @story1.id, urlId: url1.id }, 'user@example.org')
-              Article.create({ storyId: @story1.id, urlId: url2.id }, 'user@example.org')
-            ])
-          .spread (x, y) =>
-            @article1 = x
-            @article2 = y
+        # Create Articles in series, so they stay in this order
+        Url.create({ url: 'http://example.org' }, 'user@example.org')
+          .then((u) => Article.create({ storyId: @story1.id, urlId: u.id }, 'user@example.org'))
+          .then((a) => @article1 = a)
+          .then(-> Url.create({ url: 'http://example2.org' }, 'user@example.org'))
+          .then((u) => Article.create({ storyId: @story1.id, urlId: u.id }, 'user@example.org'))
+          .then((a) => @article2 = a)
 
       it 'should return the Articles', (done) ->
         req()

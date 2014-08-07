@@ -31,6 +31,7 @@ WriteableUrlVersionFields = [
 
 WriteableFields = [
   'truthiness'
+  'headlineTruthiness'
   'comment'
 ]
 

@@ -38,6 +38,7 @@ describe 'ArticleVersionController', ->
         urlVersionId: @urlVersion.id
         articleId: @article.id
         truthiness: null
+        headlineTruthiness: null
         comment: ''
       }, @email)).then((x) => @articleVersion = x)
       .catch(console.error)
@@ -69,6 +70,7 @@ describe 'ArticleVersionController', ->
           expect(json[0].urlVersion).to.have.property('publishedAt', @urlVersion.publishedAt.toISOString())
           expect(json[0].urlVersion).to.have.property('body', @urlVersion.body)
           expect(json[0].truthiness).to.be.null
+          expect(json[0].headlineTruthiness).to.be.null
           expect(json[0].comment).to.eq('')
 
   describe '#create', ->
@@ -76,6 +78,7 @@ describe 'ArticleVersionController', ->
 
     candidateVersion =
       truthiness: 'truth'
+      headlineTruthiness: 'claim'
       comment: 'comment'
       urlVersion:
         source: 'source'
@@ -109,6 +112,7 @@ describe 'ArticleVersionController', ->
 
     candidateVersion =
       truthiness: 'truth'
+      headlineTruthiness: 'claim'
       comment: 'comment'
       urlVersion:
         source: 'source'
@@ -135,6 +139,7 @@ describe 'ArticleVersionController', ->
           t('urlVersion.urlId', @url.id)
           t('urlVersion.id', json.urlVersionId)
           t('truthiness', 'truth')
+          t('headlineTruthiness', 'claim')
           t('comment', 'comment')
           for k, v of candidateVersion.urlVersion
             t("urlVersion.#{k}", v)

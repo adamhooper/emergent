@@ -39,6 +39,11 @@ module.exports =
       allowNull: true
       comment: 'Is this text true, as far as this Story is concerned?'
 
+    headlineTruthiness:
+      type: Sequelize.ENUM('truth', 'myth', 'claim')
+      allowNull: true
+      comment: 'Is this headline true, as far as this Story is concerned?'
+
     comment:
       type: Sequelize.TEXT
       allowNull: false # but empty string is okay
