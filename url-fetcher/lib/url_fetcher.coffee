@@ -2,6 +2,8 @@ models = require('../../data-store').models
 
 UrlGet = models.UrlGet
 
+MaxUrlGetAgeInMs = 86400 * 1000 * 21 # DELETE  all UrlGets older than this
+
 # Requests a URL and fills in the `url_get` collection.
 #
 # Usage:
@@ -12,6 +14,7 @@ UrlGet = models.UrlGet
 #
 # 1. Fetch the URL.
 # 2. Insert the `statusCode`, `headers` and `body` into the UrlGet table.
+# 3. DELETE ancient UrlGets (to save space).
 # 3. Call the callback with the `url_get` record.
 class UrlFetcher
   fetch: (id, url, done) ->
@@ -26,7 +29,11 @@ class UrlFetcher
         responseHeaders: JSON.stringify(response.headers)
         body: response.body
 
-      UrlGet.create(data).nodeify(done)
+      UrlGet.create(data)
+        .tap ->
+          UrlGet.destroy(urlId: id, createdAt: { lt: new Date(new Date().valueOf() - MaxUrlGetAgeInMs) })
+          null # ignore return value
+        .nodeify(done)
 
 UrlFetcher.request = require('request') # so we can stub it out during tests
 
