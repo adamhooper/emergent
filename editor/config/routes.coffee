@@ -26,3 +26,5 @@ module.exports =
     'post   /articles/:articleId/versions'           : 'ArticleVersionController.create'
     'put    /articles/:articleId/versions/:versionId': 'ArticleVersionController.update'
     'delete /articles/:articleId/versions/:versionId': 'ArticleVersionController.destroy'
+
+    'get /unparsed-urls': 'UnparsedUrlController.index'
