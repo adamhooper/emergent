@@ -1,0 +1,1576 @@
+<!doctype html>
+<!-- paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/ -->
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
+<!-- Consider adding an manifest.appcache: h5bp.com/d/Offline -->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="UTF-8"><script type="text/javascript">(window.NREUM||(NREUM={})).loader_config={xpid:"UQECUFZQGwAFUFVbBQI="};window.NREUM||(NREUM={}),__nr_require=function(t,e,n){function r(n){if(!e[n]){var o=e[n]={exports:{}};t[n][0].call(o.exports,function(e){var o=t[n][1][e];return r(o?o:e)},o,o.exports)}return e[n].exports}if("function"==typeof __nr_require)return __nr_require;for(var o=0;o<n.length;o++)r(n[o]);return r}({1:[function(t,e){function n(t,e,n){n||(n={});for(var r=o[t],a=r&&r.length||0,s=n[i]||(n[i]={}),u=0;a>u;u++)r[u].apply(s,e);return s}function r(t,e){var n=o[t]||(o[t]=[]);n.push(e)}var o={},i="nr@context";e.exports={on:r,emit:n}},{}],2:[function(t){function e(t,e,n,i,s){return u?u-=1:r("err",[s||new UncaughtException(t,e,n)]),"function"==typeof a?a.apply(this,o(arguments)):!1}function UncaughtException(t,e,n){this.message=t||"Uncaught error with no additional information",this.sourceURL=e,this.line=n}function n(t){r("err",[t,(new Date).getTime()])}var r=t("handle"),o=t(6),i=t(5),a=window.onerror,s=!1,u=0;t("loader").features.push("err"),window.onerror=e,NREUM.noticeError=n;try{throw new Error}catch(d){"stack"in d&&(t(1),t(2),"addEventListener"in window&&t(3),window.XMLHttpRequest&&XMLHttpRequest.prototype&&XMLHttpRequest.prototype.addEventListener&&t(4),s=!0)}i.on("fn-start",function(){s&&(u+=1)}),i.on("fn-err",function(t,e,r){s&&(this.thrown=!0,n(r))}),i.on("fn-end",function(){s&&!this.thrown&&u>0&&(u-=1)}),i.on("internal-error",function(t){r("ierr",[t,(new Date).getTime(),!0])})},{1:5,2:4,3:3,4:6,5:1,6:14,handle:"D5DuLP",loader:"G9z0Bl"}],3:[function(t){function e(t){r.inPlace(t,["addEventListener","removeEventListener"],"-",n)}function n(t){return t[1]}var r=t(1),o=(t(3),t(2));if(e(window),"getPrototypeOf"in Object){for(var i=document;i&&!i.hasOwnProperty("addEventListener");)i=Object.getPrototypeOf(i);i&&e(i);for(var a=XMLHttpRequest.prototype;a&&!a.hasOwnProperty("addEventListener");)a=Object.getPrototypeOf(a);a&&e(a)}else XMLHttpRequest.prototype.hasOwnProperty("addEventListener")&&e(XMLHttpRequest.prototype);o.on("addEventListener-start",function(t){if(t[1]){var e=t[1];"function"==typeof e?this.wrapped=e["nr@wrapped"]?t[1]=e["nr@wrapped"]:e["nr@wrapped"]=t[1]=r(e,"fn-"):"function"==typeof e.handleEvent&&r.inPlace(e,["handleEvent"],"fn-")}}),o.on("removeEventListener-start",function(t){var e=this.wrapped;e&&(t[1]=e)})},{1:15,2:1,3:14}],4:[function(t){var e=(t(3),t(1)),n=t(2);e.inPlace(window,["requestAnimationFrame","mozRequestAnimationFrame","webkitRequestAnimationFrame","msRequestAnimationFrame"],"raf-"),n.on("raf-start",function(t){t[0]=e(t[0],"fn-")})},{1:15,2:1,3:14}],5:[function(t){function e(t){var e=t[0];"string"==typeof e&&(e=new Function(e)),t[0]=n(e,"fn-")}var n=(t(3),t(1)),r=t(2);n.inPlace(window,["setTimeout","setInterval","setImmediate"],"setTimer-"),r.on("setTimer-start",e)},{1:15,2:1,3:14}],6:[function(t){function e(){o.inPlace(this,s,"fn-")}function n(t,e){o.inPlace(e,["onreadystatechange"],"fn-")}function r(t,e){return e}var o=t(1),i=t(2),a=window.XMLHttpRequest,s=["onload","onerror","onabort","onloadstart","onloadend","onprogress","ontimeout"];window.XMLHttpRequest=function(t){var n=new a(t);try{i.emit("new-xhr",[],n),o.inPlace(n,["addEventListener","removeEventListener"],"-",function(t,e){return e}),n.addEventListener("readystatechange",e,!1)}catch(r){try{i.emit("internal-error",r)}catch(s){}}return n},window.XMLHttpRequest.prototype=a.prototype,o.inPlace(XMLHttpRequest.prototype,["open","send"],"-xhr-",r),i.on("send-xhr-start",n),i.on("open-xhr-start",n)},{1:15,2:1}],7:[function(t){function e(){function e(t){if("string"==typeof t&&t.length)return t.length;if("object"!=typeof t)return void 0;if("undefined"!=typeof ArrayBuffer&&t instanceof ArrayBuffer&&t.byteLength)return t.byteLength;if("undefined"!=typeof Blob&&t instanceof Blob&&t.size)return t.size;if("undefined"!=typeof FormData&&t instanceof FormData)return void 0;try{return JSON.stringify(t).length}catch(e){return void 0}}function n(t){var n=this.params,r=this.metrics;if(!this.ended){this.ended=!0;for(var i=0;u>i;i++)t.removeEventListener(s[i],this.listener,!1);if(!n.aborted){if(r.duration=(new Date).getTime()-this.startTime,4===t.readyState){n.status=t.status;var a=t.responseType,d="arraybuffer"===a||"blob"===a||"json"===a?t.response:t.responseText,f=e(d);if(f&&(r.rxSize=f),this.sameOrigin){var c=t.getResponseHeader("X-NewRelic-App-Data");c&&(n.cat=c.split(", ").pop())}}else n.status=0;r.cbTime=this.cbTime,o("xhr",[n,r])}}}function r(t,e){var n=i(e),r=t.params;r.host=n.hostname+":"+n.port,r.pathname=n.pathname,t.sameOrigin=n.sameOrigin}t("loader").features.push("xhr");var o=t("handle"),i=t(1),a=t(5),s=["load","error","abort","timeout"],u=s.length,d=t(2);t(3),t(4),a.on("new-xhr",function(){this.totalCbs=0,this.called=0,this.cbTime=0,this.end=n,this.ended=!1,this.xhrGuids={}}),a.on("open-xhr-start",function(t){this.params={method:t[0]},r(this,t[1]),this.metrics={}}),a.on("open-xhr-end",function(t,e){"loader_config"in NREUM&&"xpid"in NREUM.loader_config&&this.sameOrigin&&e.setRequestHeader("X-NewRelic-ID",NREUM.loader_config.xpid)}),a.on("send-xhr-start",function(t,n){var r=this.metrics,o=t[0],i=this;if(r&&o){var d=e(o);d&&(r.txSize=d)}this.startTime=(new Date).getTime(),this.listener=function(t){try{"abort"===t.type&&(i.params.aborted=!0),("load"!==t.type||i.called===i.totalCbs&&(i.onloadCalled||"function"!=typeof n.onload))&&i.end(n)}catch(e){try{a.emit("internal-error",e)}catch(r){}}};for(var f=0;u>f;f++)n.addEventListener(s[f],this.listener,!1)}),a.on("xhr-cb-time",function(t,e,n){this.cbTime+=t,e?this.onloadCalled=!0:this.called+=1,this.called!==this.totalCbs||!this.onloadCalled&&"function"==typeof n.onload||this.end(n)}),a.on("xhr-load-added",function(t,e){var n=""+d(t)+!!e;this.xhrGuids&&!this.xhrGuids[n]&&(this.xhrGuids[n]=!0,this.totalCbs+=1)}),a.on("xhr-load-removed",function(t,e){var n=""+d(t)+!!e;this.xhrGuids&&this.xhrGuids[n]&&(delete this.xhrGuids[n],this.totalCbs-=1)}),a.on("addEventListener-end",function(t,e){e instanceof XMLHttpRequest&&"load"===t[0]&&a.emit("xhr-load-added",[t[1],t[2]],e)}),a.on("removeEventListener-end",function(t,e){e instanceof XMLHttpRequest&&"load"===t[0]&&a.emit("xhr-load-removed",[t[1],t[2]],e)}),a.on("fn-start",function(t,e,n){e instanceof XMLHttpRequest&&("onload"===n&&(this.onload=!0),("load"===(t[0]&&t[0].type)||this.onload)&&(this.xhrCbStart=(new Date).getTime()))}),a.on("fn-end",function(t,e){this.xhrCbStart&&a.emit("xhr-cb-time",[(new Date).getTime()-this.xhrCbStart,this.onload,e],e)})}window.XMLHttpRequest&&XMLHttpRequest.prototype&&XMLHttpRequest.prototype.addEventListener&&!/CriOS/.test(navigator.userAgent)&&e()},{1:8,2:11,3:3,4:6,5:1,handle:"D5DuLP",loader:"G9z0Bl"}],8:[function(t,e){e.exports=function(t){var e=document.createElement("a"),n=window.location,r={};e.href=t,r.port=e.port;var o=e.href.split("://");return!r.port&&o[1]&&(r.port=o[1].split("/")[0].split(":")[1]),r.port&&"0"!==r.port||(r.port="https"===o[0]?"443":"80"),r.hostname=e.hostname||n.hostname,r.pathname=e.pathname,"/"!==r.pathname.charAt(0)&&(r.pathname="/"+r.pathname),r.sameOrigin=!e.hostname||e.hostname===document.domain&&e.port===n.port&&e.protocol===n.protocol,r}},{}],handle:[function(t,e){e.exports=t("D5DuLP")},{}],D5DuLP:[function(t,e){function n(t,e){var n=r[t];return n?n.apply(this,e):(o[t]||(o[t]=[]),void o[t].push(e))}var r={},o={};e.exports=n,n.queues=o,n.handlers=r},{}],11:[function(t,e){function n(t){if(!t||"object"!=typeof t&&"function"!=typeof t)return-1;if(t===window)return 0;if(o.call(t,"__nr"))return t.__nr;try{return Object.defineProperty(t,"__nr",{value:r,writable:!0,enumerable:!1}),r}catch(e){return t.__nr=r,r}finally{r+=1}}var r=1,o=Object.prototype.hasOwnProperty;e.exports=n},{}],loader:[function(t,e){e.exports=t("G9z0Bl")},{}],G9z0Bl:[function(t,e){function n(){var t=p.info=NREUM.info;if(t&&t.agent&&t.licenseKey&&t.applicationID&&u&&u.body){p.proto="https"===c.split(":")[0]||t.sslForHttp?"https://":"http://",a("mark",["onload",i()]);var e=u.createElement("script");e.src=p.proto+t.agent,u.body.appendChild(e)}}function r(){"complete"===u.readyState&&o()}function o(){a("mark",["domContent",i()])}function i(){return(new Date).getTime()}var a=t("handle"),s=window,u=s.document,d="addEventListener",f="attachEvent",c=(""+location).split("?")[0],p=e.exports={offset:i(),origin:c,features:[]};u[d]?(u[d]("DOMContentLoaded",o,!1),s[d]("load",n,!1)):(u[f]("onreadystatechange",r),s[f]("onload",n)),a("mark",["firstbyte",i()])},{handle:"D5DuLP"}],14:[function(t,e){function n(t,e,n){e||(e=0),"undefined"==typeof n&&(n=t?t.length:0);for(var r=-1,o=n-e||0,i=Array(0>o?0:o);++r<o;)i[r]=t[e+r];return i}e.exports=n},{}],15:[function(t,e){function n(t,e,r,s){function nrWrapper(){try{var n,a=u(arguments),d=this,f=r&&r(a,d)||{}}catch(c){i([c,"",[a,d,s],f])}o(e+"start",[a,d,s],f);try{return n=t.apply(d,a)}catch(p){throw o(e+"err",[a,d,p],f),p}finally{o(e+"end",[a,d,n],f)}}return a(t)?t:(e||(e=""),nrWrapper[n.flag]=!0,nrWrapper)}function r(t,e,r,o){r||(r="");var i,s,u,d="-"===r.charAt(0);for(u=0;u<e.length;u++)s=e[u],i=t[s],a(i)||(t[s]=n(i,d?s+r:r,o,s,t))}function o(t,e,n){try{s.emit(t,e,n)}catch(r){i([r,t,e,n])}}function i(t){try{s.emit("internal-error",t)}catch(e){}}function a(t){return!(t&&"function"==typeof t&&t.apply&&!t[n.flag])}var s=t(1),u=t(2);e.exports=n,n.inPlace=r,n.flag="nr@wrapper"},{1:1,2:14}]},{},["G9z0Bl",2,7]);</script>
+
+	<title>A Justin Bieber Ringtone Just Saved A Man&#039;s Life Who Was Being Attacked By A Bear</title>
+
+
+	<!-- Mobile viewport optimized: j.mp/bplateviewport -->
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<!-- Favicon and Feed -->
+	<link rel="icon" type="image/png" href="http://elitedaily.com/wp-content/themes/highsociety/favicon.png">
+	<link rel="shortcut icon" type="image/x-icon" href="http://elitedaily.com/wp-content/themes/highsociety/favicon.ico">
+	<link rel="alternate" type="application/rss+xml" title="Elite Daily Feed" href="http://elitedaily.com/feed/">
+
+	<!--  iPhone Web App Home Screen Icon -->
+	<link rel="apple-touch-icon" sizes="72x72" href="http://elitedaily.com/wp-content/themes/highsociety/images/devices/elite-icon-ipad.png" />
+	<link rel="apple-touch-icon" sizes="114x114" href="http://elitedaily.com/wp-content/themes/highsociety/images/devices/elite-icon-retina.png" />
+	<link rel="apple-touch-icon" href="http://elitedaily.com/wp-content/themes/highsociety/images/devices/elite-icon.png" />
+
+	<!-- Enable Startup Image for iOS Home Screen Web App -->
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<link rel="apple-touch-startup-image" href="http://elitedaily.com/wp-content/themes/highsociety/mobile-load.png" />
+
+	<!-- Startup Image iPad Landscape (748x1024) -->
+	<link rel="apple-touch-startup-image" href="http://elitedaily.com/wp-content/themes/highsociety/images/devices/reverie-load-ipad-landscape.png" media="screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:landscape)" />
+	<!-- Startup Image iPad Portrait (768x1004) -->
+	<link rel="apple-touch-startup-image" href="http://elitedaily.com/wp-content/themes/highsociety/images/devices/reverie-load-ipad-portrait.png" media="screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:portrait)" />
+	<!-- Startup Image iPhone (320x460) -->
+	<link rel="apple-touch-startup-image" href="http://elitedaily.com/wp-content/themes/highsociety/images/devices/reverie-load.png" media="screen and (max-device-width: 320px)" />
+
+	<meta name="google-site-verification" content="AiK5ZcZZZQI9Pdl81U80KZtzQR8klIhBYqHfZaZhzJY" /> 
+	<meta property="fb:admins" content="1381260120"/>
+	<meta property="fb:app_id" content="378366428966386" />
+	<meta name="inmobi-site-verification" content="d8c05c6c3d0f354fdf4fd5d71853cb01">
+
+	<meta name="triplelift-brand-safe" content="yes" />
+	<!--[if IE]> <script type="text/javascript" src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script> <![endif]-->
+	
+<!-- This site is optimized with the Yoast WordPress SEO plugin v1.5.2.8 - https://yoast.com/wordpress/plugins/seo/ -->
+<meta name="description" content="As the bear started clawing violently at Vorozhbitsyn, the Biebs&#039; pre-pubescent vocals made the bear&#039;s ears bleed, and it ran off."/>
+<link rel="canonical" href="http://elitedaily.com/news/world/justin-bieber-ringtone-saves-man-bear-attack/697119/" />
+<link rel="publisher" href="https://plus.google.com/116571474491193319482"/>
+<meta property="og:locale" content="en_US" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="A Justin Bieber Ringtone Just Saved A Man&#039;s Life Who Was Being Attacked By A Bear" />
+<meta property="og:description" content="As the bear started clawing violently at Vorozhbitsyn, the Biebs&#039; pre-pubescent vocals made the bear&#039;s ears bleed, and it ran off." />
+<meta property="og:url" content="http://elitedaily.com/news/world/justin-bieber-ringtone-saves-man-bear-attack/697119/" />
+<meta property="og:site_name" content="Elite Daily" />
+<meta property="article:publisher" content="http://www.facebook.com/EliteDaily" />
+<meta property="article:tag" content="bear" />
+<meta property="article:tag" content="bear attack" />
+<meta property="article:tag" content="justin bieber" />
+<meta property="article:tag" content="Justin Bieber ringtone" />
+<meta property="article:tag" content="russian man" />
+<meta property="article:section" content="News" />
+<meta property="article:section" content="World" />
+<meta property="article:published_time" content="2014-08-05T12:06:03+00:00" />
+<meta property="article:modified_time" content="2014-08-06T16:05:02+00:00" />
+<meta property="og:updated_time" content="2014-08-06T16:05:02+00:00" />
+<meta property="fb:admins" content="1381260120" />
+<meta property="og:image" content="http://cdn29.elitedaily.com/wp-content/uploads/2014/08/bear-elite-daily.png" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:site" content="@EliteDaily"/>
+<meta name="twitter:domain" content="Elite Daily"/>
+<meta name="twitter:creator" content="@alexialafata"/>
+<!-- / Yoast WordPress SEO plugin. -->
+
+<link rel='stylesheet' id='foundation-css'  href='http://elitedaily.com/wp-content/themes/highsociety/css/style.css?ver=7.9.140808' type='text/css' media='all' />
+<script type='text/javascript' src='http://elitedaily.com/wp-includes/js/jquery/jquery.js?ver=1.10.2'></script>
+<script type='text/javascript' src='http://elitedaily.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=1.2.1'></script>
+<script type='text/javascript' src='http://elitedaily.com/wp-content/themes/highsociety/js/modernizr.foundation.js?ver=9.6.140808'></script>
+<script type='text/javascript' src='http://elitedaily.com/wp-content/themes/highsociety/js/init.js?ver=9.6.140808'></script>
+<script type='text/javascript' src='http://aka-cdn-ns.adtechus.com/dt/common/DAC.js?ver=1.0.0'></script>
+<script type='text/javascript' src='http://eventtracker.elitedaily.com/client/js/tracker-0.1.min.js?ver=1.0.0'></script>
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="http://elitedaily.com/wp-includes/wlwmanifest.xml" /> 
+<meta name="generator" content="WordPress 3.8.1" />
+<link rel='shortlink' href='http://elitedaily.com/?p=697119' />
+<!--[if lt IE 9]><link rel="stylesheet" href="http://elitedaily.com/wp-content/themes/highsociety/css/ie.css"><![endif]--><style type="text/css">.broken_link, a.broken_link {
+	text-decoration: line-through;
+}</style></head>
+
+
+
+<body class="single single-post postid-697119 single-format-standard category-news off-canvas hide-extras">
+<div id="fb-root"></div>
+	<!-- Start the main container -->
+	<div id="container" class="container" role="document">
+
+			<script>
+				fbIsLoaded = false;
+				window.fbAsyncInit = function() {
+					FB.init({
+					  appId      : '378366428966386',
+					  xfbml      : true,
+					  version    : 'v2.0'
+					});
+				    fbIsLoaded = true;
+				};
+
+				(function(d, s, id){
+					var js, fjs = d.getElementsByTagName(s)[0];
+					if (d.getElementById(id)) {return;}
+					js = d.createElement(s); js.id = id;
+					js.src = "//connect.facebook.net/en_US/sdk.js";
+					fjs.parentNode.insertBefore(js, fjs);
+				}(document, 'script', 'facebook-jssdk'));
+			</script>		
+	        <script src="https://apis.google.com/js/platform.js"></script>
+
+		<!-- Row for blog navigation -->
+		<div class="headerRow top-header">
+			<form class="searchHeaderForm" role="search" method="get" id="searchform" action="http://elitedaily.com/">
+				<div class="searchHeader">
+					<input type="text" value="" name="s" id="s" placeholder="Look for Articles..." class="largeSearch">
+					<input type="submit" class="largeEnter" id="searchsubmit" value="Search">
+					<div class="icon-close"></div>
+				</div>
+			</form>
+			<header class="twelve columns" role="banner">
+
+
+				<div class="reverie-header">
+					<div class="logoHeader">
+						<a class="logo" href="http://elitedaily.com" title="Elite Daily">
+							<div class="logoImage"></div>
+						</a>
+						<h4 class="subheader">The Voice of Generation-Y</h4>
+					</div>
+
+					<div class="socialContact">
+						<div class="searchClose"></div>
+<!-- 						<input name="search" type="text" class="searchField" id="search" value="" placeholder="Search for stories..." /> -->
+						<span class="todaysTime">Friday, August 8th, 2014</span>
+						<div class="socialIcons">
+
+							<a href="http://www.facebook.com/EliteDaily" target="_blank" aria-hidden="true" data-icon="&#x46;" class="icon-facebook"></a>
+							<a href="http://twitter.com/elitedaily" target="_blank" class="icon-twitter" aria-hidden="true" data-icon="&#x54;"></a>
+							<a href="http://instagram.com/elitedaily" target="_blank" class="icon-instagram" aria-hidden="true" data-icon="&#x49;"></a>
+							<a href="https://plus.google.com/116571474491193319482" class="icon-google-plus" target="_blank" data-icon="&#x67;"></a>
+							<a href="http://youtube.com/elitedaily" target="_blank" class="icon-youtube" aria-hidden="true" data-icon="&#x79;"></a>
+							<div aria-hidden="true" data-icon="&#x69;" class="icon-info"></div>
+							<div aria-hidden="true" data-icon="&#x53;" class="icon-search"></div>
+						</div>
+					</div>
+					<script>ADTECH.config.page = { protocol: 'http', server: 'adserver.adtechus.com', network: '5391.1', pageid: 621888, kv: {authorid:"1774", env:"www", ishome:"0", isarchive:"0", issingle:"1", ispage:"0", postid:"697119", nsfw:"0", catid:["16409", "1041"]}, params: { loc: '100', grp: ''}}; </script><div class="leaderboardAd"><div id="2793084" class="" data-adid="2793084"><noscript><a href="http://adserver.adtechus.com/adlink|3.0|5391.1|2793084|0|225|ADTECH;loc=300;key=key1+key2+key3+key4;alias=" target="_blank"><img src="http://adserver.adtechus.com/adserv|3.0|5391.1|2793084|0|225|ADTECH;loc=300;key=key1+key2+key3+key4;alias=" border="0" width="728" height="90"></a></noscript></div>
+<script> ADTECH.config.placements[2793084] = { sizeid: 225, fif: {usefif: 'true'}, params: { alias: '', target: '_blank' }};</script></div>				</div>
+				<nav role="navigation" class="hide-for-small top-nav">
+					<ul class="nav-bar"><li id="menu-item-239113" class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor current-menu-parent current-post-parent menu-item-has-children has-flyout menu-item-239113 news"><a href="http://elitedaily.com/category/news/" >News</a>
+<a href="#" class="flyout-toggle"><span> </span></a>
+    	<div class="subCatWrapper">
+    	<ul class="flyout">
+	<li id="menu-item-239114" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-239114 business"><a href="http://elitedaily.com/category/news/business/" >Business</a></li>
+	<li id="menu-item-239115" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-239115 politics"><a href="http://elitedaily.com/category/news/politics/" >Politics</a></li>
+	<li id="menu-item-252318" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252318 technology"><a href="http://elitedaily.com/category/news/technology/" >Technology</a></li>
+	<li id="menu-item-252317" class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor current-menu-parent current-post-parent menu-item-252317 world"><a href="http://elitedaily.com/category/news/world/" >World</a></li>
+
+</ul>
+	  <div class="subCatContent">
+
+	  </div>
+	  </div></li>
+<li id="menu-item-252319" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-has-children has-flyout menu-item-252319 life"><a href="http://elitedaily.com/category/life/" >Life</a>
+<a href="#" class="flyout-toggle"><span> </span></a>
+    	<div class="subCatWrapper">
+    	<ul class="flyout">
+	<li id="menu-item-252322" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252322 culture"><a href="http://elitedaily.com/category/life/culture/" >Culture</a></li>
+	<li id="menu-item-252321" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252321 generation-y"><a href="http://elitedaily.com/category/life/generation-y/" >Generation Y</a></li>
+	<li id="menu-item-252320" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252320 motivation"><a href="http://elitedaily.com/category/life/motivation/" >Motivation</a></li>
+	<li id="menu-item-252323" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252323 wellness"><a href="http://elitedaily.com/category/life/wellness/" >Wellness</a></li>
+
+</ul>
+	  <div class="subCatContent">
+
+	  </div>
+	  </div></li>
+<li id="menu-item-252324" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-has-children has-flyout menu-item-252324 money"><a href="http://elitedaily.com/category/money/" >Money</a>
+<a href="#" class="flyout-toggle"><span> </span></a>
+    	<div class="subCatWrapper">
+    	<ul class="flyout">
+	<li id="menu-item-252325" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252325 entrepreneurship"><a href="http://elitedaily.com/category/money/entrepreneurship/" >Entrepreneurship</a></li>
+	<li id="menu-item-252327" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252327 start-ups"><a href="http://elitedaily.com/category/money/start-ups/" >Start Ups</a></li>
+	<li id="menu-item-252328" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252328 strategy"><a href="http://elitedaily.com/category/money/strategy/" >Strategy</a></li>
+	<li id="menu-item-252326" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252326 success"><a href="http://elitedaily.com/category/money/success/" >Success</a></li>
+
+</ul>
+	  <div class="subCatContent">
+
+	  </div>
+	  </div></li>
+<li id="menu-item-252329" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-has-children has-flyout menu-item-252329 sports"><a href="http://elitedaily.com/category/sports/" >Sports</a>
+<a href="#" class="flyout-toggle"><span> </span></a>
+    	<div class="subCatWrapper">
+    	<ul class="flyout">
+	<li id="menu-item-252332" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252332 baseball"><a href="http://elitedaily.com/category/sports/baseball/" >Baseball</a></li>
+	<li id="menu-item-252330" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252330 basketball"><a href="http://elitedaily.com/category/sports/basketball/" >Basketball</a></li>
+	<li id="menu-item-252331" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252331 football"><a href="http://elitedaily.com/category/sports/football/" >Football</a></li>
+	<li id="menu-item-252333" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252333 pro"><a href="http://elitedaily.com/category/sports/pro/" >Pro</a></li>
+
+</ul>
+	  <div class="subCatContent">
+
+	  </div>
+	  </div></li>
+<li id="menu-item-252334" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-has-children has-flyout menu-item-252334 dating"><a href="http://elitedaily.com/category/dating/" >Dating</a>
+<a href="#" class="flyout-toggle"><span> </span></a>
+    	<div class="subCatWrapper">
+    	<ul class="flyout">
+	<li id="menu-item-252336" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252336 gentlemen"><a href="http://elitedaily.com/category/dating/gentlemen/" >Gentlemen</a></li>
+	<li id="menu-item-252337" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252337 ladies"><a href="http://elitedaily.com/category/dating/ladies/" >Ladies</a></li>
+	<li id="menu-item-252335" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252335 sex"><a href="http://elitedaily.com/category/dating/sex/" >Sex</a></li>
+
+</ul>
+	  <div class="subCatContent">
+
+	  </div>
+	  </div></li>
+<li id="menu-item-252338" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-has-children has-flyout menu-item-252338 entertainment"><a href="http://elitedaily.com/category/entertainment/" >Entertainment</a>
+<a href="#" class="flyout-toggle"><span> </span></a>
+    	<div class="subCatWrapper">
+    	<ul class="flyout">
+	<li id="menu-item-252340" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252340 celebrity"><a href="http://elitedaily.com/category/entertainment/celebrity/" >Celebrity</a></li>
+	<li id="menu-item-252339" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252339 film"><a href="http://elitedaily.com/category/entertainment/film/" >Film</a></li>
+	<li id="menu-item-252341" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252341 tv"><a href="http://elitedaily.com/category/entertainment/television/" >TV</a></li>
+	<li id="menu-item-252342" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252342 events"><a href="http://elitedaily.com/category/entertainment/events/" >Events</a></li>
+
+</ul>
+	  <div class="subCatContent">
+
+	  </div>
+	  </div></li>
+<li id="menu-item-252343" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-has-children has-flyout menu-item-252343 music"><a href="http://elitedaily.com/category/music/" >Music</a>
+<a href="#" class="flyout-toggle"><span> </span></a>
+    	<div class="subCatWrapper">
+    	<ul class="flyout">
+	<li id="menu-item-252344" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252344 music-news"><a href="http://elitedaily.com/category/music/music-news/" >Music News</a></li>
+	<li id="menu-item-252345" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252345 press-play"><a href="http://elitedaily.com/category/music/press-play/" >Press Play</a></li>
+	<li id="menu-item-252346" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252346 videos"><a href="http://elitedaily.com/category/music/music-videos/" >Videos</a></li>
+	<li id="menu-item-252347" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252347 interviews"><a href="http://elitedaily.com/category/music/music-interviews/" >Interviews</a></li>
+
+</ul>
+	  <div class="subCatContent">
+
+	  </div>
+	  </div></li>
+<li id="menu-item-252348" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-has-children has-flyout menu-item-252348 women"><a href="http://elitedaily.com/category/women/" >Women</a>
+<a href="#" class="flyout-toggle"><span> </span></a>
+    	<div class="subCatWrapper">
+    	<ul class="flyout">
+	<li id="menu-item-252352" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252352 fashion"><a href="http://elitedaily.com/category/women/fashion/" >Fashion</a></li>
+	<li id="menu-item-252350" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252350 beauty"><a href="http://elitedaily.com/category/women/beauty/" >Beauty</a></li>
+	<li id="menu-item-252349" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252349 advice"><a href="http://elitedaily.com/category/women/advice/" >Advice</a></li>
+	<li id="menu-item-252351" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252351 business"><a href="http://elitedaily.com/category/women/women-business/" >Business</a></li>
+
+</ul>
+	  <div class="subCatContent">
+
+	  </div>
+	  </div></li>
+<li id="menu-item-252353" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-has-children has-flyout menu-item-252353 envision"><a href="http://elitedaily.com/category/envision/" >Envision</a>
+<a href="#" class="flyout-toggle"><span> </span></a>
+    	<div class="subCatWrapper">
+    	<ul class="flyout">
+	<li id="menu-item-252354" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252354 cars"><a href="http://elitedaily.com/category/envision/cars/" >Cars</a></li>
+	<li id="menu-item-262748" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-262748 art"><a href="http://elitedaily.com/category/envision/art/" >Art</a></li>
+	<li id="menu-item-262749" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-262749 goods"><a href="http://elitedaily.com/category/envision/goods/" >Goods</a></li>
+	<li id="menu-item-252361" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252361 destinations"><a href="http://elitedaily.com/category/envision/destinations/" >Destinations</a></li>
+
+</ul>
+	  <div class="subCatContent">
+
+	  </div>
+	  </div></li>
+<li id="menu-item-252366" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-has-children has-flyout menu-item-252366 humor"><a href="http://elitedaily.com/category/humor/" >Humor</a>
+<a href="#" class="flyout-toggle"><span> </span></a>
+    	<div class="subCatWrapper">
+    	<ul class="flyout">
+	<li id="menu-item-337932" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-337932 clips"><a href="http://elitedaily.com/category/humor/clips/" >Clips</a></li>
+	<li id="menu-item-337935" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-337935 lol-lists"><a href="http://elitedaily.com/category/humor/lol-lists/" >LOL Lists</a></li>
+	<li id="menu-item-337934" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-337934 generation-why-"><a href="http://elitedaily.com/category/humor/generationwhy/" >Generation whY!?</a></li>
+	<li id="menu-item-337933" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-337933 funny-papers"><a href="http://elitedaily.com/category/humor/funny-papers/" >Funny Papers</a></li>
+
+</ul>
+	  <div class="subCatContent">
+
+	  </div>
+	  </div></li>
+<li id="menu-item-261423" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-261423 videos"><a title="videos" href="http://elitedaily.com/tv/" >Videos</a></li>
+</ul>					<div class="subCatBackground">
+
+					</div>
+				</nav>
+				<p class="show-for-small">
+					<a class='sidebar-button' id="sidebarButton" href="#sidebar-off" >Menu</a>
+				</p>
+			</header>
+		</div>
+		<div class="stickyNav">
+			<div class="stickyNavWrapper">
+			<ul class="nav-bar"><li class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor current-menu-parent current-post-parent menu-item-has-children has-flyout menu-item-239113 news"><a href="http://elitedaily.com/category/news/" >News</a>
+<a href="#" class="flyout-toggle"><span> </span></a>
+    	<div class="subCatWrapper">
+    	<ul class="flyout">
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-239114 business"><a href="http://elitedaily.com/category/news/business/" >Business</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-239115 politics"><a href="http://elitedaily.com/category/news/politics/" >Politics</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252318 technology"><a href="http://elitedaily.com/category/news/technology/" >Technology</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor current-menu-parent current-post-parent menu-item-252317 world"><a href="http://elitedaily.com/category/news/world/" >World</a></li>
+
+</ul>
+	  <div class="subCatContent">
+
+	  </div>
+	  </div></li>
+<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-has-children has-flyout menu-item-252319 life"><a href="http://elitedaily.com/category/life/" >Life</a>
+<a href="#" class="flyout-toggle"><span> </span></a>
+    	<div class="subCatWrapper">
+    	<ul class="flyout">
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252322 culture"><a href="http://elitedaily.com/category/life/culture/" >Culture</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252321 generation-y"><a href="http://elitedaily.com/category/life/generation-y/" >Generation Y</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252320 motivation"><a href="http://elitedaily.com/category/life/motivation/" >Motivation</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252323 wellness"><a href="http://elitedaily.com/category/life/wellness/" >Wellness</a></li>
+
+</ul>
+	  <div class="subCatContent">
+
+	  </div>
+	  </div></li>
+<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-has-children has-flyout menu-item-252324 money"><a href="http://elitedaily.com/category/money/" >Money</a>
+<a href="#" class="flyout-toggle"><span> </span></a>
+    	<div class="subCatWrapper">
+    	<ul class="flyout">
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252325 entrepreneurship"><a href="http://elitedaily.com/category/money/entrepreneurship/" >Entrepreneurship</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252327 start-ups"><a href="http://elitedaily.com/category/money/start-ups/" >Start Ups</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252328 strategy"><a href="http://elitedaily.com/category/money/strategy/" >Strategy</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252326 success"><a href="http://elitedaily.com/category/money/success/" >Success</a></li>
+
+</ul>
+	  <div class="subCatContent">
+
+	  </div>
+	  </div></li>
+<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-has-children has-flyout menu-item-252329 sports"><a href="http://elitedaily.com/category/sports/" >Sports</a>
+<a href="#" class="flyout-toggle"><span> </span></a>
+    	<div class="subCatWrapper">
+    	<ul class="flyout">
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252332 baseball"><a href="http://elitedaily.com/category/sports/baseball/" >Baseball</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252330 basketball"><a href="http://elitedaily.com/category/sports/basketball/" >Basketball</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252331 football"><a href="http://elitedaily.com/category/sports/football/" >Football</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252333 pro"><a href="http://elitedaily.com/category/sports/pro/" >Pro</a></li>
+
+</ul>
+	  <div class="subCatContent">
+
+	  </div>
+	  </div></li>
+<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-has-children has-flyout menu-item-252334 dating"><a href="http://elitedaily.com/category/dating/" >Dating</a>
+<a href="#" class="flyout-toggle"><span> </span></a>
+    	<div class="subCatWrapper">
+    	<ul class="flyout">
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252336 gentlemen"><a href="http://elitedaily.com/category/dating/gentlemen/" >Gentlemen</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252337 ladies"><a href="http://elitedaily.com/category/dating/ladies/" >Ladies</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252335 sex"><a href="http://elitedaily.com/category/dating/sex/" >Sex</a></li>
+
+</ul>
+	  <div class="subCatContent">
+
+	  </div>
+	  </div></li>
+<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-has-children has-flyout menu-item-252338 entertainment"><a href="http://elitedaily.com/category/entertainment/" >Entertainment</a>
+<a href="#" class="flyout-toggle"><span> </span></a>
+    	<div class="subCatWrapper">
+    	<ul class="flyout">
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252340 celebrity"><a href="http://elitedaily.com/category/entertainment/celebrity/" >Celebrity</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252339 film"><a href="http://elitedaily.com/category/entertainment/film/" >Film</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252341 tv"><a href="http://elitedaily.com/category/entertainment/television/" >TV</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252342 events"><a href="http://elitedaily.com/category/entertainment/events/" >Events</a></li>
+
+</ul>
+	  <div class="subCatContent">
+
+	  </div>
+	  </div></li>
+<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-has-children has-flyout menu-item-252343 music"><a href="http://elitedaily.com/category/music/" >Music</a>
+<a href="#" class="flyout-toggle"><span> </span></a>
+    	<div class="subCatWrapper">
+    	<ul class="flyout">
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252344 music-news"><a href="http://elitedaily.com/category/music/music-news/" >Music News</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252345 press-play"><a href="http://elitedaily.com/category/music/press-play/" >Press Play</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252346 videos"><a href="http://elitedaily.com/category/music/music-videos/" >Videos</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252347 interviews"><a href="http://elitedaily.com/category/music/music-interviews/" >Interviews</a></li>
+
+</ul>
+	  <div class="subCatContent">
+
+	  </div>
+	  </div></li>
+<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-has-children has-flyout menu-item-252348 women"><a href="http://elitedaily.com/category/women/" >Women</a>
+<a href="#" class="flyout-toggle"><span> </span></a>
+    	<div class="subCatWrapper">
+    	<ul class="flyout">
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252352 fashion"><a href="http://elitedaily.com/category/women/fashion/" >Fashion</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252350 beauty"><a href="http://elitedaily.com/category/women/beauty/" >Beauty</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252349 advice"><a href="http://elitedaily.com/category/women/advice/" >Advice</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252351 business"><a href="http://elitedaily.com/category/women/women-business/" >Business</a></li>
+
+</ul>
+	  <div class="subCatContent">
+
+	  </div>
+	  </div></li>
+<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-has-children has-flyout menu-item-252353 envision"><a href="http://elitedaily.com/category/envision/" >Envision</a>
+<a href="#" class="flyout-toggle"><span> </span></a>
+    	<div class="subCatWrapper">
+    	<ul class="flyout">
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252354 cars"><a href="http://elitedaily.com/category/envision/cars/" >Cars</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-262748 art"><a href="http://elitedaily.com/category/envision/art/" >Art</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-262749 goods"><a href="http://elitedaily.com/category/envision/goods/" >Goods</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252361 destinations"><a href="http://elitedaily.com/category/envision/destinations/" >Destinations</a></li>
+
+</ul>
+	  <div class="subCatContent">
+
+	  </div>
+	  </div></li>
+<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-has-children has-flyout menu-item-252366 humor"><a href="http://elitedaily.com/category/humor/" >Humor</a>
+<a href="#" class="flyout-toggle"><span> </span></a>
+    	<div class="subCatWrapper">
+    	<ul class="flyout">
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-337932 clips"><a href="http://elitedaily.com/category/humor/clips/" >Clips</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-337935 lol-lists"><a href="http://elitedaily.com/category/humor/lol-lists/" >LOL Lists</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-337934 generation-why-"><a href="http://elitedaily.com/category/humor/generationwhy/" >Generation whY!?</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-337933 funny-papers"><a href="http://elitedaily.com/category/humor/funny-papers/" >Funny Papers</a></li>
+
+</ul>
+	  <div class="subCatContent">
+
+	  </div>
+	  </div></li>
+<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-261423 videos"><a title="videos" href="http://elitedaily.com/tv/" >Videos</a></li>
+</ul>			</div>
+		</div>
+		<div class="stickyHeader">
+    <h1 class="entry-title">A Justin Bieber Ringtone Just Saved A Man&#8217;s Life Who Was Being Attacked By A Bear</h1>
+    <div class="socialSharingLargeButtons">
+        <ul class="sharingIcons"><a href="javascript:fbShareThis('http://elitedaily.com/news/world/justin-bieber-ringtone-saves-man-bear-attack/697119/', 600, 350)"  class="likeArticle"><span>Share</span></a> <a title="Twitter" target="_blank" href="https://twitter.com/intent/tweet?text=A Justin Bieber Ringtone Just Saved A Man&#8217;s Life Who Was Being Attacked By A Bear&url=http://elitedaily.com/news/world/justin-bieber-ringtone-saves-man-bear-attack/697119/&via=EliteDaily" class="tweetArticle"><span>Tweet</span></a></ul></div></div>
+ 		<div class="sidebarSavior"></div>
+
+
+		<script>ndaEvent.configure({"pid":697119,"title":"A Justin Bieber Ringtone Just Saved A Man's Life Who Was Being Attacked By A Bear","url":"http:\/\/elitedaily.com\/news\/world\/justin-bieber-ringtone-saves-man-bear-attack\/697119\/","date":"2014-08-05 12:06:03","authors":"Alexia LaFata","channels":["News","World"],"tags":["bear","bear attack","justin bieber","Justin Bieber ringtone","russian man"]});</script>
+							<div class="headerTakeoverAd">
+						<div class="headerTakeoverCenter">
+							<div>
+								<div class="billboard_wrapper">
+								<!--BILLBOARD SHOULD BE HERE START -->								
+								<div id="3210524" class="" data-adid="3210524"><noscript><a href="http://adserver.adtechus.com/adlink|3.0|5391.1|3210524|0|16|ADTECH;loc=300;key=key1+key2+key3+key4;alias=" target="_blank"><img src="http://adserver.adtechus.com/adserv|3.0|5391.1|3210524|0|16|ADTECH;loc=300;key=key1+key2+key3+key4;alias=" border="0" width="300" height="250"></a></noscript></div>
+<script> ADTECH.config.placements[3210524] = { sizeid: 16, params: { alias: '', target: '_blank' }};</script>		
+								<!-- BILLBOARD SHOULD BE HERE END -->	
+								</div>
+								
+								<div class="tablet_leaderboard_wrapper">
+								<!--TABLET SHOULD BE HERE START -->								
+								<script>asyncTabletSafe(2793083);</script><div id="2793083" class="tablet_leaderboard" data-adid="2793083"><noscript><a href="http://adserver.adtechus.com/adlink|3.0|5391.1|2793083|0|225|ADTECH;loc=300;key=key1+key2+key3+key4;alias=" target="_blank"><img src="http://adserver.adtechus.com/adserv|3.0|5391.1|2793083|0|225|ADTECH;loc=300;key=key1+key2+key3+key4;alias=" border="0" width="728" height="90"></a></noscript></div>
+<script> ADTECH.config.placements[2793083] = { sizeid: 225, fif: {usefif: 'true', width: 728, height: 90}, params: { alias: '', target: '_blank' }};</script>		
+								<!-- TABLET SHOULD BE HERE END -->														
+								</div>
+
+							</div>
+						</div>
+					</div>
+					<div id="3210525" class="" data-adid="3210525"><noscript><a href="http://adserver.adtechus.com/adlink|3.0|5391.1|3210525|0|16|ADTECH;loc=300;key=key1+key2+key3+key4;alias=" target="_blank"><img src="http://adserver.adtechus.com/adserv|3.0|5391.1|3210525|0|16|ADTECH;loc=300;key=key1+key2+key3+key4;alias=" border="0" width="300" height="250"></a></noscript></div>
+<script> ADTECH.config.placements[3210525] = { sizeid: 16, params: { alias: '', target: '_blank' }}; asyncDesktopSafe(3210525);</script>
+		<!-- Begin comScore Tag -->
+<script>
+  var _comscore = _comscore || [];
+  _comscore.push({ c1: "2", c2: "15353773" });
+  (function() {
+    var s = document.createElement("script"), el =
+document.getElementsByTagName("script")[0]; s.async = true;
+    s.src = (document.location.protocol == "https:" ? "https://sb" :
+"http://b") + ".scorecardresearch.com/beacon.js";
+    el.parentNode.insertBefore(s, el);
+  })();
+</script>
+<noscript>
+  <img src="http://b.scorecardresearch.com/p?c1=2&c2=15353773&cv=2.0&cj=1" />
+</noscript>
+<!-- End comScore Tag -->
+
+
+<!-- Begin Google Analytics --> 
+
+            <script type="text/javascript">//<![CDATA[
+            // Google Analytics for WordPress by Yoast v4.3.5 | http://yoast.com/wordpress/google-analytics/
+            var _gaq = _gaq || [];
+            _gaq.push(['_setAccount', 'UA-29208430-1']);
+				            _gaq.push(['_setDomainName','elitedaily.com'],['_setCustomVar',1,'author','alexia-lafata',3],['_setCustomVar',2,'postid','697119',3],['_setCustomVar',3,'tags','bear bear-attack justin-bieber justin-bieber-ringtone russia',3],['_setCustomVar',4,'category','news',3],['_setCustomVar',5,'categories','news world',3],['_trackPageview']);
+            (function () {
+                var ga = document.createElement('script');
+                ga.type = 'text/javascript';
+                ga.async = true;
+                ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+
+                var s = document.getElementsByTagName('script')[0];
+                s.parentNode.insertBefore(ga, s);
+            })();
+            //]]></script>
+			<!-- End Google Analytics -->
+
+
+<!-- Start Alexa Certify Javascript -->
+<script type="text/javascript">
+_atrk_opts = { atrk_acct:"0Wfkg1awO700MF", domain:"elitedaily.com",dynamic: true};
+(function() { var as = document.createElement('script'); as.type = 'text/javascript'; as.async = true; as.src = "https://d31qbv1cthcecs.cloudfront.net/atrk.js"; var s = document.getElementsByTagName('script')[0];s.parentNode.insertBefore(as, s); })();
+</script>
+<noscript><img src="https://d5nxst8fruw4z.cloudfront.net/atrk.gif?account=0Wfkg1awO700MF" style="display:none" height="1" width="1" alt="" /></noscript>
+<!-- End Alexa Certify Javascript -->
+
+  
+<!-- Quantcast Tag -->
+<script type="text/javascript">
+  var _qevents = _qevents || [];
+
+  (function() {
+  var elem = document.createElement('script');
+  elem.src = (document.location.protocol == "https:" ? "https://secure" : "http://edge") + ".quantserve.com/quant.js";
+  elem.async = true;
+  elem.type = "text/javascript";
+  var scpt = document.getElementsByTagName('script')[0];
+  scpt.parentNode.insertBefore(elem, scpt);
+  })();
+
+  _qevents.push({
+  qacct:"p-bc_UJU4PWvldc"
+  });
+</script><noscript>
+<div style="display:none;">
+<img src="//pixel.quantserve.com/pixel/p-bc_UJU4PWvldc.gif" border="0" height="1" width="1" alt="Quantcast"/>
+</div>
+</noscript>
+<!-- End Quantcast tag -->
+<!-- Start Off-Canvas Row -->
+<div class="contentArea row">
+	<!-- Row for main content area -->
+	<section id="main" role="main">
+
+
+			<!-- Row for main content area -->
+			<div id="contentWrapper" class="eight columns">
+	            <div class="dynMobileUnit dynMobileUnitLeaderboard">
+
+	                
+	                <!-- Async Tag // Tag for network 5391: Elite Daily // Website: mSite // Page: mSite_News // Placement: msite_News_320x50_ATF (3173923) // created at: May 15, 2014 11:30:49 AM --> 
+			<div id="3173923">
+				<noscript>
+					<a href="http://adserver.adtechus.com/adlink|3.0|5391.1|3173923|0|3055|ADTECH;loc=300;key=key1+key2+key3+key4;alias=msite_News_320x50-ATF-5" target="_blank">
+						<img src="http://adserver.adtechus.com/adserv|3.0|5391.1|3173923|0|3055|ADTECH;loc=300;key=key1+key2+key3+key4;alias=msite_News_320x50-ATF-5" border="0" width="320" height="50">
+					</a>
+				</noscript>
+			</div> 
+			<script> 
+				ADTECH.config.page = { protocol: 'http', server: 'adserver.adtechus.com', network: '5391.1', pageid: 678517, kv: {authorid:"1774", env:"www", ishome:"0", isarchive:"0", issingle:"1", ispage:"0", postid:"697119", nsfw:"0", catid:["16409", "1041"]}, params: { loc: '100', grp: '' }}; 
+				ADTECH.config.placements[3173923] = { sizeid: 3055, fif: {usefif: 'true', width: 320, height: 50}, kv: {mpos:"320x50"}, params: { alias: 'msite_News_320x50-ATF-5', target: '_blank' }}; 
+				asyncMobileSafe(3173923); 
+			</script>	            </div>
+				<div class="primary">
+					<div id="content">
+						<div class="post-box">
+							<!-- SINGLE POST CONTENT -->
+                    <article class="post-697119 post type-post status-publish format-standard hentry category-news category-world tag-bear tag-bear-attack tag-justin-bieber tag-justin-bieber-ringtone tag-russian-man inPost" id="post-697119">
+        <header>
+                        <script>
+                function fbShareThis(url, winWidth, winHeight) {
+                    var winTop = (screen.height / 2) - (winHeight / 2);
+                    var winLeft = (screen.width / 2) - (winWidth / 2);
+                    window.open('http://www.facebook.com/sharer/sharer.php?u=' + url + '&', 'sharer', 'top=' + winTop + ',left=' + winLeft + ',toolbar=0,status=0,width=' + winWidth + ',height=' + winHeight);
+                }
+            </script>    
+            <h1 id="staticTitle" class="entry-title">A Justin Bieber Ringtone Just Saved A Man&#8217;s Life Who Was Being Attacked By A Bear</h1>
+            <div class="socialSharing">
+                    <ul class="sharingIcons">
+<!--                             <a href="" target="_blank" class="fbShare"></a> -->
+                            <a href="javascript:fbShareThis('http://elitedaily.com/news/world/justin-bieber-ringtone-saves-man-bear-attack/697119/', 600, 350)"  class="fbShare"></a>
+                            <a href="https://twitter.com/intent/tweet?text=A Justin Bieber Ringtone Just Saved A Man&#8217;s Life Who Was Being Attacked By A Bear&url=http://elitedaily.com/news/world/justin-bieber-ringtone-saves-man-bear-attack/697119/&via=EliteDaily" target="_blank" class="twitterShare"></a>
+                            <a href="whatsapp://send" data-text="A Justin Bieber Ringtone Just Saved A Man&#8217;s Life Who Was Being Attacked By A Bear" data-href="" class="wa_btn wa_btn_m whatsappShare"></a><script type="text/javascript">if(typeof wabtn4fg==="undefined"){wabtn4fg=1;h=document.head||document.getElementsByTagName("head")[0],s=document.createElement("script");s.type="text/javascript";s.src="http://elitedaily.com/wp-content/themes/highsociety/js/whats_app.js";h.appendChild(s);}</script>
+                            <a href="mailto:someone@gmail.com?body=http://elitedaily.com/news/world/justin-bieber-ringtone-saves-man-bear-attack/697119/&subject=A Justin Bieber Ringtone Just Saved A Man&#8217;s Life Who Was Being Attacked By A Bear" class="emailShare"></a>
+                            <div class="leaveComment"></div>
+                            <div class="moreShareButton"></div>
+                            <a href="https://plus.google.com/share?url=http://elitedaily.com/news/world/justin-bieber-ringtone-saves-man-bear-attack/697119/" target="_blank" class="gplusShare moreSocial"></a>
+                            <a href="http://www.linkedin.com/shareArticle?mini=true&amp;url=http://elitedaily.com/news/world/justin-bieber-ringtone-saves-man-bear-attack/697119/&title=A Justin Bieber Ringtone Just Saved A Man&#8217;s Life Who Was Being Attacked By A Bear&source=Elite Daily" class="linkedinShare moreSocial"></a>
+                            <a href="http://www.stumbleupon.com/submit?url=http://elitedaily.com/news/world/justin-bieber-ringtone-saves-man-bear-attack/697119/&title=A Justin Bieber Ringtone Just Saved A Man&#8217;s Life Who Was Being Attacked By A Bear" class="stumbleShare moreSocial"></a>
+                            <a href="http://reddit.com/submit?url=http://elitedaily.com/news/world/justin-bieber-ringtone-saves-man-bear-attack/697119/&title=A Justin Bieber Ringtone Just Saved A Man&#8217;s Life Who Was Being Attacked By A Bear"  target="_blank" class="redditShare moreSocial"></a>
+                            <div class="fb-like like-article-desktop" data-href="http://elitedaily.com/news/world/justin-bieber-ringtone-saves-man-bear-attack/697119/" data-send="false" data-layout="button_count" data-width="80" data-show-faces="false"></div>
+                            <div class="gplus"><div class="g-plusone" data-size="medium" data-href="http://elitedaily.com/news/world/justin-bieber-ringtone-saves-man-bear-attack/697119/"></div></div>
+                            <div class="twitter-tweet"><a href="https://twitter.com/share" data-url="http://elitedaily.com/news/world/justin-bieber-ringtone-saves-man-bear-attack/697119/" class="twitter-share-button" data-via="elitedaily"></a></div>
+                    </ul>
+            </div>
+        </header>
+        <img class="aligncenter featImg" alt="A Justin Bieber Ringtone Just Saved A Man&#8217;s Life Who Was Being Attacked By A Bear" src="http://cdn29.elitedaily.com/wp-content/uploads/2014/08/bear-elite-daily.png">
+        <div class="subText inPostSubText">
+                                <span class="categoryName"><a href="http://elitedaily.com/category/news/world/">World</a></span>
+                <span class="authorName">&bull; <a href="http://elitedaily.com/author/alafata1/" title="Posts by Alexia LaFata" rel="author">Alexia LaFata</a> &bull; </span>
+                <span class="post-date"><time class="updated" datetime="2014-08-05T12:06:03+00:00" pubdate><span class="dateStamp"> Aug 5, 2014 - </span><span class="timeStamp">12:06pm</span></time> </span>
+        </div>
+            
+            <div class="pageFbLike fbLarge">
+            	<span class="likeUsOnFb">Like Us On Facebook</span>
+	            <div class="fb-like like-us-top-desktop" data-href="http://facebook.com/elitedaily" data-layout="standard" data-action="like" data-show-faces="false" data-share="false"></div>
+    	    </div>
+        	<div class="pageFbLike fbSmall">
+            	<span class="likeUsOnFb">Like Us On Facebook</span>
+	            <div class="fb-like like-us-top-mobile" data-href="http://facebook.com/elitedaily" data-layout="standard" data-action="like" data-width="300" data-show-faces="false" data-share="false"></div>
+    	    </div>        
+
+                        
+            <div class="entry-content">
+
+                
+                
+
+                            <p>Justin Bieber recently saved the life of a 42-year-old Russian man.</p>
+<p>No, the Biebs didn&#8217;t do anything heroic. When Igor Vorozhbitsyn was en route to his favorite fishing spot in northern Russia&#8217;s Yakutia Republic, he was attacked by a huge brown bear.</p>
+<p>But then, his cell phone rang and the ringtone, &#8220;Baby,&#8221; <a href="http://www.dailymail.co.uk/news/article-2716479/Fisherman-saved-bear-attack-Justin-Bieber-ringtone-went-mauled-scared-bear-away.html?ito=social-facebook" onclick="javascript:_gaq.push(['_trackEvent','outbound-article','http://www.dailymail.co.uk/news/article-2716479/Fisherman-saved-bear-attack-Justin-Bieber-ringtone-went-mauled-scared-bear-away.html?ito=social-facebook']);" target="_blank">scared off the animal.</a></p>
+<p>As the bear started clawing violently at Vorozhbitsyn, the Biebs&#8217; pre-pubescent vocals made the bear&#8217;s ears bleed, and it ran off.</p>
+<p>Wildlife experts believe it was the fact that the ringtone sounding off was so unexpected that it spooked the bear, but it&#8217;s more fun to say the bear just really, really, hated that song.</p>
+<p>Vorozhbitsyn suffers from <a href="http://www.dailymail.co.uk/news/article-2716479/Fisherman-saved-bear-attack-Justin-Bieber-ringtone-went-mauled-scared-bear-away.html?ito=social-facebook" onclick="javascript:_gaq.push(['_trackEvent','outbound-article','http://www.dailymail.co.uk/news/article-2716479/Fisherman-saved-bear-attack-Justin-Bieber-ringtone-went-mauled-scared-bear-away.html?ito=social-facebook']);" target="_blank">severe bruises on his chest</a> and face and cuts on his neck. Other fishermen found him after he was attacked, and used his phone to call for help.</p>
+<p>Vorozhbitsyn says he knows the ringtone &#8220;isn&#8217;t to everyone&#8217;s taste,&#8221; but it was his granddaughter that loaded &#8220;Baby&#8221; onto his phone &#8220;for a joke.&#8221;</p>
+<p>I think, however, that&#8217;s just code for &#8220;I&#8217;m honestly just a true Belieber.&#8221;</p>
+<p><em>via <a href="http://www.dailymail.co.uk/news/article-2716479/Fisherman-saved-bear-attack-Justin-Bieber-ringtone-went-mauled-scared-bear-away.html?ito=social-facebook" onclick="javascript:_gaq.push(['_trackEvent','outbound-article','http://www.dailymail.co.uk/news/article-2716479/Fisherman-saved-bear-attack-Justin-Bieber-ringtone-went-mauled-scared-bear-away.html?ito=social-facebook']);" target="_blank">Daily Mail</a></em></p>
+                    </div>
+                    <div class="articleSocialButtons">
+                            <a title="Facebook" target="_blank" href="javascript:fbShareThis('http://elitedaily.com/news/world/justin-bieber-ringtone-saves-man-bear-attack/697119/', 600, 350)" class="likeArticle"><span>Share</span></a>
+                            <a title="Twitter" target="_blank" href="https://twitter.com/intent/tweet?text=A Justin Bieber Ringtone Just Saved A Man&#8217;s Life Who Was Being Attacked By A Bear&url=http://elitedaily.com/news/world/justin-bieber-ringtone-saves-man-bear-attack/697119/&via=EliteDaily" class="tweetArticle"><span>Tweet</span></a>
+                            <div title="Comment" class="commentArticle"><span>React</span></div>
+                    </div>
+                                        
+                    <div class="pageFbLike pageFbLikeBottom fbLarge">
+                        <span class="likeUsOnFb">Like Us On Facebook</span>
+                        <div class="fb-like like-us-bottom-desktop" data-href="http://facebook.com/elitedaily" data-layout="standard" data-action="like" data-show-faces="false" data-share="false"></div>
+                    </div>
+                    <div class="pageFbLike pageFbLikeBottom fbSmall">
+                        <span class="likeUsOnFb">Like Us On Facebook</span>
+                        <div class="fb-like like-us-bottom-mobile" data-href="http://facebook.com/elitedaily" data-layout="standard" data-action="like" data-width="300" data-show-faces="false" data-share="false"></div>
+                    </div>       
+
+                    <div class="authorBox fbLikeOn vcard"><a class="authorAvatar url" href="http://elitedaily.com/author/alafata1"><img class="photo" src="http://elitedaily.com/wp-content/uploads/2014/05/Alexia-Lafata_avatar_1400605771.jpg"></a><div class="authorInfo"><h2><author><a class="url fn" href="http://elitedaily.com/author/alafata1">Alexia LaFata</a></author></h2><p class="sponsorDescription">Alexia is a Writer for Elite Daily and one of the most inquisitive people you will ever meet. Currently a senior at Boston College, Alexia is really bad at movies (except documentaries because she obsessively watches those), controlling her portion sizes, being appropriately affectionate towards animals, tweeting, and hiding her feelings. She's a classic ENFJ who was once described as "painfully enthusiastic" -- and is still mulling over it. You can e-mail her at alafata@elitedaily.com or check out more of her writing at http://alexialafata.com. Or do both.</p></div><div class="authorIcons"><a class="icon-twitter" target="_blank" href="http://twitter.com/@alexialafata" aria-hidden="true" data-icon="&#x54;"></a><a class="icon-google-plus" target="_blank" href="http://plus.google.com/117856269769901067361?rel=author" data-icon="&#x67;"></a></div></div>    </article>
+    <div class="moreStories">
+        <div class="prevStory">
+            <div class="storyArrow">
+                <span aria-hidden="true" class="icon-left-arrow"></span>
+            </div>
+            <span>Prev Story</span><h4><a href="http://elitedaily.com/envision/how-one-woman-made-the-crazy-idea-of-teaching-babies-to-dj-a-successful-reality/697002/" rel="next">How One Woman Made The Crazy Idea Of Teaching Babies To DJ A Successful Reality</a></h2>            <div class="clearFix"></div>
+        </div>
+        <div class="nextStory">
+            <div class="storyArrow">
+                <span aria-hidden="true" class="icon-right-arrow"></span>
+            </div>
+            <span>Next Story</span><h4><a href="http://elitedaily.com/entertainment/story-harry-potter-saved-one-boys-life-will-bring-tears-listen/696971/" rel="prev">The Story Of How &#8216;Harry Potter&#8217; Saved One Boy&#8217;s Life Will Bring You To Tears</a></h2>            <div class="clearFix"></div>
+        </div>
+    </div>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+<script type="text/javascript">
+(function(d){
+  var f = d.getElementsByTagName('SCRIPT')[0], p = d.createElement('SCRIPT');
+  p.type = 'text/javascript';
+  p.async = true;
+  p.src = '//assets.pinterest.com/js/pinit.js';
+  f.parentNode.insertBefore(p, f);
+}(document));
+</script>
+<script>
+    //PIN IT BUTTON ON HOVER
+    $(document).ready(function(){
+        var this_url = '',
+        encoded_url = '',
+        this_title = $('h1#staticTitle').text(),
+        pin_url = '//www.pinterest.com/pin/create/button/?url=&media=&description='+ this_title;
+
+        setTimeout(function(){
+            $('.entry-content img, .featImg').wrap( "<div class='pinWrapped'></div>" );
+            $('.pinWrapped').append('<a target="_blank" href="" data-pin-do="buttonPin" data-pin-config="none"><img class="pinItBtn" src="//assets.pinterest.com/images/pidgets/pin_it_button.png" /></a>');
+            $(document).on('mouseenter', '.pinWrapped, .featImg',  function(){
+                var this_url = 'http://www.elitedaily.com:80/news/world/justin-bieber-ringtone-saves-man-bear-attack/697119/';
+                var img_url = $(this).children('img').attr('src');
+                var encoded_url = encodeURIComponent(img_url);
+                var pin_url = '//www.pinterest.com/pin/create/button/?url='+ this_url +'&media=' + encoded_url + '&description='+ this_title;
+                $(this).children('a').attr('href', pin_url);
+            }).on('mouseleave', '.pinWrapped, .featImg',  function(){
+                //
+            });
+        },3000);
+
+    });
+</script>
+
+<!-- END POST CONTENT -->
+
+						</div>
+					</div>
+					<!-- begin ad tag -->
+	<div class="takeoverExtra">
+		<div class="catPageHatch"></div>
+		<div class="wideRectangleUnit">
+		<div id="3216741" class="wide_rectangle_desktop" data-adid="3216741"><noscript><a href="http://adserver.adtechus.com/adlink|3.0|5391.1|3216741|0|16|ADTECH;loc=300;key=key1+key2+key3+key4;alias=" target="_blank"><img src="http://adserver.adtechus.com/adserv|3.0|5391.1|3216741|0|16|ADTECH;loc=300;key=key1+key2+key3+key4;alias=" border="0" width="300" height="250"></a></noscript></div>
+<script> ADTECH.config.placements[3216741] = { sizeid: 16, params: { alias: '', target: '_blank' }};</script><script>asyncTabletSafe(3220479);</script><div id="3220479" class="wide_rectangle_tablet" data-adid="3220479"><noscript><a href="http://adserver.adtechus.com/adlink|3.0|5391.1|3220479|0|16|ADTECH;loc=300;key=key1+key2+key3+key4;alias=" target="_blank"><img src="http://adserver.adtechus.com/adserv|3.0|5391.1|3220479|0|16|ADTECH;loc=300;key=key1+key2+key3+key4;alias=" border="0" width="300" height="250"></a></noscript></div>
+<script> ADTECH.config.placements[3220479] = { sizeid: 16, params: { alias: '', target: '_blank' }};</script>	
+		</div>
+	</div>
+
+<div class="dynMobileUnit dynMobileUnitRectangle">
+	<!-- Async Tag // Tag for network 5391: Elite Daily // Website: mSite // Page: mSite_News // Placement: msite_News_300x250_BTF (3173924) // created at: May 15, 2014 11:30:49 AM --> 
+			<div id="3173924">
+				<noscript>
+					<a href="http://adserver.adtechus.com/adlink|3.0|5391.1|3173924|0|170|ADTECH;loc=300;key=key1+key2+key3+key4;alias=msite_News_300x250-BTF-5" target="_blank">
+						<img src="http://adserver.adtechus.com/adserv|3.0|5391.1|3173924|0|170|ADTECH;loc=300;key=key1+key2+key3+key4;alias=msite_News_300x250-BTF-5" border="0" width="300" height="250">
+					</a>
+				</noscript>
+			</div> 
+			<script>
+				ADTECH.config.page = { protocol: 'http', server: 'adserver.adtechus.com', network: '5391.1', pageid: 678517, kv: {authorid:"1774", env:"www", ishome:"0", isarchive:"0", issingle:"1", ispage:"0", postid:"697119", nsfw:"0", catid:["16409", "1041"]}, params: { loc: '100', grp: '' }}; 
+				ADTECH.config.placements[3173924] = { sizeid: 170, fif: {usefif: 'true', width: 300, height: 250}, kv: {mpos:"300x250"}, params: { alias: 'msite_News_300x250-BTF-5', target: '_blank' }}; 
+				asyncMobileSafe(3173924); 
+			</script></div>					<div class= "inPostVideo-Container"><article class="inPostVideo single"><div class="catPageHatch"></div><h3 class="videoSectionHeader"><a class="tvLink" target="_blank" href="http://www.youtube.com/user/EliteDaily">Original Videos</a>  <div class="youtubeButton articleYoutubeButton"><div class="g-ytsubscribe" data-channel="EliteDaily" data-layout="default"></div></div></h3><iframe class="youtubeIframe" width="608" height="341" src="http://www.youtube.com/embed/7UR1UTAVplM?wmode=transparent&amp;rel=0&amp;autohide=1&amp;showinfo=0&amp;enablejsapi=1" frameborder="0" allowfullscreen></iframe>				
+		
+						<header class="postHeader"><h2><a href="http://elitedaily.com/news/world/meet-the-14-year-old-boy-who-helped-legalize-medical-marijuana-in-new-york-video/658492/">Meet The 14-Year-Old Boy Who Helped Legalize Medical Marijuana In New York</a></h2></header>
+						<div class="entry-content">This past weekend, New York became the 23rd state in the US to legalize medical marijuana. Though Governor Andrew Cuomo signed the bill Saturday, it will be at least another 18 months before medical marijuana becomes available in New York...</div>
+		
+					</article></div>					
+					 <!-- SINGLE MORE IN CATEGORY -->
+ 
+
+
+<div class="moreInCategory category-news category-world">
+    <div class="catPageHatch"></div>
+    <h3>More In <a href="http://elitedaily.com/category/news/world/">World</a></h3>
+
+    
+        <article id="post-703239" class="post-703239 post type-post status-publish format-video hentry category-news category-world tag-adorable-couple tag-asl tag-paul-and-tina-sirimarco tag-sign-language tag-tina-sirimarco tag-toy-story two-up">
+            <a href="http://elitedaily.com/news/world/adorable-couple-signs-along-youve-got-friend/703239/">
+                <img class="aligncenter" alt="" src="http://cdn29.elitedaily.com/wp-content/uploads/2014/08/sign-language-elite-daily--600x300.png">
+            </a>    
+            <header class="postHeader">
+                <div class="subText">
+                    <span class="categoryName"><a href="http://elitedaily.com/category/news/world/">World</a></span>
+                    <author><span class="authorName">&bull; <a href="http://elitedaily.com/author/apliskin/" title="Posts by Adam Pliskin">Adam Pliskin</a></span></author>
+                    <time class="updated" datetime="2014-08-08T15:07:57+00:00" pubdate><span class="dateStamp"> Aug 8, </span><span class="timeStamp">3:07pm</span></time>                </div>
+                <h2><a href="http://elitedaily.com/news/world/adorable-couple-signs-along-youve-got-friend/703239/">Adorable Couple Covers &#8216;You&#8217;ve Got A Friend In Me&#8217; In Sign Language (Video)</a></h2>
+            </header>
+            <div class="entry-content">
+                <p>Tina Cleveland and Paul Sirimarco make up an adorable couple who just made an adorable video. Cleveland is an American Sign Language interpreter who taught her fiancé how to sign Randy Newman&#8217;s song, &#8220;You&#8217;ve got a friend in me.&#8221; The song was popularized by Pixar&#8217;s hit, &#8220;Toy Story.&#8221; It&#8217;s a lovely song about friendship, loyalty [&hellip;]</p>
+            </div>
+            <div class="post-divider"></div>
+        </article>
+    
+        <article id="post-703139" class="post-703139 post type-post status-publish format-standard hentry category-news category-world tag-college-tag tag-frat tag-frat-bros tag-fraternal-leadership tag-fraternity tag-whyweneedfrat two-up">
+            <a href="http://elitedaily.com/news/world/why-we-need-frat-campaign-bros/703139/">
+                <img class="aligncenter" alt="" src="http://cdn29.elitedaily.com/wp-content/uploads/2014/08/article-2719571-2058F89000000578-701_634x6242-600x300.jpg">
+            </a>    
+            <header class="postHeader">
+                <div class="subText">
+                    <span class="categoryName"><a href="http://elitedaily.com/category/news/world/">World</a></span>
+                    <author><span class="authorName">&bull; <a href="http://elitedaily.com/author/apliskin/" title="Posts by Adam Pliskin">Adam Pliskin</a></span></author>
+                    <time class="updated" datetime="2014-08-08T14:34:06+00:00" pubdate><span class="dateStamp"> Aug 8, </span><span class="timeStamp">2:34pm</span></time>                </div>
+                <h2><a href="http://elitedaily.com/news/world/why-we-need-frat-campaign-bros/703139/">&#8216;Why We Need Frat&#8217; Campaign Makes Bros Look Even Douchier Than Ever Before (Photos)</a></h2>
+            </header>
+            <div class="entry-content">
+                <p>Last week, Total Frat Move released a video called &#8220;Why We Need Frat.&#8221; It featured a bunch of preppy looking dudes holding whiteboards detailing their reasons for joining fraternities, using the hashtag, &#8220;#WhyWeNeedFrat.&#8221; The video was shot in black and white and was meant to mock the super-serious hashtag campaigns that have recently become popular. [&hellip;]</p>
+            </div>
+            <div class="post-divider"></div>
+        </article>
+    
+        <article id="post-702947" class="post-702947 post type-post status-publish format-standard hentry category-news category-world tag-cooked-parents tag-henry-chau tag-hong-kong tag-hong-kong-murder tag-murder tag-murdered-parents two-up">
+            <a href="http://elitedaily.com/news/world/cooked-parents-murder/702947/">
+                <img class="aligncenter" alt="" src="http://cdn29.elitedaily.com/wp-content/uploads/2014/08/large-36-600x300.jpg">
+            </a>    
+            <header class="postHeader">
+                <div class="subText">
+                    <span class="categoryName"><a href="http://elitedaily.com/category/news/world/">World</a></span>
+                    <author><span class="authorName">&bull; <a href="http://elitedaily.com/author/apliskin/" title="Posts by Adam Pliskin">Adam Pliskin</a></span></author>
+                    <time class="updated" datetime="2014-08-08T13:23:47+00:00" pubdate><span class="dateStamp"> Aug 8, </span><span class="timeStamp">1:23pm</span></time>                </div>
+                <h2><a href="http://elitedaily.com/news/world/cooked-parents-murder/702947/">WTF: A Hong Kong Man Murdered His Parents And Placed Their Remains In Lunchboxes</a></h2>
+            </header>
+            <div class="entry-content">
+                <p>Here&#8217;s a grisly story for you. A 30-year-old Hong Kong man named Henry Chau is on trial for the brutal murder of both his parents. Chau and his partner in crime, Tse Chun-kei, allegedly decapitated the elderly couple and placed the severed heads in a refrigerator. The heads were discovered and the murderers were arrested, but that&#8217;s [&hellip;]</p>
+            </div>
+            <div class="post-divider"></div>
+        </article>
+    
+        <article id="post-702864" class="post-702864 post type-post status-publish format-standard hentry category-news category-world tag-acrobatics tag-michelle-arvin tag-pregnant tag-pregnant-trapeze-artist tag-trapeze two-up">
+            <a href="http://elitedaily.com/news/world/pregnant-acrobatics/702864/">
+                <img class="aligncenter" alt="" src="http://cdn29.elitedaily.com/wp-content/uploads/2014/08/circus6n-1-web1-600x300.jpg">
+            </a>    
+            <header class="postHeader">
+                <div class="subText">
+                    <span class="categoryName"><a href="http://elitedaily.com/category/news/world/">World</a></span>
+                    <author><span class="authorName">&bull; <a href="http://elitedaily.com/author/apliskin/" title="Posts by Adam Pliskin">Adam Pliskin</a></span></author>
+                    <time class="updated" datetime="2014-08-08T12:40:07+00:00" pubdate><span class="dateStamp"> Aug 8, </span><span class="timeStamp">12:40pm</span></time>                </div>
+                <h2><a href="http://elitedaily.com/news/world/pregnant-acrobatics/702864/">Being Pregnant Didn&#8217;t Stop This Trapeze Artist From Performing Acrobatic Tricks (Photos)</a></h2>
+            </header>
+            <div class="entry-content">
+                <p>A New York woman named Michelle Arvin, who works as a trapeze artist and aerial performer, continued to perform her acrobatic feats throughout her pregnancy. Arvin, who is also a teacher at the Circus Warehouse in Long Island City, kept on hanging in precarious positions past her expected due date. However, Arvin and her doctors [&hellip;]</p>
+            </div>
+            <div class="post-divider"></div>
+        </article>
+    
+        <article id="post-702893" class="post-702893 post type-post status-publish format-standard hentry category-news category-world tag-apple tag-apple-employee tag-badge-auction tag-charity tag-sam-sung two-up">
+            <a href="http://elitedaily.com/news/world/former-apple-employee-sam-sung-auctioning-old-badge-charity/702893/">
+                <img class="aligncenter" alt="" src="http://cdn29.elitedaily.com/wp-content/uploads/2014/08/samsung-600x300.jpg">
+            </a>    
+            <header class="postHeader">
+                <div class="subText">
+                    <span class="categoryName"><a href="http://elitedaily.com/category/news/world/">World</a></span>
+                    <author><span class="authorName">&bull; <a href="http://elitedaily.com/author/ctoole/" title="Posts by Connor Toole">Connor Toole</a></span></author>
+                    <time class="updated" datetime="2014-08-08T12:35:59+00:00" pubdate><span class="dateStamp"> Aug 8, </span><span class="timeStamp">12:35pm</span></time>                </div>
+                <h2><a href="http://elitedaily.com/news/world/former-apple-employee-sam-sung-auctioning-old-badge-charity/702893/">Former Apple Employee Named Sam Sung Is Auctioning Off His Old Badge</a></h2>
+            </header>
+            <div class="entry-content">
+                <p>Last year, a man named Sam Sung garnered a fair amount of attention after a picture of his Apple business card began to circulate online. When the story first broke in 2012, the Vancouver-based employee was hesitant to comment, but after changing jobs and letting some time go by, he has finally shared his story. [&hellip;]</p>
+            </div>
+            <div class="post-divider"></div>
+        </article>
+    
+        <article id="post-702798" class="post-702798 post type-post status-publish format-video hentry category-news category-world tag-caliphate tag-iraq tag-isis tag-syria tag-the-islamic-state tag-vice-documentary two-up">
+            <a href="http://elitedaily.com/news/world/isis-iraq-inside-frontline/702798/">
+                <img class="aligncenter" alt="" src="http://cdn29.elitedaily.com/wp-content/uploads/2014/08/isis-elite-daily-600x300.png">
+            </a>    
+            <header class="postHeader">
+                <div class="subText">
+                    <span class="categoryName"><a href="http://elitedaily.com/category/news/world/">World</a></span>
+                    <author><span class="authorName">&bull; <a href="http://elitedaily.com/author/apliskin/" title="Posts by Adam Pliskin">Adam Pliskin</a></span></author>
+                    <time class="updated" datetime="2014-08-08T12:31:26+00:00" pubdate><span class="dateStamp"> Aug 8, </span><span class="timeStamp">12:31pm</span></time>                </div>
+                <h2><a href="http://elitedaily.com/news/world/isis-iraq-inside-frontline/702798/">An Inside Look At The Terrifying Terrorist Group ISIS From The Frontline (Video)</a></h2>
+            </header>
+            <div class="entry-content">
+                <p>Vice News has just released the first installment of a series called, &#8220;The Islamic State.&#8221; The series gives an unprecedented look inside the inner workings of the group formerly known as ISIS (the Islamic State of Iraq and Syria) which now simply goes by &#8220;The Islamic State&#8221; or IS. The group is known as a [&hellip;]</p>
+            </div>
+            <div class="post-divider"></div>
+        </article>
+        </div>
+ <!-- END MORE IN CATEGORY -->
+					<!-- SINGLE AD CONTENT -->
+<!--
+<div class="sponsoredVid">
+    <h4>Sponsored Content</h4>
+    <div class="catPageHatch"></div>
+    <iframe class="sponsoredVidIframe" src="http://app.videostat.com/v2/iframe.php?p=135&playlist=187&javascript=false&width=620&height=495&background=FFFFFF" width="620" height="495" frameborder="0" scrolling="no"></iframe>
+</div>  
+    
+<div class="sponsoredVidMobile">
+    <h4>Sponsored Content</h4>
+    <iframe class="mobileVidIframe" src="" width="390" height="320" frameborder="0" scrolling="no"></iframe>
+</div>      -->
+    
+<!-- END AD CONTENT -->
+					<!-- SINGLE ALSO ON SITE CONTENT -->
+<div class="alsoOnElite">
+    <div class="catPageHatch"></div>
+    <h4> Also On Elite </h4>
+     
+            
+        <article id="post-666522" class="post-666522 post type-post status-publish format-video hentry category-news category-world tag-alligators tag-gator-fight tag-gators tag-golf-course tag-viral-video three-up-small">
+            <a href="http://elitedaily.com/news/world/gator-fight-video/666522/">
+                <img class="aligncenter" alt="" src="http://cdn29.elitedaily.com/wp-content/uploads/2014/07/gator-elite-daily-600x300.png">
+            </a>    
+            <header class="postHeader">
+                <div class="subText">
+                    <span class="categoryName"><a href="http://elitedaily.com/category/news/world/">World</a></span>
+                    <time class="updated" datetime="2014-07-11T15:18:43+00:00" pubdate><span class="dateStamp"> Jul 11, </span><span class="timeStamp">3:18pm</span></time>                </div>
+                <h2><a href="http://elitedaily.com/news/world/gator-fight-video/666522/">These Alligators Wrestling Is Better Than Any UFC Match You&#8217;ve Ever Seen (Video)</a></h2>
+            </header>
+            <div class="entry-content">
+                <p>Two 10-foot alligators crawled out of a pond at The Eagles Golf Course in Tampa and became embroiled in a vicious fight, presumably a territorial dispute. The gators didn&#8217;t seem to be looking for a kill but for submission, locking their jaws onto each other in various positions until one grows too exhausted to fight [&hellip;]</p>
+            </div>
+            <div class="post-divider"></div>
+        </article>
+    
+        <article id="post-699832" class="post-699832 post type-post status-publish format-standard hentry category-basketball category-sports tag-basketball tag-kobe-bryant tag-lakers tag-michael-jordan tag-nba tag-work-ethic three-up-small">
+            <a href="http://elitedaily.com/sports/story-kobe-bryant-competitive/699832/">
+                <img class="aligncenter" alt="" src="http://cdn29.elitedaily.com/wp-content/uploads/2014/08/kobe-bryant-elite-daily-600x300.jpg">
+            </a>    
+            <header class="postHeader">
+                <div class="subText">
+                    <span class="categoryName"><a href="http://elitedaily.com/category/sports/">Sports</a></span>
+                    <time class="updated" datetime="2014-08-06T17:10:46+00:00" pubdate><span class="dateStamp"> Aug 6, </span><span class="timeStamp">5:10pm</span></time>                </div>
+                <h2><a href="http://elitedaily.com/sports/story-kobe-bryant-competitive/699832/">This Story About Kobe Bryant Practicing At 3 AM Proves How Competitive He Is</a></h2>
+            </header>
+            <div class="entry-content">
+                <p>If there&#8217;s one thing that separates the good from the great, it&#8217;s work ethic. Plain and simple. The guy who wants it most and who will not stop until he finally achieves his goals is always the one who comes out on top. God-given talent doesn&#8217;t hurt either, but in the case of Kobe Bryant, [&hellip;]</p>
+            </div>
+            <div class="post-divider"></div>
+        </article>
+    
+        <article id="post-644502" class="post-644502 post type-post status-publish format-standard hentry category-dating category-ladies tag-dating-advice tag-life-advice tag-love tag-single-ladies tag-single-life three-up-small">
+            <a href="http://elitedaily.com/dating/making-it-count-10-things-every-girl-should-learn-while-single/644502/">
+                <img class="aligncenter" alt="" src="http://cdn29.elitedaily.com/wp-content/uploads/2014/07/tumblr_n5q3kcq4wd1qzdiqvo1_1280-600x300.jpg">
+            </a>    
+            <header class="postHeader">
+                <div class="subText">
+                    <span class="categoryName"><a href="http://elitedaily.com/category/dating/ladies/">Ladies</a></span>
+                    <time class="updated" datetime="2014-07-17T10:39:50+00:00" pubdate><span class="dateStamp"> Jul 17, </span><span class="timeStamp">10:39am</span></time>                </div>
+                <h2><a href="http://elitedaily.com/dating/making-it-count-10-things-every-girl-should-learn-while-single/644502/">10 Important, Independent Lessons Every Girl Should Learn While She&#8217;s Single</a></h2>
+            </header>
+            <div class="entry-content">
+                <p>I personally have never believed people who claim they choose to be single. I mean, you may come to enjoy being single and make the most out of it, but if your idea of Prince Charming shows up one day, you&#8217;re not gonna be like, Sorry, Chris Hemsworth lookalike, I&#8217;m busy treading a sea of [&hellip;]</p>
+            </div>
+            <div class="post-divider"></div>
+        </article>
+    
+        <article id="post-662300" class="post-662300 post type-post status-publish format-standard hentry category-celebrity category-entertainment tag-gifs-ryan-gosling-pregnancy tag-reaction-baby-gifs tag-reaction-gifs-pregnancy tag-ryan-gosling-eva-mendes tag-ryan-gosling-eva-mendes-baby-gifs three-up-small">
+            <a href="http://elitedaily.com/entertainment/celebrity/gifs-descibe-ryan-gosling-eva-mendez-pregnant/662300/">
+                <img class="aligncenter" alt="" src="http://cdn29.elitedaily.com/wp-content/uploads/2014/07/ryan-600x300.jpg">
+            </a>    
+            <header class="postHeader">
+                <div class="subText">
+                    <span class="categoryName"><a href="http://elitedaily.com/category/entertainment/">Entertainment</a></span>
+                    <time class="updated" datetime="2014-07-09T12:53:46+00:00" pubdate><span class="dateStamp"> Jul 9, </span><span class="timeStamp">12:53pm</span></time>                </div>
+                <h2><a href="http://elitedaily.com/entertainment/celebrity/gifs-descibe-ryan-gosling-eva-mendez-pregnant/662300/">16 GIFs To Describe How Every Girl Felt When She Heard That Ryan Gosling Got Eva Mendez Pregnant</a></h2>
+            </header>
+            <div class="entry-content">
+                <p>Remember that time you heard Ryan Gosling impregnated Eva Mendes? Of course, you do. It was the worst moment of your life. You probably cried, immediately gave up on your diet (who needs a dream body when your dream boy is taken?) and then drank a lot. No judgment, we were right there with you. [&hellip;]</p>
+            </div>
+            <div class="post-divider"></div>
+        </article>
+    
+        <article id="post-666629" class="post-666629 post type-post status-publish format-standard hentry category-basketball category-sports tag-cleveland tag-drake tag-drake-map tag-elite-daily tag-lebron-james three-up-small">
+            <a href="http://elitedaily.com/sports/drake-definitely-next-flight-cleveland-photo/666629/">
+                <img class="aligncenter" alt="" src="http://cdn29.elitedaily.com/wp-content/uploads/2014/07/Drake_2-600x300.png">
+            </a>    
+            <header class="postHeader">
+                <div class="subText">
+                    <span class="categoryName"><a href="http://elitedaily.com/category/sports/">Sports</a></span>
+                    <time class="updated" datetime="2014-07-11T15:13:05+00:00" pubdate><span class="dateStamp"> Jul 11, </span><span class="timeStamp">3:13pm</span></time>                </div>
+                <h2><a href="http://elitedaily.com/sports/drake-definitely-next-flight-cleveland-photo/666629/">Groupie Alert! Drake Is Definitely On The Next Flight To Cleveland (Photo)</a></h2>
+            </header>
+            <div class="entry-content">
+                <p>Aubrey &#8220;Drake&#8221; Graham has a storied history of jumping on whatever bandwagon is hot at the moment, so when LeBron James teamed up with Chris Bosh and Dwyane Wade four years ago, it was only natural that he abandon his hometown Toronto Raptors for a team with greater street cred. After being denied access to [&hellip;]</p>
+            </div>
+            <div class="post-divider"></div>
+        </article>
+    
+        <article id="post-696784" class="post-696784 post type-post status-publish format-standard hentry category-basketball category-sports tag-drake tag-kevin-durant tag-ovo-fest tag-raptors tag-toronto three-up-small">
+            <a href="http://elitedaily.com/sports/drake-kevin-durant-raptors-video/696784/">
+                <img class="aligncenter" alt="" src="http://cdn29.elitedaily.com/wp-content/uploads/2014/08/drake-kevin-durant-manziel-elite-daily-600x300.jpg">
+            </a>    
+            <header class="postHeader">
+                <div class="subText">
+                    <span class="categoryName"><a href="http://elitedaily.com/category/sports/">Sports</a></span>
+                    <time class="updated" datetime="2014-08-05T10:34:54+00:00" pubdate><span class="dateStamp"> Aug 5, </span><span class="timeStamp">10:34am</span></time>                </div>
+                <h2><a href="http://elitedaily.com/sports/drake-kevin-durant-raptors-video/696784/">Drake Tried Recruiting Kevin Durant To Play For The Raptors At His Concert</a></h2>
+            </header>
+            <div class="entry-content">
+                <p>Drake is working the game right now. After killing it at the ESPYs, he&#8217;s pretty much established a personal relationship with every single sports star you can think of. However, what people are forgetting is that he has an allegiance (perhaps his only non-groupie allegiance) as the Toronto Raptors&#8217; brand ambassador. During his OVO Fest [&hellip;]</p>
+            </div>
+            <div class="post-divider"></div>
+        </article>
+        </div>
+<!-- END ALSO ON SITE CONTENT -->
+					<!-- SINGLE POST COMMENTS -->
+<div class="facebookComments">
+    <div class="catPageHatch"></div> 
+    <div class="fb-comments" data-href="http://elitedaily.com/news/world/justin-bieber-ringtone-saves-man-bear-attack/697119/" data-width="620" data-num-posts="10"></div>
+</div>  
+<!-- END POST COMMENTS -->
+				</div>
+			</div><!-- End Content row -->
+			
+
+			<aside id="sidebar" class="four columns">
+	<div class="sidebar-box">
+		<div class="sidebarAbove">
+			<article id="ad_300x250_atf-38" class="row widget widget_ad_300x250_atf"><div class="sidebar-section twelve columns"><h6>Widget Titles</h6><div id="2793081" class="ad_medium_rectangle_wrapper" data-adid="2793081"><noscript><a href="http://adserver.adtechus.com/adlink|3.0|5391.1|2793081|0|170|ADTECH;loc=300;key=key1+key2+key3+key4;alias=" target="_blank"><img src="http://adserver.adtechus.com/adserv|3.0|5391.1|2793081|0|170|ADTECH;loc=300;key=key1+key2+key3+key4;alias=" border="0" width="300" height="250"></a></noscript></div>
+<script> ADTECH.config.placements[2793081] = { sizeid: 170, fif: {usefif: 'true'}, params: { alias: '', target: '_blank' }};</script></div></article><article id="social_sidebar-4" class="row widget widget_social_sidebar"><div class="sidebar-section twelve columns"><h6>Procrastinate Better</h6><div class="fbLikeBox"><div class="fb-like-box like-us-sidebar-desktop" data-href="http://facebook.com/elitedaily" data-colorscheme="light" data-show-faces="true" data-header="false" data-stream="false" data-show-border="false"></div></div><div class="twitterButton"><a href="https://twitter.com/elitedaily" class="twitter-follow-button" data-show-count="true">Follow @elitedaily</a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script></div><div class="youtubeButton"><div class="g-ytsubscribe" data-channel="EliteDaily" data-layout="default"></div></div><div class="stayUpdated"><div class="socialSquares"><a href="http://facebook.com/elitedaily" target="_blank" class="facebookSquare"></a><a href="http://twitter.com/elitedaily" target="_blank" class="twitterSquare"></a><a href="http://instagram.com/elitedaily" target="_blank" class="instagramSquare"></a><a href="http://youtube.com/elitedaily" target="_blank" class="youtubeSquare"></a></div><p class="socialPhrase">Stay Informed &amp; Be Elite</p></div></div></article><article id="newsletter_sidebar-3" class="row widget widget_newsletter_sidebar"><div class="sidebar-section twelve columns"><h6>Newsletter</h6><div id="mc_embed_signup"><form action="http://elitedaily.us4.list-manage.com/subscribe/post?u=77ecc6f79e757aadc421a87b1&amp;id=6249718f79" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate><div class="mailBorder" ></div><img class="subscribeImage" src="http://cdn29.elitedaily.com/wp-content/uploads/2014/06/sign-up.png"><div class="mc-field-group"><input type="email" value="Enter email address..." name="EMAIL" class="required email" id="mce-EMAIL" onfocus="if (this.value == 'Enter email address...') {this.value = '';}" onblur="if (this.value == '') {this.value = 'Enter email address...';}" /></div><div id="mce-responses" class="clear"><div class="response" id="mce-error-response" style="display:none"></div><div class="response" id="mce-success-response" style="display:none"></div></div><div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div></form></div></div></article><article id="ad_300x250_btf-19" class="row widget widget_ad_300x250_btf"><div class="sidebar-section twelve columns"><h6>Widget Title</h6><div id="2824181" class="ad_medium_rectangle_wrapper" data-adid="2824181"><noscript><a href="http://adserver.adtechus.com/adlink|3.0|5391.1|2824181|0|170|ADTECH;loc=300;key=key1+key2+key3+key4;alias=" target="_blank"><img src="http://adserver.adtechus.com/adserv|3.0|5391.1|2824181|0|170|ADTECH;loc=300;key=key1+key2+key3+key4;alias=" border="0" width="300" height="250"></a></noscript></div>
+<script> ADTECH.config.placements[2824181] = { sizeid: 170, fif: {usefif: 'true'}, params: { alias: '', target: '_blank' }};</script></div></article><article id="feat_sidebar-2" class="row widget widget_feat_sidebar"><div class="sidebar-section twelve columns"><h6>What&#8217;s New</h6>
+		<ul class="popularList">
+
+							<li class="post-701416 post type-post status-publish format-standard hentry category-news category-politics tag-banned-food tag-food tag-processed-foods tag-russia">
+				<a href="http://elitedaily.com/news/politics/russia-just-banned-u-s-food-imports-wise-healthy-decision/701416/" title="Cold War II: Russia Banning US Food Imports Is A Wise And Healthy Decision">
+				<img class="aligncenter" alt="Cold War II: Russia Banning US Food Imports Is A Wise And Healthy Decision" src="http://cdn29.elitedaily.com/wp-content/uploads/2014/08/snack_52x40-300x150.jpg">				</a>
+				<h4><a class="popularTitle" href="http://elitedaily.com/news/politics/russia-just-banned-u-s-food-imports-wise-healthy-decision/701416/" title="Cold War II: Russia Banning US Food Imports Is A Wise And Healthy Decision">
+					Cold War II: Russia Banning US Food Imports Is A Wise And Healthy Decision					</a>
+				</h4>
+				<script>
+				var oldIE;
+			    if ($('html').is('.ie6, .ie7, .ie8')) {
+			        oldIE = true;
+			    }
+
+			    if (oldIE) {
+			        // Here's your JS for IE..
+			    } else {
+					function getTheCount() {
+						var this_url = $('.popularList>li:nth-child(' + 1 + ')>a').attr('href');
+						var fb_count = 'http://api.facebook.com/restserver.php?method=links.getStats&format=json&urls=' + this_url;
+						var this_json = $.getJSON( fb_count , function(data){
+								$('.popularList>li:nth-child(' + 1 + ') .socialNumber').html(data[0]['total_count']);							
+						});
+					}
+					getTheCount();
+			    }
+
+				</script>				
+				<span class="categoryName"><a href="http://elitedaily.com/category/news/politics/">Politics</a></span>
+				<div class="categoryScreen">
+					<div class="socialNumWrapper">
+						<i class="icon-redo" aria-hidden="true" data-icon="&#x79;" ></i>
+						<span class="socialNumber">0</span>						
+					</div>
+				</div>								
+			</li>
+						<li class="post-699889 post type-post status-publish format-standard hentry category-news category-technology">
+				<a href="http://elitedaily.com/news/technology/drones-uavs-commericial-hobby-cool/699889/" title="Drones Are Actually Pretty Cool… When They Aren&#8217;t Being Used To Kill People">
+				<img class="aligncenter" alt="Drones Are Actually Pretty Cool… When They Aren&#8217;t Being Used To Kill People" src="http://cdn29.elitedaily.com/wp-content/uploads/2014/08/shutterstock_109319384-300x150.jpg">				</a>
+				<h4><a class="popularTitle" href="http://elitedaily.com/news/technology/drones-uavs-commericial-hobby-cool/699889/" title="Drones Are Actually Pretty Cool… When They Aren&#8217;t Being Used To Kill People">
+					Drones Are Actually Pretty Cool… When They Aren&#8217;t Being Used To Kill People					</a>
+				</h4>
+				<script>
+				var oldIE;
+			    if ($('html').is('.ie6, .ie7, .ie8')) {
+			        oldIE = true;
+			    }
+
+			    if (oldIE) {
+			        // Here's your JS for IE..
+			    } else {
+					function getTheCount() {
+						var this_url = $('.popularList>li:nth-child(' + 2 + ')>a').attr('href');
+						var fb_count = 'http://api.facebook.com/restserver.php?method=links.getStats&format=json&urls=' + this_url;
+						var this_json = $.getJSON( fb_count , function(data){
+								$('.popularList>li:nth-child(' + 2 + ') .socialNumber').html(data[0]['total_count']);							
+						});
+					}
+					getTheCount();
+			    }
+
+				</script>				
+				<span class="categoryName"><a href="http://elitedaily.com/category/news/technology/">Technology</a></span>
+				<div class="categoryScreen">
+					<div class="socialNumWrapper">
+						<i class="icon-redo" aria-hidden="true" data-icon="&#x79;" ></i>
+						<span class="socialNumber">0</span>						
+					</div>
+				</div>								
+			</li>
+						<li class="post-683367 post type-post status-publish format-standard hentry category-culture category-life tag-attached tag-experience tag-life-tag tag-multitask tag-phone">
+				<a href="http://elitedaily.com/life/culture/life-without-phone-ive-learned/683367/" title="I Went 16 Months Without A Cell Phone And My Life Was So Much Better">
+				<img class="aligncenter" alt="I Went 16 Months Without A Cell Phone And My Life Was So Much Better" src="http://cdn29.elitedaily.com/wp-content/uploads/2014/08/tumblr_mmwagdwXex1qdm5oto1_500-300x150.jpg">				</a>
+				<h4><a class="popularTitle" href="http://elitedaily.com/life/culture/life-without-phone-ive-learned/683367/" title="I Went 16 Months Without A Cell Phone And My Life Was So Much Better">
+					I Went 16 Months Without A Cell Phone And My Life Was So Much Better					</a>
+				</h4>
+				<script>
+				var oldIE;
+			    if ($('html').is('.ie6, .ie7, .ie8')) {
+			        oldIE = true;
+			    }
+
+			    if (oldIE) {
+			        // Here's your JS for IE..
+			    } else {
+					function getTheCount() {
+						var this_url = $('.popularList>li:nth-child(' + 3 + ')>a').attr('href');
+						var fb_count = 'http://api.facebook.com/restserver.php?method=links.getStats&format=json&urls=' + this_url;
+						var this_json = $.getJSON( fb_count , function(data){
+								$('.popularList>li:nth-child(' + 3 + ') .socialNumber').html(data[0]['total_count']);							
+						});
+					}
+					getTheCount();
+			    }
+
+				</script>				
+				<span class="categoryName"><a href="http://elitedaily.com/category/life/">Life</a></span>
+				<div class="categoryScreen">
+					<div class="socialNumWrapper">
+						<i class="icon-redo" aria-hidden="true" data-icon="&#x79;" ></i>
+						<span class="socialNumber">0</span>						
+					</div>
+				</div>								
+			</li>
+						<li class="post-700966 post type-post status-publish format-standard hentry category-culture category-life tag-being-broke tag-broke tag-help-me-im-poor tag-poor">
+				<a href="http://elitedaily.com/life/culture/29-signs-you-are-one-broke-girl/700966/" title="#HelpMeI&#8217;mPoor: 29 Signs You Are One Broke B*tch In The City">
+				<img class="aligncenter" alt="#HelpMeI&#8217;mPoor: 29 Signs You Are One Broke B*tch In The City" src="http://cdn29.elitedaily.com/wp-content/uploads/2014/08/large-113-300x150.jpg">				</a>
+				<h4><a class="popularTitle" href="http://elitedaily.com/life/culture/29-signs-you-are-one-broke-girl/700966/" title="#HelpMeI&#8217;mPoor: 29 Signs You Are One Broke B*tch In The City">
+					#HelpMeI&#8217;mPoor: 29 Signs You Are One Broke B*tch In The City					</a>
+				</h4>
+				<script>
+				var oldIE;
+			    if ($('html').is('.ie6, .ie7, .ie8')) {
+			        oldIE = true;
+			    }
+
+			    if (oldIE) {
+			        // Here's your JS for IE..
+			    } else {
+					function getTheCount() {
+						var this_url = $('.popularList>li:nth-child(' + 4 + ')>a').attr('href');
+						var fb_count = 'http://api.facebook.com/restserver.php?method=links.getStats&format=json&urls=' + this_url;
+						var this_json = $.getJSON( fb_count , function(data){
+								$('.popularList>li:nth-child(' + 4 + ') .socialNumber').html(data[0]['total_count']);							
+						});
+					}
+					getTheCount();
+			    }
+
+				</script>				
+				<span class="categoryName"><a href="http://elitedaily.com/category/life/">Life</a></span>
+				<div class="categoryScreen">
+					<div class="socialNumWrapper">
+						<i class="icon-redo" aria-hidden="true" data-icon="&#x79;" ></i>
+						<span class="socialNumber">0</span>						
+					</div>
+				</div>								
+			</li>
+				</ul>
+		</div></article><article id="ad_300x250_btf_b-5" class="row widget widget_ad_300x250_btf_b"><div class="sidebar-section twelve columns"><h6>Widget Title</h6><div id="2793082" class="ad_medium_rectangle_wrapper" data-adid="2793082"><noscript><a href="http://adserver.adtechus.com/adlink|3.0|5391.1|2793082|0|170|ADTECH;loc=300;key=key1+key2+key3+key4;alias=" target="_blank"><img src="http://adserver.adtechus.com/adserv|3.0|5391.1|2793082|0|170|ADTECH;loc=300;key=key1+key2+key3+key4;alias=" border="0" width="300" height="250"></a></noscript></div>
+<script> ADTECH.config.placements[2793082] = { sizeid: 170, fif: {usefif: 'true'}, params: { alias: '', target: '_blank' }};</script></div></article><article id="call_2_action-6" class="row widget widget_call_2_action"><div class="sidebar-section twelve columns"><h6>Widget Title</h6><div class="ctaImage"><img src="http://cdn29.elitedaily.com/wp-content/uploads/2014/06/write-for-elite.png"></div><a class="submitInfo" href="http://v3.elitedaily.com/journalist/" target="_blank">Apply Now</a></div></article>			<div class="stickBlankBottom"></div>			
+		</div>
+		<div class="sidebarBelow">
+			<article id="advanced-recent-posts-2" class="row widget advanced_recent_posts_widget"><div class="sidebar-section twelve columns"><h6>RIGHT NOW</h6><ul>
+						<li class="recent-post-item category-funny-papers category-humor">
+
+				<a  href="http://elitedaily.com/humor/text-message-broken-condom-food/703507/" rel="bookmark" title="Permanent link to Text Exchange Between Guy And Girl After Condom Breaks Proves Food Is Always Priority" class="post-title">Text Exchange Between Guy And Girl After Condom Breaks Proves Food Is Always Priority</a>
+
+					
+				<div class="subText">
+					<span class="categoryName"><a href="http://elitedaily.com/category/humor/">Humor</a></span>
+					<span class="post-date">&bull; 56 mins ago</span>
+				</div>
+
+				                				<div class="post-entry">
+				
+					<a href="http://elitedaily.com/humor/text-message-broken-condom-food/703507/" title="Text Exchange Between Guy And Girl After Condom Breaks Proves Food Is Always Priority">
+
+					<img src="http://cdn29.elitedaily.com/wp-content/uploads/2014/08/Screen-Shot-2014-08-08-at-3.02.57-PM-150x150.png" alt="Text Exchange Between Guy And Girl After Condom Breaks Proves Food Is Always Priority" width="100" height="100" />
+
+					</a>
+
+				
+
+
+			
+
+				
+
+							  </div>
+				
+
+				
+			</li>
+
+								<li class="recent-post-item category-art category-envision">
+
+				<a  href="http://elitedaily.com/envision/influential-photographers-of-august/703135/" rel="bookmark" title="Permanent link to Full-Frame: The Most Influential Photographers Of August" class="post-title">Full-Frame: The Most Influential Photographers Of August</a>
+
+					
+				<div class="subText">
+					<span class="categoryName"><a href="http://elitedaily.com/category/envision/">Envision</a></span>
+					<span class="post-date">&bull; 1 hour ago</span>
+				</div>
+
+				                				<div class="post-entry">
+				
+					<a href="http://elitedaily.com/envision/influential-photographers-of-august/703135/" title="Full-Frame: The Most Influential Photographers Of August">
+
+					<img src="http://cdn29.elitedaily.com/wp-content/uploads/2014/08/Featured-Image4-150x150.jpg" alt="Full-Frame: The Most Influential Photographers Of August" width="100" height="100" />
+
+					</a>
+
+				
+
+
+			
+
+				
+
+							  </div>
+				
+
+				
+			</li>
+
+								<li class="recent-post-item category-news">
+
+				<a  href="http://elitedaily.com/news/brutus-croc-shark-photos/703422/" rel="bookmark" title="Permanent link to Here&#8217;s A Closer Look At Brutus, The Gigantic Shark-Eating Crocodile (Photos)" class="post-title">Here&#8217;s A Closer Look At Brutus, The Gigantic Shark-Eating Crocodile (Photos)</a>
+
+					
+				<div class="subText">
+					<span class="categoryName"><a href="http://elitedaily.com/category/news/">News</a></span>
+					<span class="post-date">&bull; 1 hour ago</span>
+				</div>
+
+				                				<div class="post-entry">
+				
+					<a href="http://elitedaily.com/news/brutus-croc-shark-photos/703422/" title="Here&#8217;s A Closer Look At Brutus, The Gigantic Shark-Eating Crocodile (Photos)">
+
+					<img src="http://cdn29.elitedaily.com/wp-content/uploads/2014/08/article-2716765-2046AC7800000578-500_964x5572-150x150.jpg" alt="Here&#8217;s A Closer Look At Brutus, The Gigantic Shark-Eating Crocodile (Photos)" width="100" height="100" />
+
+					</a>
+
+				
+
+
+			
+
+				
+
+							  </div>
+				
+
+				
+			</li>
+
+								<li class="recent-post-item category-clips category-humor">
+
+				<a  href="http://elitedaily.com/humor/penis-stuck-in-zipper-video/703430/" rel="bookmark" title="Permanent link to Irishman Tries To Free Penis From Zipper As Friends Look On And Laugh (Video)" class="post-title">Irishman Tries To Free Penis From Zipper As Friends Look On And Laugh (Video)</a>
+
+					
+				<div class="subText">
+					<span class="categoryName"><a href="http://elitedaily.com/category/humor/">Humor</a></span>
+					<span class="post-date">&bull; 1 hour ago</span>
+				</div>
+
+				                				<div class="post-entry">
+				
+					<a href="http://elitedaily.com/humor/penis-stuck-in-zipper-video/703430/" title="Irishman Tries To Free Penis From Zipper As Friends Look On And Laugh (Video)">
+
+					<img src="http://cdn29.elitedaily.com/wp-content/uploads/2014/08/Penis-From-Zipper-elite-daily--150x150.png" alt="Irishman Tries To Free Penis From Zipper As Friends Look On And Laugh (Video)" width="100" height="100" />
+
+					</a>
+
+				
+
+
+			
+
+				
+
+							  </div>
+				
+
+				
+			</li>
+
+								<li class="recent-post-item category-celebrity category-entertainment">
+
+				<a  href="http://elitedaily.com/entertainment/celebrity/russell-brand-bill-oreilly-rant/703385/" rel="bookmark" title="Permanent link to Russell Brand Rips Apart Bill O&#8217;Reilly Over His Remarks On Border Control (Video)" class="post-title">Russell Brand Rips Apart Bill O&#8217;Reilly Over His Remarks On Border Control (Video)</a>
+
+					
+				<div class="subText">
+					<span class="categoryName"><a href="http://elitedaily.com/category/entertainment/">Entertainment</a></span>
+					<span class="post-date">&bull; 2 hours ago</span>
+				</div>
+
+				                				<div class="post-entry">
+				
+					<a href="http://elitedaily.com/entertainment/celebrity/russell-brand-bill-oreilly-rant/703385/" title="Russell Brand Rips Apart Bill O&#8217;Reilly Over His Remarks On Border Control (Video)">
+
+					<img src="http://cdn29.elitedaily.com/wp-content/uploads/2014/08/Russell-Brand-elite-daily-150x150.png" alt="Russell Brand Rips Apart Bill O&#8217;Reilly Over His Remarks On Border Control (Video)" width="100" height="100" />
+
+					</a>
+
+				
+
+
+			
+
+				
+
+							  </div>
+				
+
+				
+			</li>
+
+		</ul>
+</div></article>		</div>
+
+	</div>
+</aside><!-- /#sidebar -->
+	</section>
+		<footer id="content-info" role="contentinfo">
+			            <div class="footerAdWrapper">
+	            <script>asyncDesktopSafe(2793084);asyncDesktopSafe(3210524);asyncDesktopSafe(3216741);asyncDesktopSafe(2793081);asyncDesktopSafe(2824181);asyncDesktopSafe(2793082);console.log('Ads loaded');</script>	        </div>
+						<div class="row categoryRow">
+				<div class="footerColumn">
+					<h4>Categories</h4>
+					<ul>
+							<li class="cat-item cat-item-1036"><a href="http://elitedaily.com/category/sports/" title="Sports">Sports</a>
+</li>
+	<li class="cat-item cat-item-3783"><a href="http://elitedaily.com/category/money/" title="View all posts filed under Money">Money</a>
+</li>
+	<li class="cat-item cat-item-16409"><a href="http://elitedaily.com/category/news/" title="View all posts filed under News">News</a>
+</li>
+	<li class="cat-item cat-item-40129"><a href="http://elitedaily.com/category/life/" title="View all posts filed under Life">Life</a>
+</li>
+					</ul>
+					<!---->
+				</div>
+				<div class="footerColumn">
+					<ul>
+							<li class="cat-item cat-item-14048"><a href="http://elitedaily.com/category/entertainment/" title="View all posts filed under Entertainment">Entertainment</a>
+</li>
+	<li class="cat-item cat-item-14995"><a href="http://elitedaily.com/category/dating/" title="Love Life">Dating</a>
+</li>
+	<li class="cat-item cat-item-15287"><a href="http://elitedaily.com/category/women/" title="Women">Women</a>
+</li>
+	<li class="cat-item cat-item-40135"><a href="http://elitedaily.com/category/music/" title="music ">Music</a>
+</li>
+					</ul>
+				</div> 
+				<div class="footerColumn">
+					<ul>
+							<li class="cat-item cat-item-1031"><a href="http://elitedaily.com/category/envision/" title="envision ">Envision</a>
+</li>
+	<li class="cat-item cat-item-14436"><a href="http://elitedaily.com/category/humor/" title="View all posts filed under Humor">Humor</a>
+</li>
+					</ul>
+				</div>
+				<div class="footerColumn infoColumn">
+					<h4>Get In Touch</h4>
+					<ul>
+						<li><a href="/about">About</a></li>
+						<li><a href="/contact-us">Contact</a></li>
+						<li><a href="/advertise">Advertise</a></li>
+						<li><a target="_blank" href="http://v3.elitedaily.com/journalist/">Careers</a></li>
+					</ul>
+				</div>
+				<div class="socialColumn">
+					<h4>Follow Us</h4>
+					<div class="socialFooter">
+						<ul class="squareSocialIcons">
+							<a href="http://facebook.com/elitedaily" target="_blank" class="facebookSquare"></a>
+							<a href="http://twitter.com/elitedaily" target="_blank" class="twitterSquare"></a>
+							<a href="http://instagram.com/elitedaily" target="_blank" class="instagramSquare"></a>
+							<a href="http://youtube.com/elitedaily" target="_blank" class="youtubeSquare"></a>
+						</ul>
+						<ul class="socialButtons">
+							<li class="fbButton"><div class="fb-like like-us-footer-desktop" data-href="http://facebook.com/elitedaily" data-send="false" data-layout="button_count" data-width="80" data-show-faces="false"></div></li>
+							<li class="twButton"><a href="https://twitter.com/elitedaily" class="twitter-follow-button" data-show-count="false">Follow @elitedailiy</a></li>							
+						</ul>
+					</div>
+				</div>
+				<a class="madeInNy" href="http://wearemadeinny.com/" target="_blank"></a>
+			</div>
+		
+			<div class="row copyrightRow">
+				<div class="twelve columns">
+					<span class="legalInfo"><a href="/privacy-policy">Privacy Policy</a>  <span class="legalDivide">&bull;</span>  <a href="/copyright">Copyright</a></span>
+
+					<span class="companyInfo">Elite Daily - &copy; 2014-2014 All rights reserved.</span>
+				</div>
+			</div>
+		</footer>
+
+		<section id="sidebar-off" role="complementary">
+			<nav id="sideMenu" role="navigation">
+		    	<ul class="nav-bar"><li class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor current-menu-parent current-post-parent menu-item-has-children has-flyout menu-item-239113 news"><a href="http://elitedaily.com/category/news/" >News</a>
+<a href="#" class="flyout-toggle"><span> </span></a>
+    	<div class="subCatWrapper">
+    	<ul class="flyout">
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-239114 business"><a href="http://elitedaily.com/category/news/business/" >Business</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-239115 politics"><a href="http://elitedaily.com/category/news/politics/" >Politics</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252318 technology"><a href="http://elitedaily.com/category/news/technology/" >Technology</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor current-menu-parent current-post-parent menu-item-252317 world"><a href="http://elitedaily.com/category/news/world/" >World</a></li>
+
+</ul>
+	  <div class="subCatContent">
+
+	  </div>
+	  </div></li>
+<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-has-children has-flyout menu-item-252319 life"><a href="http://elitedaily.com/category/life/" >Life</a>
+<a href="#" class="flyout-toggle"><span> </span></a>
+    	<div class="subCatWrapper">
+    	<ul class="flyout">
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252322 culture"><a href="http://elitedaily.com/category/life/culture/" >Culture</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252321 generation-y"><a href="http://elitedaily.com/category/life/generation-y/" >Generation Y</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252320 motivation"><a href="http://elitedaily.com/category/life/motivation/" >Motivation</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252323 wellness"><a href="http://elitedaily.com/category/life/wellness/" >Wellness</a></li>
+
+</ul>
+	  <div class="subCatContent">
+
+	  </div>
+	  </div></li>
+<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-has-children has-flyout menu-item-252324 money"><a href="http://elitedaily.com/category/money/" >Money</a>
+<a href="#" class="flyout-toggle"><span> </span></a>
+    	<div class="subCatWrapper">
+    	<ul class="flyout">
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252325 entrepreneurship"><a href="http://elitedaily.com/category/money/entrepreneurship/" >Entrepreneurship</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252327 start-ups"><a href="http://elitedaily.com/category/money/start-ups/" >Start Ups</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252328 strategy"><a href="http://elitedaily.com/category/money/strategy/" >Strategy</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252326 success"><a href="http://elitedaily.com/category/money/success/" >Success</a></li>
+
+</ul>
+	  <div class="subCatContent">
+
+	  </div>
+	  </div></li>
+<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-has-children has-flyout menu-item-252329 sports"><a href="http://elitedaily.com/category/sports/" >Sports</a>
+<a href="#" class="flyout-toggle"><span> </span></a>
+    	<div class="subCatWrapper">
+    	<ul class="flyout">
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252332 baseball"><a href="http://elitedaily.com/category/sports/baseball/" >Baseball</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252330 basketball"><a href="http://elitedaily.com/category/sports/basketball/" >Basketball</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252331 football"><a href="http://elitedaily.com/category/sports/football/" >Football</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252333 pro"><a href="http://elitedaily.com/category/sports/pro/" >Pro</a></li>
+
+</ul>
+	  <div class="subCatContent">
+
+	  </div>
+	  </div></li>
+<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-has-children has-flyout menu-item-252334 dating"><a href="http://elitedaily.com/category/dating/" >Dating</a>
+<a href="#" class="flyout-toggle"><span> </span></a>
+    	<div class="subCatWrapper">
+    	<ul class="flyout">
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252336 gentlemen"><a href="http://elitedaily.com/category/dating/gentlemen/" >Gentlemen</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252337 ladies"><a href="http://elitedaily.com/category/dating/ladies/" >Ladies</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252335 sex"><a href="http://elitedaily.com/category/dating/sex/" >Sex</a></li>
+
+</ul>
+	  <div class="subCatContent">
+
+	  </div>
+	  </div></li>
+<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-has-children has-flyout menu-item-252338 entertainment"><a href="http://elitedaily.com/category/entertainment/" >Entertainment</a>
+<a href="#" class="flyout-toggle"><span> </span></a>
+    	<div class="subCatWrapper">
+    	<ul class="flyout">
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252340 celebrity"><a href="http://elitedaily.com/category/entertainment/celebrity/" >Celebrity</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252339 film"><a href="http://elitedaily.com/category/entertainment/film/" >Film</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252341 tv"><a href="http://elitedaily.com/category/entertainment/television/" >TV</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252342 events"><a href="http://elitedaily.com/category/entertainment/events/" >Events</a></li>
+
+</ul>
+	  <div class="subCatContent">
+
+	  </div>
+	  </div></li>
+<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-has-children has-flyout menu-item-252343 music"><a href="http://elitedaily.com/category/music/" >Music</a>
+<a href="#" class="flyout-toggle"><span> </span></a>
+    	<div class="subCatWrapper">
+    	<ul class="flyout">
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252344 music-news"><a href="http://elitedaily.com/category/music/music-news/" >Music News</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252345 press-play"><a href="http://elitedaily.com/category/music/press-play/" >Press Play</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252346 videos"><a href="http://elitedaily.com/category/music/music-videos/" >Videos</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252347 interviews"><a href="http://elitedaily.com/category/music/music-interviews/" >Interviews</a></li>
+
+</ul>
+	  <div class="subCatContent">
+
+	  </div>
+	  </div></li>
+<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-has-children has-flyout menu-item-252348 women"><a href="http://elitedaily.com/category/women/" >Women</a>
+<a href="#" class="flyout-toggle"><span> </span></a>
+    	<div class="subCatWrapper">
+    	<ul class="flyout">
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252352 fashion"><a href="http://elitedaily.com/category/women/fashion/" >Fashion</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252350 beauty"><a href="http://elitedaily.com/category/women/beauty/" >Beauty</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252349 advice"><a href="http://elitedaily.com/category/women/advice/" >Advice</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252351 business"><a href="http://elitedaily.com/category/women/women-business/" >Business</a></li>
+
+</ul>
+	  <div class="subCatContent">
+
+	  </div>
+	  </div></li>
+<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-has-children has-flyout menu-item-252353 envision"><a href="http://elitedaily.com/category/envision/" >Envision</a>
+<a href="#" class="flyout-toggle"><span> </span></a>
+    	<div class="subCatWrapper">
+    	<ul class="flyout">
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252354 cars"><a href="http://elitedaily.com/category/envision/cars/" >Cars</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-262748 art"><a href="http://elitedaily.com/category/envision/art/" >Art</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-262749 goods"><a href="http://elitedaily.com/category/envision/goods/" >Goods</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-252361 destinations"><a href="http://elitedaily.com/category/envision/destinations/" >Destinations</a></li>
+
+</ul>
+	  <div class="subCatContent">
+
+	  </div>
+	  </div></li>
+<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-has-children has-flyout menu-item-252366 humor"><a href="http://elitedaily.com/category/humor/" >Humor</a>
+<a href="#" class="flyout-toggle"><span> </span></a>
+    	<div class="subCatWrapper">
+    	<ul class="flyout">
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-337932 clips"><a href="http://elitedaily.com/category/humor/clips/" >Clips</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-337935 lol-lists"><a href="http://elitedaily.com/category/humor/lol-lists/" >LOL Lists</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-337934 generation-why-"><a href="http://elitedaily.com/category/humor/generationwhy/" >Generation whY!?</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-337933 funny-papers"><a href="http://elitedaily.com/category/humor/funny-papers/" >Funny Papers</a></li>
+
+</ul>
+	  <div class="subCatContent">
+
+	  </div>
+	  </div></li>
+<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-261423 videos"><a title="videos" href="http://elitedaily.com/tv/" >Videos</a></li>
+</ul>											
+		   	</nav>
+		</section>
+		
+		</div><!-- End Off-Canvas Row -->
+		
+
+		<footer class="mobileFooter">
+			<ul>
+				<li>
+					<a href="/about" class="icon-info" aria-hidden="true"></a>
+				</li>					
+				<li>
+					<a href="http://www.facebook.com/EliteDaily" class="icon-facebook" aria-hidden="true"></a>
+				</li>
+				<li>
+					<a href="http://twitter.com/elitedaily" class="icon-twitter" aria-hidden="true"></a>
+				</li>
+				<li>
+					<a href="#" class="icon-contact" aria-hidden="true"></a>
+				</li>											
+			</ul>
+			<h4>Elite Daily - &copy; 2014-2014 All rights reserved.</h4>
+		</footer>
+
+		<div class="transparentScreen">
+			<div class="aboutElite">
+				<h2>The Voice of Generation-Y</h2>
+				<p>Elite Daily is a lifestyle publication giving you the best of what's real day in and day out.</p>
+				<ul class="aboutActions">
+					<li class="aboutUsButton"><div aria-hidden="true" class="icon-about aboutUsIcon"></div><a href="/about">Who We Are</a></li>										
+					<li class="contactButton"><div aria-hidden="true" class="icon-contact contactIcon"></div><a href="/contact-us">Get In Touch</a></li>
+					<li class="advertiseButton"><div aria-hidden="true" class="icon-advertise advertiseIcon"></div><a href="/advertise">Advertise</a></li>
+					<li class="writerButton"><div aria-hidden="true" class="icon-write writerIcon"></div><a target="_blank" href="http://v3.elitedaily.com/journalist/">Write For Us</a></li>
+				</ul>
+				<ul class="aboutSocial">
+					<a class="icon-facebook" href="http://www.facebook.com/EliteDaily" target="_blank" aria-hidden="true" data-icon="&#x46;"></a>
+					<a class="icon-twitter" href="http://www.twitter.com/eliteDaily" target="_blank" aria-hidden="true" data-icon="&#x54;"></a>
+					<a class="icon-instagram" href="http://instagram.com/elitedaily" target="_blank" data-icon="&#x49;"></a>
+					<a class="icon-youtube" href="http://youtube.com/elitedaily" target="_blank" data-icon="&#x49;"></a>
+				</ul>
+				<div class="icon-close" aria-hidden="true" data-icon="&#x58;"></div>
+			</div>	
+		</div>
+			
+	</div> <!-- Container End -->
+	
+	
+	<!-- Prompt IE 6 users to install Chrome Frame. Remove this if you want to support IE 6.
+	     chromium.org/developers/how-tos/chrome-frame-getting-started -->
+	<!--[if lt IE 7]>
+		<script defer src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>
+		<script defer>window.attachEvent('onload',function(){CFInstall.check({mode:'overlay'})})</script>
+	<![endif]-->
+	
+	<script type='text/javascript' src='http://elitedaily.com/wp-content/themes/highsociety/js/jquery-migrate-1.1.1.min.js?ver=9.6.140808'></script>
+<script type='text/javascript' src='http://elitedaily.com/wp-content/themes/highsociety/js/jquery.infinitescroll.js?ver=9.6.140808'></script>
+<script type='text/javascript' src='http://elitedaily.com/wp-content/themes/highsociety/js/jquery.offcanvas.js?ver=9.6.140808'></script>
+<script type='text/javascript' src='http://elitedaily.com/wp-includes/js/hoverIntent.min.js?ver=r7'></script>
+<script type='text/javascript' src='http://elitedaily.com/wp-content/themes/highsociety/js/execdropdown.js?ver=9.6.140808'></script>
+<script type='text/javascript' src='http://elitedaily.com/wp-content/themes/highsociety/js/jquery.fitvids.min.js?ver=9.6.140808'></script>
+<script type='text/javascript' src='http://elitedaily.com/wp-content/themes/highsociety/js/ga_events.js?ver=9.6.140808'></script>
+	<!-- FACEBOOK -->
+
+	<!-- GOOGLE+ -->
+	<script>
+	  (function() {
+	    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+	    po.src = 'https://apis.google.com/js/plusone.js';
+	    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+	  })();
+	</script>
+
+	<!-- SPRITZ -->
+	
+<script type="text/javascript">window.NREUM||(NREUM={});NREUM.info={"beacon":"beacon-4.newrelic.com","licenseKey":"8bab2a9d64","applicationID":"3544923","transactionName":"b1IHZRcHXxACUhIPV1YYJFIRD14NTEIPCF9UUg==","queueTime":0,"applicationTime":1602,"ttGuid":"","agentToken":"","userAttributes":"","errorBeacon":"bam.nr-data.net","agent":"js-agent.newrelic.com\/nr-411.min.js"}</script></body>
+</html>
