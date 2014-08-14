@@ -7,11 +7,9 @@ FetchDelayInMs = 2 * 3600 * 1000 # 2hrs
 
 module.exports = class FetchHandler
   constructor: (options) ->
-    throw 'Must pass options.queue, a UrlTaskQueue' if !options.queue
     throw 'Must pass options.htmlParser, an HtmlParser' if !options.htmlParser
     throw 'Must pass options.urlFetcher, a UrlFetcher' if !options.urlFetcher
 
-    @queue = options.queue
     @log = options.log || console.log
     htmlParser = options.htmlParser
     urlFetcher = options.urlFetcher
@@ -19,7 +17,7 @@ module.exports = class FetchHandler
     @_fetch = Promise.promisify(urlFetcher.fetch, urlFetcher)
     @_parse = Promise.promisify(htmlParser.parse, htmlParser)
 
-  handle: (id, url, done) ->
+  handle: (queue, id, url, done) ->
     @_fetch(id, url)
       .then (obj) ->
         if obj.statusCode != 200
@@ -47,5 +45,5 @@ module.exports = class FetchHandler
           @log("FetchHandler.handle determined #{url} did not change")
           null
       .catch((e) => @log("FetchHandler.handle error: #{e.message}"))
-      .finally(=> @queue.queue(id, url, new Date(new Date().valueOf() + FetchDelayInMs)))
+      .finally(=> queue.queue(id, url, new Date(new Date().valueOf() + FetchDelayInMs)))
       .nodeify(done)

@@ -29,33 +29,28 @@ kueQueue.client.flushdb()
 
 console.log('Initializing work queue...')
 
-urlFetcher = new UrlFetcher()
-
-fetchHandler = null
-
-# Weird, circular definition here. We're defining a queue, and we're making its
-# task add something to the very queue that calls it.
-fetchQueue = new UrlTaskQueue
-  task: (urlId, url) ->
-    fetchHandler ||= new FetchHandler
-      queue: fetchQueue
-      urlFetcher: urlFetcher
-      htmlParser: HtmlParser
-    fetchHandler.handle(urlId, url)
+buildPopularityHandler = (service) ->
+  upf = new UrlPopularityFetcher
+    service: service
+    fetchLogic: FetchLogic[service]
+    log: (args...) -> console.log("[#{service}]: ", args...)
+  new UrlTaskQueue
+    task: upf.fetch.bind(upf)
+    log: (args...) -> console.log("[#{service} queue]: ", args...)
 
 queues =
-  fetch: fetchQueue
-  # Now comes another hack to add the others
+  fetch: new UrlTaskQueue
+    log: (args...) -> console.log("[fetch queue]: ", args...)
+    task: (->
+      fh = new FetchHandler
+        urlFetcher: new UrlFetcher
+        htmlParser: HtmlParser
+        log: (args...) -> console.log("[fetch]: ", args...)
+      fh.handle.bind(fh)
+    )()
 
-popularityFetcher = new UrlPopularityFetcher
-  fetchLogic: FetchLogic
-  queues: queues
-
-buildPopularityHandler = (service) -> ((id, url) -> popularityFetcher.fetch(service, id, url))
-
-queues.facebook = new UrlTaskQueue(task: buildPopularityHandler('facebook'))
-queues.twitter = new UrlTaskQueue(task: buildPopularityHandler('twitter'))
-queues.google = new UrlTaskQueue(task: buildPopularityHandler('google'))
+for service in Services
+  queues[service] = buildPopularityHandler(service)
 
 console.log('Loading URLs...')
 startup = new Startup

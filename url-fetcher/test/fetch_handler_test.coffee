@@ -12,15 +12,15 @@ describe 'FetchHandler', ->
     @sandbox.stub(models.Article, 'findAll').returns(Promise.resolve([]))
     @sandbox.stub(models.ArticleVersion, 'create').returns(Promise.resolve({}))
 
-    @queue =
-      queue: sinon.spy()
-
     @parsedObject =
       source: 'source'
       headline: 'headline'
       byline: 'byline'
       publishedAt: new Date(1)
       body: 'body'
+
+    @queue =
+      queue: sinon.spy()
 
     @parser =
       parse: sinon.stub().callsArgWith(2, null, @parsedObject)
@@ -33,7 +33,6 @@ describe 'FetchHandler', ->
       fetch: sinon.stub().callsArgWith(2, null, @fetchedObject)
 
     @handler = new FetchHandler
-      queue: @queue
       htmlParser: @parser
       urlFetcher: @fetcher
       log: sinon.spy()
@@ -45,7 +44,7 @@ describe 'FetchHandler', ->
     beforeEach ->
       @id = '2764594f-bd77-49f0-9c73-31503eaede8f'
       @url = 'http://example.org'
-      @go = (done) => @handler.handle(@id, @url, done)
+      @go = (done) => @handler.handle(@queue, @id, @url, done)
 
     it 'should fetch the original URL', (done) ->
       @go =>

@@ -6,7 +6,7 @@ PriorityQueue = require('js-priority-queue')
 # Usage:
 #
 #   queue = new UrlTaskQueue
-#       task: (urlId, url) -> ...
+#       task: (queue, urlId, url) -> ...
 #       log: console.log
 #
 #   queue.queue('e91beed9-bfb7-44af-9609-ab10736347c1', 'http://example.org', new Date(new Date().valueOf() + 1000))
@@ -59,7 +59,7 @@ module.exports = class UrlTaskQueue
 
     job = @priorityQueue.dequeue()
     @log("handling (#{job.id} #{job.url})")
-    @task(job.id, job.url)
+    @task(@, job.id, job.url)
 
     setImmediate(=> @_tick())
 

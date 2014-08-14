@@ -15,24 +15,22 @@ DelayInMs = 2 * 3600 * 1000 # 2hrs
 #
 # 1. Query facebook for the URL's popularity (returning a number)
 # 2. Update the `url` and `url_fetch` collections with the new popularity
-# 3. Queue another update in the future
 module.exports = class UrlPopularityFetcher
   constructor: (options) ->
-    throw 'Must pass queues, an Object mapping service name to UrlTaskQueue' if !options.queues
-    @queues = options.queues
+    throw 'Must pass service, a String' if !options.service
+    throw 'Must pass fetchLogic, a Function' if !options.fetchLogic
 
-    @fetchLogic = {}
-    for k, v of options.fetchLogic
-      @fetchLogic[k] = Promise.promisify(v)
-    undefined
+    @service = options.service
+    @fetchLogic = options.fetchLogic
+    @fetchLogicPromise = Promise.promisify(@fetchLogic)
 
-  fetch: (service, urlId, url, done) ->
-    @fetchLogic[service](url)
-      .then (data) ->
+  fetch: (queue, urlId, url, done) ->
+    @fetchLogicPromise(url)
+      .then (data) =>
         UrlPopularityGet.create
           urlId: urlId
-          service: service
+          service: @service
           shares: data.n
           rawData: data.rawData
-      .finally(=> @queues[service].queue(urlId, url, new Date(new Date().valueOf() + DelayInMs)))
+      .finally(=> queue.queue(urlId, url, new Date(new Date().valueOf() + DelayInMs)))
       .nodeify(done)

@@ -23,15 +23,15 @@ describe 'UrlTaskQueue', ->
     @queue.queue(@id1, 'http://example.org', new Date())
     @queue.startHandling()
     @sandbox.clock.tick(1)
-    expect(@task).to.have.been.calledWith(@id1, 'http://example.org')
+    expect(@task).to.have.been.calledWith(@queue, @id1, 'http://example.org')
 
   it 'should run all tasks on start', ->
     @queue.queue(@id1, 'http://example.org', new Date())
     @queue.queue(@id2, 'http://example.com', new Date())
     @queue.startHandling()
     @sandbox.clock.tick(1)
-    expect(@task).to.have.been.calledWith(@id1, 'http://example.org')
-    expect(@task).to.have.been.calledWith(@id2, 'http://example.com')
+    expect(@task).to.have.been.calledWith(@queue, @id1, 'http://example.org')
+    expect(@task).to.have.been.calledWith(@queue, @id2, 'http://example.com')
 
   it 'should run tasks later', ->
     @queue.queue(@id1, 'http://example.org', new Date(new Date().valueOf() + 1000))
@@ -39,7 +39,7 @@ describe 'UrlTaskQueue', ->
     @sandbox.clock.tick(999)
     expect(@task).not.to.have.been.called
     @sandbox.clock.tick(1)
-    expect(@task).to.have.been.calledWith(@id1, 'http://example.org')
+    expect(@task).to.have.been.calledWith(@queue, @id1, 'http://example.org')
 
   it 'should run tasks in order', ->
     @queue.queue(@id1, 'http://example.org/1', new Date(new Date().valueOf() + 1000))
@@ -47,14 +47,14 @@ describe 'UrlTaskQueue', ->
     @queue.queue(@id2, 'http://example.org/2', new Date(new Date().valueOf() + 2000))
     @queue.startHandling()
     @sandbox.clock.tick(1000)
-    expect(@task).to.have.been.calledWith(@id1, 'http://example.org/1')
-    expect(@task).not.to.have.been.calledWith(@id2, 'http://example.org/2')
-    expect(@task).not.to.have.been.calledWith(@id3, 'http://example.org/3')
+    expect(@task).to.have.been.calledWith(@queue, @id1, 'http://example.org/1')
+    expect(@task).not.to.have.been.calledWith(@queue, @id2, 'http://example.org/2')
+    expect(@task).not.to.have.been.calledWith(@queue, @id3, 'http://example.org/3')
     @sandbox.clock.tick(1000)
-    expect(@task).to.have.been.calledWith(@id2, 'http://example.org/2')
-    expect(@task).not.to.have.been.calledWith(@id3, 'http://example.org/3')
+    expect(@task).to.have.been.calledWith(@queue, @id2, 'http://example.org/2')
+    expect(@task).not.to.have.been.calledWith(@queue, @id3, 'http://example.org/3')
     @sandbox.clock.tick(1000)
-    expect(@task).to.have.been.calledWith(@id3, 'http://example.org/3')
+    expect(@task).to.have.been.calledWith(@queue, @id3, 'http://example.org/3')
 
   describe 'when started empty', ->
     beforeEach -> @queue.startHandling()
@@ -62,14 +62,14 @@ describe 'UrlTaskQueue', ->
     it 'should run a task immediately', ->
       @queue.queue(@id1, 'http://example.org', new Date())
       @sandbox.clock.tick(1)
-      expect(@task).to.have.been.calledWith(@id1, 'http://example.org')
+      expect(@task).to.have.been.calledWith(@queue, @id1, 'http://example.org')
 
     it 'should schedule a task for later', ->
       @queue.queue(@id1, 'http://example.org', new Date(new Date().valueOf() + 1000))
       @sandbox.clock.tick(999)
       expect(@task).not.to.have.been.called
       @sandbox.clock.tick(1)
-      expect(@task).to.have.been.calledWith(@id1, 'http://example.org')
+      expect(@task).to.have.been.calledWith(@queue, @id1, 'http://example.org')
 
     it 'should schedule a sooner task before the queued one', ->
       t1 = new Date().valueOf()
@@ -78,13 +78,13 @@ describe 'UrlTaskQueue', ->
       @sandbox.clock.tick(500)
       @queue.queue(@id2, 'http://example.org', new Date(t1 + 750))
       @sandbox.clock.tick(249)
-      expect(@task).not.to.have.been.calledWith(@id1)
-      expect(@task).not.to.have.been.calledWith(@id2)
+      expect(@task).not.to.have.been.calledWith(@queue, @id1)
+      expect(@task).not.to.have.been.calledWith(@queue, @id2)
       @sandbox.clock.tick(1)
-      expect(@task).not.to.have.been.calledWith(@id1)
-      expect(@task).to.have.been.calledWith(@id2)
+      expect(@task).not.to.have.been.calledWith(@queue, @id1)
+      expect(@task).to.have.been.calledWith(@queue, @id2)
       @sandbox.clock.tick(250)
-      expect(@task).to.have.been.calledWith(@id1)
+      expect(@task).to.have.been.calledWith(@queue, @id1)
 
     it 'should do nothing when stopped', ->
       @queue.queue(@id1, 'http://example.org', new Date(new Date().valueOf() + 1000))
@@ -99,12 +99,10 @@ describe 'UrlTaskQueue', ->
     it 'should let a handler queue something', ->
       # Not sure why this would ever fail if the others pass ... but it should
       # inspire confidence because this is how we're going to use it.
-      @queue.task = sinon.spy =>
-        @queue.queue(@id2, 'http://example.org/2', new Date(new Date().valueOf() + 1000))
       @queue.queue(@id1, 'http://example.org/1', new Date(new Date().valueOf() + 1000))
       @sandbox.clock.tick(1000)
-      expect(@queue.task).to.have.been.calledWith(@id1, 'http://example.org/1')
+      @task.lastCall.args[0].queue(@id2, 'http://example.org/2', new Date(new Date().valueOf() + 1000))
       @sandbox.clock.tick(999)
-      expect(@queue.task).not.to.have.been.calledWith(@id2, 'http://example.org/2')
+      expect(@queue.task).not.to.have.been.calledWith(@queue, @id2, 'http://example.org/2')
       @sandbox.clock.tick(1)
-      expect(@queue.task).to.have.been.calledWith(@id2, 'http://example.org/2')
+      expect(@queue.task).to.have.been.calledWith(@queue, @id2, 'http://example.org/2')
