@@ -7,11 +7,12 @@ FetchDelayInMs = 2 * 3600 * 1000 # 2hrs
 
 module.exports = class FetchHandler
   constructor: (options) ->
-    throw 'Must pass options.queue, a UrlQueue' if !options.queue
+    throw 'Must pass options.queue, a UrlTaskQueue' if !options.queue
     throw 'Must pass options.htmlParser, an HtmlParser' if !options.htmlParser
     throw 'Must pass options.urlFetcher, a UrlFetcher' if !options.urlFetcher
 
     @queue = options.queue
+    @log = options.log || console.log
     htmlParser = options.htmlParser
     urlFetcher = options.urlFetcher
 
@@ -35,16 +36,16 @@ module.exports = class FetchHandler
             else
               data = _.extend({ urlId: id }, data)
               models.UrlVersion.create(data, null)
-      .then (newUvOrNull) ->
+      .then (newUvOrNull) =>
         if (uvid = newUvOrNull?.id)?
-          console.log("FetchHandler.handle created new UrlVersion for #{url}")
+          @log("FetchHandler.handle created new UrlVersion for #{url}")
           Promise.map(
             models.Article.findAll(where: { urlId: id }),
             (a) -> models.ArticleVersion.create(articleId: a.id, urlVersionId: uvid)
           )
         else
-          console.log("FetchHandler.handle determined #{url} did not change")
+          @log("FetchHandler.handle determined #{url} did not change")
           null
-      .catch((e) => console.warn(e.message))
-      .finally(=> @queue.queue('fetch', id, url, new Date(new Date().valueOf() + FetchDelayInMs)))
+      .catch((e) => @log("FetchHandler.handle error: #{e.message}"))
+      .finally(=> @queue.queue(id, url, new Date(new Date().valueOf() + FetchDelayInMs)))
       .nodeify(done)

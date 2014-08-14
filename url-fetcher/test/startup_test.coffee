@@ -7,17 +7,22 @@ Url = models.Url
 describe 'startup', ->
   beforeEach ->
     @sandbox = sinon.sandbox.create(useFakeTimers: true)
+    @sandbox.stub(models.Url, 'findAllUnparsed').returns(Promise.resolve([]))
     @clock = @sandbox.clock
+
   afterEach ->
     @sandbox.restore()
 
   beforeEach ->
     @sandbox.stub(Url, 'findAllRaw')
 
-    @queue =
-      queue: sinon.spy()
+    @queues =
+      facebook: { queue: sinon.spy() }
+      twitter: { queue: sinon.spy() }
+      google: { queue: sinon.spy() }
+      fetch: { queue: sinon.spy() }
 
-    @startup = new Startup(queue: @queue)
+    @startup = new Startup(queues: @queues)
 
   it 'should run a callback', (done) ->
     Url.findAllRaw.returns(Promise.resolve([]))
@@ -45,19 +50,19 @@ describe 'startup', ->
     it 'should schedule immediate fetch, facebook, google and twitter jobs', (done) ->
       @foundUrls.push(id: 'abcdef', url: 'https://example.org')
       @startup.run =>
-        expect(@queue.queue).to.have.been.calledWith('fetch', 'abcdef', 'https://example.org', new Date())
-        expect(@queue.queue).to.have.been.calledWith('google', 'abcdef', 'https://example.org', new Date())
-        expect(@queue.queue).to.have.been.calledWith('facebook', 'abcdef', 'https://example.org', new Date())
-        expect(@queue.queue).to.have.been.calledWith('twitter', 'abcdef', 'https://example.org', new Date())
+        expect(@queues.fetch.queue).to.have.been.calledWith('abcdef', 'https://example.org', new Date())
+        expect(@queues.google.queue).to.have.been.calledWith('abcdef', 'https://example.org', new Date())
+        expect(@queues.facebook.queue).to.have.been.calledWith('abcdef', 'https://example.org', new Date())
+        expect(@queues.twitter.queue).to.have.been.calledWith('abcdef', 'https://example.org', new Date())
         done()
 
     it 'should schedule a second fetch a few milliseconds later', (done) ->
       @foundUrls.push(id: 'abcdef', url: 'https://example.org')
       @foundUrls.push(id: 'ghijkl', url: 'https://example.com')
       @startup.run =>
-        expect(@queue.queue).to.have.been.calledWith('fetch', 'ghijkl', 'https://example.com', new Date(619))
-        expect(@queue.queue).to.have.been.calledWith('google', 'ghijkl', 'https://example.com', new Date(619))
-        expect(@queue.queue).to.have.been.calledWith('facebook', 'ghijkl', 'https://example.com', new Date(619))
-        expect(@queue.queue).to.have.been.calledWith('twitter', 'ghijkl', 'https://example.com', new Date(619))
+        expect(@queues.fetch.queue).to.have.been.calledWith('ghijkl', 'https://example.com', new Date(619))
+        expect(@queues.google.queue).to.have.been.calledWith('ghijkl', 'https://example.com', new Date(619))
+        expect(@queues.facebook.queue).to.have.been.calledWith('ghijkl', 'https://example.com', new Date(619))
+        expect(@queues.twitter.queue).to.have.been.calledWith('ghijkl', 'https://example.com', new Date(619))
         done()
 

@@ -16,17 +16,20 @@ module.exports = class Startup
   # * `urls` a Mongo `Collection`
   # * `queue` a `Queue`
   constructor: (options) ->
-    @queue = options.queue
+    throw 'Must pass queues, an Object mapping service name to UrlTaskQueue' if !options.queues
+    @queues = options.queues
 
-  addAllUrlsToQueue: (done) ->
-    date = new Date()
+  addAllUrlsToQueues: (done) ->
+    dates = {}
+    for service in Services
+      dates[service] = new Date()
 
     models.Url.findAllRaw()
       .then (urls) =>
         for url in urls
           for service in Services
-            @queue.queue(service, url.id, url.url, date)
-          date = new Date(date.valueOf() + FetchThrottling)
+            @queues[service].queue(url.id, url.url, dates[service])
+            dates[service] = new Date(dates[service].valueOf() + FetchThrottling)
       .nodeify(done)
 
   runNewParsers: (done) ->
@@ -85,4 +88,4 @@ module.exports = class Startup
   run: (done) ->
     @runNewParsers (err) =>
       return done(err) if err
-      @addAllUrlsToQueue(done)
+      @addAllUrlsToQueues(done)

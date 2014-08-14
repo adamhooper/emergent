@@ -18,7 +18,8 @@ DelayInMs = 2 * 3600 * 1000 # 2hrs
 # 3. Queue another update in the future
 module.exports = class UrlPopularityFetcher
   constructor: (options) ->
-    @queue = options.queue
+    throw 'Must pass queues, an Object mapping service name to UrlTaskQueue' if !options.queues
+    @queues = options.queues
 
     @fetchLogic = {}
     for k, v of options.fetchLogic
@@ -33,5 +34,5 @@ module.exports = class UrlPopularityFetcher
           service: service
           shares: data.n
           rawData: data.rawData
-      .finally(=> @queue.queue(service, urlId, url, new Date(new Date().valueOf() + DelayInMs)))
+      .finally(=> @queues[service].queue(urlId, url, new Date(new Date().valueOf() + DelayInMs)))
       .nodeify(done)

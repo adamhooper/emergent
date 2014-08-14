@@ -27,7 +27,8 @@ describe 'url_fetcher', ->
 
     @fetcher = new UrlFetcher()
 
-  afterEach -> @sandbox.restore()
+  afterEach ->
+    @sandbox.restore()
 
   it 'should GET the page', (done) ->
     UrlGet.create.returns(Promise.reject(null))

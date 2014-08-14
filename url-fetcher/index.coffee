@@ -1,8 +1,7 @@
-async = require('async')
 fs = require('fs')
 kue = require('kue')
 
-Queue = require('./lib/queue')
+UrlTaskQueue = require('./lib/url_task_queue')
 Startup = require('./lib/startup')
 HtmlParser = require('./lib/parser/html_parser')
 UrlFetcher = require('./lib/url_fetcher')
@@ -18,7 +17,6 @@ FetchLogic = {}
 )()
 
 kueQueue = kue.createQueue()
-queue = undefined
 
 # Set up Kue to delete jobs once they're complete
 kueQueue.on 'job complete', (id) ->
@@ -29,49 +27,52 @@ kueQueue.on 'job complete', (id) ->
 console.log('Emptying redis...')
 kueQueue.client.flushdb()
 
-async.series [
-  (cb) ->
-    console.log('Initializing work queue...')
+console.log('Initializing work queue...')
 
-    handlers = {}
-    queue = new Queue
-      handlers: handlers
+urlFetcher = new UrlFetcher()
 
-    urlFetcher = new UrlFetcher()
+fetchHandler = null
 
-    popularityFetcher = new UrlPopularityFetcher
-      fetchLogic: FetchLogic
-      queue: queue
-
-    buildHandler = (service) -> ((id, url) -> popularityFetcher.fetch(service, id, url))
-    (handlers[service] = buildHandler(service)) for service in Services
-
-    fetchHandler = new FetchHandler
-      queue: queue
+# Weird, circular definition here. We're defining a queue, and we're making its
+# task add something to the very queue that calls it.
+fetchQueue = new UrlTaskQueue
+  task: (urlId, url) ->
+    fetchHandler ||= new FetchHandler
+      queue: fetchQueue
       urlFetcher: urlFetcher
       htmlParser: HtmlParser
+    fetchHandler.handle(urlId, url)
 
-    handlers.fetch = fetchHandler.handle.bind(fetchHandler)
+queues =
+  fetch: fetchQueue
+  # Now comes another hack to add the others
 
-    cb()
+popularityFetcher = new UrlPopularityFetcher
+  fetchLogic: FetchLogic
+  queues: queues
 
-  (cb) ->
-    console.log('Loading URLs...')
-    startup = new Startup
-      queue: queue
-    startup.run(cb)
+buildPopularityHandler = (service) -> ((id, url) -> popularityFetcher.fetch(service, id, url))
 
-  (cb) -> # Process the queue
-    console.log('Running...')
+queues.facebook = new UrlTaskQueue(task: buildPopularityHandler('facebook'))
+queues.twitter = new UrlTaskQueue(task: buildPopularityHandler('twitter'))
+queues.google = new UrlTaskQueue(task: buildPopularityHandler('google'))
 
-    kueQueue.process 'url', 20, (job, done) ->
-      console.log('Processing', job.data)
-      if (url = job.data.incoming)?
-        for job in UrlSubJobs
-          queue.queue(job, url.id, url.url, new Date())
-      else
-        throw "Invalid job: " + JSON.stringify(job)
+console.log('Loading URLs...')
+startup = new Startup
+  queues: queues
 
+startup.run ->
+  console.log('Running...')
+
+  kueQueue.process 'url', 20, (job, done) ->
+    console.log('Processing', job.data)
+    if (url = job.data.incoming)?
+      for job in UrlSubJobs
+        queues[job].queue(url.id, url.url, new Date())
+    else
+      throw "Invalid job: " + JSON.stringify(job)
+
+  for __, queue of queues
     queue.startHandling()
-], (err) ->
-  throw err if err?
+
+  undefined

@@ -36,6 +36,7 @@ describe 'FetchHandler', ->
       queue: @queue
       htmlParser: @parser
       urlFetcher: @fetcher
+      log: sinon.spy()
 
   afterEach ->
     @sandbox.restore()
@@ -64,19 +65,19 @@ describe 'FetchHandler', ->
 
     it 'should queue another fetch', (done) ->
       @go =>
-        expect(@queue.queue).to.have.been.calledWith('fetch', @id, @url, new Date(2 * 3600 * 1000))
+        expect(@queue.queue).to.have.been.calledWith(@id, @url, new Date(2 * 3600 * 1000))
         done()
 
     it 'should queue another fetch even when UrlFetcher fails', (done) ->
       @fetcher.fetch.callsArgWith(2, new Error("Fake fetch failure for #{@url}"))
       @go =>
-        expect(@queue.queue).to.have.been.calledWith('fetch', @id, @url, new Date(2 * 3600 * 1000))
+        expect(@queue.queue).to.have.been.calledWith(@id, @url, new Date(2 * 3600 * 1000))
         done()
 
     it 'should queue another fetch even when HtmlParser fails', (done) ->
       @parser.parse.callsArgWith(2, new Error("Fake parse failure for #{@url}"))
       @go =>
-        expect(@queue.queue).to.have.been.calledWith('fetch', @id, @url, new Date(2 * 3600 * 1000))
+        expect(@queue.queue).to.have.been.calledWith(@id, @url, new Date(2 * 3600 * 1000))
         done()
 
     describe 'when this UrlVersion already exists', ->
