@@ -35,6 +35,7 @@ buildPopularityHandler = (service) ->
     fetchLogic: FetchLogic[service]
     log: (args...) -> console.log("[#{service}]: ", args...)
   new UrlTaskQueue
+    throttleMs: 613 # be prompt, but don't swamp these services
     task: upf.fetch.bind(upf)
     log: (args...) -> console.log("[#{service} queue]: ", args...)
 

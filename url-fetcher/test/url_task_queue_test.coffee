@@ -7,39 +7,57 @@ describe 'UrlTaskQueue', ->
     @task = sinon.spy()
     @log = sinon.spy()
 
+    # example IDs in order: this is how the queue will tie-break
     @id1 = '1e0d9960-6892-4555-9e4d-40469b4bc92b'
-    @id2 = 'e452f537-c189-4ab3-a6e4-e803a9527eb7'
-    @id3 = 'ba8e0822-9eb2-461c-8aaf-e2e0a0ac93fd'
+    @id2 = 'ba8e0822-9eb2-461c-8aaf-e2e0a0ac93fd'
+    @id3 = 'e452f537-c189-4ab3-a6e4-e803a9527eb7'
 
     @queue = new UrlTaskQueue
       task: @task
       log: @log
+      throttleMs: 123
 
   afterEach ->
     @queue.stopHandling()
     @sandbox.restore()
 
-  it 'should run a tasks on start', ->
+  it 'should run a task on start', ->
     @queue.queue(@id1, 'http://example.org', new Date())
     @queue.startHandling()
     @sandbox.clock.tick(1)
     expect(@task).to.have.been.calledWith(@queue, @id1, 'http://example.org')
 
-  it 'should run all tasks on start', ->
-    @queue.queue(@id1, 'http://example.org', new Date())
-    @queue.queue(@id2, 'http://example.com', new Date())
+  it 'should throttle multiple tasks', ->
+    @queue.queue(@id1, 'http://example.org/1', new Date())
+    @queue.queue(@id2, 'http://example.org/2', new Date())
+    @queue.queue(@id3, 'http://example.org/3', new Date())
     @queue.startHandling()
     @sandbox.clock.tick(1)
-    expect(@task).to.have.been.calledWith(@queue, @id1, 'http://example.org')
-    expect(@task).to.have.been.calledWith(@queue, @id2, 'http://example.com')
+    expect(@task).to.have.been.calledWith(@queue, @id1)
+    expect(@task).not.to.have.been.calledWith(@queue, @id2)
+    @sandbox.clock.tick(123)
+    expect(@task).to.have.been.calledWith(@queue, @id2)
+    expect(@task).not.to.have.been.calledWith(@queue, @id3)
+    @sandbox.clock.tick(123)
+    expect(@task).to.have.been.calledWith(@queue, @id3)
 
-  it 'should run tasks later', ->
+  it 'should run tasks in the future', ->
     @queue.queue(@id1, 'http://example.org', new Date(new Date().valueOf() + 1000))
     @queue.startHandling()
     @sandbox.clock.tick(999)
     expect(@task).not.to.have.been.called
     @sandbox.clock.tick(1)
     expect(@task).to.have.been.calledWith(@queue, @id1, 'http://example.org')
+
+  it 'should run a task later than the throttle delay', ->
+    @queue.queue(@id1, 'http://example.org/1', new Date())
+    @queue.queue(@id2, 'http://example.org/2', new Date(124))
+    @queue.startHandling()
+    @sandbox.clock.tick(123)
+    expect(@task).to.have.been.calledWith(@queue, @id1)
+    expect(@task).not.to.have.been.calledWith(@queue, @id2)
+    @sandbox.clock.tick(1)
+    expect(@task).to.have.been.calledWith(@queue, @id2)
 
   it 'should run tasks in order', ->
     @queue.queue(@id1, 'http://example.org/1', new Date(new Date().valueOf() + 1000))
