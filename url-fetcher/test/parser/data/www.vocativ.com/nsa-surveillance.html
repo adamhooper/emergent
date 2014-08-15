@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html lang="en-US" prefix="og: http://ogp.me/ns#" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html lang="en-US" prefix="og: http://ogp.me/ns#" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html lang="en-US" prefix="og: http://ogp.me/ns#" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang=en-US prefix="og: http://ogp.me/ns#" class="gt-ie8 no-js"> <!--<![endif]-->
+<head>
+<meta charset=UTF-8 /><script type='text/javascript'>window.mod_pagespeed_start = Number(new Date());</script><link rel=stylesheet href='/content/A.mu-plugins,,_vocativ-videos,,_assets,,_flowplayer,,_skin,,_minimalist.css+mu-plugins,,_vocativ-videos,,_css,,_flowplayer-skin.css+themes,,_vocativ,,_css,,_build,,_fonticons.css+themes,,_vocativ,,_css,,_build,,_fonts.css+themes,,_vocativ,,_css,,_build,,_main.css+themes,,_vocativ,,_css,,_build,,_vendor,,_fancybox,,_jquery.fancybox.css+themes,,_vocativ,,_css,,_build,,_annotate.css+themes,,_vocativ,,_css,,_build,,_animate.min.css,Mcc.0rTPDrQwaP.css.pagespeed.cf.JvbKlEsB99.css' type='text/css' media=all /><script>(window.NREUM||(NREUM={})).loader_config={xpid:"VwcAVl5WGwcEXFBTBQY="};window.NREUM||(NREUM={}),__nr_require=function(t,e,n){function r(n){if(!e[n]){var o=e[n]={exports:{}};t[n][0].call(o.exports,function(e){var o=t[n][1][e];return r(o?o:e)},o,o.exports)}return e[n].exports}if("function"==typeof __nr_require)return __nr_require;for(var o=0;o<n.length;o++)r(n[o]);return r}({1:[function(t,e){function n(t,e,n){n||(n={});for(var r=o[t],a=r&&r.length||0,s=n[i]||(n[i]={}),u=0;a>u;u++)r[u].apply(s,e);return s}function r(t,e){var n=o[t]||(o[t]=[]);n.push(e)}var o={},i="nr@context";e.exports={on:r,emit:n}},{}],2:[function(t){function e(t,e,n,i,s){return u?u-=1:r("err",[s||new UncaughtException(t,e,n)]),"function"==typeof a?a.apply(this,o(arguments)):!1}function UncaughtException(t,e,n){this.message=t||"Uncaught error with no additional information",this.sourceURL=e,this.line=n}function n(t){r("err",[t,(new Date).getTime()])}var r=t("handle"),o=t(6),i=t(5),a=window.onerror,s=!1,u=0;t("loader").features.push("err"),window.onerror=e,NREUM.noticeError=n;try{throw new Error}catch(d){"stack"in d&&(t(1),t(2),"addEventListener"in window&&t(3),window.XMLHttpRequest&&XMLHttpRequest.prototype&&XMLHttpRequest.prototype.addEventListener&&t(4),s=!0)}i.on("fn-start",function(){s&&(u+=1)}),i.on("fn-err",function(t,e,r){s&&(this.thrown=!0,n(r))}),i.on("fn-end",function(){s&&!this.thrown&&u>0&&(u-=1)}),i.on("internal-error",function(t){r("ierr",[t,(new Date).getTime(),!0])})},{1:5,2:4,3:3,4:6,5:1,6:14,handle:"D5DuLP",loader:"G9z0Bl"}],3:[function(t){function e(t){r.inPlace(t,["addEventListener","removeEventListener"],"-",n)}function n(t){return t[1]}var r=t(1),o=(t(3),t(2));if(e(window),"getPrototypeOf"in Object){for(var i=document;i&&!i.hasOwnProperty("addEventListener");)i=Object.getPrototypeOf(i);i&&e(i);for(var a=XMLHttpRequest.prototype;a&&!a.hasOwnProperty("addEventListener");)a=Object.getPrototypeOf(a);a&&e(a)}else XMLHttpRequest.prototype.hasOwnProperty("addEventListener")&&e(XMLHttpRequest.prototype);o.on("addEventListener-start",function(t){if(t[1]){var e=t[1];"function"==typeof e?this.wrapped=e["nr@wrapped"]?t[1]=e["nr@wrapped"]:e["nr@wrapped"]=t[1]=r(e,"fn-"):"function"==typeof e.handleEvent&&r.inPlace(e,["handleEvent"],"fn-")}}),o.on("removeEventListener-start",function(t){var e=this.wrapped;e&&(t[1]=e)})},{1:15,2:1,3:14}],4:[function(t){var e=(t(3),t(1)),n=t(2);e.inPlace(window,["requestAnimationFrame","mozRequestAnimationFrame","webkitRequestAnimationFrame","msRequestAnimationFrame"],"raf-"),n.on("raf-start",function(t){t[0]=e(t[0],"fn-")})},{1:15,2:1,3:14}],5:[function(t){function e(t){var e=t[0];"string"==typeof e&&(e=new Function(e)),t[0]=n(e,"fn-")}var n=(t(3),t(1)),r=t(2);n.inPlace(window,["setTimeout","setInterval","setImmediate"],"setTimer-"),r.on("setTimer-start",e)},{1:15,2:1,3:14}],6:[function(t){function e(){o.inPlace(this,s,"fn-")}function n(t,e){o.inPlace(e,["onreadystatechange"],"fn-")}function r(t,e){return e}var o=t(1),i=t(2),a=window.XMLHttpRequest,s=["onload","onerror","onabort","onloadstart","onloadend","onprogress","ontimeout"];window.XMLHttpRequest=function(t){var n=new a(t);try{i.emit("new-xhr",[],n),o.inPlace(n,["addEventListener","removeEventListener"],"-",function(t,e){return e}),n.addEventListener("readystatechange",e,!1)}catch(r){try{i.emit("internal-error",r)}catch(s){}}return n},window.XMLHttpRequest.prototype=a.prototype,o.inPlace(XMLHttpRequest.prototype,["open","send"],"-xhr-",r),i.on("send-xhr-start",n),i.on("open-xhr-start",n)},{1:15,2:1}],7:[function(t){function e(){function e(t){if("string"==typeof t&&t.length)return t.length;if("object"!=typeof t)return void 0;if("undefined"!=typeof ArrayBuffer&&t instanceof ArrayBuffer&&t.byteLength)return t.byteLength;if("undefined"!=typeof Blob&&t instanceof Blob&&t.size)return t.size;if("undefined"!=typeof FormData&&t instanceof FormData)return void 0;try{return JSON.stringify(t).length}catch(e){return void 0}}function n(t){var n=this.params,r=this.metrics;if(!this.ended){this.ended=!0;for(var i=0;u>i;i++)t.removeEventListener(s[i],this.listener,!1);if(!n.aborted){if(r.duration=(new Date).getTime()-this.startTime,4===t.readyState){n.status=t.status;var a=t.responseType,d="arraybuffer"===a||"blob"===a||"json"===a?t.response:t.responseText,f=e(d);if(f&&(r.rxSize=f),this.sameOrigin){var c=t.getResponseHeader("X-NewRelic-App-Data");c&&(n.cat=c.split(", ").pop())}}else n.status=0;r.cbTime=this.cbTime,o("xhr",[n,r])}}}function r(t,e){var n=i(e),r=t.params;r.host=n.hostname+":"+n.port,r.pathname=n.pathname,t.sameOrigin=n.sameOrigin}t("loader").features.push("xhr");var o=t("handle"),i=t(1),a=t(5),s=["load","error","abort","timeout"],u=s.length,d=t(2);t(3),t(4),a.on("new-xhr",function(){this.totalCbs=0,this.called=0,this.cbTime=0,this.end=n,this.ended=!1,this.xhrGuids={}}),a.on("open-xhr-start",function(t){this.params={method:t[0]},r(this,t[1]),this.metrics={}}),a.on("open-xhr-end",function(t,e){"loader_config"in NREUM&&"xpid"in NREUM.loader_config&&this.sameOrigin&&e.setRequestHeader("X-NewRelic-ID",NREUM.loader_config.xpid)}),a.on("send-xhr-start",function(t,n){var r=this.metrics,o=t[0],i=this;if(r&&o){var d=e(o);d&&(r.txSize=d)}this.startTime=(new Date).getTime(),this.listener=function(t){try{"abort"===t.type&&(i.params.aborted=!0),("load"!==t.type||i.called===i.totalCbs&&(i.onloadCalled||"function"!=typeof n.onload))&&i.end(n)}catch(e){try{a.emit("internal-error",e)}catch(r){}}};for(var f=0;u>f;f++)n.addEventListener(s[f],this.listener,!1)}),a.on("xhr-cb-time",function(t,e,n){this.cbTime+=t,e?this.onloadCalled=!0:this.called+=1,this.called!==this.totalCbs||!this.onloadCalled&&"function"==typeof n.onload||this.end(n)}),a.on("xhr-load-added",function(t,e){var n=""+d(t)+!!e;this.xhrGuids&&!this.xhrGuids[n]&&(this.xhrGuids[n]=!0,this.totalCbs+=1)}),a.on("xhr-load-removed",function(t,e){var n=""+d(t)+!!e;this.xhrGuids&&this.xhrGuids[n]&&(delete this.xhrGuids[n],this.totalCbs-=1)}),a.on("addEventListener-end",function(t,e){e instanceof XMLHttpRequest&&"load"===t[0]&&a.emit("xhr-load-added",[t[1],t[2]],e)}),a.on("removeEventListener-end",function(t,e){e instanceof XMLHttpRequest&&"load"===t[0]&&a.emit("xhr-load-removed",[t[1],t[2]],e)}),a.on("fn-start",function(t,e,n){e instanceof XMLHttpRequest&&("onload"===n&&(this.onload=!0),("load"===(t[0]&&t[0].type)||this.onload)&&(this.xhrCbStart=(new Date).getTime()))}),a.on("fn-end",function(t,e){this.xhrCbStart&&a.emit("xhr-cb-time",[(new Date).getTime()-this.xhrCbStart,this.onload,e],e)})}window.XMLHttpRequest&&XMLHttpRequest.prototype&&XMLHttpRequest.prototype.addEventListener&&!/CriOS/.test(navigator.userAgent)&&e()},{1:8,2:11,3:3,4:6,5:1,handle:"D5DuLP",loader:"G9z0Bl"}],8:[function(t,e){e.exports=function(t){var e=document.createElement("a"),n=window.location,r={};e.href=t,r.port=e.port;var o=e.href.split("://");return!r.port&&o[1]&&(r.port=o[1].split("/")[0].split(":")[1]),r.port&&"0"!==r.port||(r.port="https"===o[0]?"443":"80"),r.hostname=e.hostname||n.hostname,r.pathname=e.pathname,"/"!==r.pathname.charAt(0)&&(r.pathname="/"+r.pathname),r.sameOrigin=!e.hostname||e.hostname===document.domain&&e.port===n.port&&e.protocol===n.protocol,r}},{}],handle:[function(t,e){e.exports=t("D5DuLP")},{}],D5DuLP:[function(t,e){function n(t,e){var n=r[t];return n?n.apply(this,e):(o[t]||(o[t]=[]),void o[t].push(e))}var r={},o={};e.exports=n,n.queues=o,n.handlers=r},{}],11:[function(t,e){function n(t){if(!t||"object"!=typeof t&&"function"!=typeof t)return-1;if(t===window)return 0;if(o.call(t,"__nr"))return t.__nr;try{return Object.defineProperty(t,"__nr",{value:r,writable:!0,enumerable:!1}),r}catch(e){return t.__nr=r,r}finally{r+=1}}var r=1,o=Object.prototype.hasOwnProperty;e.exports=n},{}],loader:[function(t,e){e.exports=t("G9z0Bl")},{}],G9z0Bl:[function(t,e){function n(){var t=p.info=NREUM.info;if(t&&t.agent&&t.licenseKey&&t.applicationID&&u&&u.body){p.proto="https"===c.split(":")[0]||t.sslForHttp?"https://":"http://",a("mark",["onload",i()]);var e=u.createElement("script");e.src=p.proto+t.agent,u.body.appendChild(e)}}function r(){"complete"===u.readyState&&o()}function o(){a("mark",["domContent",i()])}function i(){return(new Date).getTime()}var a=t("handle"),s=window,u=s.document,d="addEventListener",f="attachEvent",c=(""+location).split("?")[0],p=e.exports={offset:i(),origin:c,features:[]};u[d]?(u[d]("DOMContentLoaded",o,!1),s[d]("load",n,!1)):(u[f]("onreadystatechange",r),s[f]("onload",n)),a("mark",["firstbyte",i()])},{handle:"D5DuLP"}],14:[function(t,e){function n(t,e,n){e||(e=0),"undefined"==typeof n&&(n=t?t.length:0);for(var r=-1,o=n-e||0,i=Array(0>o?0:o);++r<o;)i[r]=t[e+r];return i}e.exports=n},{}],15:[function(t,e){function n(t,e,r,s){function nrWrapper(){try{var n,a=u(arguments),d=this,f=r&&r(a,d)||{}}catch(c){i([c,"",[a,d,s],f])}o(e+"start",[a,d,s],f);try{return n=t.apply(d,a)}catch(p){throw o(e+"err",[a,d,p],f),p}finally{o(e+"end",[a,d,n],f)}}return a(t)?t:(e||(e=""),nrWrapper[n.flag]=!0,nrWrapper)}function r(t,e,r,o){r||(r="");var i,s,u,d="-"===r.charAt(0);for(u=0;u<e.length;u++)s=e[u],i=t[s],a(i)||(t[s]=n(i,d?s+r:r,o,s,t))}function o(t,e,n){try{s.emit(t,e,n)}catch(r){i([r,t,e,n])}}function i(t){try{s.emit("internal-error",t)}catch(e){}}function a(t){return!(t&&"function"==typeof t&&t.apply&&!t[n.flag])}var s=t(1),u=t(2);e.exports=n,n.inPlace=r,n.flag="nr@wrapper"},{1:1,2:14}]},{},["G9z0Bl",2,7]);</script>
+<meta name=viewport content="width=device-width, height=device-height, user-scalable=yes, minimum-scale=1, maximum-scale=2.0">
+<title>Germany: Fear of the NSA Resurrects the Typewriter</title>
+<link rel=profile href="http://gmpg.org/xfn/11"/>
+<link rel=pingback href="https://www.vocativ.com/wordpress/xmlrpc.php"/>
+<link rel="shortcut icon" sizes=196x196 href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMQAAADECAMAAAD3eH5ZAAABmFBMVEX9Jib////9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9Jib9JiZ9Wnh2AAAAh3RSTlMAAAEDBAUGCwwPEBESExQWGBkaHyEiIyQlJicpMjM2NzxFSUpPUFFSU1ZdXmJkZWZpamttb3FzdXh5en+Ag4WGh4iJi4yNjpGSk5WWmZudnp+ho6SlpqeoqqyvsLKztbi8vb6/wsXGx8jJy8zO0NHU1tfZ2tvc3uDj5OXp6uvt8fLz9Pj6+/zA52V6AAACg0lEQVR42u3d11NTQRSA8QWxoYiIWLAjgsReAGuiYgmoWAAL2DtKAAHFhliA/bf1wYfMuGFyPWc4a+b7HjN79t7f5P0eV1YCORAgQIAAAQIECBAgQIAAAQLEgiBcXhV1DQda05l0EWVOV7q/23+2mNn0mfZDjZuW5Q9qIVakbk/6BK0PIJJcMDVwZK0yoqpjyidqrjaAeJbsjpmezZqI1BfvFx7xu7QeoiPxw7UQ/skSJUSnt0P4FzqIvd4S4W9pIGq8LcI3KiD6rBEf5IjV3hrhm8WIE/aIx2LEK3vE7CohonrWHuGbhIgdPgJERog4GgPijhBxPgbESyHiegyIMSGiPwbEpBBxLwbEtBAxEAPieykgvoEAAQKEFsLXBRCjUSK+5kbDjY2sCSBuvitwPPfJEHHRFag8/POiQudThohzTqmWGP+JpO0BAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQJQIwvL7Tie1EA2GiFy2K9yVzpWBV229VuB49pEhYp5CWw/e/+NdfEIPBAgQIEDM1w8h4n4MiI9CRG8MiAkh4lIMiCEh4lgMiAdCxO4YEFkhYkMMiH1ChJuIAFEvRVy2R7wVL5bZao84Ll+2NGSNmKuUI7ZbI05pLCDrtkWMl6usghu2RMzUOxVE1bAdYnqL00G4xTesEG82Oi2Ec7sGLRCf2/4M6iCca+5Ntm9zXQAxnuSCnw8PLnfKCOeWbjt84e7T18U1WBNAXC1y+Hl/V9vO6rxBIeK/CAQIECBAgAABAgQIECBAgACh0y9qmOFAXDKnUAAAAABJRU5ErkJggg==">
+<noscript><style>#wall>.item-wrap{display:none}</style></noscript>
+<meta property=og:title content="Germany: Fear of the NSA Resurrects the Typewriter">
+<meta property=og:url content="http://www.vocativ.com/world/germany-world/nsa-surveillance/">
+<meta property=og:type content=article>
+<meta property=og:image content="http://media.vocativ.com/photos/2014/07/NSA_Business_Boom_0012756900512.jpg">
+<meta property=og:image:secure_url content="https://media.vocativ.com/photos/2014/07/NSA_Business_Boom_0012756900512.jpg">
+<meta property=og:description content="Apparently the typewriter era isn&#039;t over. In Germany, manufacturers are reportedly benefitting from Edward Snowden&#039;s revelations about the NSA scandal.">
+<meta property=outbrain:image content="">
+<meta name=twitter:card content=summary_large_image>
+<meta name=twitter:site content="@vocativ">
+<meta name=twitter:title content="Germany: Fear of the NSA Resurrects the Typewriter">
+<meta name=twitter:image:src content="https://media.vocativ.com/photos/2014/07/NSA_Business_Boom_0012756900512.jpg">
+<meta name=twitter:description content="Germany: Fear of the NSA Resurrects the Typewriter">
+<meta name=twitter:creator content="@jstonington">
+<meta name=news_keywords content="NSA, Germany, business, profits, Edward Snowden, Microsoft, Verizon, National Security Agency, typewriters, Angela Merkel, smartphones, technology"/>
+<link rel=original-source href=""/>
+<meta name=description content="Apparently the typewriter era isn&#039;t over. In Germany, manufacturers are reportedly benefitting from Edward Snowden&#039;s revelations about the NSA scandal."/>
+<link rel=canonical href="http://www.vocativ.com/world/germany-world/nsa-surveillance/"/>
+<link rel=alternate type="application/rss+xml" title="Vocativ &raquo; Feed" href="https://www.vocativ.com/feed/"/>
+<link rel=alternate type="application/rss+xml" title="Vocativ &raquo; Comments Feed" href="https://www.vocativ.com/comments/feed/"/>
+<link rel=alternate type="application/rss+xml" title="Vocativ &raquo; Germany: Fear of the NSA Resurrects the Typewriter Comments Feed" href="https://www.vocativ.com/world/germany-world/nsa-surveillance/feed/"/>
+<script src='/content/themes/vocativ/js/vocativ-templates.js.pagespeed.jm.M4OMQ2dkm5.js'></script>
+<link rel=EditURI type="application/rsd+xml" title=RSD href="https://www.vocativ.com/wordpress/xmlrpc.php?rsd"/>
+<link rel=wlwmanifest type="application/wlwmanifest+xml" href="https://www.vocativ.com/wordpress/wp-includes/wlwmanifest.xml"/>
+<link rel=shortlink href='http://voc.tv/1nGwDRs'/>
+<meta property=outbrain:title content="Germany: Fear of the NSA Resurrects the Typewriter">	<script>var _gaq=_gaq||[];_gaq.push(['_setAccount','UA-31006619-3']);_gaq.push(['_setDomainName','www.vocativ.com']);_gaq.push(['_setCustomVar',2,'Author',"Joel Stonington",3]);_gaq.push(['_trackPageview']);(function(){var ga=document.createElement('script');ga.type='text/javascript';ga.async=true;ga.src=('https:'==document.location.protocol?'https://':'http://')+'stats.g.doubleclick.net/dc.js';var s=document.getElementsByTagName('script')[0];s.parentNode.insertBefore(ga,s);})();</script>
+<link rel=author href="https://plus.google.com/plus.google.com/108691622309555453390"/>
+<link rel=publisher href="https://plus.google.com/+Vocativ"/>
+<link rel=dns-prefetch href="//media.vocativ.com"><link rel=dns-prefetch href="//graph.facebook.com"></head>
+<body class="single single-post postid-100631 group-blog"><noscript><meta HTTP-EQUIV="refresh" content="0;url='https://www.vocativ.com/world/germany-world/nsa-surveillance/?PageSpeed=noscript'" /><style><!--table,div,span,font,p{display:none} --></style><div style="display:block">Please click <a href="https://www.vocativ.com/world/germany-world/nsa-surveillance/?PageSpeed=noscript">here</a> if you are not redirected within a few seconds.</div></noscript>
+<div class=overlay></div>
+<div id=fb-root></div>
+<div class=primary-header-wrap>
+<header class=primary-header>
+<a href="#" class=mobile-menu-toggle id=mobile-nav-toggle>
+<i class="fa fa-bars"></i>
+</a>
+<a class=logo href="/"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAAuCAMAAAC27sMlAAACo1BMVEUAAAD///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////+Hen5WAAAA4HRSTlMAAAECAwQFBgcICQoLDA0ODxARExQWFxgZGxwdHh8gISIjJCUmJygpKissLS4wMTIzNDU2Nzg6Ozw9P0BBQ0RFRkdISUpLTE1OT1BUVVdYWltcXV5gYmNkZWZnaGlqa21wcnN0dXZ3eHt8fX6AgYKDhIWGh4iKi4yNj5CRkpOUlZaXmJmam5ydnp+goaKjpKWmp6iprK2ur7CxsrO0tba3uLm6u7y9vsDBwsPExsfIycrMzc7Q0dLT1NXW19jZ2tvd3t/g4uPl5ufo6err7O3u7/Dx8vP09fb3+Pn6+/z9/sIBkVEAAAXVSURBVGje7Zn7XxVFFMCny1OQlwKpEWYPyUAjEUuDtIIkehCKJvgINUOUrEDLyAQVE8iCgIjCClQiDIUIQgGNAgvSwke8X/untLvnzO7M3b0wfOwHbx/OL5zH7Mx3987MOTOQu+xQiF1C31HSKKlSTexJ7AN6YdKnNXYF7ZVcck0m7LAr6MVAOA09DS0I7emjioddQd/5chvQ8IP4uHJOV3B6ympIztlGkL2yFYN6bfEz3AN3rzv4zQ/Vpelr3A0DOEfsOHGypuZ0fmqkG/XNUHpfAdCdSOAk+91AddcmCt+dEzYlF+HRAi5aBM5CQoL7JSr5ciBBs6R4vXnkt+PU+8/he7ieFmT36I/cOOgP3jTJKE/K/kxtpALQLnKdpYCzhewApY+d/DN7wfk0IUclW9BNtPWccm7wgZ0OWkeWXUM82a14Qein0PsoC/0T+FKI/whoCUzwZXD97kjIdzah+7Dx0m7r4UvpNLAUGNk2ikE7dICayeZ8cI3NJeRLUKuYaBm49slqtU1oCdouuWkcv8wCsd0mbCMhQtC0yZ9OOha6TilrC9TxeVrQG3/ThzXo8kxZ4mQzTFFyGWiPdpPxpa1qLJDOjZbs1NSsFvpGYtCBuEyidOg28CgczvjzvqEF14OjnmjQsdx6CGSg9+GQ40UvLl2eWIPWdXWFvAfGzefhsbVjYMsrNTZflq/A7M0HWchDkyrQi7Vhl2B3bkzfLVq0kvlck0D74ubStQxCryL1FsW4LPEPH2Jmtfk+zULH47r2pkH8Ph+pRhAOFIpBP/giQ7MFoLeBOkqfJTngqFByMkJZaCwCHIfEoN1ugLGBrupOsJ8A8zy/ULeAWUIEoGtBzdFi9+HWpqStNFXWarH5ECsXgyZHwPgeY8vBbMdvkIgL1RnMs2DGCEB7jIIargfrO1TxMkm+gXwNNxl0GM6AQIh9CNYeeoTAiRmtWgHj7CtMDB0O2pDDZMWCi3/Q48/hXKoThCYXwNqlGo7d3CsQ8gm7ULdzk2ViaFwsF2zTesYcKGvo7GX3tkZRaHzJS1AqWJfaEexCbQBjsQg01gBnbCHfm9Vv3JCFof0wWas703HrxG35Vd+MHuB7nhg6Tc8XZrKh3yzzCEOTL8DMUupOqLv6PPXGe/SFiql3238AvV2Sbg96DZh/OWvqCaYxLj5llrdCheAvBL1TrwaMsmKcRR292towVWinbi09FYIWyQ5wCny7STAoJ4kQdAKPwUsd4janPBu2wFt/Thya7Af7c+IGS7mT26awGL1Mc+ULYtArsUq1mDAvQuY0baCgKUNjMTo0C/ne4UaYcR2zBCzJHlcxaB+cASF6sKRaFS+yCUKVeih6ytA0424qhb8P8t8Fi5l6+JNNxKDpRcX7WswfXqOfkHQIbdafO2wK3TURNBZgTVDk1lr9mKHcAg8ThcZtZyCIxhC1RtNe08uSQR76fjyIeE0A7dXHYiVZT8GfmWArEYUOwP2//SEIrca6/3VCtoJWS+e7f7PE589ZaGdabEOTjxmsQR9r6GQmmiIMTY7R4+yBZb5zIvOwzh/w1Wp2KVe9BpiZdI32PhzqAHUNPVy25H2QX1SVaQq9ksEqMix232EtOD7XGjojVhblYBygKIkMtN9Vs/yRpoR+QePvwsxj1XxuhI9QyB8sTaEtzHEuyrhFlWhBNldMerBdNWxkPqd+yTiDf4yHXi0ATVK1Bl2ORuhoLRonBD1Ec62hwKibDZHPrANJgxw0PfVPCD1Py6vvmiQDxz/ohYob4y20Cf0bbRLSyKMdoXdZLjz1yGaSxUN7n58cmlTQBo+Ypd0MiT05Gr6/NfRe/Ypt4yXdXcmcYsi6K3qgRl4T7hX8Wdf1rVv6FY8N6Jcw/qNpreAXC8Jfxq1vM4XuSndhGlnC3/y6retKU3HyfKvbx9jjzfJW23Nu/2Oq7RCbe+b00Sj9BsYj+u3csrK8jFcWKTM2GAi4uzBXxApmfNP/sZ2G/p9B/wuVgGyI2V9OawAAAABJRU5ErkJggg==" alt=Vocativ width=109></a>
+<nav class="secondary-navigation right">
+<ul>
+<li class=secondary-navigation-search>
+<a class="search icon" href="#">
+<i class="fa fa-search"></i>
+</a>
+<div class="menu-sub menu-sub-search">
+<div class=wrap>
+<form role=search class=search-form action="/">
+<label>
+<span class=screen-reader-text>Search for:</span>
+<input type=input class=search-field autocomplete=off placeholder="Search&hellip;" value="" name=s title="Search for:"/>
+</label>
+<button class=search-submit><i class="fa fa-search"></i></button>
+</form>	</div>
+</div>
+</li>
+<li class=secondary-navigation-social-newsletter>
+<a>
+<i class="fa fa-facebook"> </i>&nbsp;
+<i class="fa fa-twitter"> </i>&nbsp;
+<i class="fa fa-envelope"> </i>
+</a>
+<div class="menu-sub menu-sub-social-newsletter">
+<div class=follow-social-accounts>
+<h4>Follow our social accounts</h4>
+<ul class=social-accounts-list>
+<li>
+<a href="https://www.facebook.com/Vocativ" class=facebook>
+<i class="fa fa-facebook"></i>
+70K	</a>&nbsp;
+<a href="https://twitter.com/vocativ" class=twitter>
+<i class="fa fa-twitter"></i>
+44.5K	</a> &nbsp;
+<a href="http://vocativ.tumblr.com/" class=tumblr><i class="fa fa-tumblr"></i></a>
+</li>
+</ul>
+</div>
+<div class=newsletter-signup>
+<h4>Sign up for our newsletter</h4>
+<form action="#">
+<p class="newsletter-signup-error hidden"></p>
+<input type=email placeholder=email>
+<button type=submit>Subscribe</button>
+</form>
+</div>	</div>
+</li>
+<li class=secondary-navigation-profile>
+<a href="#" class="icon vocativ-signin"><i class="fa fa-user"></i></a>
+<div class="menu-sub menu-sub-profile">
+<div id=vocativ-user-profile class=user-profile></div>
+</div>
+</li>
+</ul>
+</nav>
+<nav class=primary-navigation>
+<ul id=menu-primary-nav-primary-menu class=menu><li id=menu-item-60204 class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-60204"><a href="/video/">VIDEO</a><div class=sub-container><div class=sub-menu-container><h4>Topics</h4>
+<ul class=sub-menu>
+<li id=menu-item-60208 class="menu-item menu-item-type-custom menu-item-object-custom menu-item-60208"><a href="/video/popular/">POPULAR</a></li>
+<li id=menu-item-60206 class="menu-item menu-item-type-custom menu-item-object-custom menu-item-60206"><a href="/video/picks/">EDITOR&#8217;S PICK</a></li>
+<li id=menu-item-60209 class="menu-item menu-item-type-custom menu-item-object-custom menu-item-60209"><a href="/video/latest/">LATEST</a></li>
+</ul>
+</div><div class=header-recirculator-items><div class=header-recirculator-items-inner><div class=header-recirculator-item>
+<a href="http://www.vocativ.com/video/usa/guns/children-nra/">
+<span class=article-image>
+<img src="//media.vocativ.com/photos/2014/08/CHILDREN-OF-NRA_102a3822149712.jpg" width=400 height=300 srcset="
+				//media.vocativ.com/photos/2014/08/CHILDREN-OF-NRA_102a3822149712.jpg 228w,
+				//media.vocativ.com/photos/2014/08/CHILDREN-OF-NRA_102a1339402889.jpg 168w
+				" sizes="(min-width: 1200px) 228px, 168px"/>
+</span>
+<span class=article-title>
+Meet The Children of the NRA	</span>
+</a>
+</div>
+<div class=header-recirculator-item>
+<a href="http://www.vocativ.com/video/culture/sport/indias-monkey-king/">
+<span class=article-image>
+<img src="//media.vocativ.com/photos/2014/08/Monkey-Man-Still_1024025373005.jpg" width=400 height=300 srcset="
+				//media.vocativ.com/photos/2014/08/Monkey-Man-Still_1024025373005.jpg 228w,
+				//media.vocativ.com/photos/2014/08/Monkey-Man-Still_1021754170719.jpg 168w
+				" sizes="(min-width: 1200px) 228px, 168px"/>
+</span>
+<span class=article-title>
+From Suicidal to Scaling Walls: Meet India&#039;s Amazing Monkey King	</span>
+</a>
+</div>
+<div class=header-recirculator-item>
+<a href="http://www.vocativ.com/video/money/breadline/detroit-water/">
+<span class=article-image>
+<img src="//media.vocativ.com/photos/2014/08/Detroit1012764338330.jpg" width=400 height=300 srcset="
+				//media.vocativ.com/photos/2014/08/Detroit1012764338330.jpg 228w,
+				//media.vocativ.com/photos/2014/08/Detroit1014075755063.jpg 168w
+				" sizes="(min-width: 1200px) 228px, 168px"/>
+</span>
+<span class=article-title>
+VIDEO: Detroit&#039;s Shame - Water Everywhere, Except for the Poor	</span>
+</a>
+</div>
+<div class=header-recirculator-item>
+<a href="http://www.vocativ.com/video/tech/machines/crowdsourced-robot/">
+<span class=article-image>
+<img src="//media.vocativ.com/photos/2014/08/robot042939569278.jpg" width=400 height=300 srcset="
+				//media.vocativ.com/photos/2014/08/robot042939569278.jpg 228w,
+				//media.vocativ.com/photos/2014/08/robot041132892607.jpg 168w
+				" sizes="(min-width: 1200px) 228px, 168px"/>
+</span>
+<span class=article-title>
+How to Build a Robot in Your Living Room	</span>
+</a>
+</div>
+</div></div></div></li>
+<li id=menu-item-60155 class="menu-item menu-item-type-taxonomy menu-item-object-vocativ-topic menu-item-has-children menu-item-60155"><a href="http://www.vocativ.com/usa/">USA</a><div class=sub-container><div class=sub-menu-container><h4>Topics</h4>
+<ul class=sub-menu>
+<li id=menu-item-60160 class="menu-item menu-item-type-taxonomy menu-item-object-vocativ-topic menu-item-60160"><a href="http://www.vocativ.com/usa/us-politics/">US POLITICS</a></li>
+<li id=menu-item-60165 class="menu-item menu-item-type-taxonomy menu-item-object-vocativ-topic menu-item-60165"><a href="http://www.vocativ.com/usa/nat-sec/">NAT SEC</a></li>
+<li id=menu-item-60175 class="menu-item menu-item-type-taxonomy menu-item-object-vocativ-topic menu-item-60175"><a href="http://www.vocativ.com/usa/guns/">GUNS</a></li>
+<li id=menu-item-60164 class="menu-item menu-item-type-taxonomy menu-item-object-vocativ-topic menu-item-60164"><a href="http://www.vocativ.com/usa/justice-usa/">JUSTICE</a></li>
+<li id=menu-item-67193 class="menu-item menu-item-type-taxonomy menu-item-object-vocativ-topic menu-item-67193"><a href="http://www.vocativ.com/usa/immigration-usa/">IMMIGRATION</a></li>
+</ul>
+<a href="http://www.vocativ.com/usa/" class=more-topics-link>More Topics</a></div><div class=header-recirculator-items><div class=header-recirculator-items-inner><div class=header-recirculator-item>
+<a href="http://www.vocativ.com/usa/race/ferguson-protests/">
+<span class=article-image>
+<img src="//media.vocativ.com/photos/2014/08/Mike-Brown-Style_021328952516.jpg" width=400 height=300 srcset="
+				//media.vocativ.com/photos/2014/08/Mike-Brown-Style_021328952516.jpg 228w,
+				//media.vocativ.com/photos/2014/08/Mike-Brown-Style_02829592193.jpg 168w
+				" sizes="(min-width: 1200px) 228px, 168px"/>
+</span>
+<span class=article-title>
+Calm, Common Sense Finally Prevail in Ferguson	</span>
+</a>
+</div>
+<div class=header-recirculator-item>
+<a href="http://www.vocativ.com/usa/race/stump-statements-appeal-calm-ferguson/">
+<span class=article-image>
+<img src="//media.vocativ.com/photos/2014/08/Ferguson-protest-banner2546334767.jpg" width=400 height=300 srcset="
+				//media.vocativ.com/photos/2014/08/Ferguson-protest-banner2546334767.jpg 228w,
+				//media.vocativ.com/photos/2014/08/Ferguson-protest-banner1852757344.jpg 168w
+				" sizes="(min-width: 1200px) 228px, 168px"/>
+</span>
+<span class=article-title>
+After a Night of Tear Gas, Politicians Make Statements of the Obvious	</span>
+</a>
+</div>
+<div class=header-recirculator-item>
+<a href="http://www.vocativ.com/usa/race/police-use-tear-gas-rubber-bullets-ferguson-residents/">
+<span class=article-image>
+<img src="//media.vocativ.com/photos/2014/08/Screen-Shot-2014-08-13-at-11.26.03-PM3780644049.png" width=400 height=300 srcset="
+				//media.vocativ.com/photos/2014/08/Screen-Shot-2014-08-13-at-11.26.03-PM3780644049.png 228w,
+				//media.vocativ.com/photos/2014/08/Screen-Shot-2014-08-13-at-11.26.03-PM1659110557.png 168w
+				" sizes="(min-width: 1200px) 228px, 168px"/>
+</span>
+<span class=article-title>
+WAR ZONE, Missouri: Cops Fire Tear Gas, Rubber Bullets in Ferguson	</span>
+</a>
+</div>
+<div class=header-recirculator-item>
+<a href="http://www.vocativ.com/usa/guns/militarization-of-federal-agencies/">
+<span class=article-image>
+<img src="//media.vocativ.com/photos/2014/08/Fed-Raw-Foodies-Poster1922171136.jpg" width=400 height=300 srcset="
+				//media.vocativ.com/photos/2014/08/Fed-Raw-Foodies-Poster1922171136.jpg 228w,
+				//media.vocativ.com/photos/2014/08/Fed-Raw-Foodies-Poster3003644560.jpg 168w
+				" sizes="(min-width: 1200px) 228px, 168px"/>
+</span>
+<span class=article-title>
+The Ferguson Police Aren&#039;t the Only Ones With Way Too Many Guns	</span>
+</a>
+</div>
+</div></div></div></li>
+<li id=menu-item-60156 class="menu-item menu-item-type-taxonomy menu-item-object-vocativ-topic menu-item-has-children menu-item-60156"><a href="http://www.vocativ.com/world/">World</a><div class=sub-container><div class=sub-menu-container><h4>Topics</h4>
+<ul class=sub-menu>
+<li id=menu-item-97770 class="menu-item menu-item-type-taxonomy menu-item-object-vocativ-topic menu-item-97770"><a href="http://www.vocativ.com/world/israel-world/">ISRAEL</a></li>
+<li id=menu-item-60173 class="menu-item menu-item-type-taxonomy menu-item-object-vocativ-topic menu-item-60173"><a href="http://www.vocativ.com/world/ukraine-world/">UKRAINE</a></li>
+<li id=menu-item-60179 class="menu-item menu-item-type-taxonomy menu-item-object-vocativ-topic menu-item-60179"><a href="http://www.vocativ.com/world/mexico-world/">MEXICO</a></li>
+<li id=menu-item-60177 class="menu-item menu-item-type-taxonomy menu-item-object-vocativ-topic menu-item-60177"><a href="http://www.vocativ.com/world/china/">CHINA</a></li>
+<li id=menu-item-60166 class="menu-item menu-item-type-taxonomy menu-item-object-vocativ-topic menu-item-60166"><a href="http://www.vocativ.com/world/russia/">RUSSIA</a></li>
+<li id=menu-item-60427 class="menu-item menu-item-type-taxonomy menu-item-object-vocativ-topic menu-item-60427"><a href="http://www.vocativ.com/world/turkey-world/">TURKEY</a></li>
+</ul>
+<a href="http://www.vocativ.com/world/" class=more-topics-link>More Topics</a></div><div class=header-recirculator-items><div class=header-recirculator-items-inner><div class=header-recirculator-item>
+<a href="http://www.vocativ.com/world/nigeria-world/ebola-outbreak-2014/">
+<span class=article-image>
+<img src="//media.vocativ.com/photos/2014/08/4847823952486849641.jpg" width=400 height=300 srcset="
+				//media.vocativ.com/photos/2014/08/4847823952486849641.jpg 228w,
+				//media.vocativ.com/photos/2014/08/484782395684038926.jpg 168w
+				" sizes="(min-width: 1200px) 228px, 168px"/>
+</span>
+<span class=article-title>
+Millionaire Buys 4,000 Bottles of Holy Water to Fight Ebola	</span>
+</a>
+</div>
+<div class=header-recirculator-item>
+<a href="http://www.vocativ.com/world/brazil-world/aecio-neves/">
+<span class=article-image>
+<img src="//media.vocativ.com/photos/2014/08/4532467282941441884.jpg" width=400 height=300 srcset="
+				//media.vocativ.com/photos/2014/08/4532467282941441884.jpg 228w,
+				//media.vocativ.com/photos/2014/08/4532467281656762320.jpg 168w
+				" sizes="(min-width: 1200px) 228px, 168px"/>
+</span>
+<span class=article-title>
+Internet Trolls Derail Real Presidential Election	</span>
+</a>
+</div>
+<div class=header-recirculator-item>
+<a href="http://www.vocativ.com/world/iraq-world/yazidi-religion/">
+<span class=article-image>
+<img src="//media.vocativ.com/photos/2014/08/4535638182182031614.jpg" width=400 height=300 srcset="
+				//media.vocativ.com/photos/2014/08/4535638182182031614.jpg 228w,
+				//media.vocativ.com/photos/2014/08/4535638182897461461.jpg 168w
+				" sizes="(min-width: 1200px) 228px, 168px"/>
+</span>
+<span class=article-title>
+U.S. Army Special Forces Come to Yazidis&#039; Aid in Iraq	</span>
+</a>
+</div>
+<div class=header-recirculator-item>
+<a href="http://www.vocativ.com/world/afghanistan-world/drugs-afghanistan-taliban/">
+<span class=article-image>
+<img src="//media.vocativ.com/photos/2014/08/451246730764395859.jpg" width=400 height=300 srcset="
+				//media.vocativ.com/photos/2014/08/451246730764395859.jpg 228w,
+				//media.vocativ.com/photos/2014/08/4512467301394669133.jpg 168w
+				" sizes="(min-width: 1200px) 228px, 168px"/>
+</span>
+<span class=article-title>
+Drugs, Pakistan Fuel One Bloody Afghan Summer	</span>
+</a>
+</div>
+</div></div></div></li>
+<li id=menu-item-60159 class="menu-item menu-item-type-taxonomy menu-item-object-vocativ-topic menu-item-has-children menu-item-60159"><a href="http://www.vocativ.com/underworld/">Underworld</a><div class=sub-container><div class=sub-menu-container><h4>Topics</h4>
+<ul class=sub-menu>
+<li id=menu-item-60182 class="menu-item menu-item-type-taxonomy menu-item-object-vocativ-topic menu-item-60182"><a href="http://www.vocativ.com/underworld/crime/">CRIME</a></li>
+<li id=menu-item-60184 class="menu-item menu-item-type-taxonomy menu-item-object-vocativ-topic menu-item-60184"><a href="http://www.vocativ.com/underworld/drugs/">DRUGS</a></li>
+<li id=menu-item-60172 class="menu-item menu-item-type-taxonomy menu-item-object-vocativ-topic menu-item-60172"><a href="http://www.vocativ.com/underworld/sex/">SEX</a></li>
+</ul>
+<a href="http://www.vocativ.com/underworld/" class=more-topics-link>More Topics</a></div><div class=header-recirculator-items><div class=header-recirculator-items-inner><div class=header-recirculator-item>
+<a href="http://www.vocativ.com/usa/race/ferguson-protests/">
+<span class=article-image>
+<img src="//media.vocativ.com/photos/2014/08/Mike-Brown-Style_021328952516.jpg" width=400 height=300 srcset="
+				//media.vocativ.com/photos/2014/08/Mike-Brown-Style_021328952516.jpg 228w,
+				//media.vocativ.com/photos/2014/08/Mike-Brown-Style_02829592193.jpg 168w
+				" sizes="(min-width: 1200px) 228px, 168px"/>
+</span>
+<span class=article-title>
+Calm, Common Sense Finally Prevail in Ferguson	</span>
+</a>
+</div>
+<div class=header-recirculator-item>
+<a href="http://www.vocativ.com/culture/society/date-rape-apps/">
+<span class=article-image>
+<img src="//media.vocativ.com/photos/2014/08/Apps-Save-Sexual-Assault-Poster14028273477.jpg" width=400 height=300 srcset="
+				//media.vocativ.com/photos/2014/08/Apps-Save-Sexual-Assault-Poster14028273477.jpg 228w,
+				//media.vocativ.com/photos/2014/08/Apps-Save-Sexual-Assault-Poster12132400265.jpg 168w
+				" sizes="(min-width: 1200px) 228px, 168px"/>
+</span>
+<span class=article-title>
+Rape Prevention Apps on Back-to-School Shopping Lists	</span>
+</a>
+</div>
+<div class=header-recirculator-item>
+<a href="http://www.vocativ.com/gallery/culture/photos/ferguson-missouri/">
+<span class=article-image>
+<img src="//media.vocativ.com/photos/2014/08/Ferguson-Violence_171520769076.jpg" width=400 height=300 srcset="
+				//media.vocativ.com/photos/2014/08/Ferguson-Violence_171520769076.jpg 228w,
+				//media.vocativ.com/photos/2014/08/Ferguson-Violence_17314128872.jpg 168w
+				" sizes="(min-width: 1200px) 228px, 168px"/>
+</span>
+<span class=article-title>
+See It: Shocking Photos From Ferguson	</span>
+</a>
+</div>
+<div class=header-recirculator-item>
+<a href="http://www.vocativ.com/world/afghanistan-world/drugs-afghanistan-taliban/">
+<span class=article-image>
+<img src="//media.vocativ.com/photos/2014/08/451246730764395859.jpg" width=400 height=300 srcset="
+				//media.vocativ.com/photos/2014/08/451246730764395859.jpg 228w,
+				//media.vocativ.com/photos/2014/08/4512467301394669133.jpg 168w
+				" sizes="(min-width: 1200px) 228px, 168px"/>
+</span>
+<span class=article-title>
+Drugs, Pakistan Fuel One Bloody Afghan Summer	</span>
+</a>
+</div>
+</div></div></div></li>
+<li id=menu-item-60154 class="menu-item menu-item-type-taxonomy menu-item-object-vocativ-topic menu-item-has-children menu-item-60154"><a href="http://www.vocativ.com/tech/">Tech</a><div class=sub-container><div class=sub-menu-container><h4>Topics</h4>
+<ul class=sub-menu>
+<li id=menu-item-60186 class="menu-item menu-item-type-taxonomy menu-item-object-vocativ-topic menu-item-60186"><a href="http://www.vocativ.com/tech/bitcoin/">BITCOIN</a></li>
+<li id=menu-item-60300 class="menu-item menu-item-type-taxonomy menu-item-object-vocativ-topic menu-item-60300"><a href="http://www.vocativ.com/tech/internet/">INTERNET</a></li>
+</ul>
+<a href="http://www.vocativ.com/tech/" class=more-topics-link>More Topics</a></div><div class=header-recirculator-items><div class=header-recirculator-items-inner><div class=header-recirculator-item>
+<a href="http://www.vocativ.com/tech/apple/tracy-chou/">
+<span class=article-image>
+<img src="//media.vocativ.com/photos/2014/08/Tracy-Chou-001a271506556.jpg" width=400 height=300 srcset="
+				//media.vocativ.com/photos/2014/08/Tracy-Chou-001a271506556.jpg 228w,
+				//media.vocativ.com/photos/2014/08/Tracy-Chou-001a2523885826.jpg 168w
+				" sizes="(min-width: 1200px) 228px, 168px"/>
+</span>
+<span class=article-title>
+The 26-Year-Old Woman Waging War Against Sexism	</span>
+</a>
+</div>
+<div class=header-recirculator-item>
+<a href="http://www.vocativ.com/culture/religion/pope-twitter/">
+<span class=article-image>
+<img src="//media.vocativ.com/photos/2014/08/Pope-Twitter-Poster24060799544.jpg" width=400 height=300 srcset="
+				//media.vocativ.com/photos/2014/08/Pope-Twitter-Poster24060799544.jpg 228w,
+				//media.vocativ.com/photos/2014/08/Pope-Twitter-Poster22477468447.jpg 168w
+				" sizes="(min-width: 1200px) 228px, 168px"/>
+</span>
+<span class=article-title>
+Pope Twitter Feed Is the Most Retweeted, Like, Ever	</span>
+</a>
+</div>
+<div class=header-recirculator-item>
+<a href="http://www.vocativ.com/tech/internet/tweet-israel-lose-job/">
+<span class=article-image>
+<img src="//media.vocativ.com/photos/2014/08/Steven-Salaita-0021665127286.jpg" width=400 height=300 srcset="
+				//media.vocativ.com/photos/2014/08/Steven-Salaita-0021665127286.jpg 228w,
+				//media.vocativ.com/photos/2014/08/Steven-Salaita-0021733582265.jpg 168w
+				" sizes="(min-width: 1200px) 228px, 168px"/>
+</span>
+<span class=article-title>
+Tweet Against Israel, Lose Your Job	</span>
+</a>
+</div>
+<div class=header-recirculator-item>
+<a href="http://www.vocativ.com/tech/internet/russian-password-hack/">
+<span class=article-image>
+<img src="//media.vocativ.com/photos/2014/08/Russian-PW-Hack-Poster528159118.jpg" width=400 height=300 srcset="
+				//media.vocativ.com/photos/2014/08/Russian-PW-Hack-Poster528159118.jpg 228w,
+				//media.vocativ.com/photos/2014/08/Russian-PW-Hack-Poster1953028307.jpg 168w
+				" sizes="(min-width: 1200px) 228px, 168px"/>
+</span>
+<span class=article-title>
+The U.S. Company Profiting From That Massive Russinan Password Hack	</span>
+</a>
+</div>
+</div></div></div></li>
+<li id=menu-item-60153 class="menu-item menu-item-type-taxonomy menu-item-object-vocativ-topic menu-item-has-children menu-item-60153"><a href="http://www.vocativ.com/money/">Money</a><div class=sub-container><div class=sub-menu-container><h4>Topics</h4>
+<ul class=sub-menu>
+<li id=menu-item-60161 class="menu-item menu-item-type-taxonomy menu-item-object-vocativ-topic menu-item-60161"><a href="http://www.vocativ.com/money/the1/">THE1%</a></li>
+<li id=menu-item-60189 class="menu-item menu-item-type-taxonomy menu-item-object-vocativ-topic menu-item-60189"><a href="http://www.vocativ.com/money/business/">BUSINESS</a></li>
+</ul>
+<a href="http://www.vocativ.com/money/" class=more-topics-link>More Topics</a></div><div class=header-recirculator-items><div class=header-recirculator-items-inner><div class=header-recirculator-item>
+<a href="http://www.vocativ.com/money/business/lyft-uber/">
+<span class=article-image>
+<img src="//media.vocativ.com/photos/2014/08/10421548_534480513347258_6189702526757775120_n1114418105.jpg" width=400 height=300 srcset="
+				//media.vocativ.com/photos/2014/08/10421548_534480513347258_6189702526757775120_n1114418105.jpg 228w,
+				//media.vocativ.com/photos/2014/08/10421548_534480513347258_6189702526757775120_n21535401.jpg 168w
+				" sizes="(min-width: 1200px) 228px, 168px"/>
+</span>
+<span class=article-title>
+Lyft vs. Uber: The Drivers Tell the Real Story	</span>
+</a>
+</div>
+<div class=header-recirculator-item>
+<a href="http://www.vocativ.com/tech/apple/tracy-chou/">
+<span class=article-image>
+<img src="//media.vocativ.com/photos/2014/08/Tracy-Chou-001a271506556.jpg" width=400 height=300 srcset="
+				//media.vocativ.com/photos/2014/08/Tracy-Chou-001a271506556.jpg 228w,
+				//media.vocativ.com/photos/2014/08/Tracy-Chou-001a2523885826.jpg 168w
+				" sizes="(min-width: 1200px) 228px, 168px"/>
+</span>
+<span class=article-title>
+The 26-Year-Old Woman Waging War Against Sexism	</span>
+</a>
+</div>
+<div class=header-recirculator-item>
+<a href="http://www.vocativ.com/money/business/retirement-age/">
+<span class=article-image>
+<img src="//media.vocativ.com/photos/2014/08/42-599437801594690079.jpg" width=400 height=300 srcset="
+				//media.vocativ.com/photos/2014/08/42-599437801594690079.jpg 228w,
+				//media.vocativ.com/photos/2014/08/42-59943780278483509.jpg 168w
+				" sizes="(min-width: 1200px) 228px, 168px"/>
+</span>
+<span class=article-title>
+Young Americans Still Think They&#039;ll Retire at 60	</span>
+</a>
+</div>
+<div class=header-recirculator-item>
+<a href="http://www.vocativ.com/money/the1/rich-spent-billions-taxes/">
+<span class=article-image>
+<img src="//media.vocativ.com/photos/2014/08/10365344_10150403217814970_9166029281909674446_o666775225.jpg" width=400 height=300 srcset="
+				//media.vocativ.com/photos/2014/08/10365344_10150403217814970_9166029281909674446_o666775225.jpg 228w,
+				//media.vocativ.com/photos/2014/08/10365344_10150403217814970_9166029281909674446_o1537848283.jpg 168w
+				" sizes="(min-width: 1200px) 228px, 168px"/>
+</span>
+<span class=article-title>
+How the Rich Spent Your Billions in Tax Credit	</span>
+</a>
+</div>
+</div></div></div></li>
+<li id=menu-item-60152 class="menu-item menu-item-type-taxonomy menu-item-object-vocativ-topic menu-item-has-children menu-item-60152"><a href="http://www.vocativ.com/culture/">Culture</a><div class=sub-container><div class=sub-menu-container><h4>Topics</h4>
+<ul class=sub-menu>
+<li id=menu-item-60191 class="menu-item menu-item-type-taxonomy menu-item-object-vocativ-topic menu-item-60191"><a href="http://www.vocativ.com/culture/art-culture/">ART</a></li>
+<li id=menu-item-98010 class="menu-item menu-item-type-taxonomy menu-item-object-vocativ-topic menu-item-98010"><a href="http://www.vocativ.com/culture/health-culture/">HEALTH</a></li>
+<li id=menu-item-60168 class="menu-item menu-item-type-taxonomy menu-item-object-vocativ-topic menu-item-60168"><a href="http://www.vocativ.com/culture/lgbt/">LGBT</a></li>
+<li id=menu-item-98009 class="menu-item menu-item-type-taxonomy menu-item-object-vocativ-topic menu-item-98009"><a href="http://www.vocativ.com/culture/media/">MEDIA</a></li>
+<li id=menu-item-60169 class="menu-item menu-item-type-taxonomy menu-item-object-vocativ-topic menu-item-60169"><a href="http://www.vocativ.com/culture/religion/">RELIGION</a></li>
+<li id=menu-item-97996 class="menu-item menu-item-type-taxonomy menu-item-object-vocativ-topic menu-item-97996"><a href="http://www.vocativ.com/culture/society/">SOCIETY</a></li>
+</ul>
+<a href="http://www.vocativ.com/culture/" class=more-topics-link>More Topics</a></div><div class=header-recirculator-items><div class=header-recirculator-items-inner><div class=header-recirculator-item>
+<a href="http://www.vocativ.com/culture/sport/dead-chess-olympics-norway/">
+<span class=article-image>
+<img src="//media.vocativ.com/photos/2014/08/Chess-Olympiad-Poster3190490765.jpg" width=400 height=300 srcset="
+				//media.vocativ.com/photos/2014/08/Chess-Olympiad-Poster3190490765.jpg 228w,
+				//media.vocativ.com/photos/2014/08/Chess-Olympiad-Poster3716647839.jpg 168w
+				" sizes="(min-width: 1200px) 228px, 168px"/>
+</span>
+<span class=article-title>
+Two People Dead at the Chess Olympics - Yes, at the Chess Olympics	</span>
+</a>
+</div>
+<div class=header-recirculator-item>
+<a href="http://www.vocativ.com/world/nigeria-world/ebola-outbreak-2014/">
+<span class=article-image>
+<img src="//media.vocativ.com/photos/2014/08/4847823952486849641.jpg" width=400 height=300 srcset="
+				//media.vocativ.com/photos/2014/08/4847823952486849641.jpg 228w,
+				//media.vocativ.com/photos/2014/08/484782395684038926.jpg 168w
+				" sizes="(min-width: 1200px) 228px, 168px"/>
+</span>
+<span class=article-title>
+Millionaire Buys 4,000 Bottles of Holy Water to Fight Ebola	</span>
+</a>
+</div>
+<div class=header-recirculator-item>
+<a href="http://www.vocativ.com/culture/society/date-rape-apps/">
+<span class=article-image>
+<img src="//media.vocativ.com/photos/2014/08/Apps-Save-Sexual-Assault-Poster14028273477.jpg" width=400 height=300 srcset="
+				//media.vocativ.com/photos/2014/08/Apps-Save-Sexual-Assault-Poster14028273477.jpg 228w,
+				//media.vocativ.com/photos/2014/08/Apps-Save-Sexual-Assault-Poster12132400265.jpg 168w
+				" sizes="(min-width: 1200px) 228px, 168px"/>
+</span>
+<span class=article-title>
+Rape Prevention Apps on Back-to-School Shopping Lists	</span>
+</a>
+</div>
+<div class=header-recirculator-item>
+<a href="http://www.vocativ.com/video/culture/society/street-harassment-roundtable/">
+<span class=article-image>
+<img src="//media.vocativ.com/photos/2014/08/New-Poster-Harassment3321112537.jpg" width=400 height=300 srcset="
+				//media.vocativ.com/photos/2014/08/New-Poster-Harassment3321112537.jpg 228w,
+				//media.vocativ.com/photos/2014/08/New-Poster-Harassment2158160243.jpg 168w
+				" sizes="(min-width: 1200px) 228px, 168px"/>
+</span>
+<span class=article-title>
+Street Harassment: Where&#039;s the Line Between Acceptable and Assault?	</span>
+</a>
+</div>
+</div></div></div></li>
+<li id=menu-item-63664 class="menu-item menu-item-type-taxonomy menu-item-object-vocativ-topic menu-item-63664"><a href="http://www.vocativ.com/culture/photos/">PHOTOS</a></li>
+</ul>
+</nav>
+<div class=clear></div>
+<div id=vocativ-user-profile-mobile class="user-profile user-profile-mobile"></div>
+</header>
+</div>
+<nav class="mobile-navigation mobile-sub-nav">
+<ul>
+<li><a href="/">Home</a></li>
+<li><a href="#" class="vocativ-signin vocativ-signin-mobile" data-signed-in-text="Edit Profile" data-signed-out-text=Signup>
+Signup	</a></li>
+<li><a href="#" class=vocativ-newsletter-modal-link>Email Newsletter</a></li>
+<li><h2>Social</h2></li>
+<li class="follow follow-facebook" data-network=facebook><a href="https://www.facebook.com/Vocativ">Facebook</a></li>
+<li class="follow follow-twitter" data-network=twitter><a href="https://twitter.com/vocativ">Twitter</a></li>
+<li class="follow follow-tumblr" data-network=tumblr><a href="http://vocativ.tumblr.com/">Tumblr</a></li>
+<li><h2>Sections</h2></li>
+<li>
+<div class=menu-primary-nav-container></div>
+</li>
+</ul>
+<span class=vocativ-copyright>&copy; Vocativ 2014. All Rights Reserved</span>
+</nav>
+<section class=content>
+<header class="article-header ">
+<section class=full-width>
+<div class=desktop style="background-image:url(//media.vocativ.com/photos/2014/07/NSA_Business_Boom_0012652547105.jpg)">
+</div>
+<div class=mobile>
+<div class=mobile-headline-image-wrap>
+<img width=480 height=390 src="//media.vocativ.com/photos/2014/07/NSA_Business_Boom_0011084957759.jpg" class="vocativ-image-version-top-left-dark vocativ-image-version-top-right-dark vocativ-image-version-bottom-left-dark vocativ-image-version-bottom-right-dark" alt="A Remington Portable typewriter sits prior to being repaired on July 22, 2014 at the Arndt Hans Joachim Bueromaschinen office supply store in Berlin, Germany."/>	</div>
+</div>
+</section>
+<div class=wrap>
+<div class=hashtag>
+<span class=topic><span class=hash>#</span><a href="/iseeyou/">ISEEYOU</a></span></div>	</div>
+</header>
+<div class=wrap>
+<div class=lcol>
+<article id=post-100631 class="post-100631 post type-post status-publish hentry">
+<header class=article-title>
+<h1 class=white-on-red>Germany: Fear of the NSA Resurrects the Typewriter</h1>
+</header>
+<h2 class=sub-heading>
+Apparently the typewriter era isn&#039;t over. In Germany, manufacturers are reportedly benefitting from Edward Snowden&#039;s revelations about the NSA scandal </h2>
+<div class=header-byline>
+<div class=author-meta>
+<div class=author>
+<span class=label>Author:</span>
+<span class=detail><a href="/author/joel-stonington/" title="Posts by Joel Stonington" class="url fn" rel=author>Joel Stonington</a> </span>
+</div>
+<div class=posted>
+<span class=label>Posted:</span>
+<span class=detail>07/25/14 10:53 EDT</span>
+</div>
+</div>
+<div class=clearfix></div>
+</div>
+<div class=social-share>
+<ul class="social-accounts-list share-icon-list">
+<li class=fb-like>
+<div class=fb-like data-href="http://voc.tv/1nGwDRs" data-layout=button_count data-action=like data-show-faces=false data-share=false></div>
+</li>
+<li class=fb-vocativ-share>
+<div class=share-icon-list data-title="Germany: Fear of the NSA Resurrects the Typewriter" data-recirc-headline="Germany: Fear of the NSA Resurrects the Typewriter" data-recirc-subheadline="Apparently the typewriter era isn&#039;t over. In Germany, manufacturers are reportedly benefitting from Edward Snowden&#039;s revelations about the NSA scandal." data-shortlink="http://voc.tv/1nGwDRs" data-url="https://www.vocativ.com/world/germany-world/nsa-surveillance/" data-image="http://media.vocativ.com/photos/2014/07/NSA_Business_Boom_0011181242335.jpg" data-image-drawn-text="http://media.vocativ.com/photos/2014/07/NSA_Business_Boom_0012325813026.jpg" data-image-portrait-drawn-text="http://media.vocativ.com/photos/2014/07/NSA_Business_Boom_0013497402525.jpg" " data-desc="Apparently the typewriter era isn&#039;t over. In Germany, manufacturers are reportedly benefitting from Edward Snowden&#039;s revelations about the NSA scandal" data-primary-tag=ISEEYOU data-facebook-title="Germany: Fear of the NSA Resurrects the Typewriter" data-twitter-title="Germany: Fear of the NSA Resurrects the Typewriter" data-twitter-image="pic.twitter.com/Fi0VVgZYq3" data-twitter-author=jstonington data-twitter-post-type=post>
+<div class=fb-vocativ-share-button data-share-type=facebook title="Share on Facebook">
+<div class=share-count>
+7	</div>
+</div>
+</div>
+</li>
+<li data-share-type=twitter title="" class=twitter>
+<a href="https://twitter.com/share" class=twitter-share-button data-lang=en data-url="http://voc.tv/1nGwDRs" data-count=horizontal data-counturl="http://www.vocativ.com/world/germany-world/nsa-surveillance/" data-text="Germany: Fear of the NSA Resurrects the Typewriter pic.twitter.com/Fi0VVgZYq3 @jstonington @vocativ">
+Tweet	</a>
+</li>
+</ul>
+</div>
+<div class=article-content>
+<ul class="share-icon-list share-icon-sidebar" data-title="Germany: Fear of the NSA Resurrects the Typewriter" data-recirc-headline="Germany: Fear of the NSA Resurrects the Typewriter" data-recirc-subheadline="Apparently the typewriter era isn&#039;t over. In Germany, manufacturers are reportedly benefitting from Edward Snowden&#039;s revelations about the NSA scandal." data-shortlink="http://voc.tv/1nGwDRs" data-url="https://www.vocativ.com/world/germany-world/nsa-surveillance/" data-image="http://media.vocativ.com/photos/2014/07/NSA_Business_Boom_0011181242335.jpg" data-image-drawn-text="http://media.vocativ.com/photos/2014/07/NSA_Business_Boom_0012325813026.jpg" data-image-portrait-drawn-text="http://media.vocativ.com/photos/2014/07/NSA_Business_Boom_0013497402525.jpg" " data-desc="Apparently the typewriter era isn&#039;t over. In Germany, manufacturers are reportedly benefitting from Edward Snowden&#039;s revelations about the NSA scandal" data-primary-tag=ISEEYOU data-facebook-title="Germany: Fear of the NSA Resurrects the Typewriter" data-twitter-title="Germany: Fear of the NSA Resurrects the Typewriter" data-twitter-image="pic.twitter.com/Fi0VVgZYq3" data-twitter-author=jstonington data-twitter-post-type=post>
+<li data-share-type=facebook title="Share on Facebook" class=facebook>
+<div class=share-icon><i class="fa fa-facebook"></i></div>
+</li>
+<li data-share-type=twitter title="Share on Twitter" class=twitter>
+<div class=share-icon><i class="fa fa-twitter"></i></div>
+</li>
+<li data-share-type=tumblr title="Share on Tumblr" class=tumblr>
+<div class=share-icon><i class=icon-tumblr></i></div>
+</li>
+<li data-share-type=digg title="Share on Digg" class=digg>
+<div class=share-icon><i class="fa fa-thumbs-up"></i></div>
+</li>
+<li data-share-type=google title="Share on Google+" class=gplus>
+<div class=share-icon><i class="fa fa-google-plus"></i></div>
+</li>
+<li title="Show more options" class=more data-share-type=open>
+<div class=share-icon>
+<div class=holder>
+<span class="genericon genericon-dot"></span>
+<span class="genericon genericon-dot"></span>
+<span class="genericon genericon-dot"></span>
+</div>
+</div>
+</li>
+<li class=more-options>
+<ul>
+<li data-share-type=reddit title="Share on Reddit" class=reddit>
+<div class=share-icon><i class=icon-reddit></i></div>
+</li>
+<li data-share-type=pocket title="Save to Pocket" class=pocket>
+<div class=share-icon><span class="genericon genericon-pocket"></span></div>
+</li>
+<li data-share-type=email title="Email Link" class=email>
+<div class=share-icon><span class="genericon genericon-mail"></span></div>
+</li>
+</ul>
+</li>
+</ul>
+<p>Call it the Edward Snowden effect.</p>
+<p>In the year since the former National Security Agency contractor leaked a series of classified documents about the NSA’s online surveillance programs, many in this privacy-obsessed nation have continued to worry about American snooping.</p>
+<p>Now a growing number of Germans are reportedly seeking a low-tech solution: typewriters.</p>
+<p>“We are currently experiencing a real run on the machines,” Rolf Bonnen, a manager at the typewriter manufacturer Bandermann, <a href="http://fazjob.net/ratgeber-und-service/beruf-und-chance/ingenieure/124693_Die-Antwort-auf-die-NSA-Kauft-Schreibmaschinen.html" target=_blank>told the German newspaper</a> Frankfurter Allgemeine.</p>
+<p>Among the new customers: the German government. When a television interviewer recently asked Patrick Sensburg,<b> </b>the<b> </b>head of Germany&#8217;s parliamentary investigation into the NSA, about whether his group was considering switching to typewriters, he replied: “As a matter of fact, we have—and not electronic models, either.”</p>
+<div id=post-item-101178 class="post-item-type post-item-type-image">
+<div class=post-item-type-content>
+<a href="#" class=open-share-mobile alt="Show sharing options"></a>
+<div class="share_section ">
+<ul class="share-list share-icon-list" data-title="Germany: Fear of the NSA Resurrects the Typewriter" data-recirc-headline="Germany: Fear of the NSA Resurrects the Typewriter" data-recirc-subheadline="Apparently the typewriter era isn&#039;t over. In Germany, manufacturers are reportedly benefitting from Edward Snowden&#039;s revelations about the NSA scandal." data-primary-tag=ISEEYOU data-shortlink="http://voc.tv/1nGwE7K" data-url="https://www.vocativ.com/world/germany-world/nsa-surveillance/?post_item=101178#post-item-101178" data-image="http://media.vocativ.com/photos/2014/07/Blackphone_004413114837.jpg" data-desc="Silent Circle&#039;s Blackphone Blackphone" data-facebook-title="Germany: Fear of the NSA Resurrects the Typewriter" data-video-src-mp4="" data-twitter-title="Germany: Fear of the NSA Resurrects the Typewriter" data-twitter-image="pic.twitter.com/zFg2l6YfJk" data-twitter-author=jstonington data-twitter-post-type=post data-tumblr-share-type=photo data-video-embed-code="">
+<li data-share-type=facebook title="Share on Facebook" class=facebook>
+<div class=share-icon><i class="fa fa-facebook"></i></div>
+</li>
+<li data-share-type=twitter title="Share on Twitter" class=twitter>
+<div class=share-icon><i class="fa fa-twitter"></i></div>
+</li>
+<li data-share-type=tumblr title="Share on Tumblr" class=tumblr>
+<div class=share-icon><i class=icon-tumblr></i></div>
+</li>
+<li data-share-type=google title="Share on Google+" class=gplus>
+<div class=share-icon><i class="fa fa-google-plus"></i></div>
+</li>
+</ul>
+</div>
+<div class=image-container>
+<a href="#" class=full-screen title="Full screen display">
+<i class="fa fa-arrows-alt"></i>
+</a>
+<table class=image-wrapper>
+<tr>
+<td>
+<img width=620 height=420 src="//media.vocativ.com/photos/2014/07/Blackphone_0044240370695.jpg" class="vocativ-image-version-top-left-dark vocativ-image-version-top-right-dark vocativ-image-version-bottom-left-dark vocativ-image-version-bottom-right-dark" alt=Blackphone_004 />	</td>
+</tr>
+</table>
+</div>
+<div class=image-caption-container>
+<div class=post-item-type-caption>
+<p>Silent Circle's Blackphone</p>	</div>
+<div class=post-item-image-credit>
+Blackphone	</div>
+</div>
+</div>
+</div>
+<p>Germans are particularly sensitive to government snooping in part because of the inglorious history of Nazi intelligence and the East German secret police. It didn&#8217;t help that the NSA was spying on German Chancellor Angela Merkel, or that news broke earlier this month that the Americans had a German double agent working for them in Berlin.</p>
+<p>In the meantime, typewriter companies aren&#8217;t the only firms to benefit from what Foreign Affairs calls &#8220;<a href="http://www.ticotimes.net/2014/07/19/snowdenfreude" target=_blank>Snowdenfreude</a>.&#8221; A few tech companies have actually seen sales rise, including Silent Circle, based in Washington, D.C. Earlier this year, it released the Blackphone, a cellphone equipped with special encryption technology, which the firm says has done well in Germany.</p>
+<p>“We even say it ourselves: The best way to make your phone secure is to go throw it in the river,” says Vic Hyder, Silent Circle&#8217;s chief revenue officer. “Carrying these phones around opens you up to the world. We are trying to make phones that make you as private and secure as you can be while still functioning in our world.”</p>
+<p>For the most part, however, the NSA scandal seems to have been bad for American tech and telecom companies in Germany, where the surveillance scandal could lead to <a href="http://blogs.forrester.com/james_staten/13-08-14-the_cost_of_prism_will_be_larger_than_itif_projects" target=_blank>$180 billion in losses</a> by 2016. Tech companies are definitely taking notice. In June, for instance, the German government canceled a major German government contract with Verizon.</p>
+<p>Still, not everyone thinks the move to analog is a good idea. As one German politician told Spiegel Online: “The idea that we can protect people from surveillance by dragging them back to the typewriter is absurd.”</p>
+<script>var VAdata=[];</script><script>var VAshortlink="http:\/\/voc.tv\/1nGwDRs";</script>
+</div>	<div class=vocativ-outbrain-container>
+<div class=OUTBRAIN data-src="http://www.vocativ.com/world/germany-world/nsa-surveillance/" data-widget-id=SB_2 data-ob-template=vocativ></div>
+</div>
+<div class=related-stories>
+<div class=related-stories-header>Related Stories</div>
+<ul>
+<li><a href="/underworld/crime/whodunnit-solved-german-artists-cop-brooklyn-bridge-caper/">Whodunit Solved: German Artists Cop to Brooklyn Bridge Caper</a></li>
+<li><a href="/gallery/culture/photos/art-european-central-bank/">Graffiti Artists Go to Town on European Central Bank</a></li>
+<li><a href="/world/germany-world/mischa-badasyan/">This Guy Is Going to Have Sex With Someone New Every Day...for a Year</a></li>
+<li><a href="/video/culture/sport/berlin-celebrates-world-cup-victory/">SEE IT: Berlin Goes Apeshit Over World Cup Win</a></li>
+</ul>
+</div>	<a class=comment-button href="#">Respond Now</a>
+<div class=comment-section>
+<div class=comment-form-container>
+<form action="/wordpress/wp-comments-post.php" method=post class=commentform>
+<div class=comment-editor-container>
+<textarea class=tinymce-comment name=comment></textarea>
+<div class="comment-line clear">
+<div class="comment-count right"></div>
+<ul class="comment-share left share-icon-list">
+<li class=vocativ-comments-account-interface data-slug=facebook>
+<input class=vocativ-comments-account-toggle type=checkbox name=vocativ-comments-facebook />
+<div class=share-icon-diamond><i class="fa fa-facebook"></i></div>
+</li>
+<li class=vocativ-comments-account-interface data-slug=twitter>
+<input class=vocativ-comments-account-toggle type=checkbox name=vocativ-comments-twitter />
+<div class=share-icon-diamond><i class="fa fa-twitter"></i></div>
+</li>
+<li class=vocativ-comments-account-interface data-slug=reddit>
+<input class=vocativ-comments-account-toggle type=checkbox name=vocativ-comments-reddit />
+<div class=share-icon-diamond><i class="icon icon-reddit"></i></div>
+</li>
+<li class=vocativ-comments-account-interface data-slug=tumblr>
+<input class=vocativ-comments-account-toggle type=checkbox name=vocativ-comments-tumblr />
+<div class=share-icon-diamond><i class="fa fa-tumblr"></i></div>
+</li>
+<li class=vocativ-comments-account-interface data-slug=gplus>
+<input class=vocativ-comments-account-toggle type=checkbox name=vocativ-comments-gplus />
+<div class=share-icon-diamond><i class="fa fa-google-plus"></i></div>
+</li>
+</ul>
+</div>
+<a class="comment-submit submit-button right" href="#">Post It</a>
+<a class="comment-submit submit-button right loading" href="#"><i class="fa fa-spinner fa-spin"></i></a>
+<div class=clearfix></div>
+</div>
+<div class="comment-share-extended clear"></div>
+<input type=hidden name=comment_post_ID value=100631 />
+<input type=hidden name=share_url value="https://www.vocativ.com/world/germany-world/nsa-surveillance/#comments"/>
+<input type=hidden name=short_share_url value="https://www.vocativ.com/world/germany-world/nsa-surveillance/#comments"/>
+</form>
+<div class=clearfix></div>
+</div>
+</div>
+<div id=comments class=comments-area>
+<ul class=comment-list>
+<li id=comment-23560 class="comment byuser comment-author-irwinhewitt even thread-even depth-1">
+<article id=div-comment-23560 class=comment-body>
+<footer class="comment-meta clear">
+<div class=comment-author-info>
+<div class="comment-author vcard"><img alt='' src='https://graph.facebook.com/1454474437/picture?width=200&#038;height=200' class='avatar avatar-100 photo' height=100 width=100 /></div>
+<a class=follow-button title="Follow on Twitter" href="https://twitter.com/EI2727" target=_blank><i class="fa fa-twitter"></i></a>
+<a class=follow-button title="Follow on Facebook" href="https://www.facebook.com/paulsewen" target=_blank><i class="fa fa-facebook"></i></a>
+</div>
+<div class=comment-col>
+<div class="comment-metadata clear">
+<div class="left comment-username">IrwinHewitt</div>
+<div class="right comment-time">07/25/14 12:16 EDT</div>
+</div>
+<div class=comment-content><p>You can use a typewriter, but do not send via government postal service. &nbsp;You must deliver everything by hand.</p>
+</div>
+<div class="reply left">
+<a class=comment-reply data-commentid=23560 data-postid=100631 href="#">Reply Now</a>
+</div>
+</div>
+<div class=clearfix></div>
+</footer>
+<div class=reply-section></div>
+</article>
+</li>
+</ul>
+</div>
+</article>
+</div>
+<aside class=rcol>
+<ul class="share-icon-list right-sidebar-share" data-title="Germany: Fear of the NSA Resurrects the Typewriter" data-recirc-headline="Germany: Fear of the NSA Resurrects the Typewriter" data-recirc-subheadline="Apparently the typewriter era isn&#039;t over. In Germany, manufacturers are reportedly benefitting from Edward Snowden&#039;s revelations about the NSA scandal." data-shortlink="http://voc.tv/1nGwDRs" data-url="https://www.vocativ.com/world/germany-world/nsa-surveillance/" data-image="http://media.vocativ.com/photos/2014/07/NSA_Business_Boom_0011181242335.jpg" data-image-drawn-text="http://media.vocativ.com/photos/2014/07/NSA_Business_Boom_0012325813026.jpg" data-image-portrait-drawn-text="http://media.vocativ.com/photos/2014/07/NSA_Business_Boom_0013497402525.jpg" " data-desc="Apparently the typewriter era isn&#039;t over. In Germany, manufacturers are reportedly benefitting from Edward Snowden&#039;s revelations about the NSA scandal" data-primary-tag=ISEEYOU data-facebook-title="Germany: Fear of the NSA Resurrects the Typewriter" data-twitter-title="Germany: Fear of the NSA Resurrects the Typewriter" data-twitter-image="pic.twitter.com/Fi0VVgZYq3" data-twitter-author=jstonington data-twitter-post-type=post>
+<li data-share-type=facebook title="Share on Facebook" class=facebook>
+<div class=share-icon><i class="fa fa-facebook"></i></div>
+</li>
+<li data-share-type=twitter title="Share on Twitter" class=twitter>
+<div class=share-icon><i class="fa fa-twitter"></i></div>
+</li>
+<li data-share-type=tumblr title="Share on Tumblr" class=tumblr>
+<div class=share-icon><i class=icon-tumblr></i></div>
+</li>
+<li data-share-type=google title="Share on Google+" class=gplus>
+<div class=share-icon><i class="fa fa-google-plus"></i></div>
+</li>
+</ul><div class=vocativ-outbrain-container>
+<div class=OUTBRAIN data-src="http://www.vocativ.com/world/germany-world/nsa-surveillance/" data-widget-id=SB_1 data-ob-template=vocativ></div>
+</div>
+<div class=vocativ-social-sidebar>
+<h3>Follow Vocativ</h3>
+<div class=vocativ-social-sidebar-link-container>
+<a class=vocativ-social-sidebar-facebook-link href="https://www.facebook.com/Vocativ" target=_blank data-share-type=facebook>
+<div class=vocativ-social-sidebar-facebook>
+<div class=vocativ-social-sidebar-inner-container>
+<i class="fa fa-facebook fa-lg"> </i> <span class=vocativ-social-sidebar-text>Facebook</span>
+</div>
+</div>
+</a>
+<a class=vocativ-social-sidebar-twitter-link href="https://twitter.com/vocativ" target=_blank data-share-type=twitter>
+<div class=vocativ-social-sidebar-twitter>
+<div class="vocativ-social-sidebar-inner-container vocativ-social-sidebar-twitter-container">
+<i class="fa fa-twitter fa-lg"> </i> <span class=vocativ-social-sidebar-text>Twitter</span>
+</div>
+</div>
+</a>
+<a class=vocativ-sidebar-email-link href="#">
+<div class=vocativ-social-sidebar-email>
+<div class="vocativ-social-sidebar-inner-container vocativ-social-sidebar-email-container">
+<i class="fa fa-envelope fa-lg"> </i> <span class=vocativ-social-sidebar-text>Newsletter</span>
+</div>
+</div>
+</a>
+<a class=vocativ-sidebar-youtube-link href="http://www.youtube.com/user/VocativVideo" target=_blank data-share-type=youtube>
+<div class=vocativ-social-sidebar-youtube>
+<div class=vocativ-social-sidebar-inner-container>
+<i class="fa fa-youtube-play fa-lg"></i> <span class=vocativ-social-sidebar-text>Youtube</span>
+</div>
+</div>
+</a>
+</div>
+</div>
+<div class=editor-picks>
+<div class=dont-miss>
+<h3>Don't Miss</h3>
+<div class=posts>
+<a href="/culture/society/date-rape-apps/">
+<div class=image-container>
+<img width=120 height=90 src="//media.vocativ.com/photos/2014/08/Apps-Save-Sexual-Assault-Poster12266454838.jpg" alt="Do Date Rape Apps Make You Safer or Just Freak Out Your Friends?">	</div>
+<div class=text-content>
+<h4>Rape Prevention Apps on Back-to-School Shopping Lists</h4>
+</div>
+</a>
+<a href="/gallery/culture/photos/ferguson-missouri/">
+<div class=image-container>
+<img width=120 height=90 src="//media.vocativ.com/photos/2014/08/Ferguson-Violence_171426132132.jpg" alt="Ferguson, Missouri: War Zone, USA">	</div>
+<div class=text-content>
+<h4>See It: Shocking Photos From Ferguson</h4>
+</div>
+</a>
+<a href="/usa/race/ferguson-protests/">
+<div class=image-container>
+<img width=120 height=90 src="//media.vocativ.com/photos/2014/08/Mike-Brown-Style_02552924126.jpg" alt="Common Sense Finally Kicks In on Ferguson Streets">	</div>
+<div class=text-content>
+<h4>Calm, Common Sense Finally Prevail in Ferguson</h4>
+</div>
+</a>
+<a href="/world/nigeria-world/ebola-outbreak-2014/">
+<div class=image-container>
+<img width=120 height=90 src="//media.vocativ.com/photos/2014/08/484782395850446942.jpg" alt="This Guy Sent Sierra Leone 4,000 Bottles of Holy Water to Cure Ebola">	</div>
+<div class=text-content>
+<h4>Millionaire Buys 4,000 Bottles of Holy Water to Fight Ebola</h4>
+</div>
+</a>
+<a href="/culture/sport/dead-chess-olympics-norway/">
+<div class=image-container>
+<img width=120 height=90 src="//media.vocativ.com/photos/2014/08/Chess-Olympiad-Poster2688669337.jpg" alt="Two Dead at Chess Olympiad in Norway">	</div>
+<div class=text-content>
+<h4>Two People Dead at the Chess Olympics - Yes, at the Chess Olympics</h4>
+</div>
+</a>
+</div>
+</div>
+</div>
+</aside>
+<div class=clearfix></div>
+</div>
+</section>
+<div class=recirculator-outer>
+<div class=recirculator-items>
+<h3 class=more-stories>More Stories</h3>
+<a class=recirculator-item href="http://www.vocativ.com/world/mexico-world/mexican-migrants/">
+<div class=image-container>
+<div class=overlay></div>
+<img src="//media.vocativ.com/photos/2014/08/uncle_sam_te_quiero2824088156.jpg" width=400 height=300 srcset="
+						//media.vocativ.com/photos/2014/08/uncle_sam_te_quiero1363555423.jpg 342w,
+						//media.vocativ.com/photos/2014/08/uncle_sam_te_quiero2824088156.jpg 400w
+						" sizes="(min-width: 480px) 342px, 400px"/>
+</div>
+<div class=text-content>
+<div class=hashtag>
+<span class=topic>MEXICO</span>
+</div>
+<h4>The American Dream is Outsourced to Mexico</h4>
+<span class=author>Jan-Albert Hootsen</span>
+</div>
+</a>
+<a class=recirculator-item href="http://www.vocativ.com/tech/apple/tracy-chou/">
+<div class=image-container>
+<div class=overlay></div>
+<img src="//media.vocativ.com/photos/2014/08/Tracy-Chou-001a4202771897.jpg" width=400 height=300 srcset="
+						//media.vocativ.com/photos/2014/08/Tracy-Chou-001a2942514414.jpg 342w,
+						//media.vocativ.com/photos/2014/08/Tracy-Chou-001a4202771897.jpg 400w
+						" sizes="(min-width: 480px) 342px, 400px"/>
+</div>
+<div class=text-content>
+<div class=hashtag>
+<span class=topic>APPLE</span>
+</div>
+<h4>The 26-Year-Old Woman Waging War Against Sexism</h4>
+<span class=author>Eric Markowitz</span>
+</div>
+</a>
+<a class=recirculator-item href="http://www.vocativ.com/gallery/culture/photos/ferguson-missouri/">
+<div class=image-container>
+<div class=overlay></div>
+<img src="//media.vocativ.com/photos/2014/08/Ferguson-Violence_17377633332.jpg" width=400 height=300 srcset="
+						//media.vocativ.com/photos/2014/08/Ferguson-Violence_171730212397.jpg 342w,
+						//media.vocativ.com/photos/2014/08/Ferguson-Violence_17377633332.jpg 400w
+						" sizes="(min-width: 480px) 342px, 400px"/>
+</div>
+<div class=text-content>
+<div class=hashtag>
+<span class=topic>PHOTOS</span>
+</div>
+<h4>See It: Shocking Photos From Ferguson</h4>
+<span class=author>Vocativ Staff</span>
+</div>
+</a>
+<a class=recirculator-item href="http://www.vocativ.com/culture/art-culture/gay-disney/">
+<div class=image-container>
+<div class=overlay></div>
+<img src="//media.vocativ.com/photos/2014/08/Josenew3244240670.jpg" width=400 height=300 srcset="
+						//media.vocativ.com/photos/2014/08/Josenew2533349267.jpg 342w,
+						//media.vocativ.com/photos/2014/08/Josenew3244240670.jpg 400w
+						" sizes="(min-width: 480px) 342px, 400px"/>
+</div>
+<div class=text-content>
+<div class=hashtag>
+<span class=topic>ART</span>
+</div>
+<h4>&quot;Blow&quot; White? Artist Creates NSFW Disney Characters</h4>
+<span class=author>Luke Malone</span>
+</div>
+</a>
+<a class=recirculator-item href="http://www.vocativ.com/usa/race/police-use-tear-gas-rubber-bullets-ferguson-residents/">
+<div class=image-container>
+<div class=overlay></div>
+<img src="//media.vocativ.com/photos/2014/08/Screen-Shot-2014-08-13-at-11.26.03-PM940338199.png" width=400 height=300 srcset="
+						//media.vocativ.com/photos/2014/08/Screen-Shot-2014-08-13-at-11.26.03-PM2461873290.png 342w,
+						//media.vocativ.com/photos/2014/08/Screen-Shot-2014-08-13-at-11.26.03-PM940338199.png 400w
+						" sizes="(min-width: 480px) 342px, 400px"/>
+</div>
+<div class=text-content>
+<div class=hashtag>
+<span class=topic>RACE</span>
+</div>
+<h4>WAR ZONE, Missouri: Cops Fire Tear Gas, Rubber Bullets in Ferguson</h4>
+<span class=author>Markham Nolan</span>
+</div>
+</a>
+<a class=recirculator-item href="http://www.vocativ.com/money/business/minnesota-minimum-wage/">
+<div class=image-container>
+<div class=overlay></div>
+<img src="//media.vocativ.com/photos/2014/08/Wage-Hike-Restaurant3590197403.jpg" width=400 height=300 srcset="
+						//media.vocativ.com/photos/2014/08/Wage-Hike-Restaurant3898147637.jpg 342w,
+						//media.vocativ.com/photos/2014/08/Wage-Hike-Restaurant3590197403.jpg 400w
+						" sizes="(min-width: 480px) 342px, 400px"/>
+</div>
+<div class=text-content>
+<div class=hashtag>
+<span class=topic>BUSINESS</span>
+</div>
+<h4>The Restaurant Where Your Cheeseburger Comes With a Minimum Wage Hike</h4>
+<span class=author>Abigail Tracy</span>
+</div>
+</a>
+<a class=recirculator-item href="http://www.vocativ.com/usa/guns/militarization-of-federal-agencies/">
+<div class=image-container>
+<div class=overlay></div>
+<img src="//media.vocativ.com/photos/2014/08/Fed-Raw-Foodies-Poster919774308.jpg" width=400 height=300 srcset="
+						//media.vocativ.com/photos/2014/08/Fed-Raw-Foodies-Poster2900889681.jpg 342w,
+						//media.vocativ.com/photos/2014/08/Fed-Raw-Foodies-Poster919774308.jpg 400w
+						" sizes="(min-width: 480px) 342px, 400px"/>
+</div>
+<div class=text-content>
+<div class=hashtag>
+<span class=topic>GUNS</span>
+</div>
+<h4>The Ferguson Police Aren&#039;t the Only Ones With Way Too Many Guns</h4>
+<span class=author>Elizabeth Kulze</span>
+</div>
+</a>
+<a class=recirculator-item href="http://www.vocativ.com/culture/tvmovies/robin-williams-movies-watching-week/">
+<div class=image-container>
+<div class=overlay></div>
+<img src="//media.vocativ.com/photos/2014/08/Good-Morning-Vietnam-robin-williams-30953057-2336-25601838410032.jpg" width=400 height=300 srcset="
+						//media.vocativ.com/photos/2014/08/Good-Morning-Vietnam-robin-williams-30953057-2336-2560268205863.jpg 342w,
+						//media.vocativ.com/photos/2014/08/Good-Morning-Vietnam-robin-williams-30953057-2336-25601838410032.jpg 400w
+						" sizes="(min-width: 480px) 342px, 400px"/>
+</div>
+<div class=text-content>
+<div class=hashtag>
+<span class=topic>TV&amp;MOVIES</span>
+</div>
+<h4>The Most Watched Robin Williams Films of the Week</h4>
+<span class=author>Luke Malone</span>
+</div>
+</a>
+</div>
+</div>
+<div class=recirculator-nav>
+<div class="recirculator-nav-button recirculator-prev"><i class="fa fa-angle-left"></i></div>
+<div class="recirculator-nav-button recirculator-next"><i class="fa fa-angle-right"></i></div>
+</div>
+<footer id=company-tags>
+<div class=wrap>
+<div id=footer-company class="footer-item footer-link-list">
+<h5>Company</h5>
+<div class=menu-company-footer-company-links-container><ul id=menu-company-footer-company-links class=menu><li id=menu-item-60195 class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-60195"><a href="http://www.vocativ.com/">Home</a></li>
+<li id=menu-item-84182 class="menu-item menu-item-type-post_type menu-item-object-page menu-item-84182"><a href="http://www.vocativ.com/about/">About</a></li>
+<li id=menu-item-60197 class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-60197"><a href="http://www.vocativ.com/contacts/">Contacts</a>
+<ul class=sub-menu>
+<li id=menu-item-106483 class="menu-item menu-item-type-post_type menu-item-object-page menu-item-106483"><a href="http://www.vocativ.com/contacts/jobs/">Jobs</a></li>
+</ul>
+</li>
+<li id=menu-item-60198 class="menu-item menu-item-type-post_type menu-item-object-page menu-item-60198"><a href="http://www.vocativ.com/faq/">FAQs</a></li>
+</ul></div>
+</div>
+<div id=footer-tags class="footer-item footer-link-list">
+<h5>&nbsp;</h5>
+<div class=menu-vocativ-stream-footer-tag-links-container><ul id=menu-vocativ-stream-footer-tag-links class=menu><li id=menu-item-84183 class="menu-item menu-item-type-post_type menu-item-object-page menu-item-84183"><a href="http://www.vocativ.com/privacy-policy/">Privacy Policy</a></li>
+<li id=menu-item-84184 class="menu-item menu-item-type-post_type menu-item-object-page menu-item-84184"><a href="http://www.vocativ.com/about/terms-use/">Terms of Use</a></li>
+<li id=menu-item-84554 class="menu-item menu-item-type-post_type menu-item-object-page menu-item-84554"><a href="http://www.vocativ.com/community/">Community</a></li>
+</ul></div>
+</div>
+<div id=footer-newsletter class=footer-item>
+<form id=footer-newsletter-signup>
+<h5>Sign Up For Our Newsletter</h5>
+<div id=footer-newsletter-message></div>
+<div><input type=text placeholder="Enter Your Email" id=footer-newsletter-signup-email /></div>
+<div><input type=submit id=footer-newsletter-signup-submit value=Submit /></div>
+</form>
+</div>
+<div id=footer-social class=footer-item>
+<h5>Follow Us</h5>
+<a class=facebook href="https://www.facebook.com/Vocativ"><i style="color:#4f64bf" class="fa fa-facebook-square"></i></a>
+<a class=twitter href="https://twitter.com/vocativ"><i style="color:#10a0f7" class="fa fa-twitter-square"></i></a>
+<a class=tumblr href="http://vocativ.tumblr.com/"><i style="color:#32506f" class="fa fa-tumblr-square"></i></a>
+</div>
+</div>
+<div class=clearfix></div>
+<div id=footer-copyright class=wrap>
+<span id=footer-copyright-text>&copy; 2014 Vocativ. All rights reserved</span>
+<a class=logo href="/"><span id=footer-copyright-logo><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAAuCAMAAAC27sMlAAACo1BMVEUAAAD///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////+Hen5WAAAA4HRSTlMAAAECAwQFBgcICQoLDA0ODxARExQWFxgZGxwdHh8gISIjJCUmJygpKissLS4wMTIzNDU2Nzg6Ozw9P0BBQ0RFRkdISUpLTE1OT1BUVVdYWltcXV5gYmNkZWZnaGlqa21wcnN0dXZ3eHt8fX6AgYKDhIWGh4iKi4yNj5CRkpOUlZaXmJmam5ydnp+goaKjpKWmp6iprK2ur7CxsrO0tba3uLm6u7y9vsDBwsPE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" alt=Vocativ></span></a>
+</div>
+</footer><div id=comment-recirc-wrapper>
+<div class=comment-recirc>
+<a href="/culture/society/dicks-pick-trucks-meme-rollin-coal/">
+<span class=comment-recirc-join><em>Join</em> <span>the</span> <em>Fray</em></span>
+<span class=comment-recirc-title>
+<div>
+&#8220;Rollin&#8217; Coal&#8221; Is Pollution Porn for Dudes With Pickup Trucks	</div>
+</span>
+<span class=comment-recirc-next><i class="fa fa-chevron-right"></i></span>
+</a>
+</div>
+</div><div class="modal newsletter-modal" id=newsletter-modal>
+<span class=h3>Join Vocativ</span>
+<p class=welcome-message>Sign up to receive the best of Vocativ in your&nbsp;mailbox.</p>
+<p class=message style=display:none></p>
+<form>
+<div class="form-row single-and-submit">
+<input type=text name=EMAIL placeholder="Email Address"/>
+<input type=submit value=Subscribe />
+<span class=loading-indicator style=display:none>Loading</span>
+</div>
+</form>
+</div>
+<div class="modal follow-modal" id=follow-modal>
+<p class=message style=display:none></p>
+<span class=h3>Connect with Vocativ!</span>
+<div class=social-share>
+<ul class="social-accounts-list share-icon-list">
+<li class=fb-like>
+<div class=fb-like data-href="https://www.facebook.com/Vocativ" data-layout=button_count data-action=like data-show-faces=false data-share=false></div>
+</li>
+<li data-share-type=twitter title="" class=twitter>
+<a href="https://twitter.com/vocativ" class=twitter-follow-button>Follow @vocativ</a>
+</li>
+<li data-share-type=youtube class=youtube>
+<div class=g-ytsubscribe data-channel=VocativVideo data-layout=default data-count=default></div>
+</li>
+</ul>
+</div>
+</div>
+<div class="modal newsletter-modal" id=newsletter-thanks-modal>
+<span id=title_thanks_newsletter class=h3>Thanks!</span>
+<div class=content>Vocativ: News From The Deep Web.</div>
+</div>
+<script type="text/template" id=va-tooltip>
+
+		<div class="va-tooltip animated fadeInUp ">
+
+			<div class="va-tooltip-header">
+				<span class="va-tooltip-how">HOW WE KNOW</span>
+				<button class="va-tooltip-close va-tooltip-toggle">
+					<i class="genericon genericon-close"></i>
+				</button>
+			</div>
+
+			<div class="va-tooltip-body">
+				<div class="va-tooltip-body-inner">
+				</div>
+			</div>
+
+			<div class="va-tooltip-footer">
+				<div class="va-tooltip-share">
+					<button data-type="facebook" class="va-tooltip-share-facebook">Share on facebook</button>
+					<button data-type="twitter" class="va-tooltip-share-twitter">Share on twitter</button>
+					<button data-type="tumblr" class="va-tooltip-share-tumblr">Share on tumblr</button>
+				</div>
+			</div>
+
+		</div>
+
+	</script>
+<script type="text/template" id=va-tooltip-single>
+		<div class="va-single-inner">
+			<h2 class="va-tooltip-title"><%= title %></h2>
+			<div class="va-tooltip-content"><%= content %></div>
+		</div>
+	</script>
+<script>var VocativImagePostItemsGallery={"images":[{"large":"\/\/media.vocativ.com\/photos\/2014\/07\/Blackphone_004413114837.jpg","zoom":"\/\/media.vocativ.com\/photos\/2014\/07\/Blackphone_004413114837.jpg","medium":"\/\/media.vocativ.com\/photos\/2014\/07\/Blackphone_0044240370695.jpg","small":"\/\/media.vocativ.com\/photos\/2014\/07\/Blackphone_0044240370695.jpg","caption":"<p>Silent Circle's Blackphone<\/p>","credit":"Blackphone","sharing":"<a href=\"#\" class=\"open-share-mobile\" alt=\"Show sharing options\"><\/a>\n<!-- share-section-open -->\n<div class=\"share_section \">\n\t<ul class=\"share-list share-icon-list\" \tdata-title=\"Germany: Fear of the NSA Resurrects the Typewriter\"\n\tdata-recirc-headline=\"Germany: Fear of the NSA Resurrects the Typewriter\"\n\tdata-recirc-subheadline=\"Apparently the typewriter era isn&#039;t over. In Germany, manufacturers are reportedly benefitting from Edward Snowden&#039;s revelations about the NSA scandal.\"\n\tdata-primary-tag=\"ISEEYOU\"\n\tdata-shortlink=\"http:\/\/voc.tv\/1nGwE7K\"\n\tdata-url=\"https:\/\/www.vocativ.com\/world\/germany-world\/nsa-surveillance\/?post_item=101178#post-item-101178\"\n\tdata-image=\"http:\/\/media.vocativ.com\/photos\/2014\/07\/Blackphone_004413114837.jpg\"\n\tdata-desc=\"Silent Circle&#039;s Blackphone Blackphone\"\n\tdata-facebook-title=\"Germany: Fear of the NSA Resurrects the Typewriter\"\n\tdata-video-src-mp4=\"\"\n\tdata-twitter-title=\"Germany: Fear of the NSA Resurrects the Typewriter\"\n\tdata-twitter-image = \"pic.twitter.com\/zFg2l6YfJk\"\n\tdata-twitter-author=\"jstonington\"\n\tdata-twitter-post-type = \"post\"\n\tdata-tumblr-share-type=\"photo\"\n\tdata-video-embed-code=\"\"\n\t>\n\t\t<li data-share-type=\"facebook\" title=\"Share on Facebook\" class=\"facebook\">\n\t\t\t<div class=\"share-icon\"><i class=\"fa fa-facebook\"><\/i><\/div>\n\t\t<\/li>\n\t\t<li data-share-type=\"twitter\" title=\"Share on Twitter\" class=\"twitter\">\n\t\t\t<div class=\"share-icon\"><i class=\"fa fa-twitter\"><\/i><\/div>\n\t\t<\/li>\n\t\t<li data-share-type=\"tumblr\" title=\"Share on Tumblr\" class=\"tumblr\">\n\t\t\t<div class=\"share-icon\"><i class=\"icon-tumblr\"><\/i><\/div>\n\t\t<\/li>\n\t\t<li data-share-type=\"google\" title=\"Share on Google+\" class=\"gplus\">\n\t\t\t<div class=\"share-icon\"><i class=\"fa fa-google-plus\"><\/i><\/div>\n\t\t<\/li>\n\t\t\t<\/ul>\n<\/div> <!--- End Share Section -->\n\n"}]};</script>
+<script src="/wordpress,_wp-includes,_js,_jquery,_jquery.js+content,_mu-plugins,_vocativ-videos,_assets,_flowplayer,_flowplayer.min.js.pagespeed.jc.S-HdcDIuI_.js"></script><script>eval(mod_pagespeed_Ic2iEDZqBY);</script>
+<script>eval(mod_pagespeed_E0W_INjz$s);</script>
+<script>var VocativVideoStrings={"toggle_captions":"Toggle Video Captions","file_not_found_error":"Video Encoding: Playback not yet available."};</script>
+<script src="/content/mu-plugins,_vocativ-videos,_js,_vocativ-video.js+themes,_vocativ,_js,_jquery.fancybox.pack.js.pagespeed.jc.wqUJQsiArJ.js"></script><script>eval(mod_pagespeed_RgeZkfmuKh);</script>
+<script>eval(mod_pagespeed_0WbVtmnM78);</script>
+<script>var vocativNewsletterModalData={"ajaxURL":"https:\/\/www.vocativ.com\/wordpress\/wp-admin\/admin-ajax.php","userLoggedIn":""};</script>
+<script src='/content/mu-plugins/vocativ-newsletter-modal/js/vocativ-newsletter-modal.js'></script>
+<script src='/wordpress/wp-includes/js/jquery/jquery-migrate.js.pagespeed.jm.zNUF62C06H.js'></script>
+<script src="/wordpress/wp-includes/js/underscore.min.js+backbone.min.js.pagespeed.jc.WWPMx6UNm5.js"></script><script>eval(mod_pagespeed_XzaVDynlcw);</script>
+<script>eval(mod_pagespeed_5_RPnZj7Kt);</script>
+<script>var VocativGalleryL10n={"more_photos":"More Photos","replay":"Replay","share":"Share","prev":"Prev","next":"Next"};</script>
+<script src="/content/themes/vocativ/js/gallery.js+keyboard-image-navigation.js.pagespeed.jc.aUHUjew0NK.js"></script><script>eval(mod_pagespeed__LgWeW$RTO);</script>
+<script>eval(mod_pagespeed_pPISkk4dBX);</script>
+<script>var VocativComments={"scripts":["https:\/\/www1.vocativ.com\/content\/themes\/vocativ\/js\/tinymce\/tinymce.min.js"],"twitter_url_length":"22","twitter_threshold":"117","please_wait":"Please Wait...","loading":"Loading...","uploading":"Uploading...","image_upload_url":"https:\/\/www.vocativ.com\/wordpress\/wp-admin\/admin-post.php","css_editor_url":"https:\/\/www1.vocativ.com\/content\/themes\/vocativ\/css\/build\/comment-wysiwyg-styles.css","images_in_comments_enabled":"1","image_upload_nonce":"3f84a3d43e","drop_image_text":"Drop image to add to comment","drag_drop_help":"Attach images by dragging & dropping or","drag_drop_help_button":"selecting them","no_drag_drop_help_button":"Upload Image","max_file_size_text":"(max file size 5MB)","connect_to_share":"Connect to Share","continue":"Continue","connect_now":"Connect Now!","please_fix_errors":"Please fix errors before continuing","please_enter_a_comment":"Please enter a comment"};</script>
+<script src="/content/themes/vocativ/js/comment-form.js+FlexSlider,_jquery.flexslider.js+vocativ-annotations.js+post-items.js.pagespeed.jc.GB_mPirxvW.js"></script><script>eval(mod_pagespeed_tcZkXt7_EE);</script>
+<script>eval(mod_pagespeed_9AcZwOU3JB);</script>
+<script>eval(mod_pagespeed_7akTnzgdAE);</script>
+<script>eval(mod_pagespeed_Bt3DxRAzgD);</script>
+<script>var VocativTrackingConfig={"megalyticId":"1446","googleAnalyticsAccount":"UA-31006619-3"};</script>
+<script src="/content/themes/vocativ/js/vocativ-tracking.js+fastclick.js+modernizr.min.js.pagespeed.jc.3nbjAEO0SP.js"></script><script>eval(mod_pagespeed_hS21dVPnBS);</script>
+<script>eval(mod_pagespeed_1Uf0dZB8P6);</script>
+<script>eval(mod_pagespeed_lx28keA9uC);</script>
+<script src='/content/themes/vocativ/js/picturefill.js'></script>
+<script src='/content/themes/vocativ/js/touchSwipe.min.js.pagespeed.jm.mB5Mo4bgwh.js'></script>
+<script src='/content/themes/vocativ/js/jquery.fitvids.js'></script>
+<script>var VocativTheme={"home_url":"https:\/\/www.vocativ.com","track_facebook_share_nonce":"fcf1a7b7d7","hp_lazy_load_nonce":"a2611b7d18","ajax_url":"\/\/www.vocativ.com\/wordpress\/wp-admin\/admin-ajax.php","cdn_ajax_url":"\/\/www1.vocativ.com\/wordpress\/wp-admin\/admin-ajax.php","cdn_url":"\/\/www1.vocativ.com","secure_ajax_experiment":"1","l10n":{"pleaseWait":"Please Wait ...","success":"Success","error":"Error"},"facebook_app_id":"685756558116580"};</script>
+<script src='/content/themes/vocativ/js/scripts.js.pagespeed.jm.1Ru4LRBjyo.js'></script>
+<script>var VocativAccounts={"ajaxurl":"\/wordpress\/wp-admin\/admin-ajax.php","uploadurl":"\/wordpress\/wp-admin\/admin-ajax.php","userModelData":{"id":0,"nonce":"b0eaeec2ac","authenticated":[],"authentication_url":{"facebook":"https:\/\/www.vocativ.com?redirect_to=https%3A%2F%2Fwww.vocativ.com%3Fvocativ-accounts-authentication-action%3Dpost-authenticate%26vocativ-accounts-authentication-account%3Dfacebook&vocativ-accounts-module=facebook&vocativ-accounts-action=authenticate","gplus":"https:\/\/www.vocativ.com?redirect_to=https%3A%2F%2Fwww.vocativ.com%3Fvocativ-accounts-authentication-action%3Dpost-authenticate%26vocativ-accounts-authentication-account%3Dgplus&vocativ-accounts-module=gplus&vocativ-accounts-action=authenticate","reddit":"https:\/\/www.vocativ.com?redirect_to=https%3A%2F%2Fwww.vocativ.com%3Fvocativ-accounts-authentication-action%3Dpost-authenticate%26vocativ-accounts-authentication-account%3Dreddit&vocativ-accounts-module=reddit&vocativ-accounts-action=authenticate","tumblr":"https:\/\/www.vocativ.com?redirect_to=https%3A%2F%2Fwww.vocativ.com%3Fvocativ-accounts-authentication-action%3Dpost-authenticate%26vocativ-accounts-authentication-account%3Dtumblr&vocativ-accounts-module=tumblr&vocativ-accounts-action=authenticate","twitter":"https:\/\/www.vocativ.com?redirect_to=https%3A%2F%2Fwww.vocativ.com%3Fvocativ-accounts-authentication-action%3Dpost-authenticate%26vocativ-accounts-authentication-account%3Dtwitter&vocativ-accounts-module=twitter&vocativ-accounts-action=authenticate"},"disconnect_url":[],"screenname":[],"extended_interfaces":[],"display_name":null,"user_email":null,"avatar":null,"signout_url":"https:\/\/www.vocativ.com\/wordpress\/wp-login.php?action=logout&redirect_to=%2F&_wpnonce=01ac3e5920","newsletters":[]},"facebookUrl":"https:\/\/www.facebook.com\/Vocativ","twitterUrl":"https:\/\/twitter.com\/vocativ","youtubeUrl":"http:\/\/www.youtube.com\/user\/VocativVideo","newsletters":[{"id":"88da2e50cc","name":"Vocativ Newsletter"}],"l10n":{"uploadSuccess":"Your photo has changed.","signIntoVocativ":"Sign in","getMoreFromVocativ":"Get more from Vocativ","login":"Sign in","signup":"Sign Up","needAccount":"need an account?","alreadyHaveAccount":"already have an account?","signInViaMail":"or sign in via email","signUpViaMail":"or sign up via email","loginWithTwitter":"Sign in with Twitter","loginWithFacebook":"Sign in with Facebook","loginWithGoogle":"Login with Google+","email":"Email Address","emailoruser":"Email Address or Username","password":"Password","forgotPassword":"Forgot password?","rememberPassword":"Remember your password?","signupWithTwitter":"Sign up with Twitter","signupWithFacebook":"Sign up with Facebook","signupWithGoogle":"Sign up with Google+","displayName":"Display Name","getNewPassword":"Get New Password","clickToChangeImage":"Click to change image","changePassword":"Change Password","logoutUrl":"https:\/\/www.vocativ.com\/wordpress\/wp-login.php?action=logout&amp;redirect_to=%2F&amp;_wpnonce=01ac3e5920","signout":"Signout","currentPassword":"Current Password","newPassword":"New Password","confirmPassword":"Confirm Password","saveChanges":"Save Changes","socialAccounts":"Social Accounts","disconnectFromTwitter":"Disconnect from Twitter","connectToTwitter":"Connect to Twitter","disconnectFromFacebook":"Disconnect from Facebook","connectToFacebook":"Connect to Facebook","connect":"Connect","more":"More","disconnectFromGoogle":"Disconnect from Google+","connectToGoogle":"Connect to Google+","disconnectFromReddit":"Disconnect from Reddit","connectToReddit":"Connect to Reddit","disconnectFromTumblr":"Disconnect from Tumblr","connectToTumblr":"Connect to Tumblr","less":"Less","newsletter":"Newsletter","youAreSubscribedTo":"You are subscribed to","enterYourEmail":"Enter your email to receive our newsletter.","editEmail":"Edit Email","followVocativ":"Follow Vocativ","makeVocativComeToYou":"Make Vocativ Come To You","shortNewsLetterSignUp":"Sign up for our email newsletter.","subscribe":"Subscribe","facebook":"Facebook","twitter":"Twitter","youtube":"YouTube"}};</script>
+<script src="/content/themes/vocativ/js/accounts.js+jquery.autoellipsis-1.0.10.min.js+footer.js.pagespeed.jc.dodqTfsOlZ.js"></script><script>eval(mod_pagespeed_f9ngae19LO);</script>
+<script>eval(mod_pagespeed_eNsVlk$yJ4);</script>
+<script src='/content/themes/vocativ/js/tinymce/plugins/vocativimage/plupload/plupload.full.min.js'></script>
+<script>eval(mod_pagespeed__uN9Y25SkU);</script>
+<script src='/content/themes/vocativ/js/spin.min.js.pagespeed.ce.KtNIC67crJ.js'></script>
+<script src="/content/themes/vocativ/js/rangy-core.js+rangy-selectionsaverestore.js+jquery.annotate.js+modals.js+header-nav.js+navigation.js+google-analytics.js+skip-link-focus-fix.js.pagespeed.jc.Z4NXTgFsVa.js"></script><script>eval(mod_pagespeed_lNraB5K1jc);</script>
+<script>eval(mod_pagespeed_pfJBgVGXik);</script>
+<script>eval(mod_pagespeed_K6c9k43ggn);</script>
+<script>eval(mod_pagespeed_vOT2ZQM8KV);</script>
+<script>eval(mod_pagespeed_kHWK0njoEn);</script>
+<script>eval(mod_pagespeed_yO6svD_urL);</script>
+<script>eval(mod_pagespeed__0g0v06RuA);</script>
+<script>eval(mod_pagespeed_vXTvLrtKPm);</script>
+<script>jQuery(document).ready(function(){if(jQuery('.vocativ-outbrain-container').length){jQuery.getScript('//widgets.outbrain.com/outbrain.js',{cache:true});}});</script>
+<script>jQuery(document).ready(function($){$.getScript('//tru.am/scripts/ta-pagesocial-sdk.js',function(){window.TRUE_ANTHEM.configure('98');});});</script>
+<script>window.twttr=(function(d,s,id){var t,js,fjs=d.getElementsByTagName(s)[0];if(d.getElementById(id))return;js=d.createElement(s);js.id=id;js.async=true;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);return window.twttr||(t={_e:[],ready:function(f){t._e.push(f)}});}(document,"script","twitter-wjs"));</script><script>window.NREUM||(NREUM={});NREUM.info={"beacon":"beacon-3.newrelic.com","licenseKey":"664d57f0c1","applicationID":"4481127","transactionName":"YwRbbEtVXEpQBU0LX1pObEpQG1tXVQNBTEBcEQ==","queueTime":0,"applicationTime":5,"ttGuid":"","agentToken":"","atts":"T0NYGgNPT0Q=","errorBeacon":"bam.nr-data.net","agent":"js-agent.newrelic.com\/nr-411.min.js"}</script><script pagespeed_no_defer="">(function(){var c=encodeURIComponent,g=window,h="performance";g.pagespeed=g.pagespeed||{};var l=g.pagespeed,m=function(f,a,d,b){this.c=f;this.a=a;this.b=d;this.d=b};l.beaconUrl="";
+var n=function(f){var a=f.c,d=g.mod_pagespeed_start,b=Number(new Date)-d,a=a+(-1==a.indexOf("?")?"?":"&"),a=a+"ets="+("load"==f.a?"load:":"unload:"),a=a+b;if("beforeunload"!=f.a||!g.mod_pagespeed_loaded){a+="&r"+f.a+"=";if(g[h]){var b=g[h].timing,e=b.navigationStart,k=b.requestStart,a=a+(b[f.a+"EventStart"]-e),a=a+("&nav="+(b.fetchStart-e)),a=a+("&dns="+(b.domainLookupEnd-b.domainLookupStart)),a=a+("&connect="+(b.connectEnd-b.connectStart)),a=a+("&req_start="+(k-e)),a=a+("&ttfb="+(b.responseStart-
+k)),a=a+("&dwld="+(b.responseEnd-b.responseStart)),a=a+("&dom_c="+(b.domContentLoadedEventStart-e));g[h].navigation&&(a+="&nt="+g[h].navigation.type);e=-1;b.msFirstPaint?e=b.msFirstPaint:g.chrome&&g.chrome.loadTimes&&(e=Math.floor(1E3*g.chrome.loadTimes().firstPaintTime));e=e-k;0<=e&&(a+="&fp="+e)}else a+=b;l.getResourceTimingData&&g.parent==g&&(a+=l.getResourceTimingData());a+=g.parent!=g?"&ifr=1":"&ifr=0";"load"==f.a&&(g.mod_pagespeed_loaded=!0,(b=g.mod_pagespeed_num_resources_prefetched)&&(a+=
+"&nrp="+b),(b=g.mod_pagespeed_prefetch_start)&&(a+="&htmlAt="+(d-b)));l.panelLoader&&(d=l.panelLoader.getCsiTimingsString(),""!=d&&(a+="&b_csi="+d));l.criticalCss&&(d=l.criticalCss,a+="&ccis="+d.total_critical_inlined_size+"&cces="+d.total_original_external_size+"&ccos="+d.total_overhead_size+"&ccrl="+d.num_replaced_links+"&ccul="+d.num_unreplaced_links);""!=f.b&&(a+=f.b);document.referrer&&(a+="&ref="+c(document.referrer));a+="&url="+c(f.d);l.beaconUrl=a;(new Image).src=a}};
+l.e=function(f,a,d,b){var e=new m(f,a,d,b);g.addEventListener?g.addEventListener(a,function(){n(e)},!1):g.attachEvent("on"+a,function(){n(e)})};l.addInstrumentationInit=l.e;})();
+
+pagespeed.addInstrumentationInit('/beacon', 'load', '', 'https://www.vocativ.com/world/germany-world/nsa-surveillance/');</script></body>
+</html>
