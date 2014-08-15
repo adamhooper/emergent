@@ -7,4 +7,4 @@ module.exports =
     headline: $article.find('h2').first().text()
     byline: h.texts($article.find('a[itemprop=author]'))
     publishedAt: new Date($article.find('.article-meta time').last().attr('datetime') + 'Z')
-    body: h.texts($article.find('.article-body>h2, .article-body>.video-content>*:not(aside, iframe)'))
+    body: h.texts($article.find('.article-body>h2, .article-body>.video-content>*').filter(':not(aside, iframe)'))
