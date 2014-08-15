@@ -52,7 +52,7 @@ describe 'StoryController', ->
       req('slug-a')
         .expect(200)
         .expect (res) ->
-          Story.find.should.have.been.calledWith(slug: 'slug-a')
+          Story.find.should.have.been.calledWith(where: { slug: 'slug-a' })
           res.body.slug.should.equal('slug-a')
           undefined
         .end(done)

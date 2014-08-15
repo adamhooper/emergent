@@ -13,7 +13,7 @@ module.exports = self =
 
   find: (req, res) ->
     slug = req.param('slug') || ''
-    Story.find(slug: slug)
+    Story.find(where: { slug: slug })
       .then (val) ->
         if val?
           res.json(val)
