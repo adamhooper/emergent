@@ -67,6 +67,7 @@ startup.run ->
         queues[job].queue(url.id, url.url, new Date())
     else
       throw "Invalid job: " + JSON.stringify(job)
+    done()
 
   for __, queue of queues
     queue.startHandling()
