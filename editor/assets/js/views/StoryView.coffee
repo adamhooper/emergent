@@ -8,30 +8,31 @@ define [ 'underscore', 'moment', 'marionette' ], (_, moment, Marionette) ->
       <form method="post" action="#">
         <div class="row">
           <div class="col-md-4">
-            <div class="form-group">
+            <p class="not-editing"><strong>Claim:</strong> <%- headline %></p>
+            <p class="not-editing"><strong>Description:</strong> <%- description %></p>
+            <div class="form-group editing">
               <label for="claim-headline">The claim, in tweet form:</label>
-              <p class="not-editing"><%- headline %></p>
-              <textarea class="editing form-control" id="claim-headline" rows="2" name="headline" placeholder="A man bit a dog"><%- headline %></textarea>
+              <textarea class="form-control" id="claim-headline" rows="2" name="headline" placeholder="A man bit a dog"><%- headline %></textarea>
             </div>
-            <div class="form-group">
+            <div class="form-group editing">
               <label for="claim-description">The claim, in two sentences:</label>
-              <p class="not-editing"><%- description %></p>
-              <textarea class="editing form-control" id="claim-description" rows="5" name="description" placeholder="Two. Sentences."><%- description %></textarea>
+              <textarea class="form-control" id="claim-description" rows="5" name="description" placeholder="Two. Sentences."><%- description %></textarea>
             </div>
           </div>
 
           <div class="col-md-4">
-            <div class="form-group">
+            <p class="not-editing">
+              <strong>Origin:</strong>
+              <%- origin %>
+              <% if (originUrl) { %>
+                <a target="_blank" href="<%- originUrl %>">[link]</a>
+              <% } %>
+            </p>
+            <div class="form-group editing">
               <label for="claim-origin">Who said this, how, when?</label>
               <p class="not-editing"><%- origin %></p>
-              <textarea class="editing form-control" id="claim-origin" rows="5" name="origin" placeholder="Lies Inc. said so on its blog."><%- origin %></textarea>
+              <textarea class="form-control" id="claim-origin" rows="5" name="origin" placeholder="Lies Inc. said so on its blog."><%- origin %></textarea>
             </div>
-            <% if (originUrl) { %>
-              <div class="form-group origin-url not-editing">
-                <label>If possible, link to that:</label>
-                <p><a href="<%- originUrl %>"><%- originUrl %></a></p>
-              </div>
-            <% } %>
             <div class="form-group origin-url editing">
               <label for="claim-origin-url">If possible, link to that:</label>
               <input type="text" class="form-control" id="claim-origin-url" name="originUrl" placeholder="http://lies.com/blog" value="<%- originUrl || '' %>">
@@ -39,15 +40,18 @@ define [ 'underscore', 'moment', 'marionette' ], (_, moment, Marionette) ->
           </div>
 
           <div class="col-md-4">
-            <div class="form-group not-editing">
-              <label>Is this claim true?</label>
-              <p>
-                <% if (truthiness == 'unknown') { %>We don't know
-                <% } else if (truthiness == 'true') { %>It is entirely true
-                <% } else if (truthiness == 'false') { %>It is not entirely true
-                <% } %>
-              </p>
-            </div>
+            <p class="not-editing">
+              <strong>Truthiness:</strong>
+              <% if (truthiness == 'unknown') { %>We don't know
+              <% } else if (truthiness == 'true') { %>It is entirely true
+              <% } else if (truthiness == 'false') { %>It is not entirely true
+              <% } %>
+
+              <% if (truthinessDateString) { %>
+                as of <%- truthinessDateString %>
+              <% } %>
+            </p>
+
             <div class="form-group editing">
               <label>Is this claim true?</label>
               <div class="radio">
@@ -69,12 +73,6 @@ define [ 'underscore', 'moment', 'marionette' ], (_, moment, Marionette) ->
                 </label>
               </div>
             </div>
-            <% if (truthinessDate) { %>
-              <div class="form-group truthiness-date not-editing">
-                <label>When did the world first learn whether the claim is true or false?</label>
-                <p><time datetime="<%- new Date(truthinessDate).toISOString() %>"><%- truthinessDateString %></time></p>
-              </div>
-            <% } %>
             <div class="form-group truthiness-date editing">
               <label for="claim-truthiness-date">When did the world first learn whether the claim is true or false?</label>
               <input type="datetime-local" class="form-control" id="claim-truthiness-date" name="truthinessDate" value="<%- truthinessDateLocal %>">
