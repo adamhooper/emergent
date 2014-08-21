@@ -1,5 +1,24 @@
 Story = require('../../../data-store').models.Story
 
+AttributesWithDefaults =
+  headline: ''
+  description: ''
+  origin: ''
+  originUrl: null
+  truthiness: 'unknown'
+  truthinessDate: null
+
+jsonToAttributes = (json, isCreate) ->
+  ret = {}
+
+  if isCreate
+    ret.slug = json.slug
+
+  for k, d of AttributesWithDefaults
+    ret[k] = json[k] ? d
+
+  ret
+
 module.exports = self =
   index: (req, res) ->
     if req.method == 'POST'
@@ -25,7 +44,8 @@ module.exports = self =
     if !req.body?
       res.status(400).json(message: 'You must send the JSON properties to create')
     else
-      Story.create(req.body, req.user.email)
+      attributes = jsonToAttributes(req.body, true)
+      Story.create(attributes, req.user.email)
         .then (val) -> res.json(val)
         .catch (err) -> res.status(400).json(err)
 
@@ -39,14 +59,13 @@ module.exports = self =
     slug = req.param('slug') || ''
     if !req.body?
       res.status(400).json(message: 'You must send the JSON properties to update')
-    else if req.body.slug?
-      res.status(400).json(message: 'You can never change the slug of a story')
     else
+      attributes = jsonToAttributes(req.body, false)
       Story.find(where: { slug: slug })
         .then (story) ->
           if !story
             res.status(404).json(message: "Could not find a story with slug '#{slug}'")
           else
-            Story.update(story, req.body, req.user.email)
+            Story.update(story, attributes, req.user.email)
               .then (updatedStory) -> res.json(updatedStory)
         .catch (err) -> res.status(500).json(err)

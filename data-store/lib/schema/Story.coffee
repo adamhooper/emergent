@@ -23,6 +23,30 @@ module.exports =
       allowNull: false
       comment: 'The two-line bit of text we show the user'
 
+    origin:
+      type: Sequelize.STRING
+      allowNull: false
+      defaultValue: ''
+      comment: 'Who said this first. e.g., a Guardian blog post'
+
+    originUrl:
+      type: Sequelize.STRING
+      allowNull: true
+      validate: { isUrl: true }
+      comment: 'a URL to whatever the origin column mentions'
+
+    truthiness:
+      type: Sequelize.ENUM
+      values: [ 'unknown', 'true', 'false' ]
+      defaultValue: 'unknown'
+      allowNull: false
+      comment: 'whether or not the claim is objectively true, according to us'
+
+    truthinessDate:
+      type: Sequelize.DATE
+      allowNull: true
+      comment: 'when the world first became aware of the truthiness of the claim'
+
     createdAt:
       type: Sequelize.DATE
       allowNull: false

@@ -159,12 +159,13 @@ describe 'StoryController', ->
           x
         .should.eventually.contain(status: 404)
 
-    it 'should return 400 when the slug is wrong', (done) ->
-      supertest(app)
-        .put('/stories/slug-a')
-        .set('Accept', 'application/json')
-        .send(slug: 'slug-b')
-        .expect(400, done)
+    it 'should never update the slug', ->
+      reqPromise({ slug: 'slug-b' }, 'slug-a')
+        .then (res) ->
+          expect(res).to.have.property('status', 200)
+          expect(res.body).to.have.property('slug', 'slug-a')
+          expect(Story.update).to.have.been.called
+          expect(Story.update.lastCall.args[1]).not.to.have.property('slug')
 
     describe 'with a valid request', ->
       beforeEach ->
