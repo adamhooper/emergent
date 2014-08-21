@@ -1,3 +1,4 @@
 #!/bin/sh
 
+git fetch truthmaker # to avoid conflicts
 git push truthmaker HEAD:master
