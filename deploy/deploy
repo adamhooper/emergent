@@ -1,4 +1,4 @@
 #!/bin/sh
 
-git fetch truthmaker # to avoid conflicts
-git push truthmaker HEAD:master
+git push origin master          # if everyone does this every time...
+git push truthmaker HEAD:master # this won't fail
