@@ -6,24 +6,31 @@
 
   .story-metadata {
     border-bottom: 1px solid @navbar-default-border;
-    text-align: center;
 
     .slug {
+      margin-bottom: 1em;
       h3 {
         display: inline;
         font-family: @font-family-monospace;
         font-weight: bold;
         font-size: 1.2em;
-      }
-
-      a {
-        display: inline-block;
-        margin-left: 1em;
+        padding-right: 1em;
       }
     }
 
-    h2 {
-      font-size: 1.2em;
+    form {
+      .editing { display: none; }
+      .not-applicable { display: none; }
+    }
+
+    form.editing {
+      .editing { display: block; }
+      .not-editing { display: none; }
+      .not-applicable { display: none; } // specificity
+    }
+
+    button {
+      margin-bottom: 1em;
     }
   }
 

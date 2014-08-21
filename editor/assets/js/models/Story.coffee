@@ -7,6 +7,10 @@ define [ 'backbone' ], (Backbone) ->
       slug: ''
       headline: ''
       description: ''
+      origin: ''
+      originUrl: null
+      truthiness: 'unknown'
+      truthinessDate: null
 
     initialize: (attributes, options) ->
       @_isNew = options?.isNew || false
