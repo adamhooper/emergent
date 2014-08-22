@@ -15,6 +15,7 @@ require.config
     'backbone.babysitter': 'bower_components/backbone.babysitter/lib/backbone.babysitter'
     'backbone.wreqr': 'bower_components/backbone.wreqr/lib/backbone.wreqr'
     jquery: 'bower_components/jquery/dist/jquery'
+    moment: 'bower_components/moment/moment'
     marionette: 'bower_components/marionette/lib/core/amd/backbone.marionette'
     q: 'bower_components/q/q'
     underscore: 'bower_components/underscore/underscore'
