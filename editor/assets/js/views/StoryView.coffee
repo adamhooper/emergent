@@ -43,8 +43,8 @@ define [ 'underscore', 'moment', 'marionette' ], (_, moment, Marionette) ->
             <p class="not-editing">
               <strong>Truthiness:</strong>
               <% if (truthiness == 'unknown') { %>We don't know
-              <% } else if (truthiness == 'true') { %>It is entirely true
-              <% } else if (truthiness == 'false') { %>It is not entirely true
+              <% } else if (truthiness == 'true') { %>It is <em>true</em>
+              <% } else if (truthiness == 'false') { %>It is <em>false</em>
               <% } %>
 
               <% if (truthinessDateString) { %>
