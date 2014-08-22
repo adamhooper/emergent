@@ -11,5 +11,5 @@ module.exports =
     source: 'The Daily Caller'
     headline: $('#single h1').text()
     byline: h.texts($authors)
-    publishedAt: h.moment.tz($dateline.text().trim(), 'H:mm A  MM/DD/YYYY', 'America/Washington')
+    publishedAt: h.moment.tz($dateline.text().trim(), 'H:mm A  MM/DD/YYYY', 'America/New_York')
     body: h.texts($body.find('p'))
