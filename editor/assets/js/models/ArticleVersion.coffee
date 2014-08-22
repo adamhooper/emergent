@@ -3,7 +3,8 @@ define [
 ], (Backbone) ->
   class ArticleVersion extends Backbone.Model
     defaults:
-      truthiness: null
+      stance: null
+      headlineStance: null
       comment: ''
       urlVersion:
         source: ''

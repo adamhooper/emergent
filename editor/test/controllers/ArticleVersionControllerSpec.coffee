@@ -37,8 +37,8 @@ describe 'ArticleVersionController', ->
       .then(=> ArticleVersion.create({
         urlVersionId: @urlVersion.id
         articleId: @article.id
-        truthiness: null
-        headlineTruthiness: null
+        stance: null
+        headlineStance: null
         comment: ''
       }, @email)).then((x) => @articleVersion = x)
       .catch(console.error)
@@ -69,16 +69,16 @@ describe 'ArticleVersionController', ->
           expect(json[0].urlVersion).to.have.property('id', @urlVersion.id)
           expect(json[0].urlVersion).to.have.property('publishedAt', @urlVersion.publishedAt.toISOString())
           expect(json[0].urlVersion).to.have.property('body', @urlVersion.body)
-          expect(json[0].truthiness).to.be.null
-          expect(json[0].headlineTruthiness).to.be.null
+          expect(json[0].stance).to.be.null
+          expect(json[0].headlineStance).to.be.null
           expect(json[0].comment).to.eq('')
 
   describe '#create', ->
     createReq = (articleId, object) -> req('post', "/articles/#{articleId}/versions", object)
 
     candidateVersion =
-      truthiness: 'truth'
-      headlineTruthiness: 'claim'
+      stance: 'observing'
+      headlineStance: 'for'
       comment: 'comment'
       urlVersion:
         source: 'source'
@@ -100,7 +100,8 @@ describe 'ArticleVersionController', ->
           t = (prop, value) -> expect(json).to.have.deep.property(prop, value)
           t('urlVersion.urlId', @url.id)
           t('urlVersion.id', json.urlVersionId)
-          t('truthiness', 'truth')
+          t('stance', 'observing')
+          t('headlineStance', 'for')
           t('comment', 'comment')
           for k, v of candidateVersion.urlVersion
             t("urlVersion.#{k}", v)
@@ -111,8 +112,8 @@ describe 'ArticleVersionController', ->
     updateReq = (articleId, versionId, attrs) -> req('put', "/articles/#{articleId}/versions/#{versionId}", attrs)
 
     candidateVersion =
-      truthiness: 'truth'
-      headlineTruthiness: 'claim'
+      stance: 'observing'
+      headlineStance: 'for'
       comment: 'comment'
       urlVersion:
         source: 'source'
@@ -138,8 +139,8 @@ describe 'ArticleVersionController', ->
           t = (prop, value) -> expect(json).to.have.deep.property(prop, value)
           t('urlVersion.urlId', @url.id)
           t('urlVersion.id', json.urlVersionId)
-          t('truthiness', 'truth')
-          t('headlineTruthiness', 'claim')
+          t('stance', 'observing')
+          t('headlineStance', 'for')
           t('comment', 'comment')
           for k, v of candidateVersion.urlVersion
             t("urlVersion.#{k}", v)

@@ -30,8 +30,8 @@ WriteableUrlVersionFields = [
 ]
 
 WriteableFields = [
-  'truthiness'
-  'headlineTruthiness'
+  'stance'
+  'headlineStance'
   'comment'
 ]
 

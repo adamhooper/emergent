@@ -28,8 +28,8 @@ define [
       publishedAt: 'input[name=published-at]'
       byline: 'input[name=byline]'
       body: 'textarea[name=body]'
-      truthiness: 'input[name=truthiness]'
-      headlineTruthiness: 'input[name=headline-truthiness]'
+      stance: 'input[name=stance]'
+      headlineStance: 'input[name=headline-stance]'
       comment: 'textarea[name=comment]'
 
     template: _.template('''
@@ -81,18 +81,20 @@ define [
         <fieldset class="article-version">
           <legend>What Truthmaker editors say</legend>
           <div class="form-group">
-            <label for="version-<%- cid %>-headline-truthiness">Truthiness of the headline</label>
-            <div class="radio"><label><input id="version-<%- cid %>-headline-truthiness" type="radio" name="headline-truthiness" value="" <%- headlineTruthiness ? '' : 'checked' %>> I haven't looked</label></div>
-            <div class="radio"><label><input type="radio" name="headline-truthiness" value="truth" <%- headlineTruthiness == 'truth' ? 'checked' : '' %>> Truth</label></div>
-            <div class="radio"><label><input type="radio" name="headline-truthiness" value="myth" <%- headlineTruthiness == 'myth' ? 'checked' : '' %>> Myth</label></div>
-            <div class="radio"><label><input type="radio" name="headline-truthiness" value="claim" <%- headlineTruthiness == 'claim' ? 'checked' : '' %>> Claim</label></div>
+            <label for="version-<%- cid %>-headline-stance">Does the headline support the claim?</label>
+            <div class="radio"><label><input id="version-<%- cid %>-headline-stance" type="radio" name="headline-stance" value="" <%- headlineStance ? '' : 'checked' %>> I haven't looked</label></div>
+            <div class="radio"><label><input type="radio" name="headline-stance" value="for" <%- headlineStance == 'for' ? 'checked' : '' %>> The headline is <em>for</em> the claim</label></div>
+            <div class="radio"><label><input type="radio" name="headline-stance" value="against" <%- headlineStance == 'against' ? 'checked' : '' %>> The headline is <em>against</em> the claim</label></div>
+            <div class="radio"><label><input type="radio" name="headline-stance" value="observing" <%- headlineStance == 'observing' ? 'checked' : '' %>> The headline is merely <em>reporting</em> the claim exists</label></div>
+            <div class="radio"><label><input type="radio" name="headline-stance" value="ignoring" <%- headlineStance == 'ignoring' ? 'checked' : '' %>> The headline <em>does not mention</em> the claim</label></div>
           </div>
           <div class="form-group">
-            <label for="version-<%- cid %>-truthiness">Truthiness of the body</label>
-            <div class="radio"><label><input id="version-<%- cid %>-truthiness" type="radio" name="truthiness" value="" <%- truthiness ? '' : 'checked' %>> I haven't looked</label></div>
-            <div class="radio"><label><input type="radio" name="truthiness" value="truth" <%- truthiness == 'truth' ? 'checked' : '' %>> Truth</label></div>
-            <div class="radio"><label><input type="radio" name="truthiness" value="myth" <%- truthiness == 'myth' ? 'checked' : '' %>> Myth</label></div>
-            <div class="radio"><label><input type="radio" name="truthiness" value="claim" <%- truthiness == 'claim' ? 'checked' : '' %>> Claim</label></div>
+            <label for="version-<%- cid %>-stance">Does the body support the claim?</label>
+            <div class="radio"><label><input id="version-<%- cid %>-stance" type="radio" name="stance" value="" <%- stance ? '' : 'checked' %>> I haven't looked</label></div>
+            <div class="radio"><label><input type="radio" name="stance" value="for" <%- stance == 'for' ? 'checked' : '' %>> The body is <em>for</em> the claim</label></div>
+            <div class="radio"><label><input type="radio" name="stance" value="against" <%- stance == 'against' ? 'checked' : '' %>> The body is <em>against</em> the claim</label></div>
+            <div class="radio"><label><input type="radio" name="stance" value="observing" <%- stance == 'observing' ? 'checked' : '' %>> The body is merely <em>reporting</em> the claim exists</label></div>
+            <div class="radio"><label><input type="radio" name="stance" value="ignoring" <%- stance == 'ignoring' ? 'checked' : '' %>> The body <em>does not mention</em> the claim</label></div>
           </div>
           <div class="form-group">
             <label for="version-<%- cid %>-comment">Comment</label>
@@ -109,7 +111,7 @@ define [
     render: ->
       super()
 
-      @$el.toggleClass('complete', !!@model.get('truthiness') && !!@model.get('headlineTruthiness'))
+      @$el.toggleClass('complete', !!@model.get('stance') && !!@model.get('headlineStance'))
 
       @
 
@@ -174,8 +176,8 @@ define [
         byline: json.urlVersion.byline
         body: json.urlVersion.body
         bodyHtml: @getBodyHtml()
-      truthiness: json.truthiness ? ''
-      headlineTruthiness: json.headlineTruthiness ? ''
+      stance: json.stance ? ''
+      headlineStance: json.headlineStance ? ''
       comment: json.comment
       createdAt: json.urlVersion.createdAt
       createdAtString: moment(json.urlVersion.createdAt).format('YYYY-MM-DD \\a\\t h:mm A')
@@ -187,6 +189,6 @@ define [
         publishedAt: moment(@ui.publishedAt.val()).toDate()
         byline: @ui.byline.val().trim()
         body: @ui.body.val().trim()
-      truthiness: @ui.truthiness.filter(':checked').val() || null
-      headlineTruthiness: @ui.headlineTruthiness.filter(':checked').val() || null
+      stance: @ui.stance.filter(':checked').val() || null
+      headlineStance: @ui.headlineStance.filter(':checked').val() || null
       comment: @ui.comment.val().trim()

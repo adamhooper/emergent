@@ -8,8 +8,8 @@ define [ 'underscore', 'moment', 'marionette' ], (_, moment, Marionette) ->
       <form method="post" action="#">
         <div class="row">
           <div class="col-md-4">
-            <p class="not-editing"><strong>Claim:</strong> <%- headline %></p>
-            <p class="not-editing"><strong>Description:</strong> <%- description %></p>
+            <p class="headline not-editing"><strong>Claim:</strong> <%- headline %></p>
+            <p class="description not-editing"><strong>Description:</strong> <%- description %></p>
             <div class="form-group editing">
               <label for="claim-headline">The claim, in tweet form:</label>
               <textarea class="form-control" id="claim-headline" rows="2" name="headline" placeholder="A man bit a dog"><%- headline %></textarea>

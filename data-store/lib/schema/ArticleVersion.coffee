@@ -34,15 +34,17 @@ module.exports =
       allowNull: true # NULL means Truthmaker created it automatically
       validate: { isEmail: true }
 
-    truthiness:
-      type: Sequelize.ENUM('truth', 'myth', 'claim')
+    stance:
+      type: Sequelize.ENUM
+      values: ['for', 'against', 'observing', 'ignoring']
       allowNull: true
-      comment: 'Is this text true, as far as this Story is concerned?'
+      comment: 'Does the body support the claim?'
 
-    headlineTruthiness:
-      type: Sequelize.ENUM('truth', 'myth', 'claim')
+    headlineStance:
+      type: Sequelize.ENUM
+      values: ['for', 'against', 'observing', 'ignoring']
       allowNull: true
-      comment: 'Is this headline true, as far as this Story is concerned?'
+      comment: 'Does the headline support the claim?'
 
     comment:
       type: Sequelize.TEXT
