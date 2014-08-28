@@ -1,5 +1,6 @@
 cheerio = require('cheerio')
 moment = require('moment-timezone')
+_ = require('lodash')
 
 # Western news websites use a few abbreviations for timezones. In theory there
 # could be conflicts, but most of the time these are correct. (If there are
@@ -49,13 +50,37 @@ class HtmlParser
     h = new Helpers($)
     ret = siteParser.parse(url, $, h)
 
+    toArray = (x) ->
+      x = h.texts(x) if x?.text? # Cheerio object
+      x || []
+
+    toString = (x) ->
+      if _.isString(x)
+        x
+      else if x
+        x = toArray(x) # Cheerio object -> String(s)
+        x[0] || '' # Array -> String
+      else
+        ''
+
+    toDate = (x) ->
+      if _.isDate(x) # Date
+        x
+      else if x?.toDate? # Moment
+        x.toDate()
+      else if x
+        x = toString(x)
+        new Date(x)
+      else
+        null
+
     # All but publishedAt must be non-null in actual code. But null can be
     # handy during test-driven development, so we handle it on byline/body.
-    source: ret.source ? ''
-    headline: ret.headline ? ''
-    byline: ret.byline?.join(', ') ? ''
-    publishedAt: ret.publishedAt?.toDate?() ? ret.publishedAt
-    body: ret.body?.join("\n\n") ? ''
+    source: toString(ret.source)
+    headline: toString(ret.headline)
+    byline: toArray(ret.byline).join(", ")
+    publishedAt: toDate(ret.publishedAt)
+    body: toArray(ret.body).join("\n\n")
 
   # Parses the HTML at the given URL. Returns an Object like this:
   #
