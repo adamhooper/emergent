@@ -70,7 +70,7 @@ define [
             </div>
             <div class="form-group">
               <label for="version-<%- cid %>-byline">Byline</label>
-              <input id="version-<%- cid %>-byline" name="byline" class="form-control" placeholder="e.g., Adam Hooper, Craig Silverman" value="<%- urlVersion.byline %>" required>
+              <input id="version-<%- cid %>-byline" name="byline" class="form-control" placeholder="e.g., Adam Hooper, Craig Silverman" value="<%- urlVersion.byline %>">
             </div>
             <div class="form-group">
               <label for="version-<%- cid %>-body">Body</label>
