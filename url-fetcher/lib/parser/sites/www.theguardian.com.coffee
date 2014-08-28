@@ -19,7 +19,7 @@ module.exports =
       null
 
     source: 'The Guardian'
-    headline: $('div#article-header h1').text()
-    byline: h.texts($('[itemprop=author]'))
+    headline: $('div#article-header h1')
+    byline: $('[itemprop=author]')
     publishedAt: publishedAt
-    body: h.texts($('div#article-body-blocks p'))
+    body: $('div#article-body-blocks p')
