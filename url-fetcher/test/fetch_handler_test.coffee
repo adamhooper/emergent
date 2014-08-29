@@ -18,6 +18,7 @@ describe 'FetchHandler', ->
       byline: 'byline'
       publishedAt: new Date(1)
       body: 'body'
+      version: 1
 
     @queue =
       queue: sinon.spy()

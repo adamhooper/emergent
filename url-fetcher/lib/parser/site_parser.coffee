@@ -48,3 +48,9 @@ module.exports = class SiteParser
   #   $: a Cheerio object. (https://matthewmueller.github.io/cheerio/)
   #   h: a Helper object.
   parse: (url, $, h) -> throw new Error('not implemented')
+
+  # The version of the parser.
+  #
+  # Override this version with a higher number to re-parse any UrlGets in the
+  # database.
+  version: 1

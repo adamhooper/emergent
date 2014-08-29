@@ -85,6 +85,11 @@ module.exports =
       get: -> @getDataValue('sha1')?.toString('hex') || null
       set: (v) -> v && @setDataValue('sha1', new Buffer(v, 'hex')) || null
 
+    parserVersion:
+      type: Sequelize.INTEGER
+      allowNull: false
+      comment: 'parser that generated the parsed values'
+
   classMethods:
     calculateSha1Hex: (attributes) ->
       rowToSha1(attributes).toString('hex')

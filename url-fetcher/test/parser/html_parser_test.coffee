@@ -12,10 +12,12 @@ describe 'HtmlParser', ->
     badSiteParser =
       testUrl: sinon.stub().returns(false)
       parse: sinon.stub().returns(@simpleParseRetval)
+      version: 1
 
     goodSiteParser =
       testUrl: sinon.stub().returns(true)
       parse: sinon.stub().returns(@simpleParseRetval)
+      version: 2
 
     subject = new HtmlParser()
     subject.addSiteParser(badSiteParser)
@@ -45,6 +47,7 @@ describe 'HtmlParser', ->
       @siteParser =
         testUrl: -> true
         parse: sinon.stub().returns(parseResult)
+        version: 123
 
       @subject = new HtmlParser()
       @subject.addSiteParser(@siteParser)
@@ -89,3 +92,8 @@ describe 'HtmlParser', ->
     it 'should return a Date publishedAt as a Date', (done) ->
       date = new Date()
       @handleResultProperty('publishedAt', date, date, done)
+
+    it 'should return the version', (done) ->
+      @subject.parse 'http://example.org', '<html></html>', (err, val) ->
+        expect(val.version).to.eq(123)
+        done()

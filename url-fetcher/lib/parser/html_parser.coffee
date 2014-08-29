@@ -81,6 +81,7 @@ class HtmlParser
     byline: toArray(ret.byline).join(", ")
     publishedAt: toDate(ret.publishedAt)
     body: toArray(ret.body).join("\n\n")
+    version: siteParser.version
 
   # Parses the HTML at the given URL. Returns an Object like this:
   #
