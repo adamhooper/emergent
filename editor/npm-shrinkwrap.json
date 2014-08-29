@@ -2854,6 +2854,10 @@
       "version": "3.17.0",
       "from": "validator@^3.17.0",
       "resolved": "https://registry.npmjs.org/validator/-/validator-3.17.0.tgz"
+    },
+    "bytes": {
+      "version": "1.0.0",
+      "from": "bytes@"
     }
   }
 }
