@@ -2,10 +2,9 @@ module.exports =
   up: (migration, DataTypes, done) ->
     migration.addColumn('UrlVersion', 'parserVersion', {
       type: DataTypes.INTEGER
-      allowNull: false
-      defaultValue: 1
+      allowNull: true
     })
-      .then(-> migration.migrator.sequelize.query('ALTER TABLE "UrlVersion" ALTER COLUMN "parserVersion" DROP DEFAULT'))
+      .then(-> migration.migrator.sequelize.query('UPDATE "UrlVersion" SET "parserVersion" = 1 WHERE "createdBy" IS NULL'))
       .nodeify(done)
 
   down: (migration, DataTypes, done) ->

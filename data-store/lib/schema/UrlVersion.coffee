@@ -87,8 +87,8 @@ module.exports =
 
     parserVersion:
       type: Sequelize.INTEGER
-      allowNull: false
-      comment: 'parser that generated the parsed values'
+      allowNull: true
+      comment: 'parser that generated the parsed values; NULL for manually-entered values'
 
   classMethods:
     calculateSha1Hex: (attributes) ->
