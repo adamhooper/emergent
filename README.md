@@ -4,7 +4,7 @@ There's a lot to do. No time to write about it.
 
 First, install NodeJS. Then, in this directory:
 
-    npm install -g mocha karma-cli bower supervise
+    npm install -g mocha karma-cli bower supervisor
     (cd data-store && npm install)
     (cd editor && npm install)
     (cd url-fetcher && npm install)

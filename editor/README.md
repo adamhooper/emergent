@@ -21,7 +21,7 @@ We prefer CoffeeScript, but plain JavaScript shouldn't break anything.
 
 In one terminal, run `gulp`. This will recompile the assets as they change.
 
-In another terminal, run `supervise index.coffee`. This will run the Express
+In another terminal, run `supervisor index.coffee`. This will run the Express
 server and restart it when any files change.
 
 Browse to http://localhost:1337 to see the result.
