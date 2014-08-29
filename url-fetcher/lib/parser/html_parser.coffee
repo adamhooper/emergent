@@ -83,6 +83,16 @@ class HtmlParser
     body: toArray(ret.body).join("\n\n")
     version: siteParser.version
 
+  # Finds the appropriate SiteParser for the given URL.
+  #
+  # Returns `null` if there is none.
+  urlToSiteParser: (url) ->
+    for siteParser in @siteParsers
+      if siteParser.testUrl(url)
+        return siteParser
+
+    null
+
   # Parses the HTML at the given URL. Returns an Object like this:
   #
   #   {
@@ -93,13 +103,12 @@ class HtmlParser
   #     body: "foo\n\nbar" # paragraphs separated by two newlines
   #   }
   parse: (url, html) ->
-    ret = null
+    siteParser = @urlToSiteParser(url)
 
-    for siteParser in @siteParsers
-      if siteParser.testUrl(url)
-        return @_doParse(url, html, siteParser)
-
-    throw new Error("No SiteParser exists to handle the URL #{url}")
+    if siteParser
+      return @_doParse(url, html, siteParser)
+    else
+      throw new Error("No SiteParser exists to handle the URL #{url}")
 
 singleton = new HtmlParser()
 

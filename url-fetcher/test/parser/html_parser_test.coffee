@@ -8,26 +8,32 @@ describe 'HtmlParser', ->
       body: []
       publishedAt: null
 
-  it 'should invoke the correct SiteParser', ->
-    badSiteParser =
-      testUrl: sinon.stub().returns(false)
-      parse: sinon.stub().returns(@simpleParseRetval)
-      version: 1
+  describe 'with multiple SiteParsers', ->
+    beforeEach ->
+      @badSiteParser =
+        testUrl: sinon.stub().returns(false)
+        parse: sinon.stub().returns(@simpleParseRetval)
+        version: 1
 
-    goodSiteParser =
-      testUrl: sinon.stub().returns(true)
-      parse: sinon.stub().returns(@simpleParseRetval)
-      version: 2
+      @goodSiteParser =
+        testUrl: sinon.stub().returns(true)
+        parse: sinon.stub().returns(@simpleParseRetval)
+        version: 2
 
-    subject = new HtmlParser()
-    subject.addSiteParser(badSiteParser)
-    subject.addSiteParser(goodSiteParser)
+      @subject = new HtmlParser()
+      @subject.addSiteParser(@badSiteParser)
+      @subject.addSiteParser(@goodSiteParser)
 
-    subject.parse('http://example.org', '<html></html>')
-    expect(badSiteParser.testUrl).to.have.been.called
-    expect(badSiteParser.parse).not.to.have.been.called
-    expect(goodSiteParser.testUrl).to.have.been.called
-    expect(goodSiteParser.parse).to.have.been.called
+    it 'should invoke the correct SiteParser', ->
+      @subject.parse('http://example.org', '<html></html>')
+      expect(@badSiteParser.testUrl).to.have.been.called
+      expect(@badSiteParser.parse).not.to.have.been.called
+      expect(@goodSiteParser.testUrl).to.have.been.called
+      expect(@goodSiteParser.parse).to.have.been.called
+
+    it 'should return the correct SiteParser', ->
+      ret = @subject.urlToSiteParser('http://example.org')
+      expect(ret).to.eq(@goodSiteParser)
 
   it 'should give an error when there is no valid SiteParser', ->
     subject = new HtmlParser()
