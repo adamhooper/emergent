@@ -24,7 +24,7 @@ describe 'FetchHandler', ->
       queue: sinon.spy()
 
     @parser =
-      parse: sinon.stub().callsArgWith(2, null, @parsedObject)
+      parse: sinon.stub().returns(@parsedObject)
 
     @fetchedObject =
       statusCode: 200

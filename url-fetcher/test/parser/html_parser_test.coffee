@@ -8,7 +8,7 @@ describe 'HtmlParser', ->
       body: []
       publishedAt: null
 
-  it 'should invoke the correct SiteParser', (done) ->
+  it 'should invoke the correct SiteParser', ->
     badSiteParser =
       testUrl: sinon.stub().returns(false)
       parse: sinon.stub().returns(@simpleParseRetval)
@@ -23,20 +23,16 @@ describe 'HtmlParser', ->
     subject.addSiteParser(badSiteParser)
     subject.addSiteParser(goodSiteParser)
 
-    subject.parse 'http://example.org', '<html></html>', (err) ->
-      expect(err).to.be.null
-      expect(badSiteParser.testUrl).to.have.been.called
-      expect(badSiteParser.parse).not.to.have.been.called
-      expect(goodSiteParser.testUrl).to.have.been.called
-      expect(goodSiteParser.parse).to.have.been.called
-      done()
+    subject.parse('http://example.org', '<html></html>')
+    expect(badSiteParser.testUrl).to.have.been.called
+    expect(badSiteParser.parse).not.to.have.been.called
+    expect(goodSiteParser.testUrl).to.have.been.called
+    expect(goodSiteParser.parse).to.have.been.called
 
-  it 'should give an error when there is no valid SiteParser', (done) ->
+  it 'should give an error when there is no valid SiteParser', ->
     subject = new HtmlParser()
     subject.addSiteParser(testUrl: -> false)
-    subject.parse 'http://example.org', '<html></html>', (err) ->
-      expect(err).to.be.an.instanceOf(Error)
-      done()
+    expect(-> subject.parse('http://example.org', '<html></html>')).to.throw(Error)
 
   describe 'when parsing with a good siteParser', ->
     beforeEach ->
@@ -52,48 +48,36 @@ describe 'HtmlParser', ->
       @subject = new HtmlParser()
       @subject.addSiteParser(@siteParser)
 
-      @handleResultProperty = (prop, siteParserValue, expected, done) =>
+      @handleResultProperty = (prop, siteParserValue, expected) =>
         parseResult[prop] = siteParserValue
-        @subject.parse 'http://example.org', '<html></html>', (err, val) ->
-          expect(val[prop]).to.deep.eq(expected)
-          done()
+        val = @subject.parse('http://example.org', '<html></html>')
+        expect(val[prop]).to.deep.eq(expected)
 
-    it 'should call SiteParser.parse(url, $, h)', (done) ->
+    it 'should call SiteParser.parse(url, $, h)', ->
       stub = @siteParser.parse
-      @subject.parse 'http://example.org', '<html><body><p>foo</p></body></html>', (err, val) ->
-        expect(stub).to.have.been.called
-        args = stub.lastCall.args
-        expect(args[0]).to.deep.eq('http://example.org')
-        # Test that $ is a Cheerio object.
-        expect(args[1]('body').find('p').text()).to.eq('foo')
-        # Test that h is a bunch of helpers.
-        expect(args[2].texts).to.be.a.function
-        done()
+      @subject.parse('http://example.org', '<html><body><p>foo</p></body></html>')
+      expect(stub).to.have.been.called
+      args = stub.lastCall.args
+      expect(args[0]).to.deep.eq('http://example.org')
+      # Test that $ is a Cheerio object.
+      expect(args[1]('body').find('p').text()).to.eq('foo')
+      # Test that h is a bunch of helpers.
+      expect(args[2].texts).to.be.a.function
 
-    it 'should return the source', (done) ->
-      @handleResultProperty('source', 'foo', 'foo', done)
+    it 'should return the source', -> @handleResultProperty('source', 'foo', 'foo')
+    it 'should return the headline', -> @handleResultProperty('headline', 'foo', 'foo')
+    it 'should return the body', -> @handleResultProperty('body', [ 'para1', 'para2' ], "para1\n\npara2")
+    it 'should return the byline', -> @handleResultProperty('byline', [ 'Adam Hooper', 'Craig Silverman' ], 'Adam Hooper, Craig Silverman')
+    it 'should return a null publishedAt as null', -> @handleResultProperty('publishedAt', null, null)
 
-    it 'should return the headline', (done) ->
-      @handleResultProperty('headline', 'foo', 'foo', done)
-
-    it 'should return the body', (done) ->
-      @handleResultProperty('body', [ 'para1', 'para2' ], "para1\n\npara2", done)
-
-    it 'should return the byline', (done) ->
-      @handleResultProperty('byline', [ 'Adam Hooper', 'Craig Silverman' ], 'Adam Hooper, Craig Silverman', done)
-
-    it 'should return a null publishedAt as null', (done) ->
-      @handleResultProperty('publishedAt', null, null, done)
-
-    it 'should return a Moment publishedAt as a Date', (done) ->
+    it 'should return a Moment publishedAt as a Date', ->
       aMoment = require('moment')()
-      @handleResultProperty('publishedAt', aMoment, aMoment.toDate(), done)
+      @handleResultProperty('publishedAt', aMoment, aMoment.toDate())
 
-    it 'should return a Date publishedAt as a Date', (done) ->
+    it 'should return a Date publishedAt as a Date', ->
       date = new Date()
-      @handleResultProperty('publishedAt', date, date, done)
+      @handleResultProperty('publishedAt', date, date)
 
-    it 'should return the version', (done) ->
-      @subject.parse 'http://example.org', '<html></html>', (err, val) ->
-        expect(val.version).to.eq(123)
-        done()
+    it 'should return the version', ->
+      val = @subject.parse('http://example.org', '<html></html>')
+      expect(val.version).to.eq(123)

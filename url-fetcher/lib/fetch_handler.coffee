@@ -11,11 +11,10 @@ module.exports = class FetchHandler
     throw 'Must pass options.urlFetcher, a UrlFetcher' if !options.urlFetcher
 
     @log = options.log || console.log
-    htmlParser = options.htmlParser
+    @htmlParser = options.htmlParser
     urlFetcher = options.urlFetcher
 
     @_fetch = Promise.promisify(urlFetcher.fetch, urlFetcher)
-    @_parse = Promise.promisify(htmlParser.parse, htmlParser)
 
   handle: (queue, id, url, done) ->
     @_fetch(id, url)
@@ -23,7 +22,7 @@ module.exports = class FetchHandler
         if obj.statusCode != 200
           throw new Error("#{url} gave HTTP status #{obj.statusCode}")
         obj
-      .then((obj) => @_parse(url, obj.body))
+      .then((obj) => @htmlParser.parse(url, obj.body))
       .then (data) ->
         sha1 = models.UrlVersion.calculateSha1Hex(data)
         # Check the last-stored UrlVersion. Create a new one if it's different.

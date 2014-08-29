@@ -92,22 +92,14 @@ class HtmlParser
   #     publishedAt: null  # or a Date object
   #     body: "foo\n\nbar" # paragraphs separated by two newlines
   #   }
-  #
-  # Why is this an async method? Because it will be a bit slower than others.
-  # In the future, we may consider offloading this work to another machine.
-  # This way, we don't need to rewrite our tests when we do.
-  parse: (url, html, done) ->
+  parse: (url, html) ->
     ret = null
 
     for siteParser in @siteParsers
       if siteParser.testUrl(url)
-        ret = @_doParse(url, html, siteParser)
-        break
+        return @_doParse(url, html, siteParser)
 
-    if ret?
-      done(null, ret)
-    else
-      done(new Error("No SiteParser exists to handle the URL #{url}"))
+    throw new Error("No SiteParser exists to handle the URL #{url}")
 
 singleton = new HtmlParser()
 

@@ -65,8 +65,6 @@ module.exports = class Startup
       .nodeify(done)
 
   runNewParsers: (done) ->
-    parseHtml = Promise.promisify(HtmlParser.parse, HtmlParser)
-
     # FIXME untested! Still prototyping....
     models.Url.findAllUnparsed({ attributes: [ 'id', 'url' ] }, raw: true)
       .then (urls) ->
@@ -87,7 +85,7 @@ module.exports = class Startup
                 urlGets.forEach (urlGet) ->
                   # Similar to fetch_handler.coffee
                   next = next
-                    .then(-> parseHtml(url, urlGet.body))
+                    .then(-> HtmlParser.parse(url, urlGet.body))
                     .then (data) ->
                       nParsed += 1
                       sha1 = models.UrlVersion.calculateSha1Hex(data)
