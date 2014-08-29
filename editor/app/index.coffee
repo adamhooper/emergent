@@ -1,5 +1,6 @@
 express = require('express')
 bodyParser = require('body-parser')
+bytes = require('bytes')
 
 for k, v of require('../config/globals')
   global[k] = v
@@ -7,7 +8,9 @@ for k, v of require('../config/globals')
 app = express()
 
 app.use(bodyParser.urlencoded(extended: false))
-app.use(bodyParser.json())
+app.use(bodyParser.json(
+  limit: bytes('10mb') # https://github.com/craigsilverman/truthmaker/issues/40
+))
 
 if app.get('env') != 'test'
   morgan = require('morgan')

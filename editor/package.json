@@ -30,7 +30,8 @@
     "passport": "~0.2.0",
     "passport-google": "~0.3.0",
     "requirejs": "~2.1.11",
-    "validator": "^3.17.0"
+    "validator": "^3.17.0",
+    "bytes": "~1.0.0"
   },
   "repository": {
     "type": "git",
