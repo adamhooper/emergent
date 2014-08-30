@@ -122,5 +122,6 @@ for codeFile in fs.readdirSync("#{__dirname}/sites")
   singleton.addSiteParser(siteParser)
 
 HtmlParser.parse = (args...) -> singleton.parse(args...)
+HtmlParser.urlToSiteParser = (args...) -> singleton.urlToSiteParser(args...)
 
 module.exports = HtmlParser
