@@ -47,19 +47,19 @@ describe 'url_popularity_fetcher', ->
   it 'should queue another fetch in two hours on success', (done) ->
     id = '04808471-2828-467c-a6f3-c36754b2406d'
     @fetcher.fetch @queue, id, 'http://example.org', =>
-      expect(@queue.queue).to.have.been.calledWith(id, 'http://example.org', new Date(2 * 3600 * 1000))
+      expect(@queue.queue).to.have.been.calledWith(id, 'http://example.org', new Date(1 * 3600 * 1000))
       done()
 
   it 'should queue another fetch in two hours on fetching error', (done) ->
     @fetchLogic.callsArgWith(1, 'err')
     id = '04808471-2828-467c-a6f3-c36754b2406d'
     @fetcher.fetch @queue, id, 'http://example.org', =>
-      expect(@queue.queue).to.have.been.calledWith(id, 'http://example.org', new Date(2 * 3600 * 1000))
+      expect(@queue.queue).to.have.been.calledWith(id, 'http://example.org', new Date(1 * 3600 * 1000))
       done()
 
   it 'should queue another fetch in two hours on database error', (done) ->
     UrlPopularityGet.create.returns(Promise.reject('db error'))
     id = '04808471-2828-467c-a6f3-c36754b2406d'
     @fetcher.fetch @queue, id, 'http://example.org', =>
-      expect(@queue.queue).to.have.been.calledWith(id, 'http://example.org', new Date(2 * 3600 * 1000))
+      expect(@queue.queue).to.have.been.calledWith(id, 'http://example.org', new Date(1 * 3600 * 1000))
       done()

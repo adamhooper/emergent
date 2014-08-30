@@ -19,7 +19,7 @@ describe 'url_fetcher', ->
     delete @insertResponse.headers
 
     @sandbox = sinon.sandbox.create(useFakeTimers: true)
-    @sandbox.clock.tick(28 * DayInMs)
+    @sandbox.clock.tick(32 * DayInMs)
 
     @sandbox.stub(UrlFetcher.request, 'get').callsArgWith(1, null, @response)
     @sandbox.stub(UrlGet, 'create')
@@ -74,7 +74,7 @@ describe 'url_fetcher', ->
     @fetcher.fetch '560f5f77-5b44-46cf-a3a8-1722917184de', 'http://example.org', (err, data) =>
       expect(UrlGet.destroy).to.have.been.calledWith
         urlId: '560f5f77-5b44-46cf-a3a8-1722917184de'
-        createdAt: { lt: new Date(7 * DayInMs) }
+        createdAt: { lt: new Date(1 * DayInMs) }
       done()
 
   it 'should not delete old UrlGets on non-success', (done) ->

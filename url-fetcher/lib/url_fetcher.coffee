@@ -2,7 +2,7 @@ models = require('../../data-store').models
 
 UrlGet = models.UrlGet
 
-MaxUrlGetAgeInMs = 86400 * 1000 * 21 # DELETE  all UrlGets older than this
+MaxUrlGetAgeInMs = 86400 * 1000 * 31 # DELETE all UrlGets older than this
 
 # Requests a URL and fills in the `url_get` collection.
 #

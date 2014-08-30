@@ -3,7 +3,7 @@ Promise = require('bluebird')
 
 models = require('../../data-store').models
 
-FetchDelayInMs = 2 * 3600 * 1000 # 2hrs
+FetchDelayInMs = 1 * 3600 * 1000 # 1hr
 
 module.exports = class FetchHandler
   constructor: (options) ->

@@ -3,7 +3,7 @@ models = require('../../data-store').models
 
 UrlPopularityGet = models.UrlPopularityGet
 
-DelayInMs = 2 * 3600 * 1000 # 2hrs
+DelayInMs = 1 * 3600 * 1000 # 1hr
 
 # Finds URL popularity and updates the `url` and `url_fetch` collections.
 #
