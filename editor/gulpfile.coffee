@@ -6,6 +6,7 @@ gutil = require('gulp-util')
 less = require('gulp-less')
 minifyCss = require('gulp-minify-css')
 requirejs = require('requirejs')
+rimraf = require('rimraf')
 watch = require('gulp-watch')
 
 paths =
@@ -112,7 +113,9 @@ gulp.task 'realDefault', [ 'compileAssets', 'linkAssets' ], ->
   gulp.watch(paths.fonts.src, [ 'fonts' ])
   gulp.watch(paths.dev.src, [ 'dev-to-public' ])
 
-gulp.task('realProd', [ 'deployJs', 'deployRjsLoader', 'deployCss', 'fonts' ])
+gulp.task 'realProd', [ 'deployJs', 'deployRjsLoader', 'deployCss', 'fonts' ], ->
+  rimraf 'dist/public', ->
+    copyDir('.tmp/public/**/*', 'dist/public')
 
 gulp.task 'default', [ 'clean' ], ->
   gulp.start('realDefault')
