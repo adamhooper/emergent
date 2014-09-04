@@ -6,7 +6,7 @@ rowToSha1 = (row) ->
     row.source
     row.headline
     row.byline
-    row.publishedAt.toISOString()
+    row.publishedAt?.toISOString() || 'null'
     row.body
   ].join('\u0000')
   hash = crypto.createHash('sha1')
