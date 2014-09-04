@@ -84,6 +84,6 @@ describe 'HtmlParser', ->
       date = new Date()
       @handleResultProperty('publishedAt', date, date)
 
-    it 'should return the version', ->
+    it 'should return the parser version', ->
       val = @subject.parse('http://example.org', '<html></html>')
-      expect(val.version).to.eq(123)
+      expect(val.parserVersion).to.eq(123)

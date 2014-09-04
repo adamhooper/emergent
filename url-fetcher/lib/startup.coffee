@@ -1,6 +1,8 @@
 Promise = require('bluebird')
 
 HtmlParser = require('./parser/html_parser')
+UrlsToReparseFinder = require('./urls_to_reparse_finder')
+UrlReparser = require('./url_reparser')
 models = require('../../data-store/lib/models')
 
 Services = [ 'fetch', 'facebook', 'twitter', 'google' ]
@@ -65,54 +67,22 @@ module.exports = class Startup
       .nodeify(done)
 
   runNewParsers: (done) ->
-    # FIXME untested! Still prototyping....
-    models.Url.findAllUnparsed({ attributes: [ 'id', 'url' ] }, raw: true)
-      .then (urls) ->
-        # We parse all GETs for one URL in a single transaction. That way, if
-        # something fails halfway through, we'll be able to start over. (The
-        # only reliable way to tell that parsing failed is if there are exactly
-        # zero UrlVersions. 1,000 GETs could translate to one UrlVersion, so
-        # if a UrlVersion is present we know nothing.)
-        handleOneUrl = (id, url) ->
-          console.log("Parsing fetched-but-unparsed URL #{url}...")
-          models.sequelize.transaction().then (t) ->
-            models.UrlGet.findAll(where: { urlId: id, statusCode: 200 }, order: [[ 'createdAt' ]])
-              .then (urlGets) ->
-                lastSha1 = null
-                next = Promise.resolve(null)
-                nParsed = 0
-                nInserted = 0
-                urlGets.forEach (urlGet) ->
-                  # Similar to fetch_handler.coffee
-                  next = next
-                    .then(-> HtmlParser.parse(url, urlGet.body))
-                    .then (data) ->
-                      nParsed += 1
-                      sha1 = models.UrlVersion.calculateSha1Hex(data)
-                      if sha1 != lastSha1
-                        lastSha1 = sha1
-                        nInserted += 1
-                        data.urlId = id
-                        models.UrlVersion.create(data, null, createdAt: urlGet.createdAt, transaction: t)
-                          .then (urlVersion) ->
-                            uvid = urlVersion.id
-                            Promise.map(
-                              models.Article.findAll(where: { urlId: id }),
-                              (a) -> models.ArticleVersion.create({ articleId: a.id, urlVersionId: uvid }, null, transaction: t)
-                            )
-                      else
-                        null
-                next.then ->
-                  console.log("Parsed #{nParsed} and inserted #{nInserted} UrlVersions for URL #{url}.")
-                  t.commit()
-              .catch (e) ->
-                console.log("Failed parsing previously-unparsed URL #{url}: #{e.message}. Skipping....")
-                t.rollback()
+    finder = new UrlsToReparseFinder(htmlParser: HtmlParser)
+    reparser = new UrlReparser(htmlParser: HtmlParser)
 
-        next = Promise.resolve(null)
-        urls.forEach (url) ->
-          next = next.then(-> handleOneUrl(url.id, url.url))
-        next
+    find = Promise.promisify(finder.findUrlsToReparse, finder)
+    reparse = Promise.promisify(reparser.reparse, reparser)
+
+    console.log("Looking for URLs that need re-parsing...")
+    find()
+      .map(((url) ->
+        console.log("Reparsing URL #{url.id}: #{url.url}...")
+        reparse(url.id, url.url)
+          .then(null)
+          .catch (e) ->
+            console.log("Failed reparse: #{e.message}. Skipping....")
+            console.log(e.stack)
+      ), concurrency: 1)
       .nodeify(done)
 
   run: (done) ->

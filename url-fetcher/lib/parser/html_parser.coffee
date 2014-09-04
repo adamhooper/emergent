@@ -81,7 +81,7 @@ class HtmlParser
     byline: toArray(ret.byline).join(", ")
     publishedAt: toDate(ret.publishedAt)
     body: toArray(ret.body).join("\n\n")
-    version: siteParser.version
+    parserVersion: siteParser.version
 
   # Finds the appropriate SiteParser for the given URL.
   #

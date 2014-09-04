@@ -56,6 +56,14 @@ module.exports = class Model
     instance._impl.save()
       .then(-> instance)
 
+  # Returns a Promise
+  bulkUpdate: (attrs, where, email, options) ->
+    attrs = _.extend({}, attrs)
+    attrs.updatedAt = new Date() if 'updatedAt' of @_impl.attributes
+    attrs.updatedBy = email if 'updatedBy' of @_impl.attributes
+
+    @_impl.update(attrs, where, options)
+
   # Returns a Promise of [Instance, isNew].
   #
   # An upsert will insert a new row if an insert fails because of a conflict.
