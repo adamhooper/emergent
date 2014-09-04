@@ -1,0 +1,1 @@
+var defer=function(){var e=[],t;return{resolve:function(n){if(!e)throw new Error("A promise can only be resolved once.");t=n;for(var r=0,i=e.length;r<i;r++){var s=e[r];s(t)}e=undefined},then:function(n){e?e.push(n):n(t)}}};

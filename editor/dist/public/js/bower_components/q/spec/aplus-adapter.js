@@ -1,0 +1,1 @@
+var Q=require("../q");exports.fulfilled=Q.resolve,exports.rejected=Q.reject,exports.pending=function(){var e=Q.defer();return{promise:e.promise,fulfill:e.resolve,reject:e.reject}};

@@ -1,0 +1,1 @@
+var isPromise=function(e){return e&&typeof e.then=="function"},defer=function(){var e=[],t;return{resolve:function(n){if(e){t=n;for(var r=0,i=e.length;r<i;r++){var s=e[r];s(t)}e=undefined}},promise:{then:function(n){e?e.push(n):n(t)}}}};

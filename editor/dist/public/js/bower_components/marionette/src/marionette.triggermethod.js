@@ -1,0 +1,1 @@
+Marionette.triggerMethod=function(){function t(e,t,n){return n.toUpperCase()}var e=/(^|:)(\w)/gi,n=function(n){var r="on"+n.replace(e,t),i=this[r];_.isFunction(this.trigger)&&this.trigger.apply(this,arguments);if(_.isFunction(i))return i.apply(this,_.tail(arguments))};return n}();

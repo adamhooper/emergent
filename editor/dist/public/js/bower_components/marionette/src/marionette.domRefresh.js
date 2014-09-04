@@ -1,0 +1,1 @@
+Marionette.MonitorDOMRefresh=function(e){function t(e){e._isShown=!0,r(e)}function n(e){e._isRendered=!0,r(e)}function r(e){e._isShown&&e._isRendered&&i(e)&&_.isFunction(e.triggerMethod)&&e.triggerMethod("dom:refresh")}function i(t){return e.contains(t.el)}return function(e){e.listenTo(e,"show",function(){t(e)}),e.listenTo(e,"render",function(){n(e)})}}(document.documentElement);

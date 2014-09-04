@@ -1,0 +1,10 @@
+/**
+ * Stub functions
+ *
+ * @author Christian Johansen (christian@cjohansen.no)
+ * @license BSD
+ *
+ * Copyright (c) 2010-2013 Christian Johansen
+ */
+
+(function(e){function n(t,r,i){if(!i||typeof i=="function"){var s;i?s=e.spy&&e.spy.create?e.spy.create(i):i:s=n.create();if(!t&&typeof r=="undefined")return e.stub.create();if(typeof r=="undefined"&&typeof t=="object"){for(var o in t)typeof t[o]=="function"&&n(t,o);return t}return e.wrapMethod(t,r,s)}throw new TypeError("Custom stub should be function")}function r(t){return t.defaultBehavior||i(t)||e.behavior.create(t)}function i(e){return e.parent&&s(e.parent)}function s(e){var t=e.behaviors[e.callCount-1];return t&&t.isPresent()?t:r(e)}var t=typeof module!="undefined"&&module.exports;!e&&t&&(e=require("../sinon"));if(!e)return;var o=0;e.extend(n,function(){var t={create:function(){var r=function(){return s(r).invoke(this,arguments)};r.id="stub#"+o++;var i=r;return r=e.spy.create(r),r.func=i,e.extend(r,n),r._create=e.stub.create,r.displayName="stub",r.toString=e.functionToString,r.defaultBehavior=null,r.behaviors=[],r},resetBehavior:function(){var e;this.defaultBehavior=null,this.behaviors=[],delete this.returnValue,delete this.returnArgAt,this.returnThis=!1;if(this.fakes)for(e=0;e<this.fakes.length;e++)this.fakes[e].resetBehavior()},onCall:function(t){return this.behaviors[t]||(this.behaviors[t]=e.behavior.create(this)),this.behaviors[t]},onFirstCall:function(){return this.onCall(0)},onSecondCall:function(){return this.onCall(1)},onThirdCall:function(){return this.onCall(2)}};for(var r in e.behavior)e.behavior.hasOwnProperty(r)&&!t.hasOwnProperty(r)&&r!="create"&&r!="withArgs"&&r!="invoke"&&(t[r]=function(t){return function(){return this.defaultBehavior=this.defaultBehavior||e.behavior.create(this),this.defaultBehavior[t].apply(this.defaultBehavior,arguments),this}}(r));return t}()),e.stub=n,typeof define=="function"&&define.amd?define(["module"],function(e){e.exports=n}):t&&(module.exports=n)})(typeof sinon=="object"&&sinon||null);
