@@ -70,11 +70,12 @@ addRoutes = (app) ->
 
 addRoutes(app)
 
-staticDir = if app.get('env') == 'production'
+staticDir = __dirname + '/../' + if app.get('env') == 'production'
   'dist/public'
 else
   '.tmp/public'
 
-app.use(express.static("#{__dirname}/../#{staticDir}"))
+console.log("Serving static files from #{staticDir}...")
+app.use(express.static(staticDir))
 
 module.exports = app
