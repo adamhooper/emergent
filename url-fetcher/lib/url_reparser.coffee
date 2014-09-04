@@ -32,7 +32,7 @@ module.exports = class UrlReparser
   #   overwrite the UrlVersion and clear its ArticleVersions.
   reparse: (urlId, url, done) ->
     Promise.all([
-      models.UrlGet.findAll(where: { urlId: urlId, status: 200 }, order: [ [ 'createdAt' ] ])
+      models.UrlGet.findAll(where: { urlId: urlId, statusCode: 200 }, order: [ [ 'createdAt' ] ])
       models.UrlVersion.findAll(where: { urlId: urlId, urlGetId: { ne: null }, parserVersion: { ne: null } }, order: [ [ 'createdAt' ] ])
     ])
       .spread(@_merge.bind(@, urlId, url))
