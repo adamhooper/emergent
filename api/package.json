@@ -23,7 +23,7 @@
   "dependencies": {
     "coffee-script": "~1.8.0",
     "morgan": "~1.3.0",
-    "halson": "~2.2.0",
-    "lodash": "~2.4.1"
+    "lodash": "~2.4.1",
+    "express": "~4.8.8"
   }
 }
