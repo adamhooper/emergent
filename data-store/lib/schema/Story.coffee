@@ -8,29 +8,29 @@ Sequelize = require('sequelize')
 module.exports =
   columns:
     slug:
-      type: Sequelize.STRING
+      type: Sequelize.TEXT
       allowNull: false
       unique: true
       comment: 'Unique identifier for building URLs that use this story'
 
     headline:
-      type: Sequelize.STRING
+      type: Sequelize.TEXT
       allowNull: false
       comment: 'The one-line bit of text we show the user'
 
     description:
-      type: Sequelize.STRING
+      type: Sequelize.TEXT
       allowNull: false
       comment: 'The two-line bit of text we show the user'
 
     origin:
-      type: Sequelize.STRING
+      type: Sequelize.TEXT
       allowNull: false
       defaultValue: ''
       comment: 'Who said this first. e.g., a Guardian blog post'
 
     originUrl:
-      type: Sequelize.STRING
+      type: Sequelize.TEXT
       allowNull: true
       validate: { isUrl: true }
       comment: 'a URL to whatever the origin column mentions'

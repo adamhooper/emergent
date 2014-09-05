@@ -54,17 +54,17 @@ module.exports =
       comment: 'null means this was automatically parsed and never updated'
 
     source:
-      type: Sequelize.STRING
+      type: Sequelize.TEXT
       allowNull: false
       comment: 'parsed name of the publication at this URL'
 
     headline:
-      type: Sequelize.STRING
+      type: Sequelize.TEXT
       allowNull: false
       comment: 'parsed headline at this URL'
 
     byline:
-      type: Sequelize.STRING
+      type: Sequelize.TEXT
       allowNull: false
       comment: 'parsed comma-separated list of author names at this URL'
 

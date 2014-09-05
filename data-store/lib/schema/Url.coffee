@@ -8,7 +8,7 @@ _ = require('lodash')
 module.exports =
   columns:
     url:
-      type: Sequelize.STRING
+      type: Sequelize.TEXT
       allowNull: false
       unique: true
       validate: { isUrl: true }
