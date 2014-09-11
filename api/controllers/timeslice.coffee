@@ -104,6 +104,6 @@ module.exports =
         sliceStrings
       .then (sliceStrings) ->
         res.type('application/json')
-        res.header('cache-control', 'public, max-age=1800')
+        res.header('cache-control', 'public, max-age=300')
         res.send("[#{sliceStrings.join(',')}]")
       .catch(next)
