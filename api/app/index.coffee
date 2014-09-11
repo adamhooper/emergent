@@ -10,6 +10,7 @@ if app.get('env') != 'test'
 if app.get('env') == 'production'
   app.enable('trust proxy')
 
+console.log("Routing...")
 for codeFile in fs.readdirSync("#{__dirname}/../controllers")
   [controllerName, ext] = codeFile.split(/\./)
   continue if ext != 'coffee' && ext != 'js'
@@ -17,6 +18,7 @@ for codeFile in fs.readdirSync("#{__dirname}/../controllers")
 
   for action, func of controller
     [ method, path ] = action.split(/\s+/)
+    console.log(method, path)
     app[method](path, func)
 
 errorHandler = (err, req, res, next) ->

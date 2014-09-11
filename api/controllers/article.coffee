@@ -20,7 +20,7 @@ articleToJson = (row) ->
   ret
 
 module.exports =
-  'get /claims/:slug/articles': (req, res, next) ->
+  'get /claims/:claimId/articles': (req, res, next) ->
     models.sequelize.query('''
       WITH
       "rankedArticleVersion" AS (
@@ -40,7 +40,7 @@ module.exports =
       INNER JOIN "Url" u ON a."urlId" = u.id
       LEFT JOIN "rankedArticleVersion" av ON a.id = av."articleId" AND av.rank = 1
       LEFT JOIN "UrlVersion" uv ON av."urlVersionId" = uv.id
-      WHERE a."storyId" = (SELECT id FROM "Story" WHERE slug = ?)
-    ''', null, null, [ req.params.slug ])
+      WHERE a."storyId" = ?
+    ''', null, null, [ req.params.claimId ])
       .then((json) -> res.json(json))
       .catch(next)

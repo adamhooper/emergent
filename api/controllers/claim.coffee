@@ -4,6 +4,7 @@ models = require('../../data-store').models
 
 claimToJson = (claim) ->
   _.pick(claim, [
+    'id'
     'slug'
     'headline'
     'description'
@@ -20,8 +21,8 @@ module.exports =
       .then((json) -> res.json(json))
       .catch(next)
 
-  'get /claims/:slug': (req, res, next) ->
-    models.Story.find(where: { slug: req.params.slug })
+  'get /claims/:id': (req, res, next) ->
+    models.Story.find(req.params.id)
       .tap (claim) ->
         if !claim?
           res.status(404)
