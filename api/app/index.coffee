@@ -10,6 +10,12 @@ if app.get('env') != 'test'
 if app.get('env') == 'production'
   app.enable('trust proxy')
 
+allowCors = (req, res, next) ->
+  res.header('Access-Control-Allow-Origin', '*')
+  next()
+
+app.use(allowCors)
+
 console.log("Routing...")
 for codeFile in fs.readdirSync("#{__dirname}/../controllers")
   [controllerName, ext] = codeFile.split(/\./)
