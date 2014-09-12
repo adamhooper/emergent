@@ -36,6 +36,10 @@ class Helpers
       .toArray()
       .filter((s) -> s) # trim empty lines
 
+  domain: (url) ->
+    m = /https?:\/\/([^\/]+)/.exec(url)
+    m?[1]
+
   moment: moment
 
 class HtmlParser

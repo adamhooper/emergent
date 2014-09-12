@@ -1,0 +1,21 @@
+Apple Inc. (NASDAQ:AAPL) plans to acquire struggling social network Path, a source tells Michael Carney, a West Coast Editor at PandoDaily.  "It's almost done, if not signed already, but it’s essentially a done deal," the unnamed source, who the article says is "well-placed" inside Apple's engineering team, says. Path co-founder Dave Morin's attendance Tuesday at Apple's event lends some credence here -- Morin posted a selfie of himself with rapper Dr. Dre from the event on Twitter.
+
+Did not forget about Dre. pic.twitter.com/fWNDpFhfYr
+
+— Dave Morin (@davemorin) September 9, 2014
+
+If Apple intends to acquire Path, known for its beautiful interface and nebulous business model, it would be the tech giant's latest attempt to gain a foothold in social. Apple has previously stumbled in this arena with a music-centric social network called Ping that went largely unused and was discontinued in 2012. So it makes sense that it might want to start with someone else's (quite functional and flashy looking) foundation to bring a native social experience to its iOS devices.
+
+Path was founded in 2010 by ex-Facebooker Morin and Napster co-founder Shawn Fanning. In five rounds of funding to date, the company has received $77 million in investments from 40 different investors.
+
+Path was originally conceived as a companion network to Facebook for people to enjoy higher engagement with a smaller number of quality friends and contacts. It specifically limited users to 150 in-network connections as a tip of the hat to Dunbar's number, an idea in anthropology stating human brain size is such that we can only support meaningful relationships with 150 people. Where Facebook would be a place for wishing distant acquaintances a noncommittal happy birthday, Path would be specifically for sincere communications with your smaller, closer circle of friends and family.
+
+The company released its app first on iPhone, later following up with apps for Android, Windows Phone and iPad. While it only boasts 25 million users (a far cry from the userbase of social giants like Facebook, Twitter and Snapchat), the app is quite glamorous-looking and loaded with simple visual appeal. You might consider its news feed a list of stylized Facebook updates from people you actually want to hear from.
+
+A screenshot of the Path iPad app.  Path
+
+Apple and Path already have history together. Not only is Path's Morin a former Apple employee who worked in the company's marketing and product division from 2004-2006, but Path also made a fairly major error surrounding iOS user privacy in 2012. Its app uploaded iPhone users' complete contact lists to its servers, which led to Apple CEO Tim Cook responding to letters from the U.S. Congress about how Apple responds to user privacy. A second privacy flub in 2013 saw Path pay an $800,000 penalty to the U.S. Federal Trade Commission for storing information belonging to underage users; it agreed to independent privacy assessments every other year for the next 20 years.
+
+Path has had its problems, but its product -- a walled garden for more-intimate socialization with your closest friends -- is strong and functional.
+
+Apple has yet to build a social experience people want to use habitually, so this acquisition would be a sensible one. If and when it becomes official, we'll be standing by for the specifics.

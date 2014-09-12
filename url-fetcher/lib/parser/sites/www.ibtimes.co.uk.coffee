@@ -4,7 +4,7 @@ module.exports =
     $article = $('article .article-text')
     $article.find('script, .imageBox').remove()
 
-    source: 'International Business Times'
+    source: 'International Business Times UK'
     headline: $('h1').text()
     byline: h.texts($('[rel=author]'))
     publishedAt: h.moment.tz($('[itemprop=datePublished]').text(), 'MMMM DD, YYYY HH:mm', 'Europe/London')
