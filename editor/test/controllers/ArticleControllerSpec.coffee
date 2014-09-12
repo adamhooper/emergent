@@ -6,17 +6,14 @@ Url = global.models.Url
 
 describe 'ArticleController', ->
   beforeEach ->
-    # A hack to simulate @kueQueue.createJob(...).save()
-    @oldKueQueue = global.kueQueue
-    global.kueQueue =
-      createJob: sinon.stub().returnsThis()
-      save: sinon.stub().callsArgWith(0, null)
+    @sandbox = sinon.sandbox.create()
+    @sandbox.stub(global.urlJobQueue, 'queue').callsArg(1)
 
     Story.create({ slug: 'slug-a', headline: 'headline', description: 'foo' }, 'user@example.org')
       .then (story) => @story1 = story
 
   afterEach ->
-    global.kueQueue = @oldKueQueue
+    @sandbox.restore()
 
   describe '#index', ->
     req = ->
@@ -106,8 +103,7 @@ describe 'ArticleController', ->
       reqPromise(url: 'http://example.org')
         .then(-> Url.find(where: {}))
         .then((u) -> u.id)
-        .then (urlId) -> global.kueQueue.createJob.should.have.been.calledWith('url', incoming: { id: urlId, url: 'http://example.org' })
-        .then -> global.kueQueue.save.should.have.been.called
+        .then (urlId) -> expect(global.urlJobQueue.queue).to.have.been.calledWith(id: urlId, url: 'http://example.org')
 
     it 'should not store a duplicate Url', ->
       url = null
@@ -119,7 +115,7 @@ describe 'ArticleController', ->
         .tap((r) -> expect(r).to.have.deep.property('res.body.url', 'http://example.org'))
         .then(-> Url.findAll())
         .then((urls) -> expect(urls).to.have.property('length', 1))
-        .then(-> expect(global.kueQueue.createJob).not.to.have.been.called)
+        .then -> expect(global.urlJobQueue.queue).not.to.have.been.called
 
     it 'should not store a duplicate Article', ->
       url = null

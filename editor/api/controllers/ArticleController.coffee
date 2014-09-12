@@ -63,8 +63,8 @@ module.exports = self =
         Url.upsert({ url: url }, req.user.email)
           .spread (urlObject, isNew) ->
             if isNew
-              job = global.kueQueue.createJob('url', incoming: urlObject.toJSON())
-              Promise.promisify(job.save, job)()
+              queueJob = Promise.promisify(global.urlJobQueue.queue, global.urlJobQueue)
+              queueJob(urlObject.toJSON())
                 .then(-> urlObject)
             else
               urlObject

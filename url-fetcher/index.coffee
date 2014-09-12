@@ -1,6 +1,6 @@
 fs = require('fs')
-kue = require('kue')
 
+JobQueue = require('../job-queue')
 UrlTaskQueue = require('./lib/url_task_queue')
 Startup = require('./lib/startup')
 HtmlParser = require('./lib/parser/html_parser')
@@ -16,16 +16,9 @@ FetchLogic = {}
   FetchLogic.facebook.access_token = fs.readFileSync(__dirname + '/../../facebook-app-token', 'ascii').trim()
 )()
 
-kueQueue = kue.createQueue()
-
-# Set up Kue to delete jobs once they're complete
-kueQueue.on 'job complete', (id) ->
-  kue.Job.get id, (err, job) ->
-    throw err if err?
-    job.remove() # whenever -- no callback
-
 console.log('Emptying redis...')
-kueQueue.client.flushdb()
+jobQueue = new JobQueue(key: 'urls')
+jobQueue.clear() # redis commands are queued: this will come before all others
 
 console.log('Initializing work queue...')
 
@@ -60,14 +53,14 @@ startup = new Startup
 startup.run ->
   console.log('Running...')
 
-  kueQueue.process 'url', 20, (job, done) ->
-    console.log('Processing', job.data)
-    if (url = job.data.incoming)?
-      for job in UrlSubJobs
-        queues[job].queue(url.id, url.url, new Date())
-    else
-      throw "Invalid job: " + JSON.stringify(job)
-    done()
+  handleJob = ->
+    jobQueue.dequeue (err, url) ->
+      throw err if err?
+      for __, queue of queues
+        queue.queue(url.id, url.url, new Date())
+      process.nextTick(handleJob)
+
+  handleJob()
 
   for __, queue of queues
     queue.startHandling()
