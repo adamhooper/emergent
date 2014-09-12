@@ -5,7 +5,7 @@ describe 'HTML examples', ->
   normalizeBody = (text) ->
     text
       .split(/\n\n+/g)
-      .map((s) -> s.replace(/\s+/g, ' '))
+      .map((s) -> s.trim().replace(/\s+/g, ' '))
 
   createExample = (label, url, html, expected) ->
     it "Should correctly parse #{label}", ->
