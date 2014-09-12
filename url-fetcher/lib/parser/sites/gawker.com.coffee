@@ -1,5 +1,5 @@
 module.exports =
-  domains: [ 'gawker.com', 'valleywag.gawker.com' ]
+  domains: [ 'gawker.com', 'valleywag.gawker.com', 'gizmodo.com' ]
   parse: (url, $, h) ->
     time = $('.column .publish-time').attr('data-publishtime')
 
