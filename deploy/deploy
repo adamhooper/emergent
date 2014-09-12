@@ -2,10 +2,11 @@
 
 if $(git diff --quiet); then
   echo "Updating and shrinkwrapping packages..."
-  (cd editor && npm shrinkwrap) || exit 1
   (cd api && npm shrinkwrap) || exit 1
-  (cd url-fetcher && npm shrinkwrap) || exit 1
   (cd data-store && npm shrinkwrap) || exit 1
+  (cd editor && npm shrinkwrap) || exit 1
+  (cd job-queue && npm shrinkwrap) || exit 1
+  (cd url-fetcher && npm shrinkwrap) || exit 1
   git add */npm-shrinkwrap.json || exit 1
   git commit -m 'Update and shrinkwrap packages for deploy' # if it fails, nothing has changed
 
