@@ -1,10 +1,13 @@
 module.exports =
-  domains: [ 'gawker.com' ]
+  domains: [ 'gawker.com', 'valleywag.gawker.com' ]
   parse: (url, $, h) ->
     time = $('.column .publish-time').attr('data-publishtime')
 
-    source: 'Gawker'
-    byline: h.texts($('article .column .author'))
-    headline: $('h1.headline').text()
+    $body = $('.column .post-content')
+    $body.find('aside').remove()
+
+    source: $('meta[property="og:site_name"]').attr('content')
+    byline: $('article .column .author')
+    headline: $('h1.headline')
     publishedAt: new Date(+time)
-    body: h.texts($('.column .post-content>p'))
+    body: $body.find('p')
