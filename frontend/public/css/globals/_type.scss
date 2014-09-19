@@ -1,0 +1,44 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: $font-sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  line-height: 1.2;
+}
+
+%h1,
+h1 {
+  font-weight: 700;
+}
+
+%h2,
+h2 {
+  font-weight: 500;
+}
+
+%h3,
+h3 {
+  font-weight: 500;
+}
+
+%h4,
+h4 {
+  font-weight: 500;
+}
+
+p {
+  margin-top: 0;
+}
+
+strong {
+  font-weight: 500;
+}

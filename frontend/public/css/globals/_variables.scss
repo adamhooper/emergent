@@ -1,0 +1,97 @@
+//
+// Font embed
+
+@include font-face(
+  'Gotham',
+  font-files('Gotham-Light.otf'),
+  $weight: 100
+);
+
+@include font-face(
+  'Gotham',
+  font-files('Gotham-Book.otf'),
+  $weight: 400
+);
+
+@include font-face(
+  'Gotham',
+  font-files('Gotham-Medium.otf'),
+  $weight: 500
+);
+
+@include font-face(
+  'Gotham',
+  font-files('Gotham-Bold.otf'),
+  $weight: 700
+);
+
+
+//
+// Susy grid system
+
+$susy: (
+  columns: 12,
+  gutters: 3/7,
+  global-box-sizing: border-box
+);
+
+$breakpoint-mobile:    0;
+$breakpoint-tablet:    64em;
+$breakpoint-desktop:   78em;
+$breakpoint-retina:    96em;
+
+$container-mobile:     90%;
+$container-tablet:     960px;
+$container-desktop:    1190px;
+$container-retina:     1366px;
+
+
+
+//
+// Typography
+
+$font-serif:           'Georgia', 'Times New Roman', Times, serif;
+$font-sans-serif:      'Gotham', Helvetica, Arial, sans-serif;
+
+
+//
+// Colours
+
+$palette: (
+  base: (
+    light:      #eaeaea,
+    base:       #c1c1c1,
+    dark:       #252424
+  ),
+  type: (
+    light:      #eaeaea,
+    dark:       #252424
+  ),
+  primary: (
+    base:       #7ecc76
+  ),
+  secondary: (
+    base:       #f9be58
+  ),
+  tertiary: (
+    base:       #dd5b53
+  ),
+  positive: (
+    base:       #7ecc76
+  ),
+  unknown: (
+    base:       #f9be58
+  ),
+  negative: (
+    base:       #dd5b53
+  ),
+  status: (
+    true:       #7ecc76,
+    false:      #dd5b53,
+    unknown:    #f9be58,
+    observing:  #f9be58
+  ),
+  clear: (
+    base:       #fff
+  )
+);

@@ -1,0 +1,28 @@
+{
+  "name": "emergent-frontend",
+  "version": "0.0.0",
+  "main": "index.html",
+  "author": "Andrew Hull <aghull@gmail.com>",
+  "dependencies": {
+    "express": "~> 4.8.8",
+    "serve-static": "latest",
+    "jquery": "latest",
+    "backbone": "latest",
+    "react": "latest",
+    "react-router": "latest",
+    "moment": "latest"
+  },
+  "devDependencies": {
+    "connect-livereload": "latest",
+    "grunt": "latest",
+    "grunt-contrib-connect": "latest",
+    "grunt-contrib-sass": "latest",
+    "grunt-contrib-watch": "latest",
+    "grunt-browserify": "latest",
+    "grunt-connect-rewrite" : "latest",
+    "grunt-react": "latest",
+    "react": "latest",
+    "react-router": "latest",
+    "connect-modrewrite": "latest"
+  }
+}

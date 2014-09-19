@@ -1,0 +1,45 @@
+//
+// Base styles
+
+.status {
+  display: block;
+  text-transform: uppercase;
+
+  & + & {
+    margin-top: .75em;
+  }
+}
+
+.status-label {
+  font-size: .75em;
+}
+
+.status-value {
+  color: palette(clear);
+  display: block;
+  padding: .5em .75em;
+}
+
+//
+// Types of status
+
+.status-false,
+.status-against {
+  .status-value {
+    background-color: palette(status, false);
+  }
+}
+
+.status-true,
+.status-for {
+  .status-value {
+    background-color: palette(status, true);
+  }
+}
+
+.status-unknown,
+.status-observing {
+  .status-value {
+    background-color: palette(status, unknown);
+  }
+}

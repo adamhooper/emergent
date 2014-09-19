@@ -1,0 +1,11 @@
+.shares {}
+
+.shares-label {
+  @extend %label;
+  font-size: .85em;
+}
+
+.shares-value {
+  display: block;
+  font-weight: 500;
+}

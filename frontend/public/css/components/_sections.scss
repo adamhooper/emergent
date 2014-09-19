@@ -1,0 +1,10 @@
+.section {
+  @extend %content;
+  @extend %clearfix;
+  margin-bottom: 1em;
+  
+}
+
+.section-title {
+  margin-top: 0;
+}

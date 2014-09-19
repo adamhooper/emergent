@@ -1,0 +1,54 @@
+%container {
+  @include breakpoint($breakpoint-mobile) {
+    @include container($container-mobile);
+  }
+
+  @include breakpoint($breakpoint-tablet) {
+    @include container($container-tablet);
+  }
+
+  @include breakpoint($breakpoint-desktop) {
+    @include container($container-desktop);
+  }
+
+  @include breakpoint($breakpoint-retina) {
+    @include container($container-retina);
+  }
+}
+
+.container {
+  @extend %container;
+}
+
+
+
+@include breakpoint($breakpoint-desktop) {
+
+  .page-claim {
+
+    .page-header {
+      @include span(10 of 12);
+    }
+
+    .page-meta {
+      @include span(last 2 of 12);
+    }
+
+    .page-content,
+    .page-chart,
+    .page-articles {
+      @include full;
+    }
+
+  }
+
+}
+
+
+.trigger-all {
+  @include full;
+}
+
+.trigger-category {
+  @include span(inside 4 of 12);
+}
