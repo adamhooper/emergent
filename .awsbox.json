@@ -1,6 +1,7 @@
 {
   "processes": [
     "bin/editor.js",
+    "bin/frontend.js",
     "bin/api.js",
     "bin/url-fetcher.js"
   ],
