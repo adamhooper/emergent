@@ -14,7 +14,7 @@ if $(git diff --quiet); then
   echo "Compiling editor assets for production..."
   (cd editor && bower update) || exit 1
   (cd editor && gulp prod) || exit 1
-  git add -A editor/dist viewer/public || exit 1
+  git add -A editor/dist frontend/public || exit 1
   git commit -m 'Recompile editor assets for deploy' # if it fails, nothing changed
 
   git push origin master          || exit 1 # if everyone does this every time...
