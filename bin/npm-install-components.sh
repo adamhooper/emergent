@@ -9,6 +9,6 @@ NPM_ARGS="--production --cache-min 1209600" # 2 weeks
 (cd job-queue && npm install $NPM_ARGS)
 (cd editor && npm install $NPM_ARGS)
 (cd url-fetcher && npm install $NPM_ARGS)
-#(cd viewer && npm install $NPM_ARGS)
+(cd frontend && npm install $NPM_ARGS)
 #(cd editor && bower install --production)
 (cd bin && npm install --cache-min 1209600 kexec)

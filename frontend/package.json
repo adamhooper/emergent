@@ -5,14 +5,14 @@
   "author": "Andrew Hull <aghull@gmail.com>",
   "dependencies": {
     "express": "~> 4.8.8",
-    "serve-static": "latest",
+    "serve-static": "latest"
+  },
+  "devDependencies": {
     "jquery": "latest",
     "backbone": "latest",
     "react": "latest",
     "react-router": "latest",
-    "moment": "latest"
-  },
-  "devDependencies": {
+    "moment": "latest",
     "connect-livereload": "latest",
     "grunt": "latest",
     "grunt-contrib-connect": "latest",
@@ -21,8 +21,6 @@
     "grunt-browserify": "latest",
     "grunt-connect-rewrite" : "latest",
     "grunt-react": "latest",
-    "react": "latest",
-    "react-router": "latest",
     "connect-modrewrite": "latest"
   }
 }
