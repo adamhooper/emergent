@@ -1,3 +1,5 @@
+process.env.NODE_ENV = 'test'
+
 chai = require('chai')
 chaiAsPromised = require('chai-as-promised')
 supertest = require('supertest')
@@ -8,7 +10,7 @@ global.Promise = require('bluebird')
 global.expect = chai.expect
 global.models = require('../../data-store').models
 
-global.app = require('../app')
+global.app = app = require('../app')
 
 api = supertest(app)
 promiseApi = (method) ->
