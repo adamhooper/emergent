@@ -12,6 +12,7 @@ claimToJson = (claim) ->
     'originUrl'
     'truthiness'
     'truthinessDate'
+    'createdAt'
   ])
 
 module.exports =
