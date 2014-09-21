@@ -5,11 +5,7 @@ There's a lot to do. No time to write about it.
 First, install NodeJS. Then, in this directory:
 
     npm install -g mocha karma-cli bower supervisor
-    (cd data-store && npm install)
-    (cd editor && npm install)
-    (cd url-fetcher && npm install)
-    (cd viewer && npm install)
-    (cd editor && bower install)
+    bin/npm-install-components.sh
 
 Next, install `redis-server` and `postgresql`.
 
@@ -22,8 +18,7 @@ Run the following for Postgres:
 
 Set up the database schema like so:
 
-    (cd data-store && bin/sequelize db:migrate)
-    (cd data-store && NODE_ENV=production bin/sequelize db:migrate)
+    (cd data-store && bin/sequelize db:migrate) # NODE_ENV=development
     # truthmaker_test database will be migrated automatically
 
 # Run
@@ -40,7 +35,11 @@ Set up `truthmaker` as a git remote and run `deploy/deploy`.
 # Components
 
 * `editor`: interface for editors to add Stories and Articles.
-* `url-fetcher`: handles popularity and article content in the background.
-* `viewer`: visualizations, for end-users.
+* `url-fetcher`: fetches and parses URLs in the background.
+* `api`: serves up data over HTTP.
+* `frontend`: visualizations, for end-users.
 
-Licence: proprietary
+# License
+
+Proprietary. If you're reading this, you probably have some idea of what you're
+allowed to do with this code.
