@@ -11,19 +11,20 @@
     "serve-static": "latest"
   },
   "devDependencies": {
-    "jquery": "latest",
     "backbone": "latest",
-    "react": "latest",
-    "react-router": "latest",
-    "moment": "latest",
     "connect-livereload": "latest",
+    "connect-modrewrite": "latest",
     "grunt": "latest",
+    "grunt-browserify": "latest",
+    "grunt-connect-rewrite": "latest",
     "grunt-contrib-connect": "latest",
     "grunt-contrib-sass": "latest",
     "grunt-contrib-watch": "latest",
-    "grunt-browserify": "latest",
-    "grunt-connect-rewrite" : "latest",
     "grunt-react": "latest",
-    "connect-modrewrite": "latest"
+    "jquery": "latest",
+    "moment": "latest",
+    "react": "latest",
+    "react-router": "latest",
+    "underscore": "^1.7.0"
   }
 }
