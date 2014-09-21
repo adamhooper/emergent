@@ -15,6 +15,8 @@ define [
         originUrl: null
         truthiness: null
         truthinessDate: null
+        truthinessDescription: ''
+        truthinessUrl: null
       @view = new StoryView(model: @model)
       @view.render()
 

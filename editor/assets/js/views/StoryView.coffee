@@ -51,6 +51,17 @@ define [ 'underscore', 'moment', 'marionette' ], (_, moment, Marionette) ->
                 as of <%- truthinessDateString %>
               <% } %>
             </p>
+            <% if (truthinessDescription || truthinessUrl) { %>
+              <p class="not-editing">
+                <strong>Why:</strong>
+                <% if (truthinessDescription) { %>
+                  <%- truthinessDescription %>
+                <% } %>
+                <% if (truthinessUrl) { %>
+                  <a target="_blank" href="<%- truthinessUrl %>">[link]</a>
+                <% } %>
+              </p>
+            <% } %>
 
             <div class="form-group editing">
               <label>Is this claim true?</label>
@@ -76,6 +87,14 @@ define [ 'underscore', 'moment', 'marionette' ], (_, moment, Marionette) ->
             <div class="form-group truthiness-date editing">
               <label for="claim-truthiness-date">When did the world first learn whether the claim is true or false?</label>
               <input type="datetime-local" class="form-control" id="claim-truthiness-date" name="truthinessDate" value="<%- truthinessDateLocal %>">
+            </div>
+            <div class="form-group truthiness-description editing">
+              <label for="claim-truthiness-description">Why, in tweet form?</label>
+              <input class="form-control" id="claim-truthiness-description" name="truthinessDescription" value="<%- truthinessDescription %>">
+            </div>
+            <div class="form-group truthiness-url editing">
+              <label for="claim-truthiness-url">Which URL broke the truth?</label>
+              <input class="form-control" id="claim-truthiness-url" name="truthinessUrl" value="<%- truthinessUrl %>">
             </div>
           </div>
         </div>
@@ -107,11 +126,19 @@ define [ 'underscore', 'moment', 'marionette' ], (_, moment, Marionette) ->
       originUrlWrapper: '.origin-url'
       truthiness: '[name=truthiness]'
       truthinessDate: '[name=truthinessDate]'
+      truthinessDescription: '[name=truthinessDescription]'
+      truthinessUrl: '[name=truthinessUrl]'
       truthinessDateWrapper: '.truthiness-date'
+      truthinessDescriptionWrapper: '.truthiness-description'
+      truthinessUrlWrapper: '.truthiness-url'
 
     showApplicableFields: ->
-      @ui.originUrlWrapper.toggleClass('not-applicable', !@ui.origin.val())
-      @ui.truthinessDateWrapper.toggleClass('not-applicable', @_getTruthiness() == 'unknown')
+      originNotApplicable = !@ui.origin.val()
+      truthinessNotApplicable = @_getTruthiness() == 'unknown'
+      @ui.originUrlWrapper.toggleClass('not-applicable', originNotApplicable)
+      @ui.truthinessDateWrapper.toggleClass('not-applicable', truthinessNotApplicable)
+      @ui.truthinessDescriptionWrapper.toggleClass('not-applicable', truthinessNotApplicable)
+      @ui.truthinessUrlWrapper.toggleClass('not-applicable', truthinessNotApplicable)
 
     _getTruthiness: -> @ui.truthiness.filter(':checked').val() || 'unknown'
 
@@ -120,6 +147,10 @@ define [ 'underscore', 'moment', 'marionette' ], (_, moment, Marionette) ->
         moment(val).toDate()
       else
         null
+
+    _getTruthinessDescription: -> @_getTruthiness() != 'unknown' && @ui.truthinessDescription.val() || ''
+
+    _getTruthinessUrl: -> @_getTruthiness() != 'unknown' && @ui.truthinessUrl.val() || null
 
     onBack: (e) ->
       e.preventDefault()
@@ -143,6 +174,8 @@ define [ 'underscore', 'moment', 'marionette' ], (_, moment, Marionette) ->
         originUrl: @ui.origin.val() && @ui.originUrl.val() || null
         truthiness: @_getTruthiness()
         truthinessDate: @_getTruthinessDate()
+        truthinessDescription: @_getTruthinessDescription()
+        truthinessUrl: @_getTruthinessUrl()
 
       @model.save(attributes, {
         success: => @render()

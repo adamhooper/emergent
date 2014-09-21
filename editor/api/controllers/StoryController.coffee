@@ -7,6 +7,8 @@ AttributesWithDefaults =
   originUrl: null
   truthiness: 'unknown'
   truthinessDate: null
+  truthinessDescription: ''
+  truthinessUrl: null
 
 jsonToAttributes = (json, isCreate) ->
   ret = {}

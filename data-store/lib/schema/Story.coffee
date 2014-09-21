@@ -40,12 +40,24 @@ module.exports =
       values: [ 'unknown', 'true', 'false' ]
       defaultValue: 'unknown'
       allowNull: false
-      comment: 'whether or not the claim is objectively true, according to us'
+      comment: 'Whether or not the claim is objectively true, according to us'
+
+    truthinessDescription:
+      type: Sequelize.TEXT
+      allowNull: false
+      defaultValue: ''
+      comment: 'Why we put what we put in the truthiness column'
 
     truthinessDate:
       type: Sequelize.DATE
       allowNull: true
-      comment: 'when the world first became aware of the truthiness of the claim'
+      comment: 'When the world first became aware of the truthiness of the claim'
+
+    truthinessUrl:
+      type: Sequelize.TEXT
+      allowNull: true
+      validate: { isUrl: true }
+      comment: 'A URL to prove whatever the truthiness column mentions'
 
     createdAt:
       type: Sequelize.DATE

@@ -12,6 +12,8 @@ claimToJson = (claim) ->
     'originUrl'
     'truthiness'
     'truthinessDate'
+    'truthinessDescription'
+    'truthinessUrl'
     'createdAt'
   ])
 

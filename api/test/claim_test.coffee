@@ -7,7 +7,9 @@ DefaultAttrs =
   origin: 'An Origin'
   originUrl: 'http://example.org'
   truthiness: 'true'
+  truthinessDescription: 'truthiness described'
   truthinessDate: new Date(1000)
+  truthinessUrl: 'http://example2.org'
   createdAt: new Date(2000)
   createdBy: 'user@example.org'
   updatedAt: new Date(3000)
@@ -37,6 +39,8 @@ describe '/claims', ->
         expect(claim.originUrl).to.eq('http://example.org')
         expect(claim.truthiness).to.eq('true')
         expect(claim.truthinessDate).to.eq(new Date(1000).toISOString())
+        expect(claim.truthinessDescription).to.eq('truthiness described')
+        expect(claim.truthinessUrl).to.eq('http://example2.org')
         expect(claim.createdAt).to.eq(new Date(2000).toISOString())
         expect(claim).not.to.have.property('updatedAt')
         expect(claim).not.to.have.property('createdBy')
@@ -59,6 +63,8 @@ describe '/claims/:id', ->
         expect(claim.originUrl).to.eq('http://example.org')
         expect(claim.truthiness).to.eq('true')
         expect(claim.truthinessDate).to.eq(new Date(1000).toISOString())
+        expect(claim.truthinessDescription).to.eq('truthiness described')
+        expect(claim.truthinessUrl).to.eq('http://example2.org')
         expect(claim.createdAt).to.eq(new Date(2000).toISOString())
         expect(claim).not.to.have.property('updatedAt')
         expect(claim).not.to.have.property('createdBy')
