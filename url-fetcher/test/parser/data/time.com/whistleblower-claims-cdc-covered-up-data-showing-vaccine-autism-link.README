@@ -1,0 +1,1 @@
+* Removed a giant <script> tag to save 250kb and make tests run more quickly
