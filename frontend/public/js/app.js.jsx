@@ -11,7 +11,7 @@ var Root = require('./components/root.js.jsx');
 var app = {
   init: function() {
     this.claims = new this.collections.Claims();
-    this.claims.url = 'http://truthmaker-api.adamhooper-projects.com/claims'
+    this.claims.url = 'http://api.emergent.info/claims'
     this.claims.fetch().done(function() {
       React.renderComponent(
         <Routes location="history">

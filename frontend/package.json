@@ -8,18 +8,15 @@
   },
   "dependencies": {
     "express": "~> 4.8.8",
-    "serve-static": "latest"
+    "serve-static": "~> 1.6.2"
   },
   "devDependencies": {
     "backbone": "latest",
-    "connect-livereload": "latest",
-    "connect-modrewrite": "latest",
     "grunt": "latest",
     "grunt-browserify": "latest",
-    "grunt-connect-rewrite": "latest",
-    "grunt-contrib-connect": "latest",
     "grunt-contrib-sass": "latest",
     "grunt-contrib-watch": "latest",
+    "grunt-contrib-uglify": "latest",
     "grunt-react": "latest",
     "jquery": "latest",
     "moment": "latest",

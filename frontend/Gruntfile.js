@@ -12,6 +12,7 @@ module.exports = function(grunt) {
     sass: {
       dist: {
         options: {
+          bundleExec: true,
           compass: true,
           require: [
             'breakpoint',
@@ -36,11 +37,19 @@ module.exports = function(grunt) {
         files: ['public/css/**/*'],
         tasks: ['sass']
       }
+    },
+    uglify: {
+      dist: {
+        files: {
+          'public/scripts/app.min.js' : [ 'public/scripts/app.js' ]
+        }
+      }
     }
   });
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-sass');
   grunt.loadNpmTasks('grunt-browserify');
+  grunt.loadNpmTasks('grunt-contrib-uglify');
 
-  grunt.registerTask('default', ['browserify', 'watch']);
+  grunt.registerTask('default', ['browserify', 'uglify', 'watch']);
 };
