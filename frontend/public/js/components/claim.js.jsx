@@ -40,28 +40,50 @@ module.exports = React.createClass({
       '#dd5b53',
       '#f9be58'
     ];
-    var slices = claim.aggregateSlices();
-    var data = slices.reduce(function(series, slice) {
-      series[0].push(slice.for||0);
-      series[1].push(slice.against||0);
-      series[2].push(slice.observing||0);
-      return series;
-    }.bind(this), [[],[],[]]);
-    var skips = 1;
-    if (slices.length > 10) { skips = 3; }
-    if (slices.length > 25) { skips = 6; }
-    if (slices.length > 50) { skips = 12; }
-    var labels = slices.map(function(slice, i) {
-      return i%skips ? '' : moment(slice.time).format('M/D');
-    });
-    var callout;
-    if (claim.get('truthinessDate')) {
-      callout = {
-        position: _.find(_.range(slices.length), function(s) { return slices[s].time > new Date(claim.get('truthinessDate')); }),
-        text: 'Confirmed ' + claim.get('truthiness')
-      };
+
+    if (this.state.populated) {
+      var slices = claim.aggregateSlices();
+      var data = slices.reduce(function(series, slice) {
+        series[0].push(slice.for||0);
+        series[1].push(slice.against||0);
+        series[2].push(slice.observing||0);
+        return series;
+      }.bind(this), [[],[],[]]);
+
+      // find x-axis labels
+      var skips = 1;
+      if (slices.length > 10) { skips = 3; }
+      if (slices.length > 25) { skips = 6; }
+      if (slices.length > 50) { skips = 12; }
+      var labels = slices.map(function(slice, i) {
+        return i%skips ? '' : moment(slice.time).format('M/D');
+      });
+
+      // find y-axis labels
+      var highest = _.max(data.reduce(function(heights, line) {
+        line.forEach(function(amount, i) {
+          heights[i] = (heights[i]||0) + amount;
+        });
+        return heights;
+      }, []));
+      var steps = slices.length ? Math.pow(10, Math.floor(Math.log(highest)/Math.log(10) - 0.15)) : 0;
+      var ylabels = _.range(steps, highest, steps);
+      if (ylabels.length > 8) {
+        ylabels = ylabels.filter(function(a,i) { return i%2; });
+      }
+
+      // place callout for confirmation
+      var callout;
+      if (claim.get('truthinessDate')) {
+        callout = {
+          position: _.find(_.range(slices.length), function(s) { return slices[s].time > new Date(claim.get('truthinessDate')); }),
+          text: 'Confirmed ' + claim.get('truthiness')
+        };
+      }
+      window.callout = callout;
+
+      var mostShared = _.first(claim.articlesByStance());
     }
-    window.callout = callout;
 
     // compose in order of filter
     if (this.state.filter) {
@@ -69,8 +91,6 @@ module.exports = React.createClass({
       colors = [colors[filterIndex], 'white', 'white'];
       data.unshift(data.splice(filterIndex,1)[0]);
     }
-
-    var mostShared = _.first(claim.articlesByStance());
 
     return (
       <div className="container">
@@ -97,48 +117,60 @@ module.exports = React.createClass({
             </div>
           </div>
 
-          <section className="triggers triggers-section">
-            <button onClick={this.setFilter.bind(this, null)} className="trigger trigger-all">
-              All
+          <section className="filters filters-section">
+            <button onClick={this.setFilter.bind(this, null)} className="filter filter-all">
+              <p className="filter-title">All</p>
               <p>{_.reduce(shares, function(sum, num) { return sum + num; }, 0) + ' shares'}</p>
               <p>{claim.articlesByStance().length} sources</p>
             </button>
-            <button onClick={this.setFilter.bind(this, 'for')} className="trigger trigger-category">
-              For
-              <p>{shares.for ? shares.for : 0} shares</p>
-              <p>{claim.articlesByStance('for').length} sources</p>
+            <button onClick={this.setFilter.bind(this, 'for')} className="filter filter-category filter-category-for">
+              <p className="filter-title">For</p>
+              <p className="filter-sources">{claim.articlesByStance('for').length} sources</p>
+              <div className="shares">
+                <span className="shares-value">{shares.for ? shares.for : 0}</span>
+                <span className="shares-label">Shares</span>
+              </div>
+              <p>Top Source</p>
               {_.first(claim.articlesByStance('for'), 1).map(function(article) {
                 return (
                   <article className={'article' + (article.revised ? ' is-revised' : '')} key={article.id}>
-                    <h4 className="article-title"><Link to="article" params={{ slug: claim.get('slug'), articleId: article.id }}>{claim.domain(article)}</Link> - <time datetime={article.createdAt}>{article.createdAt}</time></h4>
+                    <h4 className="article-title"><Link to="article" params={{ slug: claim.get('slug'), articleId: article.id }}>{claim.domain(article)}</Link> - <time datetime={article.createdAt}>{moment(article.createdAt).format('MMMM Do YYYY')}</time></h4>
                     <p className="article-description">{article.headline}</p>
                     <p>{article.shares} shares</p>
                   </article>
                 )
               })}
             </button>
-            <button onClick={this.setFilter.bind(this, 'against')} className="trigger trigger-category">
-              Against
-              <p>{shares.against ? shares.against : 0} shares</p>
-              <p>{claim.articlesByStance('against').length} sources</p>
+            <button onClick={this.setFilter.bind(this, 'against')} className="filter filter-category filter-category-against">
+              <p className="filter-title">Against</p>
+              <p className="filter-sources">{claim.articlesByStance('against').length} sources</p>
+              <div className="shares">
+                <span className="shares-value">{shares.against ? shares.against : 0}</span>
+                <span className="shares-label">Shares</span>
+              </div>
+              <p>Top Source</p>
               {_.first(claim.articlesByStance('against'), 1).map(function(article) {
                 return (
                   <article className={'article' + (article.revised ? ' is-revised' : '')} key={article.id}>
-                    <h4 className="article-title"><Link to="article" params={{ slug: claim.get('slug'), articleId: article.id }}>{claim.domain(article)}</Link> - <time datetime={article.createdAt}>{article.createdAt}</time></h4>
+                    <h4 className="article-title"><Link to="article" params={{ slug: claim.get('slug'), articleId: article.id }}>{claim.domain(article)}</Link> - <time datetime={article.createdAt}>{moment(article.createdAt).format('MMMM Do YYYY')}</time></h4>
                     <p className="article-description">{article.headline}</p>
                     <p>{article.shares} shares</p>
                   </article>
                 )
               })}
             </button>
-            <button onClick={this.setFilter.bind(this, 'observing')} className="trigger trigger-category">
-              Observing
-              <p>{shares.observing ? shares.observing : 0} shares</p>
-              <p>{claim.articlesByStance('observing').length} sources</p>
+            <button onClick={this.setFilter.bind(this, 'observing')} className="filter filter-category filter-category-observing">
+              <p className="filter-title">Observing</p>
+              <p className="filter-sources">{claim.articlesByStance('observing').length} sources</p>
+              <div className="shares">
+                <span className="shares-value">{shares.observing ? shares.observing : 0}</span>
+                <span className="shares-label">Shares</span>
+              </div>
+              <p>Top Source</p>
               {_.first(claim.articlesByStance('observing'), 1).map(function(article) {
                 return (
                   <article className={'article' + (article.revised ? ' is-revised' : '')} key={article.id}>
-                    <h4 className="article-title"><Link to="article" params={{ slug: claim.get('slug'), articleId: article.id }}>{claim.domain(article)}</Link> - <time datetime={article.createdAt}>{article.createdAt}</time></h4>
+                    <h4 className="article-title"><Link to="article" params={{ slug: claim.get('slug'), articleId: article.id }}>{claim.domain(article)}</Link> - <time datetime={article.createdAt}>{moment(article.createdAt).format('MMMM Do YYYY')}</time></h4>
                     <p className="article-description">{article.headline}</p>
                     <p>{article.shares} shares</p>
                   </article>
@@ -150,7 +182,7 @@ module.exports = React.createClass({
           <section className="section">
             <h3 className="section-title">Shares over time</h3>
             {this.state.populated ?
-              <Barchart width={800} height={200} ref="chart" labels={labels} series={data} colors={colors} fontSize={12} gap={0.1} callout={callout}/>
+              <Barchart width={800} height={200} ref="chart" marginLeft={80} ylabels={ylabels} labels={labels} series={data} colors={colors} fontSize={12} gap={0.1} callout={callout}/>
               :
               <div>Loading</div>
             }
@@ -163,13 +195,12 @@ module.exports = React.createClass({
                 return (
                   <li key={article.id}>
                     <article className={'article' + (article.revised ? ' is-revised' : '')}>
-                      <div className="stance">
+                      <div className={'stance stance-' + article.stance}>
                         <span className="stance-value">{article.stance}</span>
                       </div>
-                      <h4 className="article-title"><Link to="article" params={{ slug: claim.get('slug'), articleId: article.id }}>{claim.domain(article)}</Link> - <time datetime={article.createdAt}>{article.createdAt}</time></h4>
+                      <h4 className="article-title"><Link to="article" params={{ slug: claim.get('slug'), articleId: article.id }}>{claim.domain(article)}</Link> - <time datetime={article.createdAt}>{moment(article.createdAt).format('MMMM Do YYYY')}</time></h4>
                       <p className="article-description">{article.headline}</p>
                       {article.revised ? 'Revised' : ''}<br />
-                      {moment(article.createdAt).format('MMMM Do YYYY')}
                       <div className="shares">
                         <span className="shares-value">{article.shares}</span>
                         <span className="shares-label">Shares</span>

@@ -16,7 +16,9 @@ module.exports = React.createClass({
     fontSize: React.PropTypes.number,
     minLength: React.PropTypes.number,
     series: React.PropTypes.arrayOf(React.PropTypes.arrayOf(React.PropTypes.number)),
-    colors: React.PropTypes.arrayOf(React.PropTypes.string)
+    colors: React.PropTypes.arrayOf(React.PropTypes.string),
+    labels: React.PropTypes.arrayOf(React.PropTypes.string),
+    ylabels: React.PropTypes.arrayOf(React.PropTypes.number)
   },
 
   getDefaultProps: function() {
@@ -90,6 +92,18 @@ module.exports = React.createClass({
       };
     }.bind(this));
 
+    var ylabels = this.props.ylabels.map(function(label, i) {
+      return {
+        y: height - (label * heightFactor) + this.props.marginTop,
+        x: this.props.marginLeft - 10,
+        fontSize: this.props.fontSize,
+        fill: 'black',
+        textAnchor: 'end',
+        __html: new String(label).replace(/(\d)(?=(\d{3})+$)/g, '$1,'),
+        key: "ylabel_" + i
+      };
+    }.bind(this));
+
     var callout, calloutText;
     if (this.props.callout) {
       var x = (width + gap) * this.props.callout.position + this.props.marginLeft - (gap / 2);
@@ -104,6 +118,7 @@ module.exports = React.createClass({
         </g>
         <g>
           {labels.map(function(label) { return React.DOM.text(label, label.__html); })}
+          {ylabels.map(function(label) { return React.DOM.text(label, label.__html); })}
           {callout}
           {calloutText}
         </g>

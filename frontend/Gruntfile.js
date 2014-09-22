@@ -26,12 +26,9 @@ module.exports = function(grunt) {
       }
     },
     watch: {
-      options: {
-        livereload: true
-      },
       scripts: {
         files: ['public/js/**/*'],
-        tasks: ['browserify']
+        tasks: ['browserify', 'uglify']
       },
       sass: {
         files: ['public/css/**/*'],

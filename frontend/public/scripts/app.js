@@ -39265,7 +39265,9 @@ module.exports = React.createClass({displayName: 'exports',
     fontSize: React.PropTypes.number,
     minLength: React.PropTypes.number,
     series: React.PropTypes.arrayOf(React.PropTypes.arrayOf(React.PropTypes.number)),
-    colors: React.PropTypes.arrayOf(React.PropTypes.string)
+    colors: React.PropTypes.arrayOf(React.PropTypes.string),
+    labels: React.PropTypes.arrayOf(React.PropTypes.string),
+    ylabels: React.PropTypes.arrayOf(React.PropTypes.number)
   },
 
   getDefaultProps: function() {
@@ -39339,6 +39341,18 @@ module.exports = React.createClass({displayName: 'exports',
       };
     }.bind(this));
 
+    var ylabels = this.props.ylabels.map(function(label, i) {
+      return {
+        y: height - (label * heightFactor) + this.props.marginTop,
+        x: this.props.marginLeft - 10,
+        fontSize: this.props.fontSize,
+        fill: 'black',
+        textAnchor: 'end',
+        __html: new String(label).replace(/(\d)(?=(\d{3})+$)/g, '$1,'),
+        key: "ylabel_" + i
+      };
+    }.bind(this));
+
     var callout, calloutText;
     if (this.props.callout) {
       var x = (width + gap) * this.props.callout.position + this.props.marginLeft - (gap / 2);
@@ -39353,6 +39367,7 @@ module.exports = React.createClass({displayName: 'exports',
         ), 
         React.DOM.g(null, 
           labels.map(function(label) { return React.DOM.text(label, label.__html); }), 
+          ylabels.map(function(label) { return React.DOM.text(label, label.__html); }), 
           callout, 
           calloutText
         )
@@ -39404,28 +39419,50 @@ module.exports = React.createClass({displayName: 'exports',
       '#dd5b53',
       '#f9be58'
     ];
-    var slices = claim.aggregateSlices();
-    var data = slices.reduce(function(series, slice) {
-      series[0].push(slice.for||0);
-      series[1].push(slice.against||0);
-      series[2].push(slice.observing||0);
-      return series;
-    }.bind(this), [[],[],[]]);
-    var skips = 1;
-    if (slices.length > 10) { skips = 3; }
-    if (slices.length > 25) { skips = 6; }
-    if (slices.length > 50) { skips = 12; }
-    var labels = slices.map(function(slice, i) {
-      return i%skips ? '' : moment(slice.time).format('M/D');
-    });
-    var callout;
-    if (claim.get('truthinessDate')) {
-      callout = {
-        position: _.find(_.range(slices.length), function(s) { return slices[s].time > new Date(claim.get('truthinessDate')); }),
-        text: 'Confirmed ' + claim.get('truthiness')
-      };
+
+    if (this.state.populated) {
+      var slices = claim.aggregateSlices();
+      var data = slices.reduce(function(series, slice) {
+        series[0].push(slice.for||0);
+        series[1].push(slice.against||0);
+        series[2].push(slice.observing||0);
+        return series;
+      }.bind(this), [[],[],[]]);
+
+      // find x-axis labels
+      var skips = 1;
+      if (slices.length > 10) { skips = 3; }
+      if (slices.length > 25) { skips = 6; }
+      if (slices.length > 50) { skips = 12; }
+      var labels = slices.map(function(slice, i) {
+        return i%skips ? '' : moment(slice.time).format('M/D');
+      });
+
+      // find y-axis labels
+      var highest = _.max(data.reduce(function(heights, line) {
+        line.forEach(function(amount, i) {
+          heights[i] = (heights[i]||0) + amount;
+        });
+        return heights;
+      }, []));
+      var steps = slices.length ? Math.pow(10, Math.floor(Math.log(highest)/Math.log(10) - 0.15)) : 0;
+      var ylabels = _.range(steps, highest, steps);
+      if (ylabels.length > 8) {
+        ylabels = ylabels.filter(function(a,i) { return i%2; });
+      }
+
+      // place callout for confirmation
+      var callout;
+      if (claim.get('truthinessDate')) {
+        callout = {
+          position: _.find(_.range(slices.length), function(s) { return slices[s].time > new Date(claim.get('truthinessDate')); }),
+          text: 'Confirmed ' + claim.get('truthiness')
+        };
+      }
+      window.callout = callout;
+
+      var mostShared = _.first(claim.articlesByStance());
     }
-    window.callout = callout;
 
     // compose in order of filter
     if (this.state.filter) {
@@ -39433,8 +39470,6 @@ module.exports = React.createClass({displayName: 'exports',
       colors = [colors[filterIndex], 'white', 'white'];
       data.unshift(data.splice(filterIndex,1)[0]);
     }
-
-    var mostShared = _.first(claim.articlesByStance());
 
     return (
       React.DOM.div({className: "container"}, 
@@ -39461,48 +39496,60 @@ module.exports = React.createClass({displayName: 'exports',
             )
           ), 
 
-          React.DOM.section({className: "triggers triggers-section"}, 
-            React.DOM.button({onClick: this.setFilter.bind(this, null), className: "trigger trigger-all"}, 
-              "All", 
+          React.DOM.section({className: "filters filters-section"}, 
+            React.DOM.button({onClick: this.setFilter.bind(this, null), className: "filter filter-all"}, 
+              React.DOM.p({className: "filter-title"}, "All"), 
               React.DOM.p(null, _.reduce(shares, function(sum, num) { return sum + num; }, 0) + ' shares'), 
               React.DOM.p(null, claim.articlesByStance().length, " sources")
             ), 
-            React.DOM.button({onClick: this.setFilter.bind(this, 'for'), className: "trigger trigger-category"}, 
-              "For", 
-              React.DOM.p(null, shares.for ? shares.for : 0, " shares"), 
-              React.DOM.p(null, claim.articlesByStance('for').length, " sources"), 
+            React.DOM.button({onClick: this.setFilter.bind(this, 'for'), className: "filter filter-category filter-category-for"}, 
+              React.DOM.p({className: "filter-title"}, "For"), 
+              React.DOM.p({className: "filter-sources"}, claim.articlesByStance('for').length, " sources"), 
+              React.DOM.div({className: "shares"}, 
+                React.DOM.span({className: "shares-value"}, shares.for ? shares.for : 0), 
+                React.DOM.span({className: "shares-label"}, "Shares")
+              ), 
+              React.DOM.p(null, "Top Source"), 
               _.first(claim.articlesByStance('for'), 1).map(function(article) {
                 return (
                   React.DOM.article({className: 'article' + (article.revised ? ' is-revised' : ''), key: article.id}, 
-                    React.DOM.h4({className: "article-title"}, Link({to: "article", params: { slug: claim.get('slug'), articleId: article.id}}, claim.domain(article)), " - ", React.DOM.time({datetime: article.createdAt}, article.createdAt)), 
+                    React.DOM.h4({className: "article-title"}, Link({to: "article", params: { slug: claim.get('slug'), articleId: article.id}}, claim.domain(article)), " - ", React.DOM.time({datetime: article.createdAt}, moment(article.createdAt).format('MMMM Do YYYY'))), 
                     React.DOM.p({className: "article-description"}, article.headline), 
                     React.DOM.p(null, article.shares, " shares")
                   )
                 )
               })
             ), 
-            React.DOM.button({onClick: this.setFilter.bind(this, 'against'), className: "trigger trigger-category"}, 
-              "Against", 
-              React.DOM.p(null, shares.against ? shares.against : 0, " shares"), 
-              React.DOM.p(null, claim.articlesByStance('against').length, " sources"), 
+            React.DOM.button({onClick: this.setFilter.bind(this, 'against'), className: "filter filter-category filter-category-against"}, 
+              React.DOM.p({className: "filter-title"}, "Against"), 
+              React.DOM.p({className: "filter-sources"}, claim.articlesByStance('against').length, " sources"), 
+              React.DOM.div({className: "shares"}, 
+                React.DOM.span({className: "shares-value"}, shares.against ? shares.against : 0), 
+                React.DOM.span({className: "shares-label"}, "Shares")
+              ), 
+              React.DOM.p(null, "Top Source"), 
               _.first(claim.articlesByStance('against'), 1).map(function(article) {
                 return (
                   React.DOM.article({className: 'article' + (article.revised ? ' is-revised' : ''), key: article.id}, 
-                    React.DOM.h4({className: "article-title"}, Link({to: "article", params: { slug: claim.get('slug'), articleId: article.id}}, claim.domain(article)), " - ", React.DOM.time({datetime: article.createdAt}, article.createdAt)), 
+                    React.DOM.h4({className: "article-title"}, Link({to: "article", params: { slug: claim.get('slug'), articleId: article.id}}, claim.domain(article)), " - ", React.DOM.time({datetime: article.createdAt}, moment(article.createdAt).format('MMMM Do YYYY'))), 
                     React.DOM.p({className: "article-description"}, article.headline), 
                     React.DOM.p(null, article.shares, " shares")
                   )
                 )
               })
             ), 
-            React.DOM.button({onClick: this.setFilter.bind(this, 'observing'), className: "trigger trigger-category"}, 
-              "Observing", 
-              React.DOM.p(null, shares.observing ? shares.observing : 0, " shares"), 
-              React.DOM.p(null, claim.articlesByStance('observing').length, " sources"), 
+            React.DOM.button({onClick: this.setFilter.bind(this, 'observing'), className: "filter filter-category filter-category-observing"}, 
+              React.DOM.p({className: "filter-title"}, "Observing"), 
+              React.DOM.p({className: "filter-sources"}, claim.articlesByStance('observing').length, " sources"), 
+              React.DOM.div({className: "shares"}, 
+                React.DOM.span({className: "shares-value"}, shares.observing ? shares.observing : 0), 
+                React.DOM.span({className: "shares-label"}, "Shares")
+              ), 
+              React.DOM.p(null, "Top Source"), 
               _.first(claim.articlesByStance('observing'), 1).map(function(article) {
                 return (
                   React.DOM.article({className: 'article' + (article.revised ? ' is-revised' : ''), key: article.id}, 
-                    React.DOM.h4({className: "article-title"}, Link({to: "article", params: { slug: claim.get('slug'), articleId: article.id}}, claim.domain(article)), " - ", React.DOM.time({datetime: article.createdAt}, article.createdAt)), 
+                    React.DOM.h4({className: "article-title"}, Link({to: "article", params: { slug: claim.get('slug'), articleId: article.id}}, claim.domain(article)), " - ", React.DOM.time({datetime: article.createdAt}, moment(article.createdAt).format('MMMM Do YYYY'))), 
                     React.DOM.p({className: "article-description"}, article.headline), 
                     React.DOM.p(null, article.shares, " shares")
                   )
@@ -39514,7 +39561,7 @@ module.exports = React.createClass({displayName: 'exports',
           React.DOM.section({className: "section"}, 
             React.DOM.h3({className: "section-title"}, "Shares over time"), 
             this.state.populated ?
-              Barchart({width: 800, height: 200, ref: "chart", labels: labels, series: data, colors: colors, fontSize: 12, gap: 0.1, callout: callout})
+              Barchart({width: 800, height: 200, ref: "chart", marginLeft: 80, ylabels: ylabels, labels: labels, series: data, colors: colors, fontSize: 12, gap: 0.1, callout: callout})
               :
               React.DOM.div(null, "Loading")
             
@@ -39527,13 +39574,12 @@ module.exports = React.createClass({displayName: 'exports',
                 return (
                   React.DOM.li({key: article.id}, 
                     React.DOM.article({className: 'article' + (article.revised ? ' is-revised' : '')}, 
-                      React.DOM.div({className: "stance"}, 
+                      React.DOM.div({className: 'stance stance-' + article.stance}, 
                         React.DOM.span({className: "stance-value"}, article.stance)
                       ), 
-                      React.DOM.h4({className: "article-title"}, Link({to: "article", params: { slug: claim.get('slug'), articleId: article.id}}, claim.domain(article)), " - ", React.DOM.time({datetime: article.createdAt}, article.createdAt)), 
+                      React.DOM.h4({className: "article-title"}, Link({to: "article", params: { slug: claim.get('slug'), articleId: article.id}}, claim.domain(article)), " - ", React.DOM.time({datetime: article.createdAt}, moment(article.createdAt).format('MMMM Do YYYY'))), 
                       React.DOM.p({className: "article-description"}, article.headline), 
                       article.revised ? 'Revised' : '', React.DOM.br(null), 
-                      moment(article.createdAt).format('MMMM Do YYYY'), 
                       React.DOM.div({className: "shares"}, 
                         React.DOM.span({className: "shares-value"}, article.shares), 
                         React.DOM.span({className: "shares-label"}, "Shares")
