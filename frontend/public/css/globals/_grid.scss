@@ -24,6 +24,20 @@
 
 @include breakpoint($breakpoint-desktop) {
 
+  // Site
+
+  .site-logo {
+    @include span(3 of 12);
+  }
+
+  .site-menu {
+    @include span(last 9 of 12);
+  }
+
+
+  //
+  // Claim page
+
   .page-claim {
 
     .page-header {
@@ -40,15 +54,23 @@
       @include full;
     }
 
+    .article-content {
+      @include span(10 of 12);
+    }
+
+    .article-footer {
+      @include span(last 2 of 12);
+    }
+
   }
 
 }
 
 
-.trigger-all {
+.filter-all {
   @include full;
 }
 
-.trigger-category {
-  @include span(inside 4 of 12);
+.filter-category {
+  @include span(nest 4 of 12 inside);
 }

@@ -1,3 +1,21 @@
 .site {
   background-color: palette(base, light);
 }
+
+
+.site-header {
+  background-color: palette(base, darker);
+  color: palette(type, light);
+  margin-bottom: 2em;
+  padding-bottom: 2em;
+  padding-top: 2em;
+}
+
+.site-logo {
+  font-size: 2em;
+  font-weight: 500;
+  letter-spacing: 3px;
+  line-height: 1;
+  margin-bottom: 0;
+  text-transform: uppercase;
+}

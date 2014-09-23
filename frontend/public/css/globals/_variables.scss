@@ -61,7 +61,8 @@ $palette: (
   base: (
     light:      #eaeaea,
     base:       #c1c1c1,
-    dark:       #252424
+    dark:       #727272,
+    darker:     #252424
   ),
   type: (
     light:      #eaeaea,
@@ -84,6 +85,11 @@ $palette: (
   ),
   negative: (
     base:       #dd5b53
+  ),
+  category: (
+    for:        #7ecc76,
+    against:    #dd5b53,
+    observing:  #f9be58
   ),
   status: (
     true:       #7ecc76,

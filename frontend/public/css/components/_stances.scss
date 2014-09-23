@@ -1,0 +1,38 @@
+//
+// Stance
+
+.stance {
+  display: inline-block;
+  padding: .5em .75em;
+
+  .article & {
+    left: 0;
+    position: absolute;
+    top: 0;
+  }
+}
+
+.stance-value {
+  color: palette(clear);
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+
+//
+// Types of stance
+
+.stance-true,
+.stance-for {
+  background-color: palette(status, true);
+}
+
+.stance-false,
+.stance-against {
+  background-color: palette(status, false);
+}
+
+.stance-unknown,
+.stance-observing {
+  background-color: palette(status, unknown);
+}

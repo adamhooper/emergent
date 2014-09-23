@@ -88,9 +88,12 @@ module.exports = React.createClass({
     // compose in order of filter
     if (this.state.filter) {
       filterIndex = ['for', 'against', 'observing'].indexOf(this.state.filter);
-      colors = [colors[filterIndex], 'white', 'white'];
+      colors = [colors[filterIndex], '#eaeaea', '#eaeaea'];
       data.unshift(data.splice(filterIndex,1)[0]);
     }
+
+    var mostShared = _.first(claim.articlesByStance()),
+      startedTracking = claim.startedTracking();
 
     return (
       <div className="container">
@@ -100,9 +103,9 @@ module.exports = React.createClass({
             <header className="page-header">
               <h1 className="page-title">{claim.get('headline')}</h1>
               <p>{claim.get('description')}</p>
-              <ul>
-                {claim.get('origin') ? <li><strong>Originated: </strong>{claim.get('originUrl') ? <a href={claim.get('originUrl')} target="_blank">{claim.get('origin')}</a> : claim.get('origin')}</li> : null}
-                <li><strong>Started Tracking:</strong> {moment(claim.startedTracking()).format('MMMM Do YYYY')}</li>
+              <ul className="list-unstyled">
+                {claim.get('origin') ? <li><strong>Originated: </strong>{claim.get('originUrl') ? <a href={claim.get('originUrl')} target="_blank">View article</a> : claim.get('origin')}</li> : null}
+                <li><strong>Started Tracking:</strong> {moment(startedTracking).format('MMM. D, YYYY H:mm Z') + ' (' + moment(startedTracking).fromNow() + ')'}</li>
               </ul>
             </header>
             <div className="page-meta">
@@ -119,64 +122,83 @@ module.exports = React.createClass({
 
           <section className="filters filters-section">
             <button onClick={this.setFilter.bind(this, null)} className="filter filter-all">
-              <p className="filter-title">All</p>
-              <p>{_.reduce(shares, function(sum, num) { return sum + num; }, 0) + ' shares'}</p>
-              <p>{claim.articlesByStance().length} sources</p>
-            </button>
-            <button onClick={this.setFilter.bind(this, 'for')} className="filter filter-category filter-category-for">
-              <p className="filter-title">For</p>
-              <p className="filter-sources">{claim.articlesByStance('for').length} sources</p>
-              <div className="shares">
-                <span className="shares-value">{shares.for ? shares.for : 0}</span>
-                <span className="shares-label">Shares</span>
+              <div className="filter-content">
+                <h4 className="filter-title">All</h4>
+                <p className="filter-sources">{claim.articlesByStance().length} sources</p>
+                <div className="shares">
+                  <span className="shares-value">{_.reduce(shares, function(sum, num) { return sum + num; }, 0)}</span>
+                  <span className="shares-label">Shares</span>
+                </div>
               </div>
-              <p>Top Source</p>
-              {_.first(claim.articlesByStance('for'), 1).map(function(article) {
-                return (
-                  <article className={'article' + (article.revised ? ' is-revised' : '')} key={article.id}>
-                    <h4 className="article-title"><Link to="article" params={{ slug: claim.get('slug'), articleId: article.id }}>{claim.domain(article)}</Link> - <time datetime={article.createdAt}>{moment(article.createdAt).format('MMMM Do YYYY')}</time></h4>
-                    <p className="article-description">{article.headline}</p>
-                    <p>{article.shares} shares</p>
-                  </article>
-                )
-              })}
             </button>
-            <button onClick={this.setFilter.bind(this, 'against')} className="filter filter-category filter-category-against">
-              <p className="filter-title">Against</p>
-              <p className="filter-sources">{claim.articlesByStance('against').length} sources</p>
-              <div className="shares">
-                <span className="shares-value">{shares.against ? shares.against : 0}</span>
-                <span className="shares-label">Shares</span>
-              </div>
-              <p>Top Source</p>
-              {_.first(claim.articlesByStance('against'), 1).map(function(article) {
-                return (
-                  <article className={'article' + (article.revised ? ' is-revised' : '')} key={article.id}>
-                    <h4 className="article-title"><Link to="article" params={{ slug: claim.get('slug'), articleId: article.id }}>{claim.domain(article)}</Link> - <time datetime={article.createdAt}>{moment(article.createdAt).format('MMMM Do YYYY')}</time></h4>
-                    <p className="article-description">{article.headline}</p>
-                    <p>{article.shares} shares</p>
-                  </article>
-                )
-              })}
-            </button>
-            <button onClick={this.setFilter.bind(this, 'observing')} className="filter filter-category filter-category-observing">
-              <p className="filter-title">Observing</p>
-              <p className="filter-sources">{claim.articlesByStance('observing').length} sources</p>
-              <div className="shares">
-                <span className="shares-value">{shares.observing ? shares.observing : 0}</span>
-                <span className="shares-label">Shares</span>
-              </div>
-              <p>Top Source</p>
-              {_.first(claim.articlesByStance('observing'), 1).map(function(article) {
-                return (
-                  <article className={'article' + (article.revised ? ' is-revised' : '')} key={article.id}>
-                    <h4 className="article-title"><Link to="article" params={{ slug: claim.get('slug'), articleId: article.id }}>{claim.domain(article)}</Link> - <time datetime={article.createdAt}>{moment(article.createdAt).format('MMMM Do YYYY')}</time></h4>
-                    <p className="article-description">{article.headline}</p>
-                    <p>{article.shares} shares</p>
-                  </article>
-                )
-              })}
-            </button>
+            <div className="filter-categories">
+              <button onClick={this.setFilter.bind(this, 'for')} className="filter filter-category filter-category-for">
+                <div className="filter-content">
+                  <p className="filter-title">For</p>
+                  <p className="filter-sources">{claim.articlesByStance('for').length} sources</p>
+                  <div className="shares">
+                    <span className="shares-value">{shares.for ? shares.for : 0}</span>
+                    <span className="shares-label">Shares</span>
+                  </div>
+                </div>
+                <div className="filter-article">
+                  <p>Top Source</p>
+                  {_.first(claim.articlesByStance('for'), 1).map(function(article) {
+                    return (
+                      <article className={'article' + (article.revised ? ' is-revised' : '')} key={article.id}>
+                        <h4 className="article-title"><Link to="article" params={{ slug: claim.get('slug'), articleId: article.id }}>{article.source}</Link> - <time datetime={article.createdAt}>{moment(article.createdAt).format('MMMM Do YYYY')}</time></h4>
+                        <p className="article-description">{article.headline}</p>
+                        <p>{article.shares} shares</p>
+                      </article>
+                    )
+                  })}
+                </div>
+              </button>
+              <button onClick={this.setFilter.bind(this, 'against')} className="filter filter-category filter-category-against">
+                <div className="filter-content">
+                  <p className="filter-title">Against</p>
+                  <p className="filter-sources">{claim.articlesByStance('against').length} sources</p>
+                  <div className="shares">
+                    <span className="shares-value">{shares.against ? shares.against : 0}</span>
+                    <span className="shares-label">Shares</span>
+                  </div>
+                </div>
+                <div className="filter-article">
+                  <p>Top Source</p>
+                  {_.first(claim.articlesByStance('against'), 1).map(function(article) {
+                    return (
+                      <article className={'article' + (article.revised ? ' is-revised' : '')} key={article.id}>
+                        <h4 className="article-title"><Link to="article" params={{ slug: claim.get('slug'), articleId: article.id }}>{article.source}</Link> - <time datetime={article.createdAt}>{moment(article.createdAt).format('MMMM Do YYYY')}</time></h4>
+                        <p className="article-description">{article.headline}</p>
+                        <p>{article.shares} shares</p>
+                      </article>
+                    )
+                  })}
+                </div>
+              </button>
+              <button onClick={this.setFilter.bind(this, 'observing')} className="filter filter-category filter-category-observing">
+                <div className="filter-content">
+                  <p className="filter-title">Observing</p>
+                  <p className="filter-sources">{claim.articlesByStance('observing').length} sources</p>
+                  <div className="shares">
+                    <span className="shares-value">{shares.observing ? shares.observing : 0}</span>
+                    <span className="shares-label">Shares</span>
+                  </div>
+                </div>
+                <div className="filter-article">
+                  <p>Top Source</p>
+                  {_.first(claim.articlesByStance('observing'), 1).map(function(article) {
+                    return (
+                      <article className={'article' + (article.revised ? ' is-revised' : '')} key={article.id}>
+                        <h4 className="article-title"><Link to="article" params={{ slug: claim.get('slug'), articleId: article.id }}>{article.source}</Link> - <time datetime={article.createdAt}>{moment(article.createdAt).format('MMMM Do YYYY')}</time></h4>
+                        <p className="article-description">{article.headline}</p>
+                        <p>{article.shares} shares</p>
+                      </article>
+                    )
+                  })}
+                </div>
+              </button>
+            </div>
           </section>
 
           <section className="section">
@@ -189,22 +211,29 @@ module.exports = React.createClass({
           </section>
 
           <section className="page-articles">
-            <h3>Sources</h3>
+            <h3 className="articles-title">Sources</h3>
             <ul className="articles">
               {_.first(claim.articlesByStance(this.state.filter), 10).map(function(article) {
+                //console.log(article);
                 return (
                   <li key={article.id}>
                     <article className={'article' + (article.revised ? ' is-revised' : '')}>
-                      <div className={'stance stance-' + article.stance}>
-                        <span className="stance-value">{article.stance}</span>
+                      <header className="article-header">
+                        <div className={'stance stance-' + article.stance}>
+                          <span className="stance-value">{article.stance}</span>
+                        </div>
+                        {article.revised ? 'Revised' : null}
+                      </header>
+                      <div className="article-content">
+                        <h4 className="article-title"><Link to="article" params={{ slug: claim.get('slug'), articleId: article.id }}>{article.source}</Link> - <time datetime={article.createdAt}>{moment(article.createdAt).format('MMMM Do YYYY')}</time></h4>
+                        <p className="article-description">{article.headline}</p>
                       </div>
-                      <h4 className="article-title"><Link to="article" params={{ slug: claim.get('slug'), articleId: article.id }}>{claim.domain(article)}</Link> - <time datetime={article.createdAt}>{moment(article.createdAt).format('MMMM Do YYYY')}</time></h4>
-                      <p className="article-description">{article.headline}</p>
-                      {article.revised ? 'Revised' : ''}<br />
-                      <div className="shares">
-                        <span className="shares-value">{article.shares}</span>
-                        <span className="shares-label">Shares</span>
-                      </div>
+                      <footer className="article-footer">
+                        <div className="shares">
+                          <span className="shares-value">{article.shares}</span>
+                          <span className="shares-label">Shares</span>
+                        </div>
+                      </footer>
                     </article>
                   </li>
                 )

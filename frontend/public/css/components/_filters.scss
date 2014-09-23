@@ -1,0 +1,127 @@
+//
+// Multiple filters
+
+.filters {}
+
+.filters-section {
+  @extend %clearfix;
+  background-color: palette(clear);
+  border: 1px solid palette(base);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .1);
+  margin-bottom: 1em;
+}
+
+.filter-categories {
+  clear: both;
+  display: flex;
+}
+
+
+//
+// Single filter
+
+.filter {
+  background-color: palette(clear);
+  border: 0;
+  //border-bottom: 10px solid transparent;
+  padding: 0;
+  position: relative;
+  text-align: left;
+
+  &:focus {
+    outline: 0;
+  }
+
+  &:after {
+    background-color: #fff;
+    bottom: -10px;
+    //content: '';
+    height: 10px;
+    left: 0;
+    position: absolute;
+    right: 0;
+  }
+
+  &.is-selected {
+    border-bottom-color: palette(primary);
+
+    &:after {
+      background-color: transparent;
+      border: 60px solid transparent;
+      border-bottom: 0;
+      border-top: 20px solid palette(primary);
+      bottom: -25px;
+      content: '';
+      display: block;
+      height: 0;
+      left: 50%;
+      margin-left: -60px;
+      position: absolute;
+      width: 0;
+    }
+  }
+}
+
+.filter-content,
+.filter-article {
+  padding: 1.5em 1em 1em;
+}
+
+.filter-title {
+  display: inline-block;
+  font-size: 1.6em;
+  font-weight: 700;
+  margin-bottom: 0;
+  margin-top: 0;
+  text-transform: uppercase;
+}
+
+.filter-sources {
+  @extend %label;
+  font-size: .85em;
+  margin-bottom: 0;
+}
+
+.filter-article {
+  background-color: #fff;
+  color: palette(base, darker);
+}
+
+
+//
+// Types of filter
+
+.filter-all {
+  background-color: lighten(palette(base), 5%);
+}
+
+.filter-category {
+  border-top: 1px solid palette(base);
+  flex-direction: column;
+
+  & + & {
+    border-left: 1px solid palette(base);
+  }
+}
+
+
+//
+// Filter categories
+
+.filter-category-for,
+.filter-category-against,
+.filter-category-observing {
+  color: #fff;
+}
+
+.filter-category-for {
+  background-color: palette(category, for);
+}
+
+.filter-category-against {
+  background-color: palette(category, against);
+}
+
+.filter-category-observing {
+  background-color: palette(category, observing);
+}

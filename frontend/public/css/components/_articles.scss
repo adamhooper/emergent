@@ -1,6 +1,10 @@
 //
 // Articles
 
+.articles-title {
+  @extend %section-title;
+}
+
 .articles {
   list-style-type: none;
   padding-left: 0;
@@ -11,7 +15,11 @@
 
   // display in content block when in list
   .article {
+    @extend %clearfix;
     @extend %content;
+    @extend %content-background;
+    padding-top: 3.5em;
+    position: relative;
   }
 }
 
