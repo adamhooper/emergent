@@ -64,7 +64,7 @@ module.exports = React.createClass({
     var heights = [];
     var width = this.barWidth();
     var gap = width * this.props.gap;
-    var heightFactor = this.props.height ? _.min([1, this.props.height / this.highest()]) : 0;
+    var heightFactor = this.props.height ? this.props.height / this.highest() : 0;
     var colors = this.props.colors;
     var height = this.props.height;
 
@@ -75,7 +75,7 @@ module.exports = React.createClass({
           y: height - (heights[i]||0) + this.props.marginTop,
           x: (width + gap) * i + this.props.marginLeft,
           width: width,
-          height: amount * heightFactor,
+          height: _.max([amount ? 1 : 0, amount * heightFactor]),
           fill: colors[s],
           key: "bar_" + s + "_" + i
         };
@@ -97,8 +97,8 @@ module.exports = React.createClass({
 
     var ylabels = this.props.ylabels.map(function(label, i) {
       return {
-        y: height - (label * heightFactor) + this.props.marginTop,
-        x: this.props.marginLeft - gap,
+        y: height - (label * heightFactor) + this.props.marginTop + this.props.fontSize/2,
+        x: this.props.marginLeft - 18,
         fontSize: this.props.fontSize,
         fill: this.props.color,
         textAnchor: 'end',

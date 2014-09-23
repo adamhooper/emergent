@@ -39121,7 +39121,8 @@ var app = {
       React.renderComponent(
         Routes({location: "history"}, 
           Route({path: "/", handler: Root}, 
-            DefaultRoute({handler: this.components.Claims, claims: this.claims}), 
+            DefaultRoute({name: "claims", handler: this.components.Claims, claims: this.claims}), 
+            Route({name: "about", path: "about", handler: this.components.About}), 
             Route({name: "claim", path: ":slug", handler: this.components.Claim, claims: this.claims}), 
             Route({name: "article", path: ":slug/articles/:articleId", handler: this.components.Article, claims: this.claims})
           )
@@ -39133,7 +39134,8 @@ var app = {
   components: {
     Claim: require('./components/claim.js.jsx'),
     Claims: require('./components/claims.js.jsx'),
-    Article: require('./components/article.js.jsx')
+    Article: require('./components/article.js.jsx'),
+    About: require('./components/about.js.jsx')
   },
 
   models: {
@@ -39155,7 +39157,7 @@ window._ = require('underscore');
 window.app = app;
 window.React = React;
 
-},{"./collections/claims.js":198,"./components/article.js.jsx":199,"./components/claim.js.jsx":201,"./components/claims.js.jsx":202,"./components/root.js.jsx":203,"./models/claim.js":205,"jquery":8,"react":195,"react-router":18,"underscore":196}],198:[function(require,module,exports){
+},{"./collections/claims.js":198,"./components/about.js.jsx":199,"./components/article.js.jsx":200,"./components/claim.js.jsx":202,"./components/claims.js.jsx":203,"./components/root.js.jsx":204,"./models/claim.js":206,"jquery":8,"react":195,"react-router":18,"underscore":196}],198:[function(require,module,exports){
 var Backbone = require('backbone');
 var _ = require('underscore');
 var $ = Backbone.$ = require('jquery');
@@ -39169,7 +39171,25 @@ module.exports = Backbone.Collection.extend({
   }
 });
 
-},{"../models/claim.js":205,"backbone":1,"jquery":8,"underscore":196}],199:[function(require,module,exports){
+},{"../models/claim.js":206,"backbone":1,"jquery":8,"underscore":196}],199:[function(require,module,exports){
+/** @jsx React.DOM */
+
+var React = require('react');
+
+module.exports = React.createClass({displayName: 'exports',
+  render: function() {
+    return (
+
+      /* JSX for about page */
+      React.DOM.div({className: "container"}, 
+        React.DOM.h1(null, "About Emergent"), 
+        React.DOM.p(null, "Updates and analysis from Emergent.info, a real-time rumor tracker.")
+      )
+
+    );
+  }
+});
+},{"react":195}],200:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
@@ -39279,7 +39299,7 @@ module.exports = React.createClass({displayName: 'exports',
   }
 });
 
-},{"../mixins/backbone_collection.js":204,"moment":9,"react":195,"underscore":196}],200:[function(require,module,exports){
+},{"../mixins/backbone_collection.js":205,"moment":9,"react":195,"underscore":196}],201:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
@@ -39339,6 +39359,7 @@ module.exports = React.createClass({displayName: 'exports',
   },
 
   highest: function() {
+    console.log(this.heights());
     return _.max(this.heights());
   },
 
@@ -39346,7 +39367,7 @@ module.exports = React.createClass({displayName: 'exports',
     var heights = [];
     var width = this.barWidth();
     var gap = width * this.props.gap;
-    var heightFactor = this.props.height ? _.min([1, this.props.height / this.highest()]) : 0;
+    var heightFactor = this.props.height ? this.props.height / this.highest() : 0;
     var colors = this.props.colors;
     var height = this.props.height;
 
@@ -39357,7 +39378,7 @@ module.exports = React.createClass({displayName: 'exports',
           y: height - (heights[i]||0) + this.props.marginTop,
           x: (width + gap) * i + this.props.marginLeft,
           width: width,
-          height: amount * heightFactor,
+          height: _.max([amount ? 1 : 0, amount * heightFactor]),
           fill: colors[s],
           key: "bar_" + s + "_" + i
         };
@@ -39379,8 +39400,8 @@ module.exports = React.createClass({displayName: 'exports',
 
     var ylabels = this.props.ylabels.map(function(label, i) {
       return {
-        y: height - (label * heightFactor) + this.props.marginTop,
-        x: this.props.marginLeft - gap,
+        y: height - (label * heightFactor) + this.props.marginTop + this.props.fontSize/2,
+        x: this.props.marginLeft - 18,
         fontSize: this.props.fontSize,
         fill: this.props.color,
         textAnchor: 'end',
@@ -39420,7 +39441,7 @@ module.exports = React.createClass({displayName: 'exports',
   }
 });
 
-},{"react":195,"underscore":196}],201:[function(require,module,exports){
+},{"react":195,"underscore":196}],202:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
@@ -39680,7 +39701,7 @@ module.exports = React.createClass({displayName: 'exports',
   }
 });
 
-},{"../mixins/backbone_collection.js":204,"./bar_chart.js.jsx":200,"moment":9,"react":195,"react-router":18,"underscore":196}],202:[function(require,module,exports){
+},{"../mixins/backbone_collection.js":205,"./bar_chart.js.jsx":201,"moment":9,"react":195,"react-router":18,"underscore":196}],203:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
@@ -39722,10 +39743,11 @@ module.exports = React.createClass({displayName: 'exports',
   }
 });
 
-},{"../mixins/backbone_collection.js":204,"moment":9,"react":195,"react-router":18,"underscore":196}],203:[function(require,module,exports){
+},{"../mixins/backbone_collection.js":205,"moment":9,"react":195,"react-router":18,"underscore":196}],204:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
+var Link = require('react-router').Link;
 
 module.exports = React.createClass({displayName: 'exports',
   render: function() {
@@ -39736,9 +39758,9 @@ module.exports = React.createClass({displayName: 'exports',
             React.DOM.p({className: "site-logo"}, "Emergent"), 
             React.DOM.nav({className: "site-menu"}, 
               React.DOM.ul({className: "menu menu-site"}, 
-                React.DOM.li(null, React.DOM.a({href: "#", className: "menu-item active"}, "Stories")), 
-                React.DOM.li(null, React.DOM.a({href: "#", className: "menu-item"}, "About")), 
-                React.DOM.li(null, React.DOM.a({href: "#", className: "menu-item"}, "Contact"))
+                React.DOM.li(null, Link({to: "claims", className: "menu-item"}, "Stories")), 
+                React.DOM.li(null, Link({to: "about", className: "menu-item"}, "About")), 
+                React.DOM.li(null, React.DOM.a({href: "http://emergentinfo.tumblr.com/", className: "menu-item"}, "Blog"))
               )
             )
           )
@@ -39749,7 +39771,7 @@ module.exports = React.createClass({displayName: 'exports',
   }
 });
 
-},{"react":195}],204:[function(require,module,exports){
+},{"react":195,"react-router":18}],205:[function(require,module,exports){
 /**
  * Ensure that changes to a components models/collections trigger reconciles
  */
@@ -39810,7 +39832,7 @@ module.exports = {
   }
 };
 
-},{"backbone":1,"underscore":196}],205:[function(require,module,exports){
+},{"backbone":1,"underscore":196}],206:[function(require,module,exports){
 var Backbone = require('backbone');
 var _ = require('underscore');
 var $ = Backbone.$ = require('jquery');

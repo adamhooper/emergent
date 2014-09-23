@@ -16,7 +16,8 @@ var app = {
       React.renderComponent(
         <Routes location="history">
           <Route path="/" handler={Root}>
-            <DefaultRoute handler={this.components.Claims} claims={this.claims}/>
+            <DefaultRoute name="claims" handler={this.components.Claims} claims={this.claims}/>
+            <Route name="about" path="about" handler={this.components.About}/>
             <Route name="claim" path=":slug" handler={this.components.Claim} claims={this.claims}/>
             <Route name="article" path=":slug/articles/:articleId" handler={this.components.Article} claims={this.claims}/>
           </Route>
@@ -28,7 +29,8 @@ var app = {
   components: {
     Claim: require('./components/claim.js.jsx'),
     Claims: require('./components/claims.js.jsx'),
-    Article: require('./components/article.js.jsx')
+    Article: require('./components/article.js.jsx'),
+    About: require('./components/about.js.jsx')
   },
 
   models: {

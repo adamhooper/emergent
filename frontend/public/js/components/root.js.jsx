@@ -1,6 +1,7 @@
 /** @jsx React.DOM */
 
 var React = require('react');
+var Link = require('react-router').Link;
 
 module.exports = React.createClass({
   render: function() {
@@ -11,9 +12,9 @@ module.exports = React.createClass({
             <p className="site-logo">Emergent</p>
             <nav className="site-menu">
               <ul className="menu menu-site">
-                <li><a href="#" className="menu-item active">Stories</a></li>
-                <li><a href="#" className="menu-item">About</a></li>
-                <li><a href="#" className="menu-item">Contact</a></li>
+                <li><Link to="claims" className="menu-item">Stories</Link></li>
+                <li><Link to="about" className="menu-item">About</Link></li>
+                <li><a href="http://emergentinfo.tumblr.com/" className="menu-item">Blog</a></li>
               </ul>
             </nav>
           </div>
