@@ -39654,7 +39654,7 @@ module.exports = React.createClass({displayName: 'exports',
                         ), 
                         article.revised ? 
                           React.DOM.div({className: 'stance stance-' + article.revised}, 
-                            React.DOM.span({className: "stance-value"}, "Revised to ", article.revised)
+                            React.DOM.span({className: "stance-value"}, 'Revised to ' + article.revised)
                           )
                         : ''
                       ), 
@@ -39894,7 +39894,7 @@ module.exports = Backbone.Model.extend({
         var article = articles[articleId] || _.clone(_.findWhere(this.get('articles'), { id: articleId }));
         if (bestStance && article.stance != bestStance) {
           if (article.stance) {
-            articles[articleId].revised = true;
+            article.revised = bestStance;
           } else {
             article.stance = bestStance;
           }

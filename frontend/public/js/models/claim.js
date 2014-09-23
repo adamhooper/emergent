@@ -81,7 +81,7 @@ module.exports = Backbone.Model.extend({
         var article = articles[articleId] || _.clone(_.findWhere(this.get('articles'), { id: articleId }));
         if (bestStance && article.stance != bestStance) {
           if (article.stance) {
-            articles[articleId].revised = true;
+            article.revised = bestStance;
           } else {
             article.stance = bestStance;
           }

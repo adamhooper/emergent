@@ -231,7 +231,7 @@ module.exports = React.createClass({
                         </div>
                         {article.revised ? 
                           <div className={'stance stance-' + article.revised}>
-                            <span className="stance-value">Revised to {article.revised}</span>
+                            <span className="stance-value">{'Revised to ' + article.revised}</span>
                           </div>
                         : ''}
                       </header>
