@@ -38,6 +38,7 @@
   //
   // Claim page
 
+  .page-article,
   .page-claim {
 
     .page-header {
@@ -62,6 +63,21 @@
       @include span(last 2 of 12);
     }
 
+  }
+
+
+  .article-revision {
+    .article-header {
+      @include span(2 of 12);
+    }
+
+    .article-content {
+      @include span(8 of 12);
+    }
+
+    .article-footer {
+      @include span( last 2 of 12);
+    }
   }
 
 }

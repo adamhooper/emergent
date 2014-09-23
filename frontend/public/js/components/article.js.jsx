@@ -12,7 +12,7 @@ module.exports = React.createClass({
   componentWillMount: function() {
     var claim = this.props.claims.findWhere({ slug: this.props.params.slug });
     this.subscribeTo(claim);
-    
+
     this.setState({
       claim: claim,
       populated: false
@@ -38,38 +38,70 @@ module.exports = React.createClass({
     var last;
 
     return (
-      <div>
-        <h1>{claim.domain(article)}</h1>
-        <p><a href={article.url} target="_blank">{article.headline}</a></p>
-        <p>{moment(article.createdAt).format('MMMM Do YYYY')}</p>
-        <ul>
-          {slices.map(function(slice) {
-            var headlineChanged = last && last.headlineStance != slice.headlineStance
-            var bodyChanged = last && last.stance != slice.stance;
-            var initial = !last;
-            last = article;
-            return (
-              <li>
-                <p>stamp: {moment(slice.end).format('MMMM Do YYYY h:mma')}</p>
-                { initial ?
-                  <p>Initially published. Headline {slice.headlineStance} Body {slice.stance}</p>
-                    :
-                  <p>
-                    { headlineChanged ? <span> Headline changed: {slice.headlineStance} </span> : null }
-                    { bodyChanged ? <span> Body changed: {slice.stance} </span> : null }
-                  </p>
-                }
-                <p>shares: {_.values(slice.shares).reduce(function(sum, count) { return sum + count; }, 0)}</p>
-              </li>
-            );
-          })}
-        </ul>
+      <div className="container">
+        <div className="page page-article">
 
-        <ul>
-          {_.map(shares, function(count, provider) {
-            return <li>{provider}: {count}</li>
-          })}
-        </ul>
+          <header className="section">
+            <div className="page-header">
+              <h1 className="page-title">{article.headline}</h1>
+              <p>{article.source}</p>
+              <p><a href={article.url} target="_blank">View original article</a></p>
+              <p>{moment(article.createdAt).format('MMMM Do YYYY')}</p>
+            </div>
+            <div className="page-meta">
+              <div className={'status status-' + claim.get('truthiness')}>
+                <span className="status-label">Claim state</span>
+                <span className="status-value">{claim.get('truthiness')}</span>
+              </div>
+              <div className={'status status-'}>
+                <span className="status-label">Most shared</span>
+                <span className="status-value"></span>
+              </div>
+            </div>
+          </header>
+
+          <ul>
+            {_.map(shares, function(count, provider) {
+              return <li>{provider}: {count}</li>
+            })}
+          </ul>
+
+          <h2 className="articles-title">Revisions</h2>
+          <ul className="articles">
+            {slices.map(function(slice) {
+              var headlineChanged = last && last.headlineStance != slice.headlineStance
+              var bodyChanged = last && last.stance != slice.stance;
+              var initial = !last;
+              last = article;
+              return (
+                <li>
+                  <article className="article article-revision">
+                    <header className="article-header">
+                      <h3>{moment(slice.end).format('MMMM Do YYYY')}</h3>
+                      <p>{moment(slice.end).format('h:mma')}</p>
+                    </header>
+                    <div className="article-content">
+                      { initial ?
+                        <p>Initially published. Headline {slice.headlineStance} Body {slice.stance}</p>
+                          :
+                        <p>
+                          { headlineChanged ? <span> Headline changed: {slice.headlineStance} </span> : null }
+                          { bodyChanged ? <span> Body changed: {slice.stance} </span> : null }
+                        </p>
+                      }
+                    </div>
+                    <footer className="article-footer">
+                      <div className="shares">
+                        <span className="shares-value">{_.values(slice.shares).reduce(function(sum, count) { return sum + count; }, 0)}</span>
+                        <span className="shares-label">Shares</span>
+                      </div>
+                    </footer>
+                  </article>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
       </div>
     );
   }

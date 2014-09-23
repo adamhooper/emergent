@@ -12,15 +12,6 @@
   > li {
     margin-bottom: .75em;
   }
-
-  // display in content block when in list
-  .article {
-    @extend %clearfix;
-    @extend %content;
-    @extend %content-background;
-    padding-top: 3.5em;
-    position: relative;
-  }
 }
 
 
@@ -38,6 +29,16 @@
   .trigger & {
     font-size: .9em;
   }
+
+  // display in content block when in list
+  .articles & {
+    @extend %clearfix;
+    @extend %content;
+    @extend %content-background;
+    padding-top: 3.5em;
+    position: relative;
+  }
+
 }
 
 .article-title {
@@ -53,4 +54,14 @@
 
 .article-description {
   margin-bottom: 0;
+}
+
+
+//
+// Revision article
+
+.article-revision {
+  .articles & {
+    padding-top: 1em;
+  }
 }

@@ -575,14 +575,19 @@ th {
     float: right;
     margin-right: 0; }
 
+  .page-article .page-header,
   .page-claim .page-header {
     width: 82.90598%;
     float: left;
     margin-right: 2.5641%; }
+  .page-article .page-meta,
   .page-claim .page-meta {
     width: 14.52991%;
     float: right;
     margin-right: 0; }
+  .page-article .page-content,
+  .page-article .page-chart,
+  .page-article .page-articles,
   .page-claim .page-content,
   .page-claim .page-chart,
   .page-claim .page-articles {
@@ -591,11 +596,26 @@ th {
     float: left;
     margin-left: 0;
     margin-right: 0; }
+  .page-article .article-content,
   .page-claim .article-content {
     width: 82.90598%;
     float: left;
     margin-right: 2.5641%; }
+  .page-article .article-footer,
   .page-claim .article-footer {
+    width: 14.52991%;
+    float: right;
+    margin-right: 0; }
+
+  .article-revision .article-header {
+    width: 14.52991%;
+    float: left;
+    margin-right: 2.5641%; }
+  .article-revision .article-content {
+    width: 65.81197%;
+    float: left;
+    margin-right: 2.5641%; }
+  .article-revision .article-footer {
     width: 14.52991%;
     float: right;
     margin-right: 0; } }
@@ -651,15 +671,15 @@ strong {
   padding-left: 0; }
   .articles > li {
     margin-bottom: .75em; }
-  .articles .article {
-    padding-top: 3.5em;
-    position: relative; }
 
 .article.is-revised {
   padding-top: 3em;
   position: relative; }
 .trigger .article {
   font-size: .9em; }
+.articles .article {
+  padding-top: 3.5em;
+  position: relative; }
 
 .article-title {
   font-size: 1.1em;
@@ -671,6 +691,9 @@ strong {
 
 .article-description {
   margin-bottom: 0; }
+
+.articles .article-revision {
+  padding-top: 1em; }
 
 .filters-section {
   background-color: #fff;

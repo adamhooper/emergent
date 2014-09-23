@@ -17,11 +17,19 @@ module.exports = React.createClass({
   render: function() {
     return (
       <div className="container">
-        <ul>
+        <ul className="articles">
           {this.props.claims.models.map(function(claim, i) {
             return (
               <li key={claim.id}>
-                <Link to="claim" params={{ slug: claim.get('slug') }}>{claim.get('headline')}</Link>
+                <article className="article">
+                  <div className={'stance stance-' + claim.get('truthiness')}>
+                    <span className="stance-value">{claim.get('truthiness')}</span>
+                  </div>
+                  <div className="article-content">
+                    <h4 className="article-title"><Link to="claim" params={{ slug: claim.get('slug') }}>{claim.get('headline')}</Link></h4>
+                    <p className="article-description">{claim.get('description')}</p>
+                  </div>
+                </article>
               </li>
             );
           })}

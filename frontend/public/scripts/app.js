@@ -39184,7 +39184,7 @@ module.exports = React.createClass({displayName: 'exports',
   componentWillMount: function() {
     var claim = this.props.claims.findWhere({ slug: this.props.params.slug });
     this.subscribeTo(claim);
-    
+
     this.setState({
       claim: claim,
       populated: false
@@ -39210,42 +39210,75 @@ module.exports = React.createClass({displayName: 'exports',
     var last;
 
     return (
-      React.DOM.div(null, 
-        React.DOM.h1(null, claim.domain(article)), 
-        React.DOM.p(null, React.DOM.a({href: article.url, target: "_blank"}, article.headline)), 
-        React.DOM.p(null, moment(article.createdAt).format('MMMM Do YYYY')), 
-        React.DOM.ul(null, 
-          slices.map(function(slice) {
-            var headlineChanged = last && last.headlineStance != slice.headlineStance
-            var bodyChanged = last && last.stance != slice.stance;
-            var initial = !last;
-            last = article;
-            return (
-              React.DOM.li(null, 
-                React.DOM.p(null, "stamp: ", moment(slice.end).format('MMMM Do YYYY h:mma')), 
-                 initial ?
-                  React.DOM.p(null, "Initially published. Headline ", slice.headlineStance, " Body ", slice.stance)
-                    :
-                  React.DOM.p(null, 
-                     headlineChanged ? React.DOM.span(null, " Headline changed: ", slice.headlineStance, " ") : null, 
-                     bodyChanged ? React.DOM.span(null, " Body changed: ", slice.stance, " ") : null
-                  ), 
-                
-                React.DOM.p(null, "shares: ", _.values(slice.shares).reduce(function(sum, count) { return sum + count; }, 0))
-              )
-            );
-          })
-        ), 
+      React.DOM.div({className: "container"}, 
+        React.DOM.div({className: "page page-article"}, 
 
-        React.DOM.ul(null, 
-          _.map(shares, function(count, provider) {
-            return React.DOM.li(null, provider, ": ", count)
-          })
+          React.DOM.header({className: "section"}, 
+            React.DOM.div({className: "page-header"}, 
+              React.DOM.h1({className: "page-title"}, article.headline), 
+              React.DOM.p(null, article.source), 
+              React.DOM.p(null, React.DOM.a({href: article.url, target: "_blank"}, "View original article")), 
+              React.DOM.p(null, moment(article.createdAt).format('MMMM Do YYYY'))
+            ), 
+            React.DOM.div({className: "page-meta"}, 
+              React.DOM.div({className: 'status status-' + claim.get('truthiness')}, 
+                React.DOM.span({className: "status-label"}, "Claim state"), 
+                React.DOM.span({className: "status-value"}, claim.get('truthiness'))
+              ), 
+              React.DOM.div({className: 'status status-'}, 
+                React.DOM.span({className: "status-label"}, "Most shared"), 
+                React.DOM.span({className: "status-value"})
+              )
+            )
+          ), 
+
+          React.DOM.ul(null, 
+            _.map(shares, function(count, provider) {
+              return React.DOM.li(null, provider, ": ", count)
+            })
+          ), 
+
+          React.DOM.h2({className: "articles-title"}, "Revisions"), 
+          React.DOM.ul({className: "articles"}, 
+            slices.map(function(slice) {
+              var headlineChanged = last && last.headlineStance != slice.headlineStance
+              var bodyChanged = last && last.stance != slice.stance;
+              var initial = !last;
+              last = article;
+              return (
+                React.DOM.li(null, 
+                  React.DOM.article({className: "article article-revision"}, 
+                    React.DOM.header({className: "article-header"}, 
+                      React.DOM.h3(null, moment(slice.end).format('MMMM Do YYYY')), 
+                      React.DOM.p(null, moment(slice.end).format('h:mma'))
+                    ), 
+                    React.DOM.div({className: "article-content"}, 
+                       initial ?
+                        React.DOM.p(null, "Initially published. Headline ", slice.headlineStance, " Body ", slice.stance)
+                          :
+                        React.DOM.p(null, 
+                           headlineChanged ? React.DOM.span(null, " Headline changed: ", slice.headlineStance, " ") : null, 
+                           bodyChanged ? React.DOM.span(null, " Body changed: ", slice.stance, " ") : null
+                        )
+                      
+                    ), 
+                    React.DOM.footer({className: "article-footer"}, 
+                      React.DOM.div({className: "shares"}, 
+                        React.DOM.span({className: "shares-value"}, _.values(slice.shares).reduce(function(sum, count) { return sum + count; }, 0)), 
+                        React.DOM.span({className: "shares-label"}, "Shares")
+                      )
+                    )
+                  )
+                )
+              );
+            })
+          )
         )
       )
     );
   }
 });
+
 },{"../mixins/backbone_collection.js":204,"moment":9,"react":195,"underscore":196}],200:[function(require,module,exports){
 /** @jsx React.DOM */
 
@@ -39645,11 +39678,19 @@ module.exports = React.createClass({displayName: 'exports',
   render: function() {
     return (
       React.DOM.div({className: "container"}, 
-        React.DOM.ul(null, 
+        React.DOM.ul({className: "articles"}, 
           this.props.claims.models.map(function(claim, i) {
             return (
               React.DOM.li({key: claim.id}, 
-                Link({to: "claim", params: { slug: claim.get('slug')}}, claim.get('headline'))
+                React.DOM.article({className: "article"}, 
+                  React.DOM.div({className: 'stance stance-' + claim.get('truthiness')}, 
+                    React.DOM.span({className: "stance-value"}, claim.get('truthiness'))
+                  ), 
+                  React.DOM.div({className: "article-content"}, 
+                    React.DOM.h4({className: "article-title"}, Link({to: "claim", params: { slug: claim.get('slug')}}, claim.get('headline'))), 
+                    React.DOM.p({className: "article-description"}, claim.get('description'))
+                  )
+                )
               )
             );
           })
