@@ -141,17 +141,36 @@ module.exports = Backbone.Model.extend({
     }
   },
 
-  /* returns count by provider for articleId, e.g. { facebook: nnn, google: nnn... } */
+  originDate: function() {
+    if (this.get('articles')) {
+      return _.pluck(this.get('articles'), 'publishedAt').sort()[0];
+    }
+  },
+
+  /* returns count by stance for articleId, e.g. { for: nnn, against: nnn... } */
   sharesByArticle: function(articleId) {
     return _.reduce(this.get('slices'), function(shares, slice) {
-      if (slice.articles[articleId] && slice.articles[articleId].shares) {
-        shares = _.reduce(slice.articles[articleId].shares, function(hash, count, provider) {
-          hash[provider] = (hash[provider]||0) + count;
-          return hash;
-        }, shares);
+      var stance = slice.articles[articleId] && this.bestStance(slice.articles[articleId]);
+      if (slice.articles[articleId] && slice.articles[articleId].shares && _.contains(this.stances, stance)) {
+        shares[stance] = _.reduce(slice.articles[articleId].shares, function(shares, count) { return shares + count; }, shares[stance]||0);
       }
       return shares;
-    }, {});
+    }, {}, this);
+  },
+
+  /* returns total for claim { facebook: nnn, google: nnn,... } to make these totals line up, only count ones with relevant stances */
+  sharesByProvider: function() {
+    return _.reduce(this.get('slices'), function(shares, slice) {
+      return _.reduce(slice.articles, function(shares, article) {
+        if (_.contains(this.stances, this.bestStance(article))) {
+          shares = _.reduce(article.shares, function(shares, count, provider) {
+            shares[provider] = (shares[provider]||0) + count;
+            return shares;
+          }, shares);
+        }
+        return shares;
+      }, shares, this);
+    }, {}, this);
   },
 
   /* stance of an article when we must pick one */

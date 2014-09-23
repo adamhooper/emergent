@@ -61,8 +61,8 @@ module.exports = React.createClass({
           </header>
 
           <ul>
-            {_.map(shares, function(count, provider) {
-              return <li>{provider}: {count}</li>
+            {_.map(shares, function(count, stance) {
+              return <li>{stance}: {count}</li>
             })}
           </ul>
 

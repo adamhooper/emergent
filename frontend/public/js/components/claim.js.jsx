@@ -28,6 +28,10 @@ module.exports = React.createClass({
     window.claim = claim;
   },
 
+  componentDidMount: function() {
+    this.setState({ barChartWidth: $(this.getDOMNode()).width() });
+  },
+
   setFilter: function(filter) {
     this.setState({ filter: filter });
   },
@@ -42,7 +46,7 @@ module.exports = React.createClass({
     ];
 
     if (this.state.populated) {
-      var slices = claim.aggregateSlices();
+      var slices = claim.aggregateSlices().slice(0, 18);
       var data = slices.reduce(function(series, slice) {
         series[0].push(slice.for||0);
         series[1].push(slice.against||0);
@@ -52,13 +56,13 @@ module.exports = React.createClass({
 
       // find x-axis labels
       var skips = 1;
-      if (slices.length > 10) { skips = 3; }
-      if (slices.length > 25) { skips = 6; }
-      if (slices.length > 50) { skips = 12; }
+      if (slices.length > this.state.barChartWidth / 100) { skips = 3; }
+      if (slices.length > 2 * this.state.barChartWidth / 100) { skips = 6; }
+      if (slices.length > 4 * this.state.barChartWidth / 100) { skips = 12; }
       var labels = slices.map(function(slice, i) {
-        return i%skips ? '' : moment(slice.time).format('M/D');
+        return i%skips ? '' : moment(slice.time).format('MMM Do, YYYY').toUpperCase();
       });
-
+      labels[0] = labels[1] = labels[labels.length - 1] = labels[labels.length - 2] = '';
       // find y-axis labels
       var highest = _.max(data.reduce(function(heights, line) {
         line.forEach(function(amount, i) {
@@ -77,7 +81,11 @@ module.exports = React.createClass({
       if (claim.get('truthinessDate')) {
         callout = {
           position: _.find(_.range(slices.length), function(s) { return slices[s].time > new Date(claim.get('truthinessDate')); }),
-          text: 'Confirmed ' + claim.get('truthiness')
+          text: [
+            moment(claim.get('truthinessDate')).format('MMM Do').toUpperCase(),
+            'CONFIRMED',
+            claim.get('truthiness').toUpperCase()
+          ]
         };
       }
       window.callout = callout;
@@ -203,10 +211,10 @@ module.exports = React.createClass({
 
           <section className="section">
             <h3 className="section-title">Shares over time</h3>
-            {this.state.populated ?
-              <Barchart width={800} height={200} ref="chart" marginLeft={80} ylabels={ylabels} labels={labels} series={data} colors={colors} fontSize={12} gap={0.1} callout={callout}/>
+            {this.state.populated && this.state.barChartWidth ?
+              <Barchart width={this.state.barChartWidth - 100} height={350} ref="chart" marginLeft={80} marginRight={20} ylabels={ylabels} labels={labels} series={data} colors={colors} fontSize={12} gap={0.6} callout={callout} color="#252424"/>
               :
-              <div>Loading</div>
+              <div id="bar-chart-placeholder">Loading...</div>
             }
           </section>
 
@@ -214,15 +222,18 @@ module.exports = React.createClass({
             <h3 className="articles-title">Sources</h3>
             <ul className="articles">
               {_.first(claim.articlesByStance(this.state.filter), 10).map(function(article) {
-                //console.log(article);
                 return (
                   <li key={article.id}>
-                    <article className={'article' + (article.revised ? ' is-revised' : '')}>
+                    <article className="article">
                       <header className="article-header">
                         <div className={'stance stance-' + article.stance}>
                           <span className="stance-value">{article.stance}</span>
                         </div>
-                        {article.revised ? 'Revised' : null}
+                        {article.revised ? 
+                          <div className={'stance stance-' + article.revised}>
+                            <span className="stance-value">Revised to {article.revised}</span>
+                          </div>
+                        : ''}
                       </header>
                       <div className="article-content">
                         <h4 className="article-title"><Link to="article" params={{ slug: claim.get('slug'), articleId: article.id }}>{article.source}</Link> - <time datetime={article.createdAt}>{moment(article.createdAt).format('MMMM Do YYYY')}</time></h4>

@@ -39233,8 +39233,8 @@ module.exports = React.createClass({displayName: 'exports',
           ), 
 
           React.DOM.ul(null, 
-            _.map(shares, function(count, provider) {
-              return React.DOM.li(null, provider, ": ", count)
+            _.map(shares, function(count, stance) {
+              return React.DOM.li(null, stance, ": ", count)
             })
           ), 
 
@@ -39297,6 +39297,7 @@ module.exports = React.createClass({displayName: 'exports',
     gap: React.PropTypes.number,
     fontSize: React.PropTypes.number,
     minLength: React.PropTypes.number,
+    color: React.PropTypes.string,
     series: React.PropTypes.arrayOf(React.PropTypes.arrayOf(React.PropTypes.number)),
     colors: React.PropTypes.arrayOf(React.PropTypes.string),
     labels: React.PropTypes.arrayOf(React.PropTypes.string),
@@ -39315,6 +39316,7 @@ module.exports = React.createClass({displayName: 'exports',
       minLength: 10, // minimum number of bars to leave space for
       gap: 0, // gap width as a percentage of bar width
       series: [[]], // array of arrays of data
+      color: 'black', // main color for text/lines
       colors: ['black'] // array of colors for each series
     };
   },
@@ -39365,10 +39367,11 @@ module.exports = React.createClass({displayName: 'exports',
 
     var labels = this.props.labels.map(function(label, i) {
       return {
-        y: height + this.props.fontSize + this.props.marginTop,
-        x: (width + gap) * i + this.props.marginLeft,
+        y: height + this.props.fontSize*1.2 + this.props.marginTop,
+        x: (width + gap) * i + (width/2) + this.props.marginLeft,
         fontSize: this.props.fontSize,
-        fill: 'black',
+        textAnchor: 'middle',
+        fill: this.props.color,
         __html: label,
         key: "label_" + i
       };
@@ -39377,9 +39380,9 @@ module.exports = React.createClass({displayName: 'exports',
     var ylabels = this.props.ylabels.map(function(label, i) {
       return {
         y: height - (label * heightFactor) + this.props.marginTop,
-        x: this.props.marginLeft - 10,
+        x: this.props.marginLeft - gap,
         fontSize: this.props.fontSize,
-        fill: 'black',
+        fill: this.props.color,
         textAnchor: 'end',
         __html: new String(label).replace(/(\d)(?=(\d{3})+$)/g, '$1,'),
         key: "ylabel_" + i
@@ -39389,14 +39392,22 @@ module.exports = React.createClass({displayName: 'exports',
     var callout, calloutText;
     if (this.props.callout) {
       var x = (width + gap) * this.props.callout.position + this.props.marginLeft - (gap / 2);
-      var callout = React.DOM.line({x1: x, x2: x, y1: "0", y2: height + this.props.marginTop + this.props.marginBottom, stroke: "black", strokeDasharray: "5,5"})
-      var calloutText = React.DOM.text({x: x + 5, y: this.props.fontSize + 25, fontSize: this.props.fontSize, fill: "black"}, this.props.callout.text)
+      var alignRight = x > this.props.width*.75; 
+      var callout = React.DOM.line({x1: x, x2: x, y1: "0", y2: height + this.props.marginTop, stroke: this.props.color, strokeWidth: "2", strokeDasharray: "2,7"})
+      var calloutText = (
+        React.DOM.text({y: this.props.fontSize + 25, fontSize: this.props.fontSize, fill: this.props.color}, 
+          this.props.callout.text.map(function(tspan) {
+            return React.DOM.tspan({x: x + (alignRight ? -5 : 5), dy: 1.2*this.props.fontSize, textAnchor: alignRight ? 'end' : 'start'}, tspan)
+          }.bind(this))
+        )
+      );
     }
 
     return (
       React.DOM.svg({width: this.props.width + this.props.marginLeft + this.props.marginRight, height: this.props.height + this.props.marginTop + this.props.marginBottom}, 
         React.DOM.g(null, 
-          bars.map(function(bar) { return React.DOM.rect(bar); })
+          bars.map(function(bar) { return React.DOM.rect(bar); }), 
+          React.DOM.line({x1: this.props.marginLeft, x2: this.props.width + this.props.marginLeft, y1: this.props.marginTop + this.props.height, y2: this.props.marginTop + this.props.height, stroke: "#999"})
         ), 
         React.DOM.g(null, 
           labels.map(function(label) { return React.DOM.text(label, label.__html); }), 
@@ -39440,6 +39451,10 @@ module.exports = React.createClass({displayName: 'exports',
     window.claim = claim;
   },
 
+  componentDidMount: function() {
+    this.setState({ barChartWidth: $(this.getDOMNode()).width() });
+  },
+
   setFilter: function(filter) {
     this.setState({ filter: filter });
   },
@@ -39454,7 +39469,7 @@ module.exports = React.createClass({displayName: 'exports',
     ];
 
     if (this.state.populated) {
-      var slices = claim.aggregateSlices();
+      var slices = claim.aggregateSlices().slice(0, 18);
       var data = slices.reduce(function(series, slice) {
         series[0].push(slice.for||0);
         series[1].push(slice.against||0);
@@ -39464,13 +39479,13 @@ module.exports = React.createClass({displayName: 'exports',
 
       // find x-axis labels
       var skips = 1;
-      if (slices.length > 10) { skips = 3; }
-      if (slices.length > 25) { skips = 6; }
-      if (slices.length > 50) { skips = 12; }
+      if (slices.length > this.state.barChartWidth / 100) { skips = 3; }
+      if (slices.length > 2 * this.state.barChartWidth / 100) { skips = 6; }
+      if (slices.length > 4 * this.state.barChartWidth / 100) { skips = 12; }
       var labels = slices.map(function(slice, i) {
-        return i%skips ? '' : moment(slice.time).format('M/D');
+        return i%skips ? '' : moment(slice.time).format('MMM Do, YYYY').toUpperCase();
       });
-
+      labels[0] = labels[1] = labels[labels.length - 1] = labels[labels.length - 2] = '';
       // find y-axis labels
       var highest = _.max(data.reduce(function(heights, line) {
         line.forEach(function(amount, i) {
@@ -39489,7 +39504,11 @@ module.exports = React.createClass({displayName: 'exports',
       if (claim.get('truthinessDate')) {
         callout = {
           position: _.find(_.range(slices.length), function(s) { return slices[s].time > new Date(claim.get('truthinessDate')); }),
-          text: 'Confirmed ' + claim.get('truthiness')
+          text: [
+            moment(claim.get('truthinessDate')).format('MMM Do').toUpperCase(),
+            'CONFIRMED',
+            claim.get('truthiness').toUpperCase()
+          ]
         };
       }
       window.callout = callout;
@@ -39615,10 +39634,10 @@ module.exports = React.createClass({displayName: 'exports',
 
           React.DOM.section({className: "section"}, 
             React.DOM.h3({className: "section-title"}, "Shares over time"), 
-            this.state.populated ?
-              Barchart({width: 800, height: 200, ref: "chart", marginLeft: 80, ylabels: ylabels, labels: labels, series: data, colors: colors, fontSize: 12, gap: 0.1, callout: callout})
+            this.state.populated && this.state.barChartWidth ?
+              Barchart({width: this.state.barChartWidth - 100, height: 350, ref: "chart", marginLeft: 80, marginRight: 20, ylabels: ylabels, labels: labels, series: data, colors: colors, fontSize: 12, gap: 0.6, callout: callout, color: "#252424"})
               :
-              React.DOM.div(null, "Loading")
+              React.DOM.div({id: "bar-chart-placeholder"}, "Loading...")
             
           ), 
 
@@ -39626,15 +39645,18 @@ module.exports = React.createClass({displayName: 'exports',
             React.DOM.h3({className: "articles-title"}, "Sources"), 
             React.DOM.ul({className: "articles"}, 
               _.first(claim.articlesByStance(this.state.filter), 10).map(function(article) {
-                //console.log(article);
                 return (
                   React.DOM.li({key: article.id}, 
-                    React.DOM.article({className: 'article' + (article.revised ? ' is-revised' : '')}, 
+                    React.DOM.article({className: "article"}, 
                       React.DOM.header({className: "article-header"}, 
                         React.DOM.div({className: 'stance stance-' + article.stance}, 
                           React.DOM.span({className: "stance-value"}, article.stance)
                         ), 
-                        article.revised ? 'Revised' : null
+                        article.revised ? 
+                          React.DOM.div({className: 'stance stance-' + article.revised}, 
+                            React.DOM.span({className: "stance-value"}, "Revised to ", article.revised)
+                          )
+                        : ''
                       ), 
                       React.DOM.div({className: "article-content"}, 
                         React.DOM.h4({className: "article-title"}, Link({to: "article", params: { slug: claim.get('slug'), articleId: article.id}}, article.source), " - ", React.DOM.time({datetime: article.createdAt}, moment(article.createdAt).format('MMMM Do YYYY'))), 
@@ -39932,17 +39954,36 @@ module.exports = Backbone.Model.extend({
     }
   },
 
-  /* returns count by provider for articleId, e.g. { facebook: nnn, google: nnn... } */
+  originDate: function() {
+    if (this.get('articles')) {
+      return _.pluck(this.get('articles'), 'publishedAt').sort()[0];
+    }
+  },
+
+  /* returns count by stance for articleId, e.g. { for: nnn, against: nnn... } */
   sharesByArticle: function(articleId) {
     return _.reduce(this.get('slices'), function(shares, slice) {
-      if (slice.articles[articleId] && slice.articles[articleId].shares) {
-        shares = _.reduce(slice.articles[articleId].shares, function(hash, count, provider) {
-          hash[provider] = (hash[provider]||0) + count;
-          return hash;
-        }, shares);
+      var stance = slice.articles[articleId] && this.bestStance(slice.articles[articleId]);
+      if (slice.articles[articleId] && slice.articles[articleId].shares && _.contains(this.stances, stance)) {
+        shares[stance] = _.reduce(slice.articles[articleId].shares, function(shares, count) { return shares + count; }, shares[stance]||0);
       }
       return shares;
-    }, {});
+    }, {}, this);
+  },
+
+  /* returns total for claim { facebook: nnn, google: nnn,... } to make these totals line up, only count ones with relevant stances */
+  sharesByProvider: function() {
+    return _.reduce(this.get('slices'), function(shares, slice) {
+      return _.reduce(slice.articles, function(shares, article) {
+        if (_.contains(this.stances, this.bestStance(article))) {
+          shares = _.reduce(article.shares, function(shares, count, provider) {
+            shares[provider] = (shares[provider]||0) + count;
+            return shares;
+          }, shares);
+        }
+        return shares;
+      }, shares, this);
+    }, {}, this);
   },
 
   /* stance of an article when we must pick one */
