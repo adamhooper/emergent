@@ -12,6 +12,7 @@
   "dependencies": {
     "bluebird": "^2.3.0",
     "body-parser": "^1.5.2",
+    "bytes": "~1.0.0",
     "coffee-script": "~1.7.1",
     "connect-redis": "^2.0.0",
     "express": "^4.7.2",
@@ -20,9 +21,8 @@
     "lodash": "^2.4.1",
     "morgan": "^1.2.2",
     "passport": "~0.2.0",
-    "passport-google": "~0.3.0",
-    "validator": "^3.17.0",
-    "bytes": "~1.0.0"
+    "passport-google-oauth": "^0.1.5",
+    "validator": "^3.17.0"
   },
   "repository": {
     "type": "git",

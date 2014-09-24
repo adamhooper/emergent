@@ -9,12 +9,15 @@ requestToBaseUrl = (req) ->
 initializePassport = (anyRequest) ->
   baseUrl = requestToBaseUrl(anyRequest)
 
-  GoogleStrategy = require('passport-google').Strategy
+  GoogleStrategy = require('passport-google-oauth').OAuth2Strategy
+  try
+    config = require('../../../../google-oauth-config.json')
+  catch
+    config = require('../../config/default-google-oauth-config.json')
+    console.warn("Cannot load google-oauth-config.json from parent directory. Using default, for #{config.callbackURL}")
+  config.scope = [ 'email' ]
 
-  passport.use(new GoogleStrategy({
-    returnURL: "#{baseUrl}/auth/google/callback"
-    realm: baseUrl
-  }, (identifier, profile, done) ->
+  passport.use(new GoogleStrategy(config, (token, refreshToken, profile, done) ->
     email = profile.emails[0].value
     models.User.find(where: { email: email })
       .then((maybeUser) -> maybeUser || false)
