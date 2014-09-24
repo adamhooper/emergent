@@ -109,8 +109,7 @@ module.exports = React.createClass({
     }
 
     var mostShared = _.first(claim.articlesByStance()),
-      startedTracking = claim.startedTracking(),
-      sharesProvider = claim.sharesByProvider() || {};
+      startedTracking = claim.startedTracking();
 
     return (
       <div className="container">
@@ -140,11 +139,24 @@ module.exports = React.createClass({
           <section className="filters filters-section">
             <button onClick={this.setFilter.bind(this, null)} className={'filter filter-all filter-category-all' + (!this.state.filter ? ' is-selected' : '')}>
               <div className="filter-content">
-                <h4 className="filter-title">All</h4>
-                <p className="filter-sources">{claim.articlesByStance().length} sources</p>
-                <div className="shares">
-                  <span className="shares-value">{this.formatNumber(_.reduce(shares, function(sum, num) { return sum + num; }, 0))}</span>
-                  <span className="shares-label">Shares</span>
+                <h4 className="filter-title">All Shares</h4>
+                <div className="filter-meta">
+                  <div className="share">
+                    <span className="shares-value">{claim.articlesByStance().length}</span>
+                    <span className="shares-label">Sources</span>
+                  </div>
+                  <div className="share share-all">
+                    <span className="shares-value">{this.formatNumber(_.reduce(shares, function(sum, num) { return sum + num; }, 0))}</span>
+                    <span className="shares-label">Shares</span>
+                  </div>
+                  {_.map(claim.sharesByProvider(), function(shares, provider) {
+                    return (
+                      <div className="share">
+                        <span className="shares-value">{this.formatNumber(shares)}</span>
+                        <span className="shares-label">{provider}</span>
+                      </div>
+                    );
+                  }, this)}
                 </div>
               </div>
             </button>
@@ -167,7 +179,7 @@ module.exports = React.createClass({
                       <article className="article article-source" key={article.id}>
                         <h4 className="article-title">{article.source} - <time datetime={article.createdAt}>{moment(article.createdAt).format('MMMM Do YYYY')}</time></h4>
                         <p className="article-description"><Link to="article" params={{ slug: claim.get('slug'), articleId: article.id }}>{this.truncateString(article.headline)}</Link></p>
-                        <p>{this.formatNumber(article.shares)} shares</p>
+                        <p className="shares-value">{this.formatNumber(article.shares)} shares</p>
                       </article>
                     )
                   }, this)}
@@ -191,7 +203,7 @@ module.exports = React.createClass({
                       <article className="article article-source" key={article.id}>
                         <h4 className="article-title">{article.source} - <time datetime={article.createdAt}>{moment(article.createdAt).format('MMMM Do YYYY')}</time></h4>
                         <p className="article-description"><Link to="article" params={{ slug: claim.get('slug'), articleId: article.id }}>{this.truncateString(article.headline)}</Link></p>
-                        <p>{this.formatNumber(article.shares)} shares</p>
+                        <p className="shares-value">{this.formatNumber(article.shares)} shares</p>
                       </article>
                     )
                   }, this)}
@@ -215,7 +227,7 @@ module.exports = React.createClass({
                       <article className="article article-source" key={article.id}>
                         <h4 className="article-title">{article.source} - <time datetime={article.createdAt}>{moment(article.createdAt).format('MMMM Do YYYY')}</time></h4>
                         <p className="article-description"><Link to="article" params={{ slug: claim.get('slug'), articleId: article.id }}>{this.truncateString(article.headline)}</Link></p>
-                        <p>{this.formatNumber(article.shares)} shares</p>
+                        <p className="shares-value">{this.formatNumber(article.shares)} shares</p>
                       </article>
                     )
                   }, this)}

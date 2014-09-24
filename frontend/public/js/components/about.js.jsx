@@ -13,7 +13,6 @@ module.exports = React.createClass({
         <p>You can view a list of rumors being tracked on the hompeage, along with their current claim state (True, False, Unverified). Click on a story to visit a page that visualizes the sources reporting the rumor, and a breakdown of social shares per source.</p>
         <p>Have a rumor we should be tracking? A source we should add to an existing story? Feedback to share? <a href="mailto:craig@craigsilverman.ca">Email us</a>.</p>
         <p>You can also <a href="http://eepurl.com/3mb9T">sign up to our mailing list</a> for occasional updates.(We never sell or share your info.)</p>
-        
         <p>Founder/Editor: Craig Silverman | Lead Developer: Adam Hooper | Design and Interaction: <a href="http://www.normative.com">Normative</a> | Research Assistant: Joscelyn Shawn Ganjhara Jurich</p>
       </div>
 

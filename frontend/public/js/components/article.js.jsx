@@ -44,9 +44,9 @@ module.exports = React.createClass({
           <header className="section">
             <div className="page-header">
               <h1 className="page-title">{article.headline}</h1>
-              <p>{article.source}</p>
+              <p>{article.source} - {moment(article.createdAt).format('MMMM Do YYYY')} ({slices.length + ' revision' + (slices.length > 1 ? 's' : '')})</p>
               <p><a href={article.url} target="_blank">View original article</a></p>
-              <p>{moment(article.createdAt).format('MMMM Do YYYY')}</p>
+              <p></p>
             </div>
             <div className="page-meta">
               <div className={'status status-' + claim.get('truthiness')}>

@@ -9,7 +9,7 @@ module.exports = React.createClass({
       <div>
         <header className="site-header">
           <div className="container">
-            <p className="site-logo">Emergent</p>
+            <p className="site-logo"><Link to="claims">Emergent</Link></p>
             <nav className="site-menu">
               <ul className="menu menu-site">
                 <li><Link to="claims" className="menu-item">Stories</Link></li>

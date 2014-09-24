@@ -1,10 +1,27 @@
 .shares {}
 
+.share {
+  display: inline-block;
+
+  & + & {
+    margin-left: 2em;
+  }
+}
+
+.share-all {
+  margin-right: 4em;
+}
+
 .shares-label {
   @extend %label;
   font-size: .85em;
 
-  // inside of a category filter
+  // inside all category filter
+  .filter-all & {
+    color: palette(type, dark);
+  }
+
+  // inside a category filter
   .filter-category & {
     color: palette(clear);
   }
@@ -13,4 +30,10 @@
 .shares-value {
   display: block;
   font-weight: 500;
+  text-transform: uppercase;
+
+  .filter-meta & {
+    font-size: 1.6em;
+    line-height: 1.2;
+  }
 }

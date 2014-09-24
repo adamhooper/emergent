@@ -504,7 +504,7 @@ th {
   font-family: "Gotham";
   src: url('/fonts/Gotham-Bold.otf') format('opentype');
   font-weight: 700; }
-.shares-label {
+.shares-label, .sources-label {
   color: #727272;
   text-transform: uppercase; }
 
@@ -619,26 +619,32 @@ th {
     width: 14.52991%;
     float: right;
     margin-right: 0; } }
-.filter-title {
-  width: 45.94595%;
-  float: left;
-  margin-right: 8.10811%; }
-
-.filter-meta {
-  width: 45.94595%;
-  float: right;
-  margin-right: 0; }
-
 .filter-all {
   clear: both;
   width: 100%;
   float: left;
   margin-left: 0;
   margin-right: 0; }
+  .filter-all .filter-title {
+    width: 23.07692%;
+    float: left;
+    margin-right: 2.5641%; }
+  .filter-all .filter-meta {
+    width: 74.35897%;
+    float: right;
+    margin-right: 0; }
 
 .filter-category {
   width: 33.33333%;
   float: left; }
+  .filter-category .filter-title {
+    width: 45.94595%;
+    float: left;
+    margin-right: 8.10811%; }
+  .filter-category .filter-meta {
+    width: 45.94595%;
+    float: right;
+    margin-right: 0; }
 
 * {
   box-sizing: border-box; }
@@ -769,7 +775,7 @@ strong {
   margin-top: 0;
   text-transform: uppercase; }
 
-.filter-meta {
+.filter-category .filter-meta {
   text-align: right; }
 
 .filter-content {
@@ -867,6 +873,9 @@ strong {
   line-height: 1;
   margin-bottom: 0;
   text-transform: uppercase; }
+  .site-logo a {
+    color: #eaeaea;
+    text-decoration: none; }
 
 svg {
   margin-top: -20px; }
@@ -874,18 +883,37 @@ svg {
 .section {
   margin-bottom: 1em; }
 
+.share {
+  display: inline-block; }
+  .share + .share {
+    margin-left: 2em; }
+
+.share-all {
+  margin-right: 4em; }
+
 .shares-label {
   font-size: .85em; }
+  .filter-all .shares-label {
+    color: #252424; }
   .filter-category .shares-label {
     color: #fff; }
 
 .shares-value {
   display: block;
-  font-weight: 500; }
+  font-weight: 500;
+  text-transform: uppercase; }
+  .filter-meta .shares-value {
+    font-size: 1.6em;
+    line-height: 1.2; }
 
 .sources {
   font-size: .85em;
   margin-bottom: 0;
+  text-transform: uppercase; }
+
+.sources-value {
+  display: block;
+  font-weight: 500;
   text-transform: uppercase; }
 
 .stance {

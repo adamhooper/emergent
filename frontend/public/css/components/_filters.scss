@@ -73,7 +73,9 @@
 }
 
 .filter-meta {
-  text-align: right;
+  .filter-category & {
+    text-align: right;
+  }
 }
 
 .filter-content {

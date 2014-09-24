@@ -81,20 +81,29 @@
   }
 }
 
-
-.filter-title {
-  @include span(2 of 4);
-}
-
-.filter-meta {
-  @include span(last 2 of 4);
-}
-
+//
+// Filter categories
 
 .filter-all {
   @include full;
+
+  .filter-title {
+    @include span(3 of 12);
+  }
+
+  .filter-meta {
+    @include span(last 9 of 12);
+  }
 }
 
 .filter-category {
   @include span(nest 4 of 12 inside);
+
+  .filter-title {
+    @include span(2 of 4);
+  }
+
+  .filter-meta {
+    @include span(last 2 of 4);
+  }
 }

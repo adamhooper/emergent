@@ -39192,7 +39192,6 @@ module.exports = React.createClass({displayName: 'exports',
         React.DOM.p(null, "You can view a list of rumors being tracked on the hompeage, along with their current claim state (True, False, Unverified). Click on a story to visit a page that visualizes the sources reporting the rumor, and a breakdown of social shares per source."), 
         React.DOM.p(null, "Have a rumor we should be tracking? A source we should add to an existing story? Feedback to share? ", React.DOM.a({href: "mailto:craig@craigsilverman.ca"}, "Email us"), "."), 
         React.DOM.p(null, "You can also ", React.DOM.a({href: "http://eepurl.com/3mb9T"}, "sign up to our mailing list"), " for occasional updates.(We never sell or share your info.)"), 
-        
         React.DOM.p(null, "Founder/Editor: Craig Silverman | Lead Developer: Adam Hooper | Design and Interaction: ", React.DOM.a({href: "http://www.normative.com"}, "Normative"), " | Research Assistant: Joscelyn Shawn Ganjhara Jurich")
       )
 
@@ -39247,9 +39246,9 @@ module.exports = React.createClass({displayName: 'exports',
           React.DOM.header({className: "section"}, 
             React.DOM.div({className: "page-header"}, 
               React.DOM.h1({className: "page-title"}, article.headline), 
-              React.DOM.p(null, article.source), 
+              React.DOM.p(null, article.source, " - ", moment(article.createdAt).format('MMMM Do YYYY'), " (", slices.length + ' revision' + (slices.length > 1 ? 's' : ''), ")"), 
               React.DOM.p(null, React.DOM.a({href: article.url, target: "_blank"}, "View original article")), 
-              React.DOM.p(null, moment(article.createdAt).format('MMMM Do YYYY'))
+              React.DOM.p(null)
             ), 
             React.DOM.div({className: "page-meta"}, 
               React.DOM.div({className: 'status status-' + claim.get('truthiness')}, 
@@ -39563,8 +39562,7 @@ module.exports = React.createClass({displayName: 'exports',
     }
 
     var mostShared = _.first(claim.articlesByStance()),
-      startedTracking = claim.startedTracking(),
-      sharesProvider = claim.sharesByProvider() || {};
+      startedTracking = claim.startedTracking();
 
     return (
       React.DOM.div({className: "container"}, 
@@ -39594,11 +39592,24 @@ module.exports = React.createClass({displayName: 'exports',
           React.DOM.section({className: "filters filters-section"}, 
             React.DOM.button({onClick: this.setFilter.bind(this, null), className: 'filter filter-all filter-category-all' + (!this.state.filter ? ' is-selected' : '')}, 
               React.DOM.div({className: "filter-content"}, 
-                React.DOM.h4({className: "filter-title"}, "All"), 
-                React.DOM.p({className: "filter-sources"}, claim.articlesByStance().length, " sources"), 
-                React.DOM.div({className: "shares"}, 
-                  React.DOM.span({className: "shares-value"}, this.formatNumber(_.reduce(shares, function(sum, num) { return sum + num; }, 0))), 
-                  React.DOM.span({className: "shares-label"}, "Shares")
+                React.DOM.h4({className: "filter-title"}, "All Shares"), 
+                React.DOM.div({className: "filter-meta"}, 
+                  React.DOM.div({className: "share"}, 
+                    React.DOM.span({className: "shares-value"}, claim.articlesByStance().length), 
+                    React.DOM.span({className: "shares-label"}, "Sources")
+                  ), 
+                  React.DOM.div({className: "share share-all"}, 
+                    React.DOM.span({className: "shares-value"}, this.formatNumber(_.reduce(shares, function(sum, num) { return sum + num; }, 0))), 
+                    React.DOM.span({className: "shares-label"}, "Shares")
+                  ), 
+                  _.map(claim.sharesByProvider(), function(shares, provider) {
+                    return (
+                      React.DOM.div({className: "share"}, 
+                        React.DOM.span({className: "shares-value"}, this.formatNumber(shares)), 
+                        React.DOM.span({className: "shares-label"}, provider)
+                      )
+                    );
+                  }, this)
                 )
               )
             ), 
@@ -39621,7 +39632,7 @@ module.exports = React.createClass({displayName: 'exports',
                       React.DOM.article({className: "article article-source", key: article.id}, 
                         React.DOM.h4({className: "article-title"}, article.source, " - ", React.DOM.time({datetime: article.createdAt}, moment(article.createdAt).format('MMMM Do YYYY'))), 
                         React.DOM.p({className: "article-description"}, Link({to: "article", params: { slug: claim.get('slug'), articleId: article.id}}, this.truncateString(article.headline))), 
-                        React.DOM.p(null, this.formatNumber(article.shares), " shares")
+                        React.DOM.p({className: "shares-value"}, this.formatNumber(article.shares), " shares")
                       )
                     )
                   }, this)
@@ -39645,7 +39656,7 @@ module.exports = React.createClass({displayName: 'exports',
                       React.DOM.article({className: "article article-source", key: article.id}, 
                         React.DOM.h4({className: "article-title"}, article.source, " - ", React.DOM.time({datetime: article.createdAt}, moment(article.createdAt).format('MMMM Do YYYY'))), 
                         React.DOM.p({className: "article-description"}, Link({to: "article", params: { slug: claim.get('slug'), articleId: article.id}}, this.truncateString(article.headline))), 
-                        React.DOM.p(null, this.formatNumber(article.shares), " shares")
+                        React.DOM.p({className: "shares-value"}, this.formatNumber(article.shares), " shares")
                       )
                     )
                   }, this)
@@ -39669,7 +39680,7 @@ module.exports = React.createClass({displayName: 'exports',
                       React.DOM.article({className: "article article-source", key: article.id}, 
                         React.DOM.h4({className: "article-title"}, article.source, " - ", React.DOM.time({datetime: article.createdAt}, moment(article.createdAt).format('MMMM Do YYYY'))), 
                         React.DOM.p({className: "article-description"}, Link({to: "article", params: { slug: claim.get('slug'), articleId: article.id}}, this.truncateString(article.headline))), 
-                        React.DOM.p(null, this.formatNumber(article.shares), " shares")
+                        React.DOM.p({className: "shares-value"}, this.formatNumber(article.shares), " shares")
                       )
                     )
                   }, this)
@@ -39780,7 +39791,7 @@ module.exports = React.createClass({displayName: 'exports',
       React.DOM.div(null, 
         React.DOM.header({className: "site-header"}, 
           React.DOM.div({className: "container"}, 
-            React.DOM.p({className: "site-logo"}, "Emergent"), 
+            React.DOM.p({className: "site-logo"}, Link({to: "claims"}, "Emergent")), 
             React.DOM.nav({className: "site-menu"}, 
               React.DOM.ul({className: "menu menu-site"}, 
                 React.DOM.li(null, Link({to: "claims", className: "menu-item"}, "Stories")), 
