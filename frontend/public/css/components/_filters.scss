@@ -8,7 +8,7 @@
   background-color: palette(clear);
   border: 1px solid palette(base);
   box-shadow: 0 1px 2px rgba(0, 0, 0, .1);
-  margin-bottom: 1em;
+  margin-bottom: 3em;
 }
 
 .filter-categories {
@@ -23,7 +23,6 @@
 .filter {
   background-color: palette(clear);
   border: 0;
-  //border-bottom: 10px solid transparent;
   padding: 0;
   position: relative;
   text-align: left;
@@ -32,25 +31,20 @@
     outline: 0;
   }
 
-  &:after {
-    background-color: #fff;
-    bottom: -10px;
-    //content: '';
-    height: 10px;
-    left: 0;
-    position: absolute;
-    right: 0;
-  }
-
   &.is-selected {
-    border-bottom-color: palette(primary);
+    &:after,
+    &:before {
+      content: '';
+      display: block;
+      position: absolute;
+    }
 
     &:after {
       background-color: transparent;
       border: 60px solid transparent;
       border-bottom: 0;
       border-top: 20px solid palette(primary);
-      bottom: -25px;
+      bottom: -15px;
       content: '';
       display: block;
       height: 0;
@@ -58,13 +52,15 @@
       margin-left: -60px;
       position: absolute;
       width: 0;
+      z-index: 10;
+    }
+
+    &:before {
+      bottom: 0;
+      height: 10px;
+      width: 100%;
     }
   }
-}
-
-.filter-content,
-.filter-article {
-  padding: 1.5em 1em 1em;
 }
 
 .filter-title {
@@ -76,15 +72,21 @@
   text-transform: uppercase;
 }
 
-.filter-sources {
-  @extend %label;
-  font-size: .85em;
-  margin-bottom: 0;
+.filter-meta {
+  text-align: right;
 }
 
-.filter-article {
-  background-color: #fff;
+.filter-content {
+  @extend %clearfix;
+  padding: 1.25em 1em;
+}
+
+.filter-source {
+  background-color: palette(clear);
   color: palette(base, darker);
+  height: 175px;
+  padding: 1em;
+  width: 100%;
 }
 
 
@@ -97,7 +99,6 @@
 
 .filter-category {
   border-top: 1px solid palette(base);
-  flex-direction: column;
 
   & + & {
     border-left: 1px solid palette(base);
@@ -111,17 +112,59 @@
 .filter-category-for,
 .filter-category-against,
 .filter-category-observing {
-  color: #fff;
+  color: palette(clear);
+}
+
+.filter-category-all {
+  &.is-selected {
+    &:after {
+      border-top-color: lighten(palette(base), 5%);
+    }
+
+    &:before {
+      background-color: lighten(palette(base), 5%);
+    }
+  }
 }
 
 .filter-category-for {
   background-color: palette(category, for);
+
+  &.is-selected {
+    &:after {
+      border-top-color: palette(category, for);
+    }
+
+    &:before {
+      background-color: palette(category, for);
+    }
+  }
 }
 
 .filter-category-against {
   background-color: palette(category, against);
+
+  &.is-selected {
+    &:after {
+      border-top-color: palette(category, against);
+    }
+
+    &:before {
+      background-color: palette(category, against);
+    }
+  }
 }
 
 .filter-category-observing {
   background-color: palette(category, observing);
+
+  &.is-selected {
+    &:after {
+      border-top-color: palette(category, observing);
+    }
+
+    &:before {
+      background-color: palette(category, observing);
+    }
+  }
 }

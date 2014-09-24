@@ -3,6 +3,11 @@
 .shares-label {
   @extend %label;
   font-size: .85em;
+
+  // inside of a category filter
+  .filter-category & {
+    color: palette(clear);
+  }
 }
 
 .shares-value {

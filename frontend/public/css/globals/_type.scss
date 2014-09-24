@@ -3,7 +3,12 @@
 }
 
 body {
+  color: palette(type, dark);
   font-family: $font-sans-serif;
+}
+
+a {
+  color: palette(type, link);
 }
 
 h1,

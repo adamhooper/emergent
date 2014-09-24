@@ -76,10 +76,18 @@
     }
 
     .article-footer {
-      @include span( last 2 of 12);
+      @include span(last 2 of 12);
     }
   }
+}
 
+
+.filter-title {
+  @include span(2 of 4);
+}
+
+.filter-meta {
+  @include span(last 2 of 4);
 }
 
 
