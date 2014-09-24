@@ -29,7 +29,8 @@ module.exports = React.createClass({
   },
 
   componentDidMount: function() {
-    this.setState({ barChartWidth: $(this.getDOMNode()).width() });
+    // this.setState({ barChartWidth: $(this.getDOMNode()).innerWidth() });
+    this.setState({ barChartWidth: 926 });
   },
 
   setFilter: function(filter) {
@@ -237,7 +238,7 @@ module.exports = React.createClass({
             </div>
           </section>
 
-          <section className="section">
+          <section className="section section-content">
             <h3 className="section-title">Shares over time</h3>
             {this.state.populated && this.state.barChartWidth ?
               <Barchart width={this.state.barChartWidth - 100} height={350} ref="chart" marginTop={75} marginLeft={80} marginRight={20} ylabels={ylabels} labels={labels} series={data} colors={colors} fontSize={12} gap={0.6} callout={callout} color="#252424"/>

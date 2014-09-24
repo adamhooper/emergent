@@ -37,13 +37,13 @@ $susy: (
 
 $breakpoint-mobile:    0;
 $breakpoint-tablet:    64em;
-$breakpoint-desktop:   78em;
+$breakpoint-desktop:   0; //72em;
 $breakpoint-retina:    96em;
 
 $container-mobile:     90%;
 $container-tablet:     960px;
-$container-desktop:    1190px;
-$container-retina:     1366px;
+$container-desktop:    960px;
+$container-retina:     1190px;
 
 
 

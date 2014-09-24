@@ -18,6 +18,7 @@
 
 .container {
   @extend %container;
+  width: 960px;
 }
 
 
@@ -42,11 +43,11 @@
   .page-claim {
 
     .page-header {
-      @include span(10 of 12);
+      @include span(9 of 12);
     }
 
     .page-meta {
-      @include span(last 2 of 12);
+      @include span(last 3 of 12);
     }
 
     .page-content,

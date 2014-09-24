@@ -512,7 +512,7 @@ th {
   clear: both;
   padding: 1em; }
 
-.articles .article {
+.articles .article, .section-content {
   background-color: #fff;
   border: 1px solid #c1c1c1;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); }
@@ -545,9 +545,9 @@ th {
       content: " ";
       display: block;
       clear: both; } }
-@media (min-width: 78em) {
+@media (min-width: 0) {
   .container {
-    max-width: 1190px;
+    max-width: 960px;
     margin-left: auto;
     margin-right: auto; }
     .container:after {
@@ -556,7 +556,7 @@ th {
       clear: both; } }
 @media (min-width: 96em) {
   .container {
-    max-width: 1366px;
+    max-width: 1190px;
     margin-left: auto;
     margin-right: auto; }
     .container:after {
@@ -564,7 +564,10 @@ th {
       display: block;
       clear: both; } }
 
-@media (min-width: 78em) {
+.container {
+  width: 960px; }
+
+@media (min-width: 0) {
   .site-logo {
     width: 23.07692%;
     float: left;
@@ -577,12 +580,12 @@ th {
 
   .page-article .page-header,
   .page-claim .page-header {
-    width: 82.90598%;
+    width: 74.35897%;
     float: left;
     margin-right: 2.5641%; }
   .page-article .page-meta,
   .page-claim .page-meta {
-    width: 14.52991%;
+    width: 23.07692%;
     float: right;
     margin-right: 0; }
   .page-article .page-content,
@@ -803,10 +806,13 @@ strong {
 .filter-category-observing {
   color: #fff; }
 
-.filter-category-all.is-selected:after {
-  border-top-color: #cecece; }
-.filter-category-all.is-selected:before {
-  background-color: #cecece; }
+.filter-category-all {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  z-index: 10; }
+  .filter-category-all.is-selected:after {
+    border-top-color: #cecece; }
+  .filter-category-all.is-selected:before {
+    background-color: #cecece; }
 
 .filter-category-for {
   background-color: #7ecc76; }
@@ -817,6 +823,10 @@ strong {
 
 .filter-category-against {
   background-color: #dd5b53; }
+  .filter-category-against .filter-content {
+    box-shadow: 1px 0 0 #dd5b53, -1px 0 0 #dd5b53;
+    position: relative;
+    z-index: 10; }
   .filter-category-against.is-selected:after {
     border-top-color: #dd5b53; }
   .filter-category-against.is-selected:before {

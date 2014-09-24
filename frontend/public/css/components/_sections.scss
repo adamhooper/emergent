@@ -8,3 +8,7 @@
 .section-title {
   @extend %section-title;
 }
+
+.section-content {
+  @extend %content-background;
+}

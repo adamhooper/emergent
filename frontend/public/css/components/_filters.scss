@@ -118,6 +118,9 @@
 }
 
 .filter-category-all {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .1);
+  z-index: 10;
+
   &.is-selected {
     &:after {
       border-top-color: lighten(palette(base), 5%);
@@ -145,6 +148,12 @@
 
 .filter-category-against {
   background-color: palette(category, against);
+
+  .filter-content {
+    box-shadow: 1px 0 0 palette(category, against), -1px 0 0 palette(category, against);
+    position: relative;
+    z-index: 10;
+  }
 
   &.is-selected {
     &:after {
