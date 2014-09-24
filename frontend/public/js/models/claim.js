@@ -6,6 +6,10 @@ module.exports = Backbone.Model.extend({
 
   stances: ['for', 'against', 'observing'],
 
+  truthinessText: function() {
+    return this.get('truthiness')=='true' || this.get('truthiness')=='false' ? this.get('truthiness') : 'unverified';
+  },
+
   /* retrieve articles and timeslices if we just have a base object */
   populate: function() {
     if (!this.get('articles')) {
@@ -136,9 +140,7 @@ module.exports = Backbone.Model.extend({
   },
 
   startedTracking: function() {
-    if (this.get('articles')) {
-      return _.pluck(this.get('articles'), 'createdAt').sort()[0];
-    }
+    return this.get('createdAt');
   },
 
   originDate: function() {

@@ -18,16 +18,16 @@ module.exports = React.createClass({
     return (
       <div className="container">
         <ul className="articles">
-          {this.props.claims.models.map(function(claim, i) {
+          {this.props.claims.map(function(claim, i) {
             return (
               <li key={claim.id}>
                 <article className="article">
                   <div className={'stance stance-' + claim.get('truthiness')}>
-                    <span className="stance-value">{claim.get('truthiness')}</span>
+                    <span className="stance-value">{claim.truthinessText()}</span>
                   </div>
                   <div className="article-content">
                     <h4 className="article-title"><Link to="claim" params={{ slug: claim.get('slug') }}>{claim.get('headline')}</Link></h4>
-                    <p className="article-description">{claim.get('description')}</p>
+                    <p className="article-description">Originated: <time datetime={claim.get('createdAt')}>{moment(claim.get('createdAt')).format('MMMM Do YYYY')}</time></p>
                   </div>
                 </article>
               </li>

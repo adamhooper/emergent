@@ -39118,6 +39118,7 @@ var app = {
     this.claims = new this.collections.Claims();
     this.claims.url = 'http://api.emergent.info/claims'
     this.claims.fetch().done(function() {
+      this.claims.sort();
       React.renderComponent(
         Routes({location: "history"}, 
           Route({path: "/", handler: Root}, 
@@ -39168,6 +39169,10 @@ module.exports = Backbone.Collection.extend({
 
   parse: function(response) {
     return response.claims;
+  },
+
+  comparator: function(c1, c2) {
+    return c1.get('createdAt') < c2.get('createdAt') ? 1 : -1;
   }
 });
 
@@ -39577,7 +39582,7 @@ module.exports = React.createClass({displayName: 'exports',
             React.DOM.div({className: "page-meta"}, 
               React.DOM.div({className: 'status status-' + claim.get('truthiness')}, 
                 React.DOM.span({className: "status-label"}, "Claim state"), 
-                React.DOM.span({className: "status-value"}, claim.get('truthiness'))
+                React.DOM.span({className: "status-value"}, claim.truthinessText())
               ), 
               React.DOM.div({className: 'status status-' + (mostShared ? mostShared.stance : '')}, 
                 React.DOM.span({className: "status-label"}, "Most shared"), 
@@ -39742,16 +39747,16 @@ module.exports = React.createClass({displayName: 'exports',
     return (
       React.DOM.div({className: "container"}, 
         React.DOM.ul({className: "articles"}, 
-          this.props.claims.models.map(function(claim, i) {
+          this.props.claims.map(function(claim, i) {
             return (
               React.DOM.li({key: claim.id}, 
                 React.DOM.article({className: "article"}, 
                   React.DOM.div({className: 'stance stance-' + claim.get('truthiness')}, 
-                    React.DOM.span({className: "stance-value"}, claim.get('truthiness'))
+                    React.DOM.span({className: "stance-value"}, claim.truthinessText())
                   ), 
                   React.DOM.div({className: "article-content"}, 
                     React.DOM.h4({className: "article-title"}, Link({to: "claim", params: { slug: claim.get('slug')}}, claim.get('headline'))), 
-                    React.DOM.p({className: "article-description"}, claim.get('description'))
+                    React.DOM.p({className: "article-description"}, "Originated: ", React.DOM.time({datetime: claim.get('createdAt')}, moment(claim.get('createdAt')).format('MMMM Do YYYY')))
                   )
                 )
               )
@@ -39860,6 +39865,10 @@ var $ = Backbone.$ = require('jquery');
 module.exports = Backbone.Model.extend({
 
   stances: ['for', 'against', 'observing'],
+
+  truthinessText: function() {
+    return this.get('truthiness')=='true' || this.get('truthiness')=='false' ? this.get('truthiness') : 'unverified';
+  },
 
   /* retrieve articles and timeslices if we just have a base object */
   populate: function() {
@@ -39991,9 +40000,7 @@ module.exports = Backbone.Model.extend({
   },
 
   startedTracking: function() {
-    if (this.get('articles')) {
-      return _.pluck(this.get('articles'), 'createdAt').sort()[0];
-    }
+    return this.get('createdAt');
   },
 
   originDate: function() {

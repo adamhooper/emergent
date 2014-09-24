@@ -128,7 +128,7 @@ module.exports = React.createClass({
             <div className="page-meta">
               <div className={'status status-' + claim.get('truthiness')}>
                 <span className="status-label">Claim state</span>
-                <span className="status-value">{claim.get('truthiness')}</span>
+                <span className="status-value">{claim.truthinessText()}</span>
               </div>
               <div className={'status status-' + (mostShared ? mostShared.stance : '')}>
                 <span className="status-label">Most shared</span>
