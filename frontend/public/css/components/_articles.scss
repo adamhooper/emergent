@@ -50,6 +50,20 @@
   }
 }
 
+.article-date {
+  font-size: 1.6em;
+  margin-bottom: 0;
+  margin-top: 0;
+  text-transform: uppercase;
+}
+
+.article-time {
+  color: palette(base, dark);
+  margin-bottom: 0;
+  margin-top: 0;
+  text-transform: uppercase;
+}
+
 .article-content {
   padding: 1em;
 }
@@ -82,7 +96,27 @@
 // Revision article
 
 .article-revision {
-  .articles & {
-    padding-top: 1em;
+  .article-header,
+  .article-footer {
+    padding: 1em;
   }
+}
+
+
+
+
+
+
+
+
+//
+// Changes
+
+.changes {
+  font-size: 1.1em;
+  font-weight: 500;
+  list-style-type: none;
+  margin-bottom: 0;
+  margin-top: 0;
+  padding-left: 0;
 }

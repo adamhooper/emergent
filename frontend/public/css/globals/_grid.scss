@@ -23,6 +23,25 @@
 
 
 
+
+//
+// Filter categories
+
+.filter-all,
+.filter-category {
+  @include full;
+
+  .filter-title {
+    @include span(2 of 4);
+  }
+
+  .filter-meta {
+    @include span(last 2 of 4);
+  }
+}
+
+
+
 @include breakpoint($breakpoint-desktop) {
 
   // Site
@@ -69,42 +88,44 @@
 
   .article-revision {
     .article-header {
-      @include span(2 of 12);
+      @include span(2.5 of 12);
     }
 
     .article-content {
-      @include span(8 of 12);
+      @include span(7.5 of 12);
     }
 
     .article-footer {
       @include span(last 2 of 12);
     }
   }
-}
 
-//
-// Filter categories
 
-.filter-all {
-  @include full;
+  //
+  // Filter categories
 
-  .filter-title {
-    @include span(3 of 12);
+  .filter-all {
+    .filter-title {
+      @include span(3 of 12);
+    }
+
+    .filter-meta {
+      @include span(last 9 of 12);
+    }
   }
 
-  .filter-meta {
-    @include span(last 9 of 12);
-  }
-}
+  .filter-category {
+    .filter-categories-1 & {
+      @include span(nest 12 of 12 inside);
+    }
 
-.filter-category {
-  @include span(nest 4 of 12 inside);
+    .filter-categories-2 & {
+      @include span(nest 6 of 12 inside);
+    }
 
-  .filter-title {
-    @include span(2 of 4);
+    .filter-categories-3 & {
+      @include span(nest 4 of 12 inside);
+    }
   }
 
-  .filter-meta {
-    @include span(last 2 of 4);
-  }
 }

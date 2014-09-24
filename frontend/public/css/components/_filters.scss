@@ -13,7 +13,10 @@
 
 .filter-categories {
   clear: both;
-  display: flex;
+
+  @include breakpoint($breakpoint-desktop) {
+    display: flex;
+  }
 }
 
 

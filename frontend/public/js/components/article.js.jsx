@@ -44,7 +44,7 @@ module.exports = React.createClass({
           <header className="section">
             <div className="page-header">
               <h1 className="page-title">{article.headline}</h1>
-              <p>{article.source} - {moment(article.createdAt).format('MMMM Do YYYY')} ({slices.length + ' revision' + (slices.length > 1 ? 's' : '')})</p>
+              <p>{article.source} - {moment(article.createdAt).format('MMM D YYYY')} ({slices.length + ' revision' + (slices.length > 1 ? 's' : '')})</p>
               <p><a href={article.url} target="_blank">View original article</a></p>
               <p></p>
             </div>
@@ -60,16 +60,9 @@ module.exports = React.createClass({
             </div>
           </header>
 
-          <ul>
-            {_.map(shares, function(count, stance) {
-              return <li>{stance}: {count}</li>
-            })}
-          </ul>
-
           <h2 className="articles-title">Revisions</h2>
           <ul className="articles">
             {slices.map(function(slice) {
-              console.log(last, slice);
               var headlineChanged = last && last.headlineStance != slice.headlineStance
               var bodyChanged = last && last.stance != slice.stance;
               var initial = !last;
@@ -77,31 +70,31 @@ module.exports = React.createClass({
                 <li>
                   <article className="article article-revision">
                     <header className="article-header">
-                      <h3>{moment(slice.end).format('MMMM Do YYYY')}</h3>
-                      <p>{moment(slice.end).format('h:mma')}</p>
+                      <h3 className="article-date">{moment(slice.end).format('MMM D YYYY')}</h3>
+                      <p className="article-time">{moment(slice.end).format('h:mma')}</p>
                     </header>
                     <div className="article-content">
-                      { initial ?
-                          <div>
-                            <p>First Published Headline <span style={{ textTransform: 'capitalize' }}>{slice.headlineStance}</span></p>
-                            <p>Body <span style={{ textTransform: 'capitalize' }}>{slice.stance}</span></p>
-                          </div>
-                        :
-                        <p>
-                          { headlineChanged ? 
-                            <p>
-                              Headline: Changed from <span style={{ textTransform: 'capitalize' }}>{last.headlineStance}</span> to <span style={{ textTransform: 'capitalize' }}>{slice.headlineStance}</span>
-                            </p>
-                            : null
-                          }
-                          { bodyChanged ? 
-                            <p>
-                              Article Body: Changed from <span style={{ textTransform: 'capitalize' }}>{last.stance}</span> to <span style={{ textTransform: 'capitalize' }}>{slice.stance}</span>
-                            </p>
-                            : null
-                          }
-                        </p>
-                      }
+                        { initial ?
+                            <ul className="changes">
+                              <li>First Published Headline <span style={{ textTransform: 'capitalize' }}>{slice.headlineStance}</span></li>
+                              <li>Body <span style={{ textTransform: 'capitalize' }}>{slice.stance}</span></li>
+                            </ul>
+                          :
+                          <ul className="changes">
+                            { headlineChanged ?
+                              <li>
+                                Headline: Changed from <span style={{ textTransform: 'capitalize' }}>{last.headlineStance}</span> to <span style={{ textTransform: 'capitalize' }}>{slice.headlineStance}</span>
+                              </li>
+                              : null
+                            }
+                            { bodyChanged ?
+                              <li>
+                                Article Body: Changed from <span style={{ textTransform: 'capitalize' }}>{last.stance}</span> to <span style={{ textTransform: 'capitalize' }}>{slice.stance}</span>
+                              </li>
+                              : null
+                            }
+                          </ul>
+                        }
                     </div>
                     <footer className="article-footer">
                       <div className="shares">

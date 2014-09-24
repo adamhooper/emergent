@@ -39246,7 +39246,7 @@ module.exports = React.createClass({displayName: 'exports',
           React.DOM.header({className: "section"}, 
             React.DOM.div({className: "page-header"}, 
               React.DOM.h1({className: "page-title"}, article.headline), 
-              React.DOM.p(null, article.source, " - ", moment(article.createdAt).format('MMMM Do YYYY'), " (", slices.length + ' revision' + (slices.length > 1 ? 's' : ''), ")"), 
+              React.DOM.p(null, article.source, " - ", moment(article.createdAt).format('MMM D YYYY'), " (", slices.length + ' revision' + (slices.length > 1 ? 's' : ''), ")"), 
               React.DOM.p(null, React.DOM.a({href: article.url, target: "_blank"}, "View original article")), 
               React.DOM.p(null)
             ), 
@@ -39262,16 +39262,9 @@ module.exports = React.createClass({displayName: 'exports',
             )
           ), 
 
-          React.DOM.ul(null, 
-            _.map(shares, function(count, stance) {
-              return React.DOM.li(null, stance, ": ", count)
-            })
-          ), 
-
           React.DOM.h2({className: "articles-title"}, "Revisions"), 
           React.DOM.ul({className: "articles"}, 
             slices.map(function(slice) {
-              console.log(last, slice);
               var headlineChanged = last && last.headlineStance != slice.headlineStance
               var bodyChanged = last && last.stance != slice.stance;
               var initial = !last;
@@ -39279,31 +39272,31 @@ module.exports = React.createClass({displayName: 'exports',
                 React.DOM.li(null, 
                   React.DOM.article({className: "article article-revision"}, 
                     React.DOM.header({className: "article-header"}, 
-                      React.DOM.h3(null, moment(slice.end).format('MMMM Do YYYY')), 
-                      React.DOM.p(null, moment(slice.end).format('h:mma'))
+                      React.DOM.h3({className: "article-date"}, moment(slice.end).format('MMM D YYYY')), 
+                      React.DOM.p({className: "article-time"}, moment(slice.end).format('h:mma'))
                     ), 
                     React.DOM.div({className: "article-content"}, 
-                       initial ?
-                          React.DOM.div(null, 
-                            React.DOM.p(null, "First Published Headline ", React.DOM.span({style: { textTransform: 'capitalize'}}, slice.headlineStance)), 
-                            React.DOM.p(null, "Body ", React.DOM.span({style: { textTransform: 'capitalize'}}, slice.stance))
+                         initial ?
+                            React.DOM.ul({className: "changes"}, 
+                              React.DOM.li(null, "First Published Headline ", React.DOM.span({style: { textTransform: 'capitalize'}}, slice.headlineStance)), 
+                              React.DOM.li(null, "Body ", React.DOM.span({style: { textTransform: 'capitalize'}}, slice.stance))
+                            )
+                          :
+                          React.DOM.ul({className: "changes"}, 
+                             headlineChanged ?
+                              React.DOM.li(null, 
+                                "Headline: Changed from ", React.DOM.span({style: { textTransform: 'capitalize'}}, last.headlineStance), " to ", React.DOM.span({style: { textTransform: 'capitalize'}}, slice.headlineStance)
+                              )
+                              : null, 
+                            
+                             bodyChanged ?
+                              React.DOM.li(null, 
+                                "Article Body: Changed from ", React.DOM.span({style: { textTransform: 'capitalize'}}, last.stance), " to ", React.DOM.span({style: { textTransform: 'capitalize'}}, slice.stance)
+                              )
+                              : null
+                            
                           )
-                        :
-                        React.DOM.p(null, 
-                           headlineChanged ? 
-                            React.DOM.p(null, 
-                              "Headline: Changed from ", React.DOM.span({style: { textTransform: 'capitalize'}}, last.headlineStance), " to ", React.DOM.span({style: { textTransform: 'capitalize'}}, slice.headlineStance)
-                            )
-                            : null, 
-                          
-                           bodyChanged ? 
-                            React.DOM.p(null, 
-                              "Article Body: Changed from ", React.DOM.span({style: { textTransform: 'capitalize'}}, last.stance), " to ", React.DOM.span({style: { textTransform: 'capitalize'}}, slice.stance)
-                            )
-                            : null
-                          
-                        )
-                      
+                        
                     ), 
                     React.DOM.footer({className: "article-footer"}, 
                       React.DOM.div({className: "shares"}, 
@@ -39630,79 +39623,88 @@ module.exports = React.createClass({displayName: 'exports',
                 )
               )
             ), 
-            React.DOM.div({className: "filter-categories"}, 
-              React.DOM.button({onClick: this.setFilter.bind(this, 'for'), className: 'filter filter-category filter-category-for' + (this.state.filter === 'for' ? ' is-selected' : '')}, 
-                React.DOM.div({className: "filter-content"}, 
-                  React.DOM.p({className: "filter-title"}, "For"), 
-                  React.DOM.div({className: "filter-meta"}, 
-                    React.DOM.p({className: "sources"}, claim.articlesByStance('for').length, " sources"), 
-                    React.DOM.div({className: "shares"}, 
-                      React.DOM.span({className: "shares-value"}, shares.for ? this.formatNumber(shares.for) : 0), 
-                      React.DOM.span({className: "shares-label"}, "Shares")
-                    )
-                  )
-                ), 
-                React.DOM.div({className: "filter-source"}, 
-                  React.DOM.p({className: "article-source-title"}, "Top Source"), 
-                  _.first(claim.articlesByStance('for'), 1).map(function(article) {
-                    return (
-                      React.DOM.article({className: "article article-source", key: article.id}, 
-                        React.DOM.h4({className: "article-title"}, article.source, " - ", React.DOM.time({datetime: article.createdAt}, moment(article.createdAt).format('MMMM Do YYYY'))), 
-                        React.DOM.p({className: "article-description"}, Link({to: "article", params: { slug: claim.get('slug'), articleId: article.id}}, this.truncateString(article.headline))), 
-                        React.DOM.p({className: "shares-value"}, this.formatNumber(article.shares), " shares")
+            React.DOM.div({className: 'filter-categories filter-categories-' + _.size(shares)}, 
+               claim.articlesByStance('for').length > 0 ?
+                React.DOM.button({onClick: this.setFilter.bind(this, 'for'), className: 'filter filter-category filter-category-for' + (this.state.filter === 'for' ? ' is-selected' : '')}, 
+                  React.DOM.div({className: "filter-content"}, 
+                    React.DOM.p({className: "filter-title"}, "For"), 
+                    React.DOM.div({className: "filter-meta"}, 
+                      React.DOM.p({className: "sources"}, claim.articlesByStance('for').length, " sources"), 
+                      React.DOM.div({className: "shares"}, 
+                        React.DOM.span({className: "shares-value"}, shares.for ? this.formatNumber(shares.for) : 0), 
+                        React.DOM.span({className: "shares-label"}, "Shares")
                       )
                     )
-                  }, this)
-                )
-              ), 
-              React.DOM.button({onClick: this.setFilter.bind(this, 'against'), className: 'filter filter-category filter-category-against' + (this.state.filter === 'against' ? ' is-selected' : '')}, 
-                React.DOM.div({className: "filter-content"}, 
-                  React.DOM.p({className: "filter-title"}, "Against"), 
-                  React.DOM.div({className: "filter-meta"}, 
-                    React.DOM.p({className: "sources"}, claim.articlesByStance('against').length, " sources"), 
-                    React.DOM.div({className: "shares"}, 
-                      React.DOM.span({className: "shares-value"}, shares.against ? this.formatNumber(shares.against) : 0), 
-                      React.DOM.span({className: "shares-label"}, "Shares")
-                    )
+                  ), 
+                  React.DOM.div({className: "filter-source"}, 
+                    React.DOM.p({className: "article-source-title"}, "Top Source"), 
+                    _.first(claim.articlesByStance('for'), 1).map(function(article) {
+                      return (
+                        React.DOM.article({className: "article article-source", key: article.id}, 
+                          React.DOM.h4({className: "article-title"}, article.source, " - ", React.DOM.time({datetime: article.createdAt}, moment(article.createdAt).format('MMMM Do YYYY'))), 
+                          React.DOM.p({className: "article-description"}, Link({to: "article", params: { slug: claim.get('slug'), articleId: article.id}}, this.truncateString(article.headline))), 
+                          React.DOM.p({className: "shares-value"}, this.formatNumber(article.shares), " shares")
+                        )
+                      )
+                    }, this)
                   )
-                ), 
-                React.DOM.div({className: "filter-source"}, 
-                  React.DOM.p({className: "article-source-title"}, "Top Source"), 
-                  _.first(claim.articlesByStance('against'), 1).map(function(article) {
-                    return (
-                      React.DOM.article({className: "article article-source", key: article.id}, 
-                        React.DOM.h4({className: "article-title"}, article.source, " - ", React.DOM.time({datetime: article.createdAt}, moment(article.createdAt).format('MMMM Do YYYY'))), 
-                        React.DOM.p({className: "article-description"}, Link({to: "article", params: { slug: claim.get('slug'), articleId: article.id}}, this.truncateString(article.headline))), 
-                        React.DOM.p({className: "shares-value"}, this.formatNumber(article.shares), " shares")
+                )
+                : null, 
+              
+               claim.articlesByStance('against').length > 0 ?
+                React.DOM.button({onClick: this.setFilter.bind(this, 'against'), className: 'filter filter-category filter-category-against' + (this.state.filter === 'against' ? ' is-selected' : '')}, 
+                  React.DOM.div({className: "filter-content"}, 
+                    React.DOM.p({className: "filter-title"}, "Against"), 
+                    React.DOM.div({className: "filter-meta"}, 
+                      React.DOM.p({className: "sources"}, claim.articlesByStance('against').length, " sources"), 
+                      React.DOM.div({className: "shares"}, 
+                        React.DOM.span({className: "shares-value"}, shares.against ? this.formatNumber(shares.against) : 0), 
+                        React.DOM.span({className: "shares-label"}, "Shares")
                       )
                     )
-                  }, this)
-                )
-              ), 
-              React.DOM.button({onClick: this.setFilter.bind(this, 'observing'), className: 'filter filter-category filter-category-observing' + (this.state.filter === 'observing' ? ' is-selected' : '')}, 
-                React.DOM.div({className: "filter-content"}, 
-                  React.DOM.p({className: "filter-title"}, "Observing"), 
-                  React.DOM.div({className: "filter-meta"}, 
-                    React.DOM.p({className: "sources"}, claim.articlesByStance('observing').length, " sources"), 
-                    React.DOM.div({className: "shares"}, 
-                      React.DOM.span({className: "shares-value"}, shares.observing ? this.formatNumber(shares.observing) : 0), 
-                      React.DOM.span({className: "shares-label"}, "Shares")
-                    )
+                  ), 
+                  React.DOM.div({className: "filter-source"}, 
+                    React.DOM.p({className: "article-source-title"}, "Top Source"), 
+                    _.first(claim.articlesByStance('against'), 1).map(function(article) {
+                      return (
+                        React.DOM.article({className: "article article-source", key: article.id}, 
+                          React.DOM.h4({className: "article-title"}, article.source, " - ", React.DOM.time({datetime: article.createdAt}, moment(article.createdAt).format('MMMM Do YYYY'))), 
+                          React.DOM.p({className: "article-description"}, Link({to: "article", params: { slug: claim.get('slug'), articleId: article.id}}, this.truncateString(article.headline))), 
+                          React.DOM.p({className: "shares-value"}, this.formatNumber(article.shares), " shares")
+                        )
+                      )
+                    }, this)
                   )
-                ), 
-                React.DOM.div({className: "filter-source"}, 
-                  React.DOM.p({className: "article-source-title"}, "Top Source"), 
-                  _.first(claim.articlesByStance('observing'), 1).map(function(article) {
-                    return (
-                      React.DOM.article({className: "article article-source", key: article.id}, 
-                        React.DOM.h4({className: "article-title"}, article.source, " - ", React.DOM.time({datetime: article.createdAt}, moment(article.createdAt).format('MMMM Do YYYY'))), 
-                        React.DOM.p({className: "article-description"}, Link({to: "article", params: { slug: claim.get('slug'), articleId: article.id}}, this.truncateString(article.headline))), 
-                        React.DOM.p({className: "shares-value"}, this.formatNumber(article.shares), " shares")
+                )
+                : null, 
+              
+               claim.articlesByStance('observing').length > 0 ?
+                React.DOM.button({onClick: this.setFilter.bind(this, 'observing'), className: 'filter filter-category filter-category-observing' + (this.state.filter === 'observing' ? ' is-selected' : '')}, 
+                  React.DOM.div({className: "filter-content"}, 
+                    React.DOM.p({className: "filter-title"}, "Observing"), 
+                    React.DOM.div({className: "filter-meta"}, 
+                      React.DOM.p({className: "sources"}, claim.articlesByStance('observing').length, " sources"), 
+                      React.DOM.div({className: "shares"}, 
+                        React.DOM.span({className: "shares-value"}, shares.observing ? this.formatNumber(shares.observing) : 0), 
+                        React.DOM.span({className: "shares-label"}, "Shares")
                       )
                     )
-                  }, this)
+                  ), 
+                  React.DOM.div({className: "filter-source"}, 
+                    React.DOM.p({className: "article-source-title"}, "Top Source"), 
+                    _.first(claim.articlesByStance('observing'), 1).map(function(article) {
+                      return (
+                        React.DOM.article({className: "article article-source", key: article.id}, 
+                          React.DOM.h4({className: "article-title"}, article.source, " - ", React.DOM.time({datetime: article.createdAt}, moment(article.createdAt).format('MMMM Do YYYY'))), 
+                          React.DOM.p({className: "article-description"}, Link({to: "article", params: { slug: claim.get('slug'), articleId: article.id}}, this.truncateString(article.headline))), 
+                          React.DOM.p({className: "shares-value"}, this.formatNumber(article.shares), " shares")
+                        )
+                      )
+                    }, this)
+                  )
                 )
-              )
+                : null
+              
             )
           ), 
 
