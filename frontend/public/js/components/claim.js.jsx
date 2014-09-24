@@ -35,7 +35,6 @@ module.exports = React.createClass({
 
   setFilter: function(filter) {
     this.setState({ filter: filter });
-    console.log(filter);
   },
 
   formatNumber: function(str) {
@@ -242,7 +241,7 @@ module.exports = React.createClass({
           <section className="section section-content">
             <h3 className="section-title">Shares over time</h3>
             {this.state.populated && this.state.barChartWidth ?
-              <Barchart width={this.state.barChartWidth - 100} height={350} ref="chart" marginTop={75} marginLeft={80} marginRight={20} ylabels={ylabels} labels={labels} series={data} colors={colors} fontSize={12} gap={0.6} callout={callout} color="#252424"/>
+              <Barchart width={this.state.barChartWidth - 100} height={200} ref="chart" marginTop={75} marginLeft={80} marginRight={20} ylabels={ylabels} labels={labels} series={data} colors={colors} fontSize={12} gap={0.6} callout={callout} color="#252424"/>
               :
               <div id="bar-chart-placeholder">Loading...</div>
             }
