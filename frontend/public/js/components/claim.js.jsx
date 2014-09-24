@@ -109,7 +109,8 @@ module.exports = React.createClass({
     }
 
     var mostShared = _.first(claim.articlesByStance()),
-      startedTracking = claim.startedTracking();
+      startedTracking = claim.startedTracking(),
+      originDate = claim.originDate();
 
     return (
       <div className="container">
@@ -120,7 +121,7 @@ module.exports = React.createClass({
               <h1 className="page-title">{claim.get('headline')}</h1>
               <p>{claim.get('description')}</p>
               <ul className="list-unstyled">
-                {claim.get('origin') ? <li><strong>Originated: </strong>{claim.get('originUrl') ? <a href={claim.get('originUrl')} target="_blank">View article</a> : claim.get('origin')}</li> : null}
+                {claim.get('origin') ? <li><strong>Originated: </strong>{moment(originDate).format('MMM D, YYYY H:mm') + ' (' + moment(originDate).fromNow() + ')'} {claim.get('originUrl') ? <a href={claim.get('originUrl')} target="_blank">View article</a> : claim.get('origin')}</li> : null}
                 <li><strong>Started Tracking:</strong> {moment(startedTracking).format('MMM D, YYYY H:mm') + ' (' + moment(startedTracking).fromNow() + ')'}</li>
               </ul>
             </header>

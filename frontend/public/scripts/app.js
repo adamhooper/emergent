@@ -39577,7 +39577,8 @@ module.exports = React.createClass({displayName: 'exports',
     }
 
     var mostShared = _.first(claim.articlesByStance()),
-      startedTracking = claim.startedTracking();
+      startedTracking = claim.startedTracking(),
+      originDate = claim.originDate();
 
     return (
       React.DOM.div({className: "container"}, 
@@ -39588,7 +39589,7 @@ module.exports = React.createClass({displayName: 'exports',
               React.DOM.h1({className: "page-title"}, claim.get('headline')), 
               React.DOM.p(null, claim.get('description')), 
               React.DOM.ul({className: "list-unstyled"}, 
-                claim.get('origin') ? React.DOM.li(null, React.DOM.strong(null, "Originated: "), claim.get('originUrl') ? React.DOM.a({href: claim.get('originUrl'), target: "_blank"}, "View article") : claim.get('origin')) : null, 
+                claim.get('origin') ? React.DOM.li(null, React.DOM.strong(null, "Originated: "), moment(originDate).format('MMM D, YYYY H:mm') + ' (' + moment(originDate).fromNow() + ')', " ", claim.get('originUrl') ? React.DOM.a({href: claim.get('originUrl'), target: "_blank"}, "View article") : claim.get('origin')) : null, 
                 React.DOM.li(null, React.DOM.strong(null, "Started Tracking:"), " ", moment(startedTracking).format('MMM D, YYYY H:mm') + ' (' + moment(startedTracking).fromNow() + ')')
               )
             ), 
