@@ -39511,7 +39511,7 @@ module.exports = React.createClass({displayName: 'exports',
   },
 
   truncateString: function(str) {
-    return str.length > 80 ? str.substring(0, str.lastIndexOf(' ', 80)) + '...' : str;
+    return str.length > 70 ? str.substring(0, str.lastIndexOf(' ', 70)) + '...' : str;
   },
 
   render: function() {
@@ -39573,7 +39573,7 @@ module.exports = React.createClass({displayName: 'exports',
     // compose in order of filter
     if (this.state.filter) {
       filterIndex = ['for', 'against', 'observing'].indexOf(this.state.filter);
-      colors = [colors[filterIndex], '#eaeaea', '#eaeaea'];
+      colors = [colors[filterIndex], 'white', 'white'];
       data.unshift(data.splice(filterIndex,1)[0]);
     }
 
@@ -39590,7 +39590,8 @@ module.exports = React.createClass({displayName: 'exports',
               React.DOM.h1({className: "page-title"}, claim.get('headline')), 
               React.DOM.p(null, claim.get('description')), 
               React.DOM.ul({className: "list-unstyled"}, 
-                claim.get('origin') ? React.DOM.li(null, React.DOM.strong(null, "Originated: "), moment(originDate).format('MMM D, YYYY H:mm') + ' (' + moment(originDate).fromNow() + ')', " ", claim.get('originUrl') ? React.DOM.a({href: claim.get('originUrl'), target: "_blank"}, "View article") : claim.get('origin')) : null, 
+                claim.get('origin') ? React.DOM.li(null, React.DOM.strong(null, "Origin: "), claim.get('origin')) : null, 
+                claim.get('origin') ? React.DOM.li(null, React.DOM.strong(null, "Originated: "), moment(originDate).format('MMM D, YYYY H:mm') + ' (' + moment(originDate).fromNow() + ')', " ", claim.get('originUrl') ? React.DOM.a({href: claim.get('originUrl'), target: "_blank"}, "View Article") : null) : null, 
                 React.DOM.li(null, React.DOM.strong(null, "Started Tracking:"), " ", moment(startedTracking).format('MMM D, YYYY H:mm') + ' (' + moment(startedTracking).fromNow() + ')')
               )
             ), 
@@ -39895,7 +39896,7 @@ module.exports = Backbone.Model.extend({
   stances: ['for', 'against', 'observing'],
 
   truthinessText: function() {
-    return this.get('truthiness')=='true' || this.get('truthiness')=='false' ? this.get('truthiness') : 'unverified';
+    return this.get('truthiness')=='true' || this.get('truthiness')=='false' ? 'Confirmed ' + this.get('truthiness') : 'Unverified';
   },
 
   /* retrieve articles and timeslices if we just have a base object */

@@ -43,7 +43,7 @@ module.exports = React.createClass({
   },
 
   truncateString: function(str) {
-    return str.length > 80 ? str.substring(0, str.lastIndexOf(' ', 80)) + '...' : str;
+    return str.length > 70 ? str.substring(0, str.lastIndexOf(' ', 70)) + '...' : str;
   },
 
   render: function() {
@@ -105,7 +105,7 @@ module.exports = React.createClass({
     // compose in order of filter
     if (this.state.filter) {
       filterIndex = ['for', 'against', 'observing'].indexOf(this.state.filter);
-      colors = [colors[filterIndex], '#eaeaea', '#eaeaea'];
+      colors = [colors[filterIndex], 'white', 'white'];
       data.unshift(data.splice(filterIndex,1)[0]);
     }
 
@@ -122,7 +122,8 @@ module.exports = React.createClass({
               <h1 className="page-title">{claim.get('headline')}</h1>
               <p>{claim.get('description')}</p>
               <ul className="list-unstyled">
-                {claim.get('origin') ? <li><strong>Originated: </strong>{moment(originDate).format('MMM D, YYYY H:mm') + ' (' + moment(originDate).fromNow() + ')'} {claim.get('originUrl') ? <a href={claim.get('originUrl')} target="_blank">View article</a> : claim.get('origin')}</li> : null}
+                {claim.get('origin') ? <li><strong>Origin: </strong>{claim.get('origin')}</li> : null}
+                {claim.get('origin') ? <li><strong>Originated: </strong>{moment(originDate).format('MMM D, YYYY H:mm') + ' (' + moment(originDate).fromNow() + ')'} {claim.get('originUrl') ? <a href={claim.get('originUrl')} target="_blank">View Article</a> : null}</li> : null}
                 <li><strong>Started Tracking:</strong> {moment(startedTracking).format('MMM D, YYYY H:mm') + ' (' + moment(startedTracking).fromNow() + ')'}</li>
               </ul>
             </header>
