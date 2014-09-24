@@ -39183,12 +39183,18 @@ module.exports = React.createClass({displayName: 'exports',
       /* JSX for about page */
       React.DOM.div({className: "container"}, 
         React.DOM.h1(null, "About Emergent"), 
-        React.DOM.p(null, "Updates and analysis from Emergent.info, a real-time rumor tracker.")
+        React.DOM.p(null, "Emergent is a real-time rumor tracker. It's part of a research project with the Tow Center for Digital Journalism that focuses on how unverified information and rumor is reported in the media, and best practices for debunking misinformation. Read more about it ", React.DOM.a({href: "http://www.craigsilverman.ca/2014/09/02/researching-rumors-and-debunking-for-the-tow-center-at-columbia-university/"}, "here"), "."), 
+        React.DOM.p(null, "You can view a list of rumors being tracked on the hompeage, along with their current claim state (True, False, Unverified). Click on a story to visit a page that visualizes the sources reporting the rumor, and a breakdown of social shares per source."), 
+        React.DOM.p(null, "Have a rumor we should be tracking? A source we should add to an existing story? Feedback to share? ", React.DOM.a({href: "mailto:craig@craigsilverman.ca"}, "Email us"), "."), 
+        React.DOM.p(null, "You can also ", React.DOM.a({href: "http://eepurl.com/3mb9T"}, "sign up to our mailing list"), " for occasional updates.(We never sell or share your info.)"), 
+        
+        React.DOM.p(null, "Founder/Editor: Craig Silverman | Lead Developer: Adam Hooper | Design and Interaction: ", React.DOM.a({href: "http://www.normative.com"}, "Normative"), " | Research Assistant: Joscelyn Shawn Ganjhara Jurich")
       )
 
     );
   }
 });
+
 },{"react":195}],200:[function(require,module,exports){
 /** @jsx React.DOM */
 
@@ -39359,7 +39365,6 @@ module.exports = React.createClass({displayName: 'exports',
   },
 
   highest: function() {
-    console.log(this.heights());
     return _.max(this.heights());
   },
 
@@ -39414,9 +39419,9 @@ module.exports = React.createClass({displayName: 'exports',
     if (this.props.callout) {
       var x = (width + gap) * this.props.callout.position + this.props.marginLeft - (gap / 2);
       var alignRight = x > this.props.width*.75; 
-      var callout = React.DOM.line({x1: x, x2: x, y1: "0", y2: height + this.props.marginTop, stroke: this.props.color, strokeWidth: "2", strokeDasharray: "2,7"})
+      var callout = React.DOM.line({x1: x, x2: x, y1: "0", y2: height + this.props.marginTop, stroke: "#999", strokeWidth: "2", strokeDasharray: "2,7"})
       var calloutText = (
-        React.DOM.text({y: this.props.fontSize + 25, fontSize: this.props.fontSize, fill: this.props.color}, 
+        React.DOM.text({y: this.props.fontSize + 10, fontSize: this.props.fontSize, fill: this.props.color}, 
           this.props.callout.text.map(function(tspan) {
             return React.DOM.tspan({x: x + (alignRight ? -5 : 5), dy: 1.2*this.props.fontSize, textAnchor: alignRight ? 'end' : 'start'}, tspan)
           }.bind(this))
@@ -39508,8 +39513,7 @@ module.exports = React.createClass({displayName: 'exports',
       }.bind(this), [[],[],[]]);
 
       // find x-axis labels
-      var skips = 1;
-      if (slices.length > this.state.barChartWidth / 100) { skips = 3; }
+      var skips = 3;
       if (slices.length > 2 * this.state.barChartWidth / 100) { skips = 6; }
       if (slices.length > 4 * this.state.barChartWidth / 100) { skips = 12; }
       var labels = slices.map(function(slice, i) {
@@ -39672,7 +39676,7 @@ module.exports = React.createClass({displayName: 'exports',
           React.DOM.section({className: "section"}, 
             React.DOM.h3({className: "section-title"}, "Shares over time"), 
             this.state.populated && this.state.barChartWidth ?
-              Barchart({width: this.state.barChartWidth - 100, height: 350, ref: "chart", marginLeft: 80, marginRight: 20, ylabels: ylabels, labels: labels, series: data, colors: colors, fontSize: 12, gap: 0.6, callout: callout, color: "#252424"})
+              Barchart({width: this.state.barChartWidth - 100, height: 350, ref: "chart", marginTop: 75, marginLeft: 80, marginRight: 20, ylabels: ylabels, labels: labels, series: data, colors: colors, fontSize: 12, gap: 0.6, callout: callout, color: "#252424"})
               :
               React.DOM.div({id: "bar-chart-placeholder"}, "Loading...")
             

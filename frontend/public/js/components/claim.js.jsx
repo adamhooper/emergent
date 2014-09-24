@@ -64,8 +64,7 @@ module.exports = React.createClass({
       }.bind(this), [[],[],[]]);
 
       // find x-axis labels
-      var skips = 1;
-      if (slices.length > this.state.barChartWidth / 100) { skips = 3; }
+      var skips = 3;
       if (slices.length > 2 * this.state.barChartWidth / 100) { skips = 6; }
       if (slices.length > 4 * this.state.barChartWidth / 100) { skips = 12; }
       var labels = slices.map(function(slice, i) {
@@ -228,7 +227,7 @@ module.exports = React.createClass({
           <section className="section">
             <h3 className="section-title">Shares over time</h3>
             {this.state.populated && this.state.barChartWidth ?
-              <Barchart width={this.state.barChartWidth - 100} height={350} ref="chart" marginLeft={80} marginRight={20} ylabels={ylabels} labels={labels} series={data} colors={colors} fontSize={12} gap={0.6} callout={callout} color="#252424"/>
+              <Barchart width={this.state.barChartWidth - 100} height={350} ref="chart" marginTop={75} marginLeft={80} marginRight={20} ylabels={ylabels} labels={labels} series={data} colors={colors} fontSize={12} gap={0.6} callout={callout} color="#252424"/>
               :
               <div id="bar-chart-placeholder">Loading...</div>
             }

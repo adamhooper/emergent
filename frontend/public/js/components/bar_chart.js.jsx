@@ -111,9 +111,9 @@ module.exports = React.createClass({
     if (this.props.callout) {
       var x = (width + gap) * this.props.callout.position + this.props.marginLeft - (gap / 2);
       var alignRight = x > this.props.width*.75; 
-      var callout = <line x1={x} x2={x} y1="0" y2={height + this.props.marginTop} stroke={this.props.color} strokeWidth="2" strokeDasharray="2,7" />
+      var callout = <line x1={x} x2={x} y1="0" y2={height + this.props.marginTop} stroke="#999" strokeWidth="2" strokeDasharray="2,7" />
       var calloutText = (
-        <text y={this.props.fontSize + 25} fontSize={this.props.fontSize} fill={this.props.color}>
+        <text y={this.props.fontSize + 10} fontSize={this.props.fontSize} fill={this.props.color}>
           {this.props.callout.text.map(function(tspan) {
             return <tspan x={x + (alignRight ? -5 : 5)} dy={1.2*this.props.fontSize} textAnchor={alignRight ? 'end' : 'start'}>{tspan}</tspan>
           }.bind(this))}
