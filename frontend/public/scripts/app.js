@@ -39251,13 +39251,13 @@ module.exports = React.createClass({displayName: 'exports',
               React.DOM.p(null)
             ), 
             React.DOM.div({className: "page-meta"}, 
-              React.DOM.div({className: 'status status-' + claim.get('truthiness')}, 
-                React.DOM.span({className: "status-label"}, "Claim state"), 
-                React.DOM.span({className: "status-value"}, claim.get('truthiness'))
+              React.DOM.div({className: 'status status-' + _.last(slices).headlineStance}, 
+                React.DOM.span({className: "status-label"}, "Headline"), 
+                React.DOM.span({className: "status-value"}, _.last(slices).headlineStance)
               ), 
-              React.DOM.div({className: 'status status-'}, 
-                React.DOM.span({className: "status-label"}, "Most shared"), 
-                React.DOM.span({className: "status-value"})
+              React.DOM.div({className: 'status status-' + _.last(slices).stance}, 
+                React.DOM.span({className: "status-label"}, "Article Body"), 
+                React.DOM.span({className: "status-value"}, _.last(slices).stance)
               )
             )
           ), 
@@ -39271,11 +39271,11 @@ module.exports = React.createClass({displayName: 'exports',
           React.DOM.h2({className: "articles-title"}, "Revisions"), 
           React.DOM.ul({className: "articles"}, 
             slices.map(function(slice) {
+              console.log(last, slice);
               var headlineChanged = last && last.headlineStance != slice.headlineStance
               var bodyChanged = last && last.stance != slice.stance;
               var initial = !last;
-              last = article;
-              return (
+              var jsx = (
                 React.DOM.li(null, 
                   React.DOM.article({className: "article article-revision"}, 
                     React.DOM.header({className: "article-header"}, 
@@ -39284,11 +39284,24 @@ module.exports = React.createClass({displayName: 'exports',
                     ), 
                     React.DOM.div({className: "article-content"}, 
                        initial ?
-                        React.DOM.p(null, "Initially published. Headline ", slice.headlineStance, " Body ", slice.stance)
-                          :
+                          React.DOM.div(null, 
+                            React.DOM.p(null, "First Published Headline ", React.DOM.span({style: { textTransform: 'capitalize'}}, slice.headlineStance)), 
+                            React.DOM.p(null, "Body ", React.DOM.span({style: { textTransform: 'capitalize'}}, slice.stance))
+                          )
+                        :
                         React.DOM.p(null, 
-                           headlineChanged ? React.DOM.span(null, " Headline changed: ", slice.headlineStance, " ") : null, 
-                           bodyChanged ? React.DOM.span(null, " Body changed: ", slice.stance, " ") : null
+                           headlineChanged ? 
+                            React.DOM.p(null, 
+                              "Headline: Changed from ", React.DOM.span({style: { textTransform: 'capitalize'}}, last.headlineStance), " to ", React.DOM.span({style: { textTransform: 'capitalize'}}, slice.headlineStance)
+                            )
+                            : null, 
+                          
+                           bodyChanged ? 
+                            React.DOM.p(null, 
+                              "Article Body: Changed from ", React.DOM.span({style: { textTransform: 'capitalize'}}, last.stance), " to ", React.DOM.span({style: { textTransform: 'capitalize'}}, slice.stance)
+                            )
+                            : null
+                          
                         )
                       
                     ), 
@@ -39301,7 +39314,9 @@ module.exports = React.createClass({displayName: 'exports',
                   )
                 )
               );
-            })
+              last = slice;
+              return jsx;
+            }).reverse()
           )
         )
       )

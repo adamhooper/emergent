@@ -49,13 +49,13 @@ module.exports = React.createClass({
               <p></p>
             </div>
             <div className="page-meta">
-              <div className={'status status-' + claim.get('truthiness')}>
-                <span className="status-label">Claim state</span>
-                <span className="status-value">{claim.get('truthiness')}</span>
+              <div className={'status status-' + _.last(slices).headlineStance}>
+                <span className="status-label">Headline</span>
+                <span className="status-value">{_.last(slices).headlineStance}</span>
               </div>
-              <div className={'status status-'}>
-                <span className="status-label">Most shared</span>
-                <span className="status-value"></span>
+              <div className={'status status-' + _.last(slices).stance}>
+                <span className="status-label">Article Body</span>
+                <span className="status-value">{_.last(slices).stance}</span>
               </div>
             </div>
           </header>
@@ -69,11 +69,11 @@ module.exports = React.createClass({
           <h2 className="articles-title">Revisions</h2>
           <ul className="articles">
             {slices.map(function(slice) {
+              console.log(last, slice);
               var headlineChanged = last && last.headlineStance != slice.headlineStance
               var bodyChanged = last && last.stance != slice.stance;
               var initial = !last;
-              last = article;
-              return (
+              var jsx = (
                 <li>
                   <article className="article article-revision">
                     <header className="article-header">
@@ -82,11 +82,24 @@ module.exports = React.createClass({
                     </header>
                     <div className="article-content">
                       { initial ?
-                        <p>Initially published. Headline {slice.headlineStance} Body {slice.stance}</p>
-                          :
+                          <div>
+                            <p>First Published Headline <span style={{ textTransform: 'capitalize' }}>{slice.headlineStance}</span></p>
+                            <p>Body <span style={{ textTransform: 'capitalize' }}>{slice.stance}</span></p>
+                          </div>
+                        :
                         <p>
-                          { headlineChanged ? <span> Headline changed: {slice.headlineStance} </span> : null }
-                          { bodyChanged ? <span> Body changed: {slice.stance} </span> : null }
+                          { headlineChanged ? 
+                            <p>
+                              Headline: Changed from <span style={{ textTransform: 'capitalize' }}>{last.headlineStance}</span> to <span style={{ textTransform: 'capitalize' }}>{slice.headlineStance}</span>
+                            </p>
+                            : null
+                          }
+                          { bodyChanged ? 
+                            <p>
+                              Article Body: Changed from <span style={{ textTransform: 'capitalize' }}>{last.stance}</span> to <span style={{ textTransform: 'capitalize' }}>{slice.stance}</span>
+                            </p>
+                            : null
+                          }
                         </p>
                       }
                     </div>
@@ -99,7 +112,9 @@ module.exports = React.createClass({
                   </article>
                 </li>
               );
-            })}
+              last = slice;
+              return jsx;
+            }).reverse()}
           </ul>
         </div>
       </div>
