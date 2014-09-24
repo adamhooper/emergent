@@ -32,11 +32,9 @@
 
   // display in content block when in list
   .articles & {
-    @extend %clearfix;
-    @extend %content;
     @extend %content-background;
-    padding-top: 3.5em;
-    position: relative;
+    @extend %clearfix;
+    clear: both;
   }
 
 }
@@ -50,6 +48,10 @@
   > a {
     color: palette(type, dark);
   }
+}
+
+.article-content {
+  padding: 1em;
 }
 
 .article-description {

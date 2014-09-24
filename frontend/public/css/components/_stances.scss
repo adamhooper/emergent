@@ -5,10 +5,8 @@
   display: inline-block;
   padding: .5em .75em;
 
-  .article & {
-    left: 0;
-    position: absolute;
-    top: 0;
+  & + & {
+    margin-left: .5em;
   }
 }
 
@@ -35,4 +33,30 @@
 .stance-unknown,
 .stance-observing {
   background-color: palette(status, unknown);
+}
+
+
+//
+// Revised stance
+
+.stance-revised {
+  background-color: palette(clear);
+
+  &.stance-for {
+    .stance-value {
+      color: palette(status, true);
+    }
+  }
+
+  &.stance-against {
+    .stance-value {
+      color: palette(status, false);
+    }
+  }
+
+  &.stance-observing {
+    .stance-value {
+      color: palette(status, unknown);
+    }
+  }
 }

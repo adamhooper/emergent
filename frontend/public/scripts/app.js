@@ -39725,7 +39725,7 @@ module.exports = React.createClass({displayName: 'exports',
                           React.DOM.span({className: "stance-value"}, article.stance)
                         ), 
                         article.revised ?
-                          React.DOM.div({className: 'stance stance-' + article.revised}, 
+                          React.DOM.div({className: 'stance stance-revised stance-' + article.revised}, 
                             React.DOM.span({className: "stance-value"}, 'Revised to ' + article.revised)
                           )
                         : ''

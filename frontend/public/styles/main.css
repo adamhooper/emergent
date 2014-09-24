@@ -508,7 +508,7 @@ th {
   color: #727272;
   text-transform: uppercase; }
 
-.articles .article, .section {
+.section {
   clear: both;
   padding: 1em; }
 
@@ -698,8 +698,7 @@ strong {
 .trigger .article {
   font-size: .9em; }
 .articles .article {
-  padding-top: 3.5em;
-  position: relative; }
+  clear: both; }
 
 .article-title {
   font-size: 1.1em;
@@ -708,6 +707,9 @@ strong {
   margin-top: 0; }
   .article-title > a {
     color: #252424; }
+
+.article-content {
+  padding: 1em; }
 
 .article-description {
   line-height: 1.4;
@@ -919,10 +921,8 @@ svg {
 .stance {
   display: inline-block;
   padding: .5em .75em; }
-  .article .stance {
-    left: 0;
-    position: absolute;
-    top: 0; }
+  .stance + .stance {
+    margin-left: .5em; }
 
 .stance-value {
   color: #fff;
@@ -940,6 +940,15 @@ svg {
 .stance-unknown,
 .stance-observing {
   background-color: #f9be58; }
+
+.stance-revised {
+  background-color: #fff; }
+  .stance-revised.stance-for .stance-value {
+    color: #7ecc76; }
+  .stance-revised.stance-against .stance-value {
+    color: #dd5b53; }
+  .stance-revised.stance-observing .stance-value {
+    color: #f9be58; }
 
 .status {
   display: block;
