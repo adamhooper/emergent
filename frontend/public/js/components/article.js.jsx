@@ -76,8 +76,8 @@ module.exports = React.createClass({
                     <div className="article-content">
                         { initial ?
                             <ul className="changes">
-                              <li>First Published Headline <span style={{ textTransform: 'capitalize' }}>{slice.headlineStance}</span></li>
-                              <li>Body <span style={{ textTransform: 'capitalize' }}>{slice.stance}</span></li>
+                              <li>First Published Headline: <span style={{ textTransform: 'capitalize' }}>{slice.headlineStance}</span></li>
+                              <li>Body: <span style={{ textTransform: 'capitalize' }}>{slice.stance}</span></li>
                             </ul>
                           :
                           <ul className="changes">

@@ -39278,8 +39278,8 @@ module.exports = React.createClass({displayName: 'exports',
                     React.DOM.div({className: "article-content"}, 
                          initial ?
                             React.DOM.ul({className: "changes"}, 
-                              React.DOM.li(null, "First Published Headline ", React.DOM.span({style: { textTransform: 'capitalize'}}, slice.headlineStance)), 
-                              React.DOM.li(null, "Body ", React.DOM.span({style: { textTransform: 'capitalize'}}, slice.stance))
+                              React.DOM.li(null, "First Published Headline: ", React.DOM.span({style: { textTransform: 'capitalize'}}, slice.headlineStance)), 
+                              React.DOM.li(null, "Body: ", React.DOM.span({style: { textTransform: 'capitalize'}}, slice.stance))
                             )
                           :
                           React.DOM.ul({className: "changes"}, 
