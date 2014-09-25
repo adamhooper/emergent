@@ -1,9 +1,12 @@
 #!/usr/bin/env node
 
 var express = require('express')
-var app = express();
+var morgan = require('morgan');
 var serveStatic = require('serve-static');
 
+var app = express();
+
+app.use(morgan('dev'));
 app.use(serveStatic(__dirname + '/public'));
 app.use(function(req, res) {
   res.sendFile(__dirname + '/views/' + (process.env.NODE_ENV=='development' ? 'dev.html' : 'index.html'));
