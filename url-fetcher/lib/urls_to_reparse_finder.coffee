@@ -6,16 +6,10 @@ module.exports = class UrlsToReparseFinder
 
   findUrlsToReparse: (done) ->
     models.sequelize.query('''
-      WITH "rankedLastVersions" AS (
-        SELECT "urlId", "parserVersion", rank() OVER (PARTITION BY "urlId" ORDER BY "createdAt" DESC, "parserVersion" DESC, id) AS r
-        FROM "UrlVersion"
-        WHERE "urlGetId" IS NOT NULL
-          AND "parserVersion" IS NOT NULL
-      )
-      SELECT u.id, u.url, v."parserVersion" AS "lastParserVersion" 
+      SELECT u.id, u.url, MAX(uv."parserVersion") AS "lastParserVersion"
       FROM "Url" u 
-      LEFT JOIN "rankedLastVersions" v ON u.id = v."urlId"
-      WHERE v.r IS NULL OR v.r = 1
+      LEFT JOIN "UrlVersion" uv ON u.id = uv."urlId"
+      GROUP BY u.id, u.url
     ''')
       .then (rows) =>
         for row in rows
