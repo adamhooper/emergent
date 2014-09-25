@@ -178,7 +178,7 @@ module.exports = React.createClass({
                     <span className="shares-label">sources</span>
                   </div>
                   <div className="shares">
-                    <span className="shares-value">{this.formatNumber(totalShares)}</span>
+                    <span className="shares-value">{this.formatNumber(claim.get('nShares'))}</span>
                     <span className="shares-label">shares</span>
                   </div>
                   <ul className="social">

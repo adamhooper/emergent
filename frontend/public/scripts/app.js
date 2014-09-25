@@ -39321,6 +39321,8 @@ module.exports = React.createClass({displayName: 'exports',
     var colors = this.props.colors;
     var height = this.props.height;
 
+    if (!width || isNaN(width)) return null;
+
     var bars = _.flatten(this.props.series.map(function(data, s) {
       return data.map(function(amount, i) {
         heights[i] = (heights[i]||0) + amount * heightFactor;
@@ -39574,7 +39576,7 @@ module.exports = React.createClass({displayName: 'exports',
                     React.DOM.span({className: "shares-label"}, "sources")
                   ), 
                   React.DOM.div({className: "shares"}, 
-                    React.DOM.span({className: "shares-value"}, this.formatNumber(totalShares)), 
+                    React.DOM.span({className: "shares-value"}, this.formatNumber(claim.get('nShares'))), 
                     React.DOM.span({className: "shares-label"}, "shares")
                   ), 
                   React.DOM.ul({className: "social"}, 

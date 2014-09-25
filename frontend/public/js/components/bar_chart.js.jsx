@@ -68,6 +68,8 @@ module.exports = React.createClass({
     var colors = this.props.colors;
     var height = this.props.height;
 
+    if (!width || isNaN(width)) return null;
+
     var bars = _.flatten(this.props.series.map(function(data, s) {
       return data.map(function(amount, i) {
         heights[i] = (heights[i]||0) + amount * heightFactor;
