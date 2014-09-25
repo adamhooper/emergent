@@ -39260,7 +39260,19 @@ module.exports = React.createClass({displayName: 'exports',
     var shares = claim.sharesByArticle(this.props.params.articleId);
 
     if (!article) {
-      return React.DOM.div(null, "Loading")
+      return (
+        React.DOM.div({className: "page page-article"}, 
+          React.DOM.div({className: "page-content"}, 
+            React.DOM.div({className: "container"}, 
+              React.DOM.header({className: "section"}, 
+                React.DOM.div({className: "section-header"}, 
+                  React.DOM.h1({className: "page-title"}, "Loading")
+                )
+              )
+            )
+          )
+        )
+      );
     }
 
     var last;
@@ -39306,13 +39318,23 @@ module.exports = React.createClass({displayName: 'exports',
                       React.DOM.div({className: "article-content"}, 
                            initial ?
                               React.DOM.ul({className: "changes"}, 
-                                React.DOM.li(null, "First Published Headline ", React.DOM.span({style: { textTransform: 'capitalize'}}, slice.headlineStance)), 
-                                React.DOM.li(null, "Body ", React.DOM.span({style: { textTransform: 'capitalize'}}, slice.stance))
+                                React.DOM.li(null, "First Published Headline: ", React.DOM.span({style: { textTransform: 'capitalize'}}, slice.headlineStance)), 
+                                React.DOM.li(null, "Body: ", React.DOM.span({style: { textTransform: 'capitalize'}}, slice.stance))
                               )
                             :
                             React.DOM.ul({className: "changes"}, 
-                              React.DOM.li(null, "First Published Headline: ", React.DOM.span({style: { textTransform: 'capitalize'}}, slice.headlineStance)), 
-                              React.DOM.li(null, "Body: ", React.DOM.span({style: { textTransform: 'capitalize'}}, slice.stance))
+                               headlineChanged ?
+                                React.DOM.li(null, 
+                                  "Headline: Changed from ", React.DOM.span({style: { textTransform: 'capitalize'}}, last.headlineStance), " to ", React.DOM.span({style: { textTransform: 'capitalize'}}, slice.headlineStance)
+                                )
+                                : null, 
+                              
+                               bodyChanged ?
+                                React.DOM.li(null, 
+                                  "Article Body: Changed from ", React.DOM.span({style: { textTransform: 'capitalize'}}, last.stance), " to ", React.DOM.span({style: { textTransform: 'capitalize'}}, slice.stance)
+                                )
+                                : null
+                              
                             )
                           
                       ), 
@@ -39327,7 +39349,7 @@ module.exports = React.createClass({displayName: 'exports',
                 );
                 last = slice;
                 return jsx;
-              }).reverse()
+              })
             )
           )
         )
@@ -39618,6 +39640,7 @@ module.exports = React.createClass({displayName: 'exports',
       }
       window.callout = callout;
 
+      var totalShares = _.reduce(shares, function(sum, num) { return sum + num; }, 0);
       var mostShared = _.first(claim.articlesByStance());
     }
 
@@ -39648,13 +39671,13 @@ module.exports = React.createClass({displayName: 'exports',
                   React.DOM.span({className: "shares-label"}, "Sources")
                 ), 
                 React.DOM.div({className: "shares"}, 
-                  React.DOM.span({className: "shares-value"}, this.formatNumber(_.reduce(shares, function(sum, num) { return sum + num; }, 0))), 
+                  React.DOM.span({className: "shares-value"}, this.formatNumber(totalShares)), 
                   React.DOM.span({className: "shares-label"}, "Shares")
                 ), 
                 _.map(claim.sharesByProvider(), function(shares, provider) {
                   return (
                     React.DOM.div({className: "share"}, 
-                      React.DOM.span({className: "shares-value"}, this.formatNumber(shares)), 
+                      React.DOM.span({className: "shares-value"}, Math.round(shares / totalShares * 100), "%"), 
                       React.DOM.span({className: "shares-label"}, provider)
                     )
                   );

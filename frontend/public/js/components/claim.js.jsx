@@ -136,6 +136,7 @@ module.exports = React.createClass({
       }
       window.callout = callout;
 
+      var totalShares = _.reduce(shares, function(sum, num) { return sum + num; }, 0);
       var mostShared = _.first(claim.articlesByStance());
     }
 
@@ -166,13 +167,13 @@ module.exports = React.createClass({
                   <span className="shares-label">Sources</span>
                 </div>
                 <div className="shares">
-                  <span className="shares-value">{this.formatNumber(_.reduce(shares, function(sum, num) { return sum + num; }, 0))}</span>
+                  <span className="shares-value">{this.formatNumber(totalShares)}</span>
                   <span className="shares-label">Shares</span>
                 </div>
                 {_.map(claim.sharesByProvider(), function(shares, provider) {
                   return (
                     <div className="share">
-                      <span className="shares-value">{this.formatNumber(shares)}</span>
+                      <span className="shares-value">{Math.round(shares / totalShares * 100)}%</span>
                       <span className="shares-label">{provider}</span>
                     </div>
                   );

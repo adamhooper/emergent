@@ -33,7 +33,19 @@ module.exports = React.createClass({
     var shares = claim.sharesByArticle(this.props.params.articleId);
 
     if (!article) {
-      return <div>Loading</div>
+      return (
+        <div className="page page-article">
+          <div className="page-content">
+            <div className="container">
+              <header className="section">
+                <div className="section-header">
+                  <h1 className="page-title">Loading</h1>
+                </div>
+              </header>
+            </div>
+          </div>
+        </div>
+      );
     }
 
     var last;
@@ -79,13 +91,23 @@ module.exports = React.createClass({
                       <div className="article-content">
                           { initial ?
                               <ul className="changes">
-                                <li>First Published Headline <span style={{ textTransform: 'capitalize' }}>{slice.headlineStance}</span></li>
-                                <li>Body <span style={{ textTransform: 'capitalize' }}>{slice.stance}</span></li>
+                                <li>First Published Headline: <span style={{ textTransform: 'capitalize' }}>{slice.headlineStance}</span></li>
+                                <li>Body: <span style={{ textTransform: 'capitalize' }}>{slice.stance}</span></li>
                               </ul>
                             :
                             <ul className="changes">
-                              <li>First Published Headline: <span style={{ textTransform: 'capitalize' }}>{slice.headlineStance}</span></li>
-                              <li>Body: <span style={{ textTransform: 'capitalize' }}>{slice.stance}</span></li>
+                              { headlineChanged ?
+                                <li>
+                                  Headline: Changed from <span style={{ textTransform: 'capitalize' }}>{last.headlineStance}</span> to <span style={{ textTransform: 'capitalize' }}>{slice.headlineStance}</span>
+                                </li>
+                                : null
+                              }
+                              { bodyChanged ?
+                                <li>
+                                  Article Body: Changed from <span style={{ textTransform: 'capitalize' }}>{last.stance}</span> to <span style={{ textTransform: 'capitalize' }}>{slice.stance}</span>
+                                </li>
+                                : null
+                              }
                             </ul>
                           }
                       </div>
@@ -100,7 +122,7 @@ module.exports = React.createClass({
                 );
                 last = slice;
                 return jsx;
-              }).reverse()}
+              })}
             </ul>
           </div>
         </div>
