@@ -39203,15 +39203,13 @@ module.exports = React.createClass({displayName: 'exports',
           "You should also ", React.DOM.a({href: "http://eepurl.com/3mb9T"}, "sign up to our mailing list"), " for" + ' ' +
           "occasional updates. (We never sell or share your info.)"
         ), 
-        React.DOM.h2(null, "How to UseEmergent"), 
-        
+        React.DOM.h2(null, "How to Use Emergent"), 
         React.DOM.p(null, 
           "You can view a list of rumors being tracked on the homepage, along with their" + ' ' +
           "current claim state (True, False, Unverified). Click on a story to visit a page" + ' ' +
           "that visualizes the sources reporting the rumor, and a breakdown of social shares" + ' ' +
           "per source. You can also click on individual articles on the story page to see specific" + ' ' + 
-          "revision and social share data about that article. For more detail about how Emergent" + ' ' +
-          "works, ", React.DOM.a({href: "http://emergentinfo.tumblr.com/"}, "check out the posts on out blog"), "."
+          "revision and social share data about that article. For more detail about how Emergent works, ", React.DOM.a({href: "http://emergentinfo.tumblr.com/"}, "check out the posts on our blog"), "."
         ), 
 
         React.DOM.h2(null, "Credits"), 
@@ -39534,7 +39532,10 @@ module.exports = React.createClass({displayName: 'exports',
     } else {
       this.setState({ targetHeights: { 'for': 1, against: 1, observing: 1 } });
     }
-    this.setState({ animate: setInterval(this.animateHeights, 20) });
+    this.setState({
+      filter: filter,
+      animate: setInterval(this.animateHeights, 20)
+    });
   },
 
   animateHeights: function() {
@@ -39624,13 +39625,6 @@ module.exports = React.createClass({displayName: 'exports',
       window.callout = callout;
 
       var mostShared = _.first(claim.articlesByStance());
-    }
-
-    // compose in order of filter
-    if (this.state.filter) {
-      filterIndex = ['for', 'against', 'observing'].indexOf(this.state.filter);
-      colors = [colors[filterIndex], 'white', 'white'];
-      data.unshift(data.splice(filterIndex,1)[0]);
     }
 
     var mostShared = _.first(claim.articlesByStance()),
