@@ -762,6 +762,9 @@ ul.credits {
   margin: 0;
   padding: 0; }
 
+.back-button {
+  margin-bottom: 15px; }
+
 .articles-title {
   margin-bottom: 1em; }
 

@@ -51,6 +51,10 @@ module.exports = React.createClass({
   },
 
   animateHeights: function() {
+    if (!this.isMounted()) {
+      clearInterval(this.state.animate);
+      return;
+    }
     var keepAnimating = false;
     filterHeights = this.state.filterHeights;
     _.each(['for', 'against', 'observing'], function(stance) {

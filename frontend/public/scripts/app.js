@@ -39174,7 +39174,8 @@ module.exports = React.createClass({displayName: 'exports',
         React.DOM.div({className: "page-content"}, 
           React.DOM.div({className: "container"}, 
 
-            React.DOM.div(null, Link({to: "claim", params: { slug: claim.get('slug')}}, "<< Back to ", claim.get('headline'))), 
+            React.DOM.div({className: "back-button"}, Link({to: "claim", params: { slug: claim.get('slug')}}, "<< Back to ", claim.get('headline'))), 
+
             React.DOM.header({className: "section"}, 
               React.DOM.div({className: "section-header"}, 
                 React.DOM.h1({className: "page-title"}, article.headline), 
@@ -39449,6 +39450,10 @@ module.exports = React.createClass({displayName: 'exports',
   },
 
   animateHeights: function() {
+    if (!this.isMounted()) {
+      clearInterval(this.state.animate);
+      return;
+    }
     var keepAnimating = false;
     filterHeights = this.state.filterHeights;
     _.each(['for', 'against', 'observing'], function(stance) {

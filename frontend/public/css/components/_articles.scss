@@ -1,6 +1,10 @@
 //
 // Articles
 
+.back-button {
+  margin-bottom: 15px;
+}
+
 .articles-title {
   @extend %section-title;
   margin-bottom: 1em;

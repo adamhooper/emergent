@@ -55,7 +55,8 @@ module.exports = React.createClass({
         <div className="page-content">
           <div className="container">
 
-            <div><Link to="claim" params={{ slug: claim.get('slug') }}>&lt;&lt; Back to {claim.get('headline')}</Link></div>
+            <div className="back-button"><Link to="claim" params={{ slug: claim.get('slug') }}>&lt;&lt; Back to {claim.get('headline')}</Link></div>
+
             <header className="section">
               <div className="section-header">
                 <h1 className="page-title">{article.headline}</h1>
