@@ -59,7 +59,7 @@ getShareCount = (claimId) ->
 
 module.exports =
   'get /claims': (req, res, next) ->
-    models.Story.findAll()
+    models.Story.findAll(where: { published: true })
       .tap (claims) ->
         getShareCounts(claims.map((c) -> c.id))
           .tap (counts) ->

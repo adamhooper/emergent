@@ -51,6 +51,12 @@ describe '/claims', ->
     api.get('/claims')
       .then((res) -> expect(res.body.claims[0]).to.have.property('nShares', 0))
 
+  it 'should hide unpublished claims', ->
+    createClaim(slug: 'slug-2', published: false)
+      .then -> api.get('/claims')
+      .then (res) ->
+        expect(res.body.claims).to.have.length(1)
+
   it 'should sum up nShares', ->
     claim2 = null
 
