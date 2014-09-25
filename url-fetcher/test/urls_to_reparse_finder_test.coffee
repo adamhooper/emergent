@@ -37,9 +37,10 @@ describe 'urls_to_reparse_finder', ->
       q = models.sequelize.query.args[0][0]
       expect(normalize(q)).to.eq(normalize('''
         WITH "rankedLastVersions" AS (
-            SELECT "urlId", "parserVersion", rank() OVER (PARTITION BY "urlId" ORDER BY "createdAt" DESC) AS r
-              FROM "UrlVersion"
-                WHERE "parserVersion" IS NOT NULL
+          SELECT "urlId", "parserVersion", rank() OVER (PARTITION BY "urlId" ORDER BY "createdAt" DESC, "parserVersion" DESC, id) AS r
+          FROM "UrlVersion"
+          WHERE "urlGetId" IS NOT NULL
+            AND "parserVersion" IS NOT NULL
         )
         SELECT u.id, u.url, v."parserVersion" AS "lastParserVersion" 
         FROM "Url" u 
