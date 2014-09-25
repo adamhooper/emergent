@@ -14,6 +14,10 @@ module.exports = React.createClass({
     this.subscribeTo(this.props.claims);
   },
 
+  formatNumber: function(str) {
+    return new String(str).replace(/(\d)(?=(\d{3})+$)/g, '$1,');
+  },
+
   render: function() {
     return (
       <div className="page">
@@ -33,10 +37,10 @@ module.exports = React.createClass({
                         <h4 className="article-title"><Link to="claim" params={{ slug: claim.get('slug') }}>{claim.get('headline')}</Link></h4>
                         <p className="article-description">Originated: <time datetime={claim.get('createdAt')}>{moment(claim.get('createdAt')).format('MMMM Do YYYY')}</time></p>
                       </div>
-                      {claim.get('shares') ?
+                      {claim.get('nShares') ?
                         <footer className="article-footer">
                           <div className="shares">
-                            <span className="shares-value">0</span>
+                            <span className="shares-value">{this.formatNumber(claim.get('nShares'))}</span>
                             <span className="shares-label">shares</span>
                           </div>
                         </footer>
@@ -44,7 +48,7 @@ module.exports = React.createClass({
                     </article>
                   </li>
                 );
-              })}
+              }.bind(this))}
             </ul>
           </div>
         </div>

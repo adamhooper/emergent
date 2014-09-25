@@ -88,6 +88,7 @@ module.exports = React.createClass({
       '#dd5b53',
       '#f9be58'
     ];
+    var totalShares = _.reduce(shares, function(sum, num) { return sum + num; }, 0);
 
     if (this.state.populated) {
       var slices = claim.aggregateSlices().slice(0, 18);
@@ -136,7 +137,6 @@ module.exports = React.createClass({
       }
       window.callout = callout;
 
-      var totalShares = _.reduce(shares, function(sum, num) { return sum + num; }, 0);
       var mostShared = _.first(claim.articlesByStance());
     }
 
@@ -171,6 +171,7 @@ module.exports = React.createClass({
                   <span className="status-value">{mostShared ? mostShared.stance : ''}</span>
                 </div>
 
+                { this.state.populated ?
                 <div className="meta">
                   <div className="shares">
                     <span className="shares-value">{claim.articlesByStance().length}</span>
@@ -191,7 +192,7 @@ module.exports = React.createClass({
                     }, this)}
                   </ul>
                 </div>
-
+                : null }
               </div>
             </div>
 
