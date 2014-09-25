@@ -24,15 +24,13 @@ module.exports = React.createClass({
           You should also <a href="http://eepurl.com/3mb9T">sign up to our mailing list</a> for
           occasional updates. (We never sell or share your info.)
         </p>
-        <h2>How to UseEmergent</h2>
-        
+        <h2>How to Use Emergent</h2>
         <p>
           You can view a list of rumors being tracked on the homepage, along with their
           current claim state (True, False, Unverified). Click on a story to visit a page
           that visualizes the sources reporting the rumor, and a breakdown of social shares
           per source. You can also click on individual articles on the story page to see specific 
-          revision and social share data about that article. For more detail about how Emergent
-          works, <a href="http://emergentinfo.tumblr.com/">check out the posts on out blog</a>.
+          revision and social share data about that article. For more detail about how Emergent works, <a href="http://emergentinfo.tumblr.com/">check out the posts on our blog</a>.
         </p>
 
         <h2>Credits</h2>

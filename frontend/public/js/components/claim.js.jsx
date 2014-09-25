@@ -44,7 +44,10 @@ module.exports = React.createClass({
     } else {
       this.setState({ targetHeights: { 'for': 1, against: 1, observing: 1 } });
     }
-    this.setState({ animate: setInterval(this.animateHeights, 20) });
+    this.setState({
+      filter: filter,
+      animate: setInterval(this.animateHeights, 20)
+    });
   },
 
   animateHeights: function() {
@@ -134,13 +137,6 @@ module.exports = React.createClass({
       window.callout = callout;
 
       var mostShared = _.first(claim.articlesByStance());
-    }
-
-    // compose in order of filter
-    if (this.state.filter) {
-      filterIndex = ['for', 'against', 'observing'].indexOf(this.state.filter);
-      colors = [colors[filterIndex], 'white', 'white'];
-      data.unshift(data.splice(filterIndex,1)[0]);
     }
 
     var mostShared = _.first(claim.articlesByStance()),
