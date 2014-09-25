@@ -21,14 +21,16 @@ module.exports = React.createClass({
           Feedback to share? <a href="mailto:craig@craigsilverman.ca">Email us</a>.
         </p>
         <p>
-          You can also <a href="http://eepurl.com/3mb9T">sign up to our mailing list</a> for
+          You should also <a href="http://eepurl.com/3mb9T">sign up to our mailing list</a> for
           occasional updates. (We never sell or share your info.)
         </p>
-        <p>
+        <h2>How to UseEmergent</h2>
           You can view a list of rumors being tracked on the homepage, along with their
           current claim state (True, False, Unverified). Click on a story to visit a page
           that visualizes the sources reporting the rumor, and a breakdown of social shares
-          per source.
+          per source. You can also click on individual articles on the story page to see specific 
+          revision and social share data about that article. For more detail about how Emergent works,
+          <a href=http://emergentinfo.tumblr.com/>check out the posts on out blog</a>.
         </p>
 
         <h2>Credits</h2>
@@ -36,7 +38,7 @@ module.exports = React.createClass({
           <li><strong>Founder/Editor</strong>: <a href="http://www.craigsilverman.ca">Craig Silverman</a></li>
           <li><strong>Lead Developer</strong>: <a href="http://adamhooper.com">Adam Hooper</a></li>
           <li><strong>Design and Interaction</strong>: <a href="http://www.normative.com">Normative</a></li>
-          <li><strong>Research Assistant</strong>: Joscelyn Shawn Ganjhara Jurich</li>
+          <li><strong>Research Assistant</strong>: Joscelyn Jurich</li>
         </ul>
       </div>
     );
