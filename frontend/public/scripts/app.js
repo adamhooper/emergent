@@ -39200,14 +39200,18 @@ module.exports = React.createClass({displayName: 'exports',
           "Feedback to share? ", React.DOM.a({href: "mailto:craig@craigsilverman.ca"}, "Email us"), "."
         ), 
         React.DOM.p(null, 
-          "You can also ", React.DOM.a({href: "http://eepurl.com/3mb9T"}, "sign up to our mailing list"), " for" + ' ' +
+          "You should also ", React.DOM.a({href: "http://eepurl.com/3mb9T"}, "sign up to our mailing list"), " for" + ' ' +
           "occasional updates. (We never sell or share your info.)"
         ), 
+        React.DOM.h2(null, "How to UseEmergent"), 
+        
         React.DOM.p(null, 
           "You can view a list of rumors being tracked on the homepage, along with their" + ' ' +
           "current claim state (True, False, Unverified). Click on a story to visit a page" + ' ' +
           "that visualizes the sources reporting the rumor, and a breakdown of social shares" + ' ' +
-          "per source."
+          "per source. You can also click on individual articles on the story page to see specific" + ' ' + 
+          "revision and social share data about that article. For more detail about how Emergent" + ' ' +
+          "works, ", React.DOM.a({href: "http://emergentinfo.tumblr.com/"}, "check out the posts on out blog"), "."
         ), 
 
         React.DOM.h2(null, "Credits"), 
@@ -39215,7 +39219,7 @@ module.exports = React.createClass({displayName: 'exports',
           React.DOM.li(null, React.DOM.strong(null, "Founder/Editor"), ": ", React.DOM.a({href: "http://www.craigsilverman.ca"}, "Craig Silverman")), 
           React.DOM.li(null, React.DOM.strong(null, "Lead Developer"), ": ", React.DOM.a({href: "http://adamhooper.com"}, "Adam Hooper")), 
           React.DOM.li(null, React.DOM.strong(null, "Design and Interaction"), ": ", React.DOM.a({href: "http://www.normative.com"}, "Normative")), 
-          React.DOM.li(null, React.DOM.strong(null, "Research Assistant"), ": Joscelyn Shawn Ganjhara Jurich")
+          React.DOM.li(null, React.DOM.strong(null, "Research Assistant"), ": Joscelyn Jurich")
         )
       )
     );
