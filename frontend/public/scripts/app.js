@@ -39184,17 +39184,40 @@ var React = require('react');
 module.exports = React.createClass({displayName: 'exports',
   render: function() {
     return (
-
       /* JSX for about page */
       React.DOM.div({className: "container"}, 
         React.DOM.h1(null, "About Emergent"), 
-        React.DOM.p(null, "Emergent is a real-time rumor tracker. It's part of a research project with the Tow Center for Digital Journalism that focuses on how unverified information and rumor is reported in the media, and best practices for debunking misinformation. Read more about it ", React.DOM.a({href: "http://www.craigsilverman.ca/2014/09/02/researching-rumors-and-debunking-for-the-tow-center-at-columbia-university/"}, "here"), "."), 
-        React.DOM.p(null, "You can view a list of rumors being tracked on the hompeage, along with their current claim state (True, False, Unverified). Click on a story to visit a page that visualizes the sources reporting the rumor, and a breakdown of social shares per source."), 
-        React.DOM.p(null, "Have a rumor we should be tracking? A source we should add to an existing story? Feedback to share? ", React.DOM.a({href: "mailto:craig@craigsilverman.ca"}, "Email us"), "."), 
-        React.DOM.p(null, "You can also ", React.DOM.a({href: "http://eepurl.com/3mb9T"}, "sign up to our mailing list"), " for occasional updates.(We never sell or share your info.)"), 
-        React.DOM.p(null, "Founder/Editor: Craig Silverman | Lead Developer: Adam Hooper | Design and Interaction: ", React.DOM.a({href: "http://www.normative.com"}, "Normative"), " | Research Assistant: Joscelyn Shawn Ganjhara Jurich")
-      )
+        React.DOM.p(null, 
+          "Emergent is a real-time rumor tracker. It's part of a research project with" + ' ' +
+          "the ", React.DOM.a({href: "http://towcenter.org/"}, "Tow Center for Digital Journalism"), " at" + ' ' +
+          "Columbia University that focuses on how unverified information and rumor are" + ' ' +
+          "reported in the media. It aims to develop and best practices for debunking" + ' ' +
+          "misinformation. Read more about the" + ' ' +
+          "research ", React.DOM.a({href: "http://www.craigsilverman.ca/2014/09/02/researching-rumors-and-debunking-for-the-tow-center-at-columbia-university/"}, "here"), "."
+        ), 
+        React.DOM.p(null, 
+          "Have a rumor we should be tracking? A source we should add to an existing story?" + ' ' +
+          "Feedback to share? ", React.DOM.a({href: "mailto:craig@craigsilverman.ca"}, "Email us"), "."
+        ), 
+        React.DOM.p(null, 
+          "You can also ", React.DOM.a({href: "http://eepurl.com/3mb9T"}, "sign up to our mailing list"), " for" + ' ' +
+          "occasional updates. (We never sell or share your info.)"
+        ), 
+        React.DOM.p(null, 
+          "You can view a list of rumors being tracked on the homepage, along with their" + ' ' +
+          "current claim state (True, False, Unverified). Click on a story to visit a page" + ' ' +
+          "that visualizes the sources reporting the rumor, and a breakdown of social shares" + ' ' +
+          "per source."
+        ), 
 
+        React.DOM.h2(null, "Credits"), 
+        React.DOM.ul({className: "credits"}, 
+          React.DOM.li(null, React.DOM.strong(null, "Founder/Editor"), ": ", React.DOM.a({href: "http://www.craigsilverman.ca"}, "Craig Silverman")), 
+          React.DOM.li(null, React.DOM.strong(null, "Lead Developer"), ": ", React.DOM.a({href: "http://adamhooper.com"}, "Adam Hooper")), 
+          React.DOM.li(null, React.DOM.strong(null, "Design and Interaction"), ": ", React.DOM.a({href: "http://www.normative.com"}, "Normative")), 
+          React.DOM.li(null, React.DOM.strong(null, "Research Assistant"), ": Joscelyn Shawn Ganjhara Jurich")
+        )
+      )
     );
   }
 });
@@ -39415,15 +39438,17 @@ module.exports = React.createClass({displayName: 'exports',
       };
     }.bind(this));
 
-    var ylabels = this.props.ylabels.map(function(label, i) {
+    var ylabels = this.props.ylabels.map(function(label) {
+      var y = label.y!==undefined ? label.y : label;
+      label = label.label ? label.label : label;
       return {
-        y: height - (label * heightFactor) + this.props.marginTop + this.props.fontSize/2,
+        y: height - (y * heightFactor) + this.props.marginTop + this.props.fontSize/2,
         x: this.props.marginLeft - 18,
         fontSize: this.props.fontSize,
         fill: this.props.color,
         textAnchor: 'end',
-        __html: new String(label).replace(/(\d)(?=(\d{3})+$)/g, '$1,'),
-        key: "ylabel_" + i
+        __html: label,
+        key: "ylabel_" + y
       };
     }.bind(this));
 
@@ -39473,7 +39498,10 @@ module.exports = React.createClass({displayName: 'exports',
   mixins: [BackboneCollection],
 
   getInitialState: function() {
-    return { filter: null };
+    return {
+      filter: null,
+      filterHeights: { 'for': 1, against: 1, observing: 1 }
+    };
   },
 
   componentWillMount: function() {
@@ -39495,7 +39523,36 @@ module.exports = React.createClass({displayName: 'exports',
   },
 
   setFilter: function(filter) {
-    this.setState({ filter: filter });
+    if (filter) {
+      var heights = { 'for': 0, against: 0, observing: 0 };
+      heights[filter] = 1;
+      this.setState({ targetHeights: heights });
+    } else {
+      this.setState({ targetHeights: { 'for': 1, against: 1, observing: 1 } });
+    }
+    this.setState({ animate: setInterval(this.animateHeights, 20) });
+  },
+
+  animateHeights: function() {
+    var keepAnimating = false;
+    filterHeights = this.state.filterHeights;
+    _.each(['for', 'against', 'observing'], function(stance) {
+      if (this.state.targetHeights[stance] != filterHeights[stance]) {
+        if (Math.abs(filterHeights[stance] - this.state.targetHeights[stance]) > .2) {
+          filterHeights[stance] += this.state.targetHeights[stance] > filterHeights[stance] ? .06 : -.06;
+          keepAnimating = true;
+        } else if (Math.abs(filterHeights[stance] - this.state.targetHeights[stance]) > .01) {
+          filterHeights[stance] += this.state.targetHeights[stance] > filterHeights[stance] ? .02 : -.02;
+          keepAnimating = true;
+        } else {
+          filterHeights[stance] = this.state.targetHeights[stance];
+        }
+      }
+    }, this);
+    this.setState({ filterHeights: filterHeights });
+    if (!keepAnimating) {
+      clearInterval(this.state.animate);
+    }
   },
 
   formatNumber: function(str) {
@@ -39518,9 +39575,9 @@ module.exports = React.createClass({displayName: 'exports',
     if (this.state.populated) {
       var slices = claim.aggregateSlices().slice(0, 18);
       var data = slices.reduce(function(series, slice) {
-        series[0].push(slice.for||0);
-        series[1].push(slice.against||0);
-        series[2].push(slice.observing||0);
+        series[0].push((slice.for||0) * this.state.filterHeights.for);
+        series[1].push((slice.against||0) * this.state.filterHeights.against);
+        series[2].push((slice.observing||0) * this.state.filterHeights.observing);
         return series;
       }.bind(this), [[],[],[]]);
 
@@ -39544,6 +39601,9 @@ module.exports = React.createClass({displayName: 'exports',
       if (ylabels.length > 8) {
         ylabels = ylabels.filter(function(a,i) { return i%2; });
       }
+      ylabels = _.reduce(ylabels, function(ylabels, y) {
+        return ylabels.concat({ y: y, label: this.formatNumber(y) });
+      }, [{ y:0, label: 'Total shares' }], this);
 
       // place callout for confirmation
       var callout;
@@ -39599,6 +39659,9 @@ module.exports = React.createClass({displayName: 'exports',
             )
           ), 
 
+          this.state.populated ? 
+
+          React.DOM.div(null, 
           React.DOM.section({className: "filters filters-section"}, 
             React.DOM.button({onClick: this.setFilter.bind(this, null), className: 'filter filter-all filter-category-all' + (!this.state.filter ? ' is-selected' : '')}, 
               React.DOM.div({className: "filter-content"}, 
@@ -39623,7 +39686,7 @@ module.exports = React.createClass({displayName: 'exports',
                 )
               )
             ), 
-            React.DOM.div({className: 'filter-categories filter-categories-' + _.size(shares)}, 
+            React.DOM.div({className: 'filter-categories filter-categories-' + _.filter(claim.sharesByStance(), function(c) { return c; }).length}, 
                claim.articlesByStance('for').length > 0 ?
                 React.DOM.button({onClick: this.setFilter.bind(this, 'for'), className: 'filter filter-category filter-category-for' + (this.state.filter === 'for' ? ' is-selected' : '')}, 
                   React.DOM.div({className: "filter-content"}, 
@@ -39710,17 +39773,14 @@ module.exports = React.createClass({displayName: 'exports',
 
           React.DOM.section({className: "section section-content"}, 
             React.DOM.h3({className: "section-title"}, "Shares over time"), 
-            this.state.populated && this.state.barChartWidth ?
-              Barchart({width: this.state.barChartWidth - 100, height: 200, ref: "chart", marginTop: 75, marginLeft: 80, marginRight: 20, ylabels: ylabels, labels: labels, series: data, colors: colors, fontSize: 12, gap: 0.6, callout: callout, color: "#252424"})
-              :
-              React.DOM.div({id: "bar-chart-placeholder"}, "Loading...")
-            
+            Barchart({width: this.state.barChartWidth - 120, height: 200, ref: "chart", marginTop: callout ? 75: 10, marginLeft: 100, marginRight: 20, ylabels: ylabels, labels: labels, series: data, colors: colors, fontSize: 12, gap: 0.6, callout: callout, color: "#252424"})
           ), 
 
           React.DOM.section({className: "page-articles"}, 
             React.DOM.h3({className: "articles-title"}, "Sources"), 
             React.DOM.ul({className: "articles"}, 
               _.first(claim.articlesByStance(this.state.filter), 10).map(function(article) {
+                var isConfirmingArticle = article.url && article.url==claim.get('truthinessUrl');
                 return (
                   React.DOM.li({key: article.id}, 
                     React.DOM.article({className: "article"}, 
@@ -39740,6 +39800,7 @@ module.exports = React.createClass({displayName: 'exports',
                       ), 
                       React.DOM.footer({className: "article-footer"}, 
                         React.DOM.div({className: "shares"}, 
+                           isConfirmingArticle ? React.DOM.span(null, claim.truthinessText()) : null, 
                           React.DOM.span({className: "shares-value"}, this.formatNumber(article.shares)), 
                           React.DOM.span({className: "shares-label"}, "Shares")
                         )
@@ -39750,6 +39811,12 @@ module.exports = React.createClass({displayName: 'exports',
               }, this)
             )
           )
+          )
+          :
+
+          React.DOM.section(null, React.DOM.h4({className: "filter-title"}, "Loading shares..."))
+          
+
         )
       )
     );
@@ -39802,9 +39869,27 @@ module.exports = React.createClass({displayName: 'exports',
 /** @jsx React.DOM */
 
 var React = require('react');
-var Link = require('react-router').Link;
+var Router = require('react-router');
+var Link = Router.Link;
+
+var nUpdatesToIgnore = 2;
 
 module.exports = React.createClass({displayName: 'exports',
+  mixins: [ Router.ActiveState ],
+
+  updateActiveState: function() {
+    // react-router sends two updates on page load. We want zero, because
+    // our first call to window.ga() happens when window.ga() actually
+    // loads.
+    if (nUpdatesToIgnore > 0) {
+      nUpdatesToIgnore -= 1;
+    } else {
+      if (window.ga) {
+        window.ga('send', 'pageview');
+      }
+    }
+  },
+
   render: function() {
     return (
       React.DOM.div(null, 
