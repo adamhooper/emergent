@@ -1,9 +1,27 @@
 /** @jsx React.DOM */
 
 var React = require('react');
-var Link = require('react-router').Link;
+var Router = require('react-router');
+var Link = Router.Link;
+
+var nUpdatesToIgnore = 2;
 
 module.exports = React.createClass({
+  mixins: [ Router.ActiveState ],
+
+  updateActiveState: function() {
+    // react-router sends two updates on page load. We want zero, because
+    // our first call to window.ga() happens when window.ga() actually
+    // loads.
+    if (nUpdatesToIgnore > 0) {
+      nUpdatesToIgnore -= 1;
+    } else {
+      if (window.ga) {
+        window.ga('send', 'pageview');
+      }
+    }
+  },
+
   render: function() {
     return (
       <div>
