@@ -25,6 +25,8 @@ module.exports = React.createClass({
           occasional updates. (We never sell or share your info.)
         </p>
         <h2>How to UseEmergent</h2>
+        
+        <p>
           You can view a list of rumors being tracked on the homepage, along with their
           current claim state (True, False, Unverified). Click on a story to visit a page
           that visualizes the sources reporting the rumor, and a breakdown of social shares
