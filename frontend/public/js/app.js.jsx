@@ -23,7 +23,7 @@ var app = {
             <Route name="article" path=":slug/articles/:articleId" handler={this.components.Article} claims={this.claims}/>
           </Route>
         </Routes>
-      , document.body);
+      , $('#react')[0]);
     }.bind(this));
   },
 

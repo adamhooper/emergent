@@ -31,7 +31,7 @@
 
 $susy: (
   columns: 12,
-  gutters: 3/7,
+  gutters: 1/3,
   global-box-sizing: border-box
 );
 
@@ -51,7 +51,8 @@ $container-retina:     1190px;
 // Typography
 
 $font-serif:           'Georgia', 'Times New Roman', Times, serif;
-$font-sans-serif:      'Gotham', Helvetica, Arial, sans-serif;
+$font-sans-serif:      'franklin-gothic-urw', Helvetica, Arial, sans-serif;
+$font-logo:            'Gotham', Helvetica, Arial, sans-serif;
 
 
 //
@@ -59,6 +60,7 @@ $font-sans-serif:      'Gotham', Helvetica, Arial, sans-serif;
 
 $palette: (
   base: (
+    lighter:    #ffffff,
     light:      #eaeaea,
     base:       #c1c1c1,
     dark:       #727272,
@@ -68,24 +70,6 @@ $palette: (
     light:      #eaeaea,
     dark:       #252424,
     link:       #727272
-  ),
-  primary: (
-    base:       #7ecc76
-  ),
-  secondary: (
-    base:       #f9be58
-  ),
-  tertiary: (
-    base:       #dd5b53
-  ),
-  positive: (
-    base:       #7ecc76
-  ),
-  unknown: (
-    base:       #f9be58
-  ),
-  negative: (
-    base:       #dd5b53
   ),
   category: (
     for:        #7ecc76,
@@ -97,8 +81,5 @@ $palette: (
     false:      #dd5b53,
     unknown:    #f9be58,
     observing:  #f9be58
-  ),
-  clear: (
-    base:       #fff
   )
 );

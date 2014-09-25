@@ -1,3 +1,21 @@
 .icon {
+  text-indent: -9999px;
+}
+
+.icon-confirmed {
+  background-image: image-url('confirmed.svg');
+  display: block;
+  height: 30px;
+  width: 30px;
+}
+
+.icon-most-shared {
+  background-image: image-url('shared.png');
+  background-repeat: no-repeat;
   display: inline-block;
+  height: 26px;
+  margin-right: 5px;
+  margin-top: -6px;
+  vertical-align: middle;
+  width: 26px;
 }

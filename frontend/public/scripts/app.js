@@ -39128,7 +39128,7 @@ var app = {
             Route({name: "article", path: ":slug/articles/:articleId", handler: this.components.Article, claims: this.claims})
           )
         )
-      , document.body);
+      , $('#react')[0]);
     }.bind(this));
   },
 
@@ -39208,7 +39208,7 @@ module.exports = React.createClass({displayName: 'exports',
           "You can view a list of rumors being tracked on the homepage, along with their" + ' ' +
           "current claim state (True, False, Unverified). Click on a story to visit a page" + ' ' +
           "that visualizes the sources reporting the rumor, and a breakdown of social shares" + ' ' +
-          "per source. You can also click on individual articles on the story page to see specific" + ' ' + 
+          "per source. You can also click on individual articles on the story page to see specific" + ' ' +
           "revision and social share data about that article. For more detail about how Emergent works, ", React.DOM.a({href: "http://emergentinfo.tumblr.com/"}, "check out the posts on our blog"), "."
         ), 
 
@@ -39265,76 +39265,68 @@ module.exports = React.createClass({displayName: 'exports',
     var last;
 
     return (
-      React.DOM.div({className: "container"}, 
-        React.DOM.div({className: "page page-article"}, 
+      React.DOM.div({className: "page page-article"}, 
+        React.DOM.div({className: "page-content"}, 
+          React.DOM.div({className: "container"}, 
 
-          React.DOM.header({className: "section"}, 
-            React.DOM.div({className: "page-header"}, 
-              React.DOM.h1({className: "page-title"}, article.headline), 
-              React.DOM.p(null, article.source, " - ", moment(article.createdAt).format('MMM D YYYY'), " (", slices.length + ' revision' + (slices.length > 1 ? 's' : ''), ")"), 
-              React.DOM.p(null, React.DOM.a({href: article.url, target: "_blank"}, "View original article")), 
-              React.DOM.p(null)
-            ), 
-            React.DOM.div({className: "page-meta"}, 
-              React.DOM.div({className: 'status status-' + _.last(slices).headlineStance}, 
-                React.DOM.span({className: "status-label"}, "Headline"), 
-                React.DOM.span({className: "status-value"}, _.last(slices).headlineStance)
+            React.DOM.header({className: "section"}, 
+              React.DOM.div({className: "section-header"}, 
+                React.DOM.h1({className: "page-title"}, article.headline), 
+                React.DOM.p(null, article.source, " - ", moment(article.createdAt).format('MMM D YYYY'), " (", slices.length + ' revision' + (slices.length > 1 ? 's' : ''), ")"), 
+                React.DOM.p(null, React.DOM.a({href: article.url, target: "_blank"}, "View original article")), 
+                React.DOM.p(null)
               ), 
-              React.DOM.div({className: 'status status-' + _.last(slices).stance}, 
-                React.DOM.span({className: "status-label"}, "Article Body"), 
-                React.DOM.span({className: "status-value"}, _.last(slices).stance)
+              React.DOM.div({className: "page-meta"}, 
+                React.DOM.div({className: 'status status-' + _.last(slices).headlineStance}, 
+                  React.DOM.span({className: "status-label"}, "Headline"), 
+                  React.DOM.span({className: "status-value"}, _.last(slices).headlineStance)
+                ), 
+                React.DOM.div({className: 'status status-' + _.last(slices).stance}, 
+                  React.DOM.span({className: "status-label"}, "Article Body"), 
+                  React.DOM.span({className: "status-value"}, _.last(slices).stance)
+                )
               )
-            )
-          ), 
+            ), 
 
-          React.DOM.h2({className: "articles-title"}, "Revisions"), 
-          React.DOM.ul({className: "articles"}, 
-            slices.map(function(slice) {
-              var headlineChanged = last && last.headlineStance != slice.headlineStance
-              var bodyChanged = last && last.stance != slice.stance;
-              var initial = !last;
-              var jsx = (
-                React.DOM.li(null, 
-                  React.DOM.article({className: "article article-revision"}, 
-                    React.DOM.header({className: "article-header"}, 
-                      React.DOM.h3({className: "article-date"}, moment(slice.end).format('MMM D YYYY')), 
-                      React.DOM.p({className: "article-time"}, moment(slice.end).format('h:mma'))
-                    ), 
-                    React.DOM.div({className: "article-content"}, 
-                         initial ?
+            React.DOM.h2({className: "articles-title"}, "Revisions"), 
+            React.DOM.ul({className: "articles"}, 
+              slices.map(function(slice) {
+                var headlineChanged = last && last.headlineStance != slice.headlineStance
+                var bodyChanged = last && last.stance != slice.stance;
+                var initial = !last;
+                var jsx = (
+                  React.DOM.li(null, 
+                    React.DOM.article({className: "article article-revision"}, 
+                      React.DOM.header({className: "article-header"}, 
+                        React.DOM.h3({className: "article-date"}, moment(slice.end).format('MMM D YYYY')), 
+                        React.DOM.p({className: "article-time"}, moment(slice.end).format('h:mma'))
+                      ), 
+                      React.DOM.div({className: "article-content"}, 
+                           initial ?
+                              React.DOM.ul({className: "changes"}, 
+                                React.DOM.li(null, "First Published Headline ", React.DOM.span({style: { textTransform: 'capitalize'}}, slice.headlineStance)), 
+                                React.DOM.li(null, "Body ", React.DOM.span({style: { textTransform: 'capitalize'}}, slice.stance))
+                              )
+                            :
                             React.DOM.ul({className: "changes"}, 
                               React.DOM.li(null, "First Published Headline: ", React.DOM.span({style: { textTransform: 'capitalize'}}, slice.headlineStance)), 
                               React.DOM.li(null, "Body: ", React.DOM.span({style: { textTransform: 'capitalize'}}, slice.stance))
                             )
-                          :
-                          React.DOM.ul({className: "changes"}, 
-                             headlineChanged ?
-                              React.DOM.li(null, 
-                                "Headline: Changed from ", React.DOM.span({style: { textTransform: 'capitalize'}}, last.headlineStance), " to ", React.DOM.span({style: { textTransform: 'capitalize'}}, slice.headlineStance)
-                              )
-                              : null, 
-                            
-                             bodyChanged ?
-                              React.DOM.li(null, 
-                                "Article Body: Changed from ", React.DOM.span({style: { textTransform: 'capitalize'}}, last.stance), " to ", React.DOM.span({style: { textTransform: 'capitalize'}}, slice.stance)
-                              )
-                              : null
-                            
-                          )
-                        
-                    ), 
-                    React.DOM.footer({className: "article-footer"}, 
-                      React.DOM.div({className: "shares"}, 
-                        React.DOM.span({className: "shares-value"}, _.values(slice.shares).reduce(function(sum, count) { return sum + count; }, 0)), 
-                        React.DOM.span({className: "shares-label"}, "Shares")
+                          
+                      ), 
+                      React.DOM.footer({className: "article-footer"}, 
+                        React.DOM.div({className: "shares"}, 
+                          React.DOM.span({className: "shares-value"}, _.values(slice.shares).reduce(function(sum, count) { return sum + count; }, 0)), 
+                          React.DOM.span({className: "shares-label"}, "shares")
+                        )
                       )
                     )
                   )
-                )
-              );
-              last = slice;
-              return jsx;
-            }).reverse()
+                );
+                last = slice;
+                return jsx;
+              }).reverse()
+            )
           )
         )
       )
@@ -39520,8 +39512,8 @@ module.exports = React.createClass({displayName: 'exports',
   },
 
   componentDidMount: function() {
-    // this.setState({ barChartWidth: $(this.getDOMNode()).innerWidth() });
     this.setState({ barChartWidth: 926 });
+    addthis.toolbox('.addthis_toolbox');
   },
 
   setFilter: function(filter) {
@@ -39632,190 +39624,191 @@ module.exports = React.createClass({displayName: 'exports',
       originDate = claim.originDate();
 
     return (
-      React.DOM.div({className: "container"}, 
-        React.DOM.div({className: "page page-claim"}, 
 
-          React.DOM.div({className: "section"}, 
-            React.DOM.header({className: "page-header"}, 
-              React.DOM.h1({className: "page-title"}, claim.get('headline')), 
-              React.DOM.p(null, claim.get('description')), 
-              React.DOM.ul({className: "list-unstyled"}, 
-                claim.get('origin') ? React.DOM.li(null, React.DOM.strong(null, "Origin: "), claim.get('origin')) : null, 
-                claim.get('origin') ? React.DOM.li(null, React.DOM.strong(null, "Originated: "), moment(originDate).format('MMM D, YYYY H:mm') + ' (' + moment(originDate).fromNow() + ')', " ", claim.get('originUrl') ? React.DOM.a({href: claim.get('originUrl'), target: "_blank"}, "View Article") : null) : null, 
-                React.DOM.li(null, React.DOM.strong(null, "Started Tracking:"), " ", moment(startedTracking).format('MMM D, YYYY H:mm') + ' (' + moment(startedTracking).fromNow() + ')')
+      React.DOM.div({className: "page page-claim"}, 
+        React.DOM.div({className: "page-header"}, 
+          React.DOM.div({className: "container"}, 
+
+            React.DOM.div({className: "section"}, 
+              React.DOM.header({className: "section-header"}, 
+                React.DOM.h1({className: "page-title"}, claim.get('headline')), 
+                React.DOM.ul({className: "list-unstyled"}, 
+                  claim.get('origin') ? React.DOM.li(null, React.DOM.strong(null, "Originated: "), moment(originDate).format('MMM D, YYYY H:mm') + ' (' + moment(originDate).fromNow() + ')', " ", claim.get('originUrl') ? React.DOM.a({href: claim.get('originUrl'), target: "_blank"}, "View Article") : null) : null, 
+                  React.DOM.li(null, React.DOM.strong(null, "Started Tracking:"), " ", moment(startedTracking).format('MMM D, YYYY H:mm') + ' (' + moment(startedTracking).fromNow() + ')')
+                ), 
+                React.DOM.div(null, claim.get('description')), 
+                claim.get('origin') ? React.DOM.p(null, React.DOM.strong(null, "Origin: "), claim.get('origin')) : null
+              ), 
+              React.DOM.div({className: "page-meta"}, 
+
+                React.DOM.div({className: "shares"}, 
+                  React.DOM.span({className: "shares-value"}, claim.articlesByStance().length), 
+                  React.DOM.span({className: "shares-label"}, "Sources")
+                ), 
+                React.DOM.div({className: "shares"}, 
+                  React.DOM.span({className: "shares-value"}, this.formatNumber(_.reduce(shares, function(sum, num) { return sum + num; }, 0))), 
+                  React.DOM.span({className: "shares-label"}, "Shares")
+                ), 
+                _.map(claim.sharesByProvider(), function(shares, provider) {
+                  return (
+                    React.DOM.div({className: "share"}, 
+                      React.DOM.span({className: "shares-value"}, this.formatNumber(shares)), 
+                      React.DOM.span({className: "shares-label"}, provider)
+                    )
+                  );
+                }, this), 
+
+                React.DOM.div({className: 'status status-' + claim.get('truthiness')}, 
+                  React.DOM.span({className: "status-label"}, "Claim State"), 
+                  React.DOM.span({className: "status-value"}, claim.truthinessText())
+                ), 
+                React.DOM.div({className: 'status status-' + (mostShared ? mostShared.stance : '')}, 
+                  React.DOM.span({className: "status-label"}, "Most Shared Claim"), 
+                  React.DOM.span({className: "status-value"}, mostShared ? mostShared.stance : '')
+                )
               )
             ), 
-            React.DOM.div({className: "page-meta"}, 
-              React.DOM.div({className: 'status status-' + claim.get('truthiness')}, 
-                React.DOM.span({className: "status-label"}, "Claim state"), 
-                React.DOM.span({className: "status-value"}, claim.truthinessText())
-              ), 
-              React.DOM.div({className: 'status status-' + (mostShared ? mostShared.stance : '')}, 
-                React.DOM.span({className: "status-label"}, "Most shared"), 
-                React.DOM.span({className: "status-value"}, mostShared ? mostShared.stance : '')
+
+            React.DOM.section({className: "cards cards-section"}, 
+              React.DOM.div({className: 'card-categories card-categories-' + _.filter(claim.sharesByStance(), function(c) { return c; }).length}, 
+                 claim.articlesByStance('for').length > 0 ?
+                  React.DOM.div({onClick: this.setFilter.bind(this, 'for'), className: 'card card-category card-category-for' + (this.state.filter === 'for' ? ' is-selected' : '')}, 
+                    React.DOM.div({className: "card-header"}, 
+                      React.DOM.p({className: "card-title"}, "For", claim.get('truthiness') === 'true' ? React.DOM.span({className: "icon icon-confirmed"}, "Confirmed") : null), 
+                      React.DOM.div({className: "card-meta"}, 
+                        React.DOM.p({className: "sources"}, claim.articlesByStance('for').length, " sources"), 
+                        React.DOM.div({className: "shares"}, 
+                          React.DOM.span({className: "shares-value"}, mostShared.stance === 'for' ? React.DOM.span({className: "icon icon-most-shared"}) : null, shares.for ? this.formatNumber(shares.for) : 0), 
+                          React.DOM.span({className: "shares-label"}, "shares")
+                        )
+                      )
+                    ), 
+                    React.DOM.div({className: "card-content"}, 
+                      React.DOM.p({className: "article-source-title"}, "Top Source"), 
+                      _.first(claim.articlesByStance('for'), 1).map(function(article) {
+                        return (
+                          React.DOM.article({className: "article article-source", key: article.id}, 
+                            React.DOM.h4({className: "article-title"}, article.source, " - ", React.DOM.time({datetime: article.createdAt}, moment(article.createdAt).format('MMMM Do YYYY'))), 
+                            React.DOM.p({className: "article-description"}, Link({to: "article", params: { slug: claim.get('slug'), articleId: article.id}}, this.truncateString(article.headline))), 
+                            React.DOM.p(null, React.DOM.strong(null, this.formatNumber(article.shares) + ' shares'))
+                          )
+                        )
+                      }, this)
+                    )
+                  )
+                  : null, 
+                
+                 claim.articlesByStance('against').length > 0 ?
+                  React.DOM.div({onClick: this.setFilter.bind(this, 'against'), className: 'card card-category card-category-against' + (this.state.filter === 'against' ? ' is-selected' : '')}, 
+                    React.DOM.div({className: "card-header"}, 
+                      React.DOM.p({className: "card-title"}, "Against", claim.get('truthiness') === 'false' ? React.DOM.span({className: "icon icon-confirmed"}, "Confirmed") : null), 
+                      React.DOM.div({className: "card-meta"}, 
+                        React.DOM.p({className: "sources"}, claim.articlesByStance('against').length, " sources"), 
+                        React.DOM.div({className: "shares"}, 
+                          React.DOM.span({className: "shares-value"}, mostShared.stance === 'against' ? React.DOM.span({className: "icon icon-most-shared"}) : null, shares.against ? this.formatNumber(shares.against) : 0), 
+                          React.DOM.span({className: "shares-label"}, "shares")
+                        )
+                      )
+                    ), 
+                    React.DOM.div({className: "card-content"}, 
+                      React.DOM.p({className: "article-source-title"}, "Top Source"), 
+                      _.first(claim.articlesByStance('against'), 1).map(function(article) {
+                        return (
+                          React.DOM.article({className: "article article-source", key: article.id}, 
+                            React.DOM.h4({className: "article-title"}, article.source, " - ", React.DOM.time({datetime: article.createdAt}, moment(article.createdAt).format('MMMM Do YYYY'))), 
+                            React.DOM.p({className: "article-description"}, Link({to: "article", params: { slug: claim.get('slug'), articleId: article.id}}, this.truncateString(article.headline))), 
+                            React.DOM.p(null, React.DOM.strong(null, this.formatNumber(article.shares) + ' shares'))
+                          )
+                        )
+                      }, this)
+                    )
+                  )
+                  : null, 
+                
+                 claim.articlesByStance('observing').length > 0 ?
+                  React.DOM.div({onClick: this.setFilter.bind(this, 'observing'), className: 'card card-category card-category-observing' + (this.state.filter === 'observing' ? ' is-selected' : '')}, 
+                    React.DOM.div({className: "card-header"}, 
+                      React.DOM.p({className: "card-title"}, "Observing"), 
+                      React.DOM.div({className: "card-meta"}, 
+                        React.DOM.p({className: "sources"}, claim.articlesByStance('observing').length, " sources"), 
+                        React.DOM.div({className: "shares"}, 
+                          React.DOM.span({className: "shares-value"}, mostShared.stance === 'observing' ? React.DOM.span({className: "icon icon-most-shared"}) : null, shares.observing ? this.formatNumber(shares.observing) : 0), 
+                          React.DOM.span({className: "shares-label"}, "shares")
+                        )
+                      )
+                    ), 
+                    React.DOM.div({className: "card-content"}, 
+                      React.DOM.p({className: "article-source-title"}, "Top Source"), 
+                      _.first(claim.articlesByStance('observing'), 1).map(function(article) {
+                        return (
+                          React.DOM.article({className: "article article-source", key: article.id}, 
+                            React.DOM.h4({className: "article-title"}, article.source, " - ", React.DOM.time({datetime: article.createdAt}, moment(article.createdAt).format('MMMM Do YYYY'))), 
+                            React.DOM.p({className: "article-description"}, Link({to: "article", params: { slug: claim.get('slug'), articleId: article.id}}, this.truncateString(article.headline))), 
+                            React.DOM.p(null, React.DOM.strong(null, this.formatNumber(article.shares) + ' shares'))
+                          )
+                        )
+                      }, this)
+                    )
+                  )
+                  : null
+                
               )
             )
-          ), 
+          )
+        ), 
 
-          this.state.populated ? 
 
-          React.DOM.div(null, 
-          React.DOM.section({className: "filters filters-section"}, 
-            React.DOM.button({onClick: this.setFilter.bind(this, null), className: 'filter filter-all filter-category-all' + (!this.state.filter ? ' is-selected' : '')}, 
-              React.DOM.div({className: "filter-content"}, 
-                React.DOM.h4({className: "filter-title"}, "All Shares"), 
-                React.DOM.div({className: "filter-meta"}, 
-                  React.DOM.div({className: "share"}, 
-                    React.DOM.span({className: "shares-value"}, claim.articlesByStance().length), 
-                    React.DOM.span({className: "shares-label"}, "Sources")
-                  ), 
-                  React.DOM.div({className: "share share-all"}, 
-                    React.DOM.span({className: "shares-value"}, this.formatNumber(_.reduce(shares, function(sum, num) { return sum + num; }, 0))), 
-                    React.DOM.span({className: "shares-label"}, "Shares")
-                  ), 
-                  _.map(claim.sharesByProvider(), function(shares, provider) {
+        this.state.populated ?
+          React.DOM.div({className: "page-content"}, 
+            React.DOM.div({className: "container"}, 
+              React.DOM.nav(null, 
+                React.DOM.ul({className: "filters"}, 
+                  React.DOM.li(null, React.DOM.button({onClick: this.setFilter.bind(this, null), className: 'filter filter-category filter-category-all' + (!this.state.filter ? ' is-selected' : '')}, "All Shares")), 
+                   claim.articlesByStance('for').length > 0 ? React.DOM.li(null, React.DOM.button({onClick: this.setFilter.bind(this, 'for'), className: 'filter filter-category filter-category-for' + (this.state.filter === 'for' ? ' is-selected' : '')}, "For")) : null, 
+                   claim.articlesByStance('against').length > 0 ? React.DOM.li(null, React.DOM.button({onClick: this.setFilter.bind(this, 'against'), className: 'filter filter-category filter-category-against' + (this.state.filter === 'against' ? ' is-selected' : '')}, "Against")) : null, 
+                   claim.articlesByStance('observing').length > 0 ? React.DOM.li(null, React.DOM.button({onClick: this.setFilter.bind(this, 'observing'), className: 'filter filter-category filter-category-observing' + (this.state.filter === 'observing' ? ' is-selected' : '')}, "Observing")) : null
+                )
+              ), 
+              React.DOM.section({className: "section section-content"}, 
+                React.DOM.h3({className: "section-title"}, "Shares over time"), 
+                Barchart({width: this.state.barChartWidth - 120, height: 200, ref: "chart", marginTop: callout ? 75: 10, marginLeft: 100, marginRight: 20, ylabels: ylabels, labels: labels, series: data, colors: colors, fontSize: 12, gap: 0.6, callout: callout, color: "#252424"})
+              ), 
+              React.DOM.section({className: "page-articles"}, 
+                React.DOM.h3({className: "articles-title"}, "Sources"), 
+                React.DOM.ul({className: "articles"}, 
+                  _.first(claim.articlesByStance(this.state.filter), 10).map(function(article) {
                     return (
-                      React.DOM.div({className: "share"}, 
-                        React.DOM.span({className: "shares-value"}, this.formatNumber(shares)), 
-                        React.DOM.span({className: "shares-label"}, provider)
+                      React.DOM.li({key: article.id}, 
+                        React.DOM.article({className: "article"}, 
+                          React.DOM.header({className: "article-header"}, 
+                            React.DOM.div({className: 'stance stance-' + article.stance}, 
+                              React.DOM.span({className: "stance-value"}, article.stance)
+                            ), 
+                            article.revised ?
+                              React.DOM.div({className: 'stance stance-revised stance-' + article.revised}, 
+                                React.DOM.span({className: "stance-value"}, 'Revised to ' + article.revised)
+                              )
+                            : ''
+                          ), 
+                          React.DOM.div({className: "article-content"}, 
+                            React.DOM.h4({className: "article-title"}, Link({to: "article", params: { slug: claim.get('slug'), articleId: article.id}}, article.source), " - ", React.DOM.time({datetime: article.createdAt}, moment(article.createdAt).format('MMMM Do YYYY'))), 
+                            React.DOM.p({className: "article-description"}, article.headline)
+                          ), 
+                          React.DOM.footer({className: "article-footer"}, 
+                            React.DOM.div({className: "shares"}, 
+                              React.DOM.span({className: "shares-value"}, this.formatNumber(article.shares)), 
+                              React.DOM.span({className: "shares-label"}, "shares")
+                            )
+                          )
+                        )
                       )
-                    );
+                    )
                   }, this)
                 )
               )
-            ), 
-            React.DOM.div({className: 'filter-categories filter-categories-' + _.filter(claim.sharesByStance(), function(c) { return c; }).length}, 
-               claim.articlesByStance('for').length > 0 ?
-                React.DOM.button({onClick: this.setFilter.bind(this, 'for'), className: 'filter filter-category filter-category-for' + (this.state.filter === 'for' ? ' is-selected' : '')}, 
-                  React.DOM.div({className: "filter-content"}, 
-                    React.DOM.p({className: "filter-title"}, "For"), 
-                    React.DOM.div({className: "filter-meta"}, 
-                      React.DOM.p({className: "sources"}, claim.articlesByStance('for').length, " sources"), 
-                      React.DOM.div({className: "shares"}, 
-                        React.DOM.span({className: "shares-value"}, shares.for ? this.formatNumber(shares.for) : 0), 
-                        React.DOM.span({className: "shares-label"}, "Shares")
-                      )
-                    )
-                  ), 
-                  React.DOM.div({className: "filter-source"}, 
-                    React.DOM.p({className: "article-source-title"}, "Top Source"), 
-                    _.first(claim.articlesByStance('for'), 1).map(function(article) {
-                      return (
-                        React.DOM.article({className: "article article-source", key: article.id}, 
-                          React.DOM.h4({className: "article-title"}, article.source, " - ", React.DOM.time({datetime: article.createdAt}, moment(article.createdAt).format('MMMM Do YYYY'))), 
-                          React.DOM.p({className: "article-description"}, Link({to: "article", params: { slug: claim.get('slug'), articleId: article.id}}, this.truncateString(article.headline))), 
-                          React.DOM.p({className: "shares-value"}, this.formatNumber(article.shares), " shares")
-                        )
-                      )
-                    }, this)
-                  )
-                )
-                : null, 
-              
-               claim.articlesByStance('against').length > 0 ?
-                React.DOM.button({onClick: this.setFilter.bind(this, 'against'), className: 'filter filter-category filter-category-against' + (this.state.filter === 'against' ? ' is-selected' : '')}, 
-                  React.DOM.div({className: "filter-content"}, 
-                    React.DOM.p({className: "filter-title"}, "Against"), 
-                    React.DOM.div({className: "filter-meta"}, 
-                      React.DOM.p({className: "sources"}, claim.articlesByStance('against').length, " sources"), 
-                      React.DOM.div({className: "shares"}, 
-                        React.DOM.span({className: "shares-value"}, shares.against ? this.formatNumber(shares.against) : 0), 
-                        React.DOM.span({className: "shares-label"}, "Shares")
-                      )
-                    )
-                  ), 
-                  React.DOM.div({className: "filter-source"}, 
-                    React.DOM.p({className: "article-source-title"}, "Top Source"), 
-                    _.first(claim.articlesByStance('against'), 1).map(function(article) {
-                      return (
-                        React.DOM.article({className: "article article-source", key: article.id}, 
-                          React.DOM.h4({className: "article-title"}, article.source, " - ", React.DOM.time({datetime: article.createdAt}, moment(article.createdAt).format('MMMM Do YYYY'))), 
-                          React.DOM.p({className: "article-description"}, Link({to: "article", params: { slug: claim.get('slug'), articleId: article.id}}, this.truncateString(article.headline))), 
-                          React.DOM.p({className: "shares-value"}, this.formatNumber(article.shares), " shares")
-                        )
-                      )
-                    }, this)
-                  )
-                )
-                : null, 
-              
-               claim.articlesByStance('observing').length > 0 ?
-                React.DOM.button({onClick: this.setFilter.bind(this, 'observing'), className: 'filter filter-category filter-category-observing' + (this.state.filter === 'observing' ? ' is-selected' : '')}, 
-                  React.DOM.div({className: "filter-content"}, 
-                    React.DOM.p({className: "filter-title"}, "Observing"), 
-                    React.DOM.div({className: "filter-meta"}, 
-                      React.DOM.p({className: "sources"}, claim.articlesByStance('observing').length, " sources"), 
-                      React.DOM.div({className: "shares"}, 
-                        React.DOM.span({className: "shares-value"}, shares.observing ? this.formatNumber(shares.observing) : 0), 
-                        React.DOM.span({className: "shares-label"}, "Shares")
-                      )
-                    )
-                  ), 
-                  React.DOM.div({className: "filter-source"}, 
-                    React.DOM.p({className: "article-source-title"}, "Top Source"), 
-                    _.first(claim.articlesByStance('observing'), 1).map(function(article) {
-                      return (
-                        React.DOM.article({className: "article article-source", key: article.id}, 
-                          React.DOM.h4({className: "article-title"}, article.source, " - ", React.DOM.time({datetime: article.createdAt}, moment(article.createdAt).format('MMMM Do YYYY'))), 
-                          React.DOM.p({className: "article-description"}, Link({to: "article", params: { slug: claim.get('slug'), articleId: article.id}}, this.truncateString(article.headline))), 
-                          React.DOM.p({className: "shares-value"}, this.formatNumber(article.shares), " shares")
-                        )
-                      )
-                    }, this)
-                  )
-                )
-                : null
-              
             )
-          ), 
-
-          React.DOM.section({className: "section section-content"}, 
-            React.DOM.h3({className: "section-title"}, "Shares over time"), 
-            Barchart({width: this.state.barChartWidth - 120, height: 200, ref: "chart", marginTop: callout ? 75: 10, marginLeft: 100, marginRight: 20, ylabels: ylabels, labels: labels, series: data, colors: colors, fontSize: 12, gap: 0.6, callout: callout, color: "#252424"})
-          ), 
-
-          React.DOM.section({className: "page-articles"}, 
-            React.DOM.h3({className: "articles-title"}, "Sources"), 
-            React.DOM.ul({className: "articles"}, 
-              _.first(claim.articlesByStance(this.state.filter), 10).map(function(article) {
-                var isConfirmingArticle = article.url && article.url==claim.get('truthinessUrl');
-                return (
-                  React.DOM.li({key: article.id}, 
-                    React.DOM.article({className: "article"}, 
-                      React.DOM.header({className: "article-header"}, 
-                        React.DOM.div({className: 'stance stance-' + article.stance}, 
-                          React.DOM.span({className: "stance-value"}, article.stance)
-                        ), 
-                        article.revised ?
-                          React.DOM.div({className: 'stance stance-revised stance-' + article.revised}, 
-                            React.DOM.span({className: "stance-value"}, 'Revised to ' + article.revised)
-                          )
-                        : ''
-                      ), 
-                      React.DOM.div({className: "article-content"}, 
-                        React.DOM.h4({className: "article-title"}, Link({to: "article", params: { slug: claim.get('slug'), articleId: article.id}}, article.source), " - ", React.DOM.time({datetime: article.createdAt}, moment(article.createdAt).format('MMMM Do YYYY'))), 
-                        React.DOM.p({className: "article-description"}, article.headline)
-                      ), 
-                      React.DOM.footer({className: "article-footer"}, 
-                        React.DOM.div({className: "shares"}, 
-                           isConfirmingArticle ? React.DOM.span(null, claim.truthinessText()) : null, 
-                          React.DOM.span({className: "shares-value"}, this.formatNumber(article.shares)), 
-                          React.DOM.span({className: "shares-label"}, "Shares")
-                        )
-                      )
-                    )
-                  )
-                )
-              }, this)
             )
-          )
-          )
-          :
-
-          React.DOM.section(null, React.DOM.h4({className: "filter-title"}, "Loading shares..."))
-          
-
-        )
+        : null
       )
     );
   }
@@ -39840,23 +39833,35 @@ module.exports = React.createClass({displayName: 'exports',
 
   render: function() {
     return (
-      React.DOM.div({className: "container"}, 
-        React.DOM.ul({className: "articles"}, 
-          this.props.claims.map(function(claim, i) {
-            return (
-              React.DOM.li({key: claim.id}, 
-                React.DOM.article({className: "article"}, 
-                  React.DOM.div({className: 'stance stance-' + claim.get('truthiness')}, 
-                    React.DOM.span({className: "stance-value"}, claim.truthinessText())
-                  ), 
-                  React.DOM.div({className: "article-content"}, 
-                    React.DOM.h4({className: "article-title"}, Link({to: "claim", params: { slug: claim.get('slug')}}, claim.get('headline'))), 
-                    React.DOM.p({className: "article-description"}, "Originated: ", React.DOM.time({datetime: claim.get('createdAt')}, moment(claim.get('createdAt')).format('MMMM Do YYYY')))
+      React.DOM.div({className: "page"}, 
+        React.DOM.div({className: "page-content"}, 
+          React.DOM.div({className: "container"}, 
+            React.DOM.ul({className: "articles"}, 
+              this.props.claims.map(function(claim, i) {
+                return (
+                  React.DOM.li({key: claim.id}, 
+                    React.DOM.article({className: "article"}, 
+                      React.DOM.header({className: "article-header"}, 
+                        React.DOM.div({className: 'stance stance-' + claim.get('truthiness')}, 
+                          React.DOM.span({className: "stance-value"}, claim.truthinessText())
+                        )
+                      ), 
+                      React.DOM.div({className: "article-content"}, 
+                        React.DOM.h4({className: "article-title"}, Link({to: "claim", params: { slug: claim.get('slug')}}, claim.get('headline'))), 
+                        React.DOM.p({className: "article-description"}, "Originated: ", React.DOM.time({datetime: claim.get('createdAt')}, moment(claim.get('createdAt')).format('MMMM Do YYYY')))
+                      ), 
+                      React.DOM.footer({className: "article-footer"}, 
+                        React.DOM.div({className: "shares"}, 
+                          React.DOM.span({className: "shares-value"}, "0"), 
+                          React.DOM.span({className: "shares-label"}, "shares")
+                        )
+                      )
+                    )
                   )
-                )
-              )
-            );
-          })
+                );
+              })
+            )
+          )
         )
       )
     );

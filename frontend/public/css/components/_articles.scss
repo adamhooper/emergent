@@ -3,14 +3,21 @@
 
 .articles-title {
   @extend %section-title;
+  margin-bottom: 1em;
 }
 
 .articles {
   list-style-type: none;
+  margin-bottom: 0;
+  margin-top: 0;
   padding-left: 0;
 
   > li {
     margin-bottom: .75em;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
   }
 }
 
@@ -51,7 +58,7 @@
 }
 
 .article-date {
-  font-size: 1.6em;
+  font-size: 1.4em;
   margin-bottom: 0;
   margin-top: 0;
   text-transform: uppercase;
@@ -83,12 +90,12 @@
 
 .article-source-title {
   color: palette(base, dark);
+  font-size: 1.1em;
   margin-bottom: 1em;
-  text-transform: uppercase;
 }
 
 .article-source {
-  font-size: .95em;
+  /* font-size: .95em; */
 }
 
 

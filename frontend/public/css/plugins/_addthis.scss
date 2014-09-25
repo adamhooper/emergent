@@ -1,0 +1,14 @@
+.addthis_toolbox {
+  margin-top: 2em;
+
+  &.addthis_default_style {
+    .at300b {
+      padding-left: 0;
+      padding-right: 0;
+
+      + .at300b {
+        padding-left: 4px;
+      }
+    }
+  }
+}

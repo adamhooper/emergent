@@ -27,16 +27,14 @@
 //
 // Filter categories
 
-.filter-all,
-.filter-category {
-  @include full;
-
-  .filter-title {
-    @include span(2 of 4);
+.card-all,
+.card-category {
+  .card-title {
+    @include span(1 of 4);
   }
 
-  .filter-meta {
-    @include span(last 2 of 4);
+  .card-meta {
+    @include span(last 3 of 4);
   }
 }
 
@@ -61,7 +59,7 @@
   .page-article,
   .page-claim {
 
-    .page-header {
+    .section-header {
       @include span(9 of 12);
     }
 
@@ -75,6 +73,24 @@
       @include full;
     }
 
+  }
+
+
+  //
+  // About page
+
+  .page-about {
+    .page-content {
+      @include span(10 of 12);
+    }
+  }
+
+
+  .article {
+    .article-header {
+      @include full;
+    }
+
     .article-content {
       @include span(10 of 12);
     }
@@ -82,7 +98,6 @@
     .article-footer {
       @include span(last 2 of 12);
     }
-
   }
 
 
@@ -104,27 +119,31 @@
   //
   // Filter categories
 
-  .filter-all {
-    .filter-title {
+  .card-all {
+    .card-title {
       @include span(3 of 12);
     }
 
-    .filter-meta {
+    .card-meta {
       @include span(last 9 of 12);
     }
   }
 
-  .filter-category {
-    .filter-categories-1 & {
-      @include span(nest 12 of 12 inside);
+  .card-category {
+    .card-categories-1 & {
+      @include span(nest 12 of 12);
     }
 
-    .filter-categories-2 & {
-      @include span(nest 6 of 12 inside);
+    .card-categories-2 & {
+      @include span(nest 6 of 12);
     }
 
-    .filter-categories-3 & {
-      @include span(nest 4 of 12 inside);
+    .card-categories-3 & {
+      @include span(nest 4 of 12);
+    }
+
+    &:last-child {
+      @include last;
     }
   }
 

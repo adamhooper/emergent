@@ -11,8 +11,8 @@
 }
 
 .stance-value {
-  color: palette(clear);
-  font-weight: 500;
+  color: palette(base, lighter);
+  letter-spacing: 1px;
   text-transform: uppercase;
 }
 
@@ -40,7 +40,7 @@
 // Revised stance
 
 .stance-revised {
-  background-color: palette(clear);
+  background-color: palette(base, lighter);
 
   &.stance-for {
     .stance-value {

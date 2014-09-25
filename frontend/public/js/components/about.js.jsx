@@ -29,7 +29,7 @@ module.exports = React.createClass({
           You can view a list of rumors being tracked on the homepage, along with their
           current claim state (True, False, Unverified). Click on a story to visit a page
           that visualizes the sources reporting the rumor, and a breakdown of social shares
-          per source. You can also click on individual articles on the story page to see specific 
+          per source. You can also click on individual articles on the story page to see specific
           revision and social share data about that article. For more detail about how Emergent works, <a href="http://emergentinfo.tumblr.com/">check out the posts on our blog</a>.
         </p>
 

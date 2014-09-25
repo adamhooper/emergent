@@ -16,24 +16,36 @@ module.exports = React.createClass({
 
   render: function() {
     return (
-      <div className="container">
-        <ul className="articles">
-          {this.props.claims.map(function(claim, i) {
-            return (
-              <li key={claim.id}>
-                <article className="article">
-                  <div className={'stance stance-' + claim.get('truthiness')}>
-                    <span className="stance-value">{claim.truthinessText()}</span>
-                  </div>
-                  <div className="article-content">
-                    <h4 className="article-title"><Link to="claim" params={{ slug: claim.get('slug') }}>{claim.get('headline')}</Link></h4>
-                    <p className="article-description">Originated: <time datetime={claim.get('createdAt')}>{moment(claim.get('createdAt')).format('MMMM Do YYYY')}</time></p>
-                  </div>
-                </article>
-              </li>
-            );
-          })}
-        </ul>
+      <div className="page">
+        <div className="page-content">
+          <div className="container">
+            <ul className="articles">
+              {this.props.claims.map(function(claim, i) {
+                return (
+                  <li key={claim.id}>
+                    <article className="article">
+                      <header className="article-header">
+                        <div className={'stance stance-' + claim.get('truthiness')}>
+                          <span className="stance-value">{claim.truthinessText()}</span>
+                        </div>
+                      </header>
+                      <div className="article-content">
+                        <h4 className="article-title"><Link to="claim" params={{ slug: claim.get('slug') }}>{claim.get('headline')}</Link></h4>
+                        <p className="article-description">Originated: <time datetime={claim.get('createdAt')}>{moment(claim.get('createdAt')).format('MMMM Do YYYY')}</time></p>
+                      </div>
+                      <footer className="article-footer">
+                        <div className="shares">
+                          <span className="shares-value">0</span>
+                          <span className="shares-label">shares</span>
+                        </div>
+                      </footer>
+                    </article>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        </div>
       </div>
     );
   }

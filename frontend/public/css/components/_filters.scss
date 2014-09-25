@@ -1,184 +1,80 @@
-//
-// Multiple filters
 
-.filters {}
+.filters {
+  list-style-type: none;
+  margin-bottom: 2em;
+  margin-top: 0;
+  padding-left: 0;
 
-.filters-section {
-  @extend %clearfix;
-  background-color: palette(clear);
-  border: 1px solid palette(base);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, .1);
-  margin-bottom: 3em;
-}
+  > li {
+    display: inline-block;
 
-.filter-categories {
-  clear: both;
-
-  @include breakpoint($breakpoint-desktop) {
-    display: flex;
+    + li {
+      margin-left: .5em;
+    }
   }
 }
 
-
-//
-// Single filter
-
 .filter {
-  background-color: palette(clear);
-  border: 0;
-  padding: 0;
-  position: relative;
-  text-align: left;
+  background-color: palette(base, lighter);
+  border-style: solid;
+  border-width: 1px;
+  display: inline-block;
+  font-weight: 500;
+  letter-spacing: 1px;
+  opacity: .75;
+  padding: .5em 1em;
+  text-transform: uppercase;
+  transition: opacity .2s ease;
+  width: 100%;
 
   &:focus {
     outline: 0;
   }
 
+  &:hover,
   &.is-selected {
-    &:after,
-    &:before {
-      content: '';
-      display: block;
-      position: absolute;
-    }
-
-    &:after {
-      background-color: transparent;
-      border: 60px solid transparent;
-      border-bottom: 0;
-      border-top: 20px solid palette(primary);
-      bottom: -15px;
-      content: '';
-      display: block;
-      height: 0;
-      left: 50%;
-      margin-left: -60px;
-      position: absolute;
-      width: 0;
-      z-index: 10;
-    }
-
-    &:before {
-      bottom: 0;
-      height: 10px;
-      width: 100%;
-    }
+    opacity: 1;
   }
 }
 
-.filter-title {
-  display: inline-block;
-  font-size: 1.6em;
-  font-weight: 700;
-  margin-bottom: 0;
-  margin-top: 0;
-  text-transform: uppercase;
-}
-
-.filter-meta {
-  .filter-category & {
-    text-align: right;
-  }
-}
-
-.filter-content {
-  @extend %clearfix;
-  padding: 1.25em 1em;
-}
-
-.filter-source {
-  background-color: palette(clear);
-  color: palette(base, darker);
-  height: 200px;
-  padding: 1em;
-  width: 100%;
-}
-
-
-//
-// Types of filter
-
-.filter-all {
-  background-color: lighten(palette(base), 5%);
-}
 
 .filter-category {
-  border-top: 1px solid palette(base);
-
-  & + & {
-    border-left: 1px solid palette(base);
-  }
-}
-
-
-//
-// Filter categories
-
-.filter-category-for,
-.filter-category-against,
-.filter-category-observing {
-  color: palette(clear);
+  color: palette(base, lighter);
+  font-weight: 400;
 }
 
 .filter-category-all {
-  box-shadow: 0 1px 2px rgba(0, 0, 0, .1);
-  z-index: 10;
+  background-color: palette(base);
+  border-color: palette(base);
 
   &.is-selected {
-    &:after {
-      border-top-color: lighten(palette(base), 5%);
-    }
-
-    &:before {
-      background-color: lighten(palette(base), 5%);
-    }
+    border-color: darken(palette(base), 10%);
   }
 }
 
 .filter-category-for {
   background-color: palette(category, for);
+  border-color: palette(category, for);
 
   &.is-selected {
-    &:after {
-      border-top-color: palette(category, for);
-    }
-
-    &:before {
-      background-color: palette(category, for);
-    }
+    border-color: darken(palette(category, for), 10%);
   }
 }
 
 .filter-category-against {
   background-color: palette(category, against);
-
-  .filter-content {
-    box-shadow: 1px 0 0 palette(category, against), -1px 0 0 palette(category, against);
-    position: relative;
-    z-index: 10;
-  }
+  border-color: palette(category, against);
 
   &.is-selected {
-    &:after {
-      border-top-color: palette(category, against);
-    }
-
-    &:before {
-      background-color: palette(category, against);
-    }
+    border-color: darken(palette(category, against), 10%);
   }
 }
 
 .filter-category-observing {
   background-color: palette(category, observing);
+  border-color: palette(category, observing);
 
   &.is-selected {
-    &:after {
-      border-top-color: palette(category, observing);
-    }
-
-    &:before {
-      background-color: palette(category, observing);
-    }
+    border-color: darken(palette(category, observing), 10%);
   }
 }

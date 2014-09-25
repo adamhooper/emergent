@@ -1,8 +1,6 @@
 .section {
-  @extend %content;
   @extend %clearfix;
-  margin-bottom: 1em;
-
+  margin-bottom: 2em;
 }
 
 .section-title {
@@ -10,6 +8,7 @@
 }
 
 .section-content {
+  @extend %content;
   @extend %content-background;
   margin-bottom: 2em;
 }

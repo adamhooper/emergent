@@ -1,0 +1,88 @@
+//
+// Multiple cards
+
+.cards {}
+
+.cards-section {
+  //@extend %clearfix;
+}
+
+.card-categories {}
+
+
+//
+// Single filter
+
+.card {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .1);
+  position: relative;
+}
+
+.card-header,
+.card-content {
+  padding: 1em;
+}
+
+.card-header {
+  @extend %clearfix;
+  border-style: solid;
+  border-width: 1px;
+}
+
+.card-title {
+  display: inline-block;
+  font-size: 1.6em;
+  font-weight: 500;
+  letter-spacing: 1px;
+  margin-bottom: 0;
+  margin-top: 0;
+  text-transform: uppercase;
+
+  .icon {
+    margin-top: .25em;
+  }
+}
+
+.card-meta {
+  text-align: right;
+}
+
+.card-content {
+  border-bottom: 1px solid palette(base);
+  border-left: 1px solid palette(base);
+  border-right: 1px solid palette(base);
+  color: palette(base, darker);
+  height: 200px;
+  width: 100%;
+}
+
+
+//
+// Filter categories
+
+.card-category-for,
+.card-category-against,
+.card-category-observing {
+  color: palette(base, lighter);
+}
+
+.card-category-for {
+  .card-header {
+    background-color: palette(category, for);
+    border-color: darken(palette(category, for), 10%);
+  }
+}
+
+.card-category-against {
+  .card-header {
+    background-color: palette(category, against);
+    border-color: darken(palette(category, against), 10%);
+  }
+}
+
+.card-category-observing {
+  .card-header {
+    background-color: palette(category, observing);
+    border-color: darken(palette(category, observing), 10%);
+  }
+}
