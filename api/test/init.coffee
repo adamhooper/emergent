@@ -6,6 +6,12 @@ before (done) ->
   migrator.migrate().complete(done)
 
 beforeEach ->
-  tables = [ 'UrlPopularityGet', 'ArticleVersion', 'UrlVersion', 'UrlGet', 'Article', 'Url', 'Story' ]
-  truncate = (table) -> global.models[table].destroy({})#, truncate: true)
-  Promise.each(tables, truncate)
+  p = Promise.resolve(null)
+
+  truncate = (table) ->
+    p = p.then(-> models[table].destroy({}))#, truncate: true)
+
+  for table in [ 'UrlPopularityGet', 'ArticleVersion', 'UrlVersion', 'UrlGet', 'Article', 'Url', 'Story' ]
+    truncate(table)
+
+  p

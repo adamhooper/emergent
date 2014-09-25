@@ -6,6 +6,7 @@ DefaultAttrs =
   description: 'A Description'
   origin: 'An Origin'
   originUrl: 'http://example.org'
+  published: true
   truthiness: 'true'
   truthinessDescription: 'truthiness described'
   truthinessDate: new Date(1000)
@@ -45,6 +46,38 @@ describe '/claims', ->
         expect(claim).not.to.have.property('updatedAt')
         expect(claim).not.to.have.property('createdBy')
         expect(claim).not.to.have.property('updatedBy')
+
+  it 'should default to an empty nShares', ->
+    api.get('/claims')
+      .then((res) -> expect(res.body.claims[0]).to.have.property('nShares', 0))
+
+  it 'should sum up nShares', ->
+    claim2 = null
+
+    createClaim(slug: 'slug-2')
+      .then((x) -> claim2 = x)
+      .then -> models.Url.create(url: 'http://example.org/1')
+      .then (url1) =>
+        Promise.all([
+          models.Article.create({ storyId: @claim1.id, urlId: url1.id }, 'user@example.org')
+          models.UrlPopularityGet.create(urlId: url1.id, service: 'facebook', rawData: '', shares: 10)
+          models.UrlPopularityGet.create(urlId: url1.id, service: 'facebook', rawData: '', shares: 20) # a higher count should make the lower one disappear
+          models.UrlPopularityGet.create(urlId: url1.id, service: 'twitter', rawData: '', shares: 14)
+        ])
+      .then -> models.Url.create(url: 'http://example.org/2')
+      .then (url2) =>
+        Promise.all([
+          models.Article.create({ storyId: claim2.id, urlId: url2.id }, 'user@example.org')
+          models.UrlPopularityGet.create(urlId: url2.id, service: 'facebook', rawData: '', shares: 30) # should not affect claim1 count
+        ])
+      .then -> api.get('/claims')
+      .then (res) =>
+        claims = res.body.claims
+        for claim in claims
+          if claim.id == @claim1.id
+            expect(claim).to.have.property('nShares', 34)
+          else
+            expect(claim).to.have.property('nShares', 30)
 
 describe '/claims/:id', ->
   beforeEach ->
