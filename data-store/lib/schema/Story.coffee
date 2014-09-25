@@ -13,6 +13,12 @@ module.exports =
       unique: true
       comment: 'Unique identifier for building URLs that use this story'
 
+    published:
+      type: Sequelize.BOOLEAN
+      allowNull: false
+      defaultValue: false
+      comment: 'True iff we list this Story in our API index page'
+
     headline:
       type: Sequelize.TEXT
       allowNull: false
