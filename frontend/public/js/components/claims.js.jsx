@@ -33,12 +33,14 @@ module.exports = React.createClass({
                         <h4 className="article-title"><Link to="claim" params={{ slug: claim.get('slug') }}>{claim.get('headline')}</Link></h4>
                         <p className="article-description">Originated: <time datetime={claim.get('createdAt')}>{moment(claim.get('createdAt')).format('MMMM Do YYYY')}</time></p>
                       </div>
-                      <footer className="article-footer">
-                        <div className="shares">
-                          <span className="shares-value">0</span>
-                          <span className="shares-label">shares</span>
-                        </div>
-                      </footer>
+                      {claim.get('shares') ?
+                        <footer className="article-footer">
+                          <div className="shares">
+                            <span className="shares-value">0</span>
+                            <span className="shares-label">shares</span>
+                          </div>
+                        </footer>
+                      : null}
                     </article>
                   </li>
                 );

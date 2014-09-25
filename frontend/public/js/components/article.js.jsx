@@ -2,6 +2,7 @@
 
 var React = require('react');
 var BackboneCollection = require('../mixins/backbone_collection.js');
+var Link = require('react-router').Link;
 var _ = require('underscore');
 var moment = require('moment');
 
@@ -42,11 +43,12 @@ module.exports = React.createClass({
         <div className="page-content">
           <div className="container">
 
+            <div><Link to="claim" params={{ slug: claim.get('slug') }}>&lt;&lt; Back to {claim.get('headline')}</Link></div>
             <header className="section">
               <div className="section-header">
                 <h1 className="page-title">{article.headline}</h1>
                 <p>{article.source} - {moment(article.createdAt).format('MMM D YYYY')} ({slices.length + ' revision' + (slices.length > 1 ? 's' : '')})</p>
-                <p><a href={article.url} target="_blank">View original article</a></p>
+                <p><a href={article.url} target="_blank">View article</a></p>
                 <p></p>
               </div>
               <div className="page-meta">

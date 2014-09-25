@@ -39229,6 +39229,7 @@ module.exports = React.createClass({displayName: 'exports',
 
 var React = require('react');
 var BackboneCollection = require('../mixins/backbone_collection.js');
+var Link = require('react-router').Link;
 var _ = require('underscore');
 var moment = require('moment');
 
@@ -39269,11 +39270,12 @@ module.exports = React.createClass({displayName: 'exports',
         React.DOM.div({className: "page-content"}, 
           React.DOM.div({className: "container"}, 
 
+            React.DOM.div(null, Link({to: "claim", params: { slug: claim.get('slug')}}, "<< Back to ", claim.get('headline'))), 
             React.DOM.header({className: "section"}, 
               React.DOM.div({className: "section-header"}, 
                 React.DOM.h1({className: "page-title"}, article.headline), 
                 React.DOM.p(null, article.source, " - ", moment(article.createdAt).format('MMM D YYYY'), " (", slices.length + ' revision' + (slices.length > 1 ? 's' : ''), ")"), 
-                React.DOM.p(null, React.DOM.a({href: article.url, target: "_blank"}, "View original article")), 
+                React.DOM.p(null, React.DOM.a({href: article.url, target: "_blank"}, "View article")), 
                 React.DOM.p(null)
               ), 
               React.DOM.div({className: "page-meta"}, 
@@ -39334,7 +39336,7 @@ module.exports = React.createClass({displayName: 'exports',
   }
 });
 
-},{"../mixins/backbone_collection.js":205,"moment":9,"react":195,"underscore":196}],201:[function(require,module,exports){
+},{"../mixins/backbone_collection.js":205,"moment":9,"react":195,"react-router":18,"underscore":196}],201:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
@@ -39850,12 +39852,14 @@ module.exports = React.createClass({displayName: 'exports',
                         React.DOM.h4({className: "article-title"}, Link({to: "claim", params: { slug: claim.get('slug')}}, claim.get('headline'))), 
                         React.DOM.p({className: "article-description"}, "Originated: ", React.DOM.time({datetime: claim.get('createdAt')}, moment(claim.get('createdAt')).format('MMMM Do YYYY')))
                       ), 
-                      React.DOM.footer({className: "article-footer"}, 
-                        React.DOM.div({className: "shares"}, 
-                          React.DOM.span({className: "shares-value"}, "0"), 
-                          React.DOM.span({className: "shares-label"}, "shares")
+                      claim.get('shares') ?
+                        React.DOM.footer({className: "article-footer"}, 
+                          React.DOM.div({className: "shares"}, 
+                            React.DOM.span({className: "shares-value"}, "0"), 
+                            React.DOM.span({className: "shares-label"}, "shares")
+                          )
                         )
-                      )
+                      : null
                     )
                   )
                 );
