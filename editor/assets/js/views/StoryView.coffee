@@ -10,6 +10,7 @@ define [ 'underscore', 'moment', 'marionette' ], (_, moment, Marionette) ->
           <div class="col-md-4">
             <p class="headline not-editing"><strong>Claim:</strong> <%- headline %></p>
             <p class="description not-editing"><strong>Description:</strong> <%- description %></p>
+            <p class="published not-editing">This claim is <strong><%- published ? 'public' : 'not public' %></strong></p>
             <div class="form-group editing">
               <label for="claim-headline">The claim, in tweet form:</label>
               <textarea class="form-control" id="claim-headline" rows="2" name="headline" placeholder="A man bit a dog"><%- headline %></textarea>
@@ -17,6 +18,11 @@ define [ 'underscore', 'moment', 'marionette' ], (_, moment, Marionette) ->
             <div class="form-group editing">
               <label for="claim-description">The claim, in two sentences:</label>
               <textarea class="form-control" id="claim-description" rows="5" name="description" placeholder="Two. Sentences."><%- description %></textarea>
+            </div>
+            <div class="checkbox editing">
+              <label>
+                <input name="published" type="checkbox" <%= published ? 'checked' : '' %>> Published</input>
+              </label>
             </div>
           </div>
 
@@ -124,6 +130,7 @@ define [ 'underscore', 'moment', 'marionette' ], (_, moment, Marionette) ->
       origin: '[name=origin]'
       originUrl: '[name=originUrl]'
       originUrlWrapper: '.origin-url'
+      published: '[name=published]'
       truthiness: '[name=truthiness]'
       truthinessDate: '[name=truthinessDate]'
       truthinessDescription: '[name=truthinessDescription]'
@@ -172,6 +179,7 @@ define [ 'underscore', 'moment', 'marionette' ], (_, moment, Marionette) ->
         description: @ui.description.val()
         origin: @ui.origin.val()
         originUrl: @ui.origin.val() && @ui.originUrl.val() || null
+        published: @ui.published.prop('checked')
         truthiness: @_getTruthiness()
         truthinessDate: @_getTruthinessDate()
         truthinessDescription: @_getTruthinessDescription()

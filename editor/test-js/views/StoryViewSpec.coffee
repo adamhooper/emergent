@@ -13,6 +13,7 @@ define [
         description: 'Description'
         origin: ''
         originUrl: null
+        published: false
         truthiness: null
         truthinessDate: null
         truthinessDescription: ''

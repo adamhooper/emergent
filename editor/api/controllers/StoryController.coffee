@@ -5,6 +5,7 @@ AttributesWithDefaults =
   description: ''
   origin: ''
   originUrl: null
+  published: false
   truthiness: 'unknown'
   truthinessDate: null
   truthinessDescription: ''

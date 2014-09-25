@@ -9,6 +9,7 @@ define [ 'backbone' ], (Backbone) ->
       description: ''
       origin: ''
       originUrl: null
+      published: false
       truthiness: 'unknown'
       truthinessDate: null
 
