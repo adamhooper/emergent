@@ -73,7 +73,10 @@ describe 'url_reparser', ->
     @htmlParser =
       parse: sinon.stub()
 
-    @transaction = { commit: sinon.stub().returns(Promise.resolve('committed')) }
+    @transaction =
+      commit: sinon.stub().returns(Promise.resolve('committed'))
+      rollback: sinon.stub().returns(Promise.resolve('rolled back'))
+
     @sandbox.stub(models.sequelize, 'transaction').returns(Promise.resolve(@transaction))
 
     @subject = new UrlReparser
@@ -95,6 +98,16 @@ describe 'url_reparser', ->
         expect(err).to.be.null
         expect(models.sequelize.transaction).to.have.been.called
         expect(@transaction.commit).to.have.been.called
+        done()
+
+    it 'should rollback on parser error', (done) ->
+      models.UrlGet.findAll.returns(Promise.resolve([ @g1 ]))
+      @htmlParser.parse.throws(new Error('an error'))
+
+      @subject.reparse @urlId, @url, (err) =>
+        expect(err).to.have.property('message', 'an error')
+        expect(models.sequelize.transaction).to.have.been.called
+        expect(@transaction.rollback).to.have.been.called
         done()
 
     it 'should create a UrlVersion and accompanying ArticleVersions', (done) ->

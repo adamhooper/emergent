@@ -79,7 +79,10 @@ module.exports = class UrlReparser
         nextSavedUrlVersion = urlVersions.shift() # next in the "stale" list
 
         while (urlGet = urlGets.shift())?
-          newUrlVersion = @_urlGetToUrlVersion(urlGet, url)
+          try
+            newUrlVersion = @_urlGetToUrlVersion(urlGet, url)
+          catch e
+            return opChain.finally(-> transaction.rollback().throw(e))
 
           if newUrlVersion.urlGetId == nextSavedUrlVersion?.urlGetId
             # re-save existing version
@@ -102,4 +105,6 @@ module.exports = class UrlReparser
 
           curUrlVersion = newUrlVersion
 
-        opChain.then(transaction.commit.bind(transaction))
+        opChain
+          .then(transaction.commit.bind(transaction))
+          .catch((e) -> transaction.rollback().throw(e))
