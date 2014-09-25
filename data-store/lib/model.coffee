@@ -4,9 +4,10 @@ _ = require('sequelize').Utils._
 
 instanceWithTracking = (instance, email, creating, options) ->
   tracking = {}
-  tracking.createdAt = (options?.createdAt || new Date()) if 'createdAt' of instance
+  if creating
+    tracking.createdAt = (options?.createdAt || new Date()) if 'createdAt' of instance
+    tracking.createdBy = email if 'createdBy' of instance
   tracking.updatedAt = (options?.updatedAt || new Date()) if 'updatedAt' of instance
-  tracking.createdBy = email if 'createdBy' of instance
   tracking.updatedBy = email if 'updatedBy' of instance
   instance.copy(tracking)
 
