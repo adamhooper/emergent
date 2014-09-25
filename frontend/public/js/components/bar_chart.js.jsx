@@ -95,15 +95,17 @@ module.exports = React.createClass({
       };
     }.bind(this));
 
-    var ylabels = this.props.ylabels.map(function(label, i) {
+    var ylabels = this.props.ylabels.map(function(label) {
+      var y = label.y!==undefined ? label.y : label;
+      label = label.label ? label.label : label;
       return {
-        y: height - (label * heightFactor) + this.props.marginTop + this.props.fontSize/2,
+        y: height - (y * heightFactor) + this.props.marginTop + this.props.fontSize/2,
         x: this.props.marginLeft - 18,
         fontSize: this.props.fontSize,
         fill: this.props.color,
         textAnchor: 'end',
-        __html: new String(label).replace(/(\d)(?=(\d{3})+$)/g, '$1,'),
-        key: "ylabel_" + i
+        __html: label,
+        key: "ylabel_" + y
       };
     }.bind(this));
 

@@ -12,7 +12,10 @@ module.exports = React.createClass({
   mixins: [BackboneCollection],
 
   getInitialState: function() {
-    return { filter: null };
+    return {
+      filter: null,
+      filterHeights: { 'for': 1, against: 1, observing: 1 }
+    };
   },
 
   componentWillMount: function() {
@@ -34,7 +37,36 @@ module.exports = React.createClass({
   },
 
   setFilter: function(filter) {
-    this.setState({ filter: filter });
+    if (filter) {
+      var heights = { 'for': 0, against: 0, observing: 0 };
+      heights[filter] = 1;
+      this.setState({ targetHeights: heights });
+    } else {
+      this.setState({ targetHeights: { 'for': 1, against: 1, observing: 1 } });
+    }
+    this.setState({ animate: setInterval(this.animateHeights, 20) });
+  },
+
+  animateHeights: function() {
+    var keepAnimating = false;
+    filterHeights = this.state.filterHeights;
+    _.each(['for', 'against', 'observing'], function(stance) {
+      if (this.state.targetHeights[stance] != filterHeights[stance]) {
+        if (Math.abs(filterHeights[stance] - this.state.targetHeights[stance]) > .2) {
+          filterHeights[stance] += this.state.targetHeights[stance] > filterHeights[stance] ? .06 : -.06;
+          keepAnimating = true;
+        } else if (Math.abs(filterHeights[stance] - this.state.targetHeights[stance]) > .01) {
+          filterHeights[stance] += this.state.targetHeights[stance] > filterHeights[stance] ? .02 : -.02;
+          keepAnimating = true;
+        } else {
+          filterHeights[stance] = this.state.targetHeights[stance];
+        }
+      }
+    }, this);
+    this.setState({ filterHeights: filterHeights });
+    if (!keepAnimating) {
+      clearInterval(this.state.animate);
+    }
   },
 
   formatNumber: function(str) {
@@ -57,9 +89,9 @@ module.exports = React.createClass({
     if (this.state.populated) {
       var slices = claim.aggregateSlices().slice(0, 18);
       var data = slices.reduce(function(series, slice) {
-        series[0].push(slice.for||0);
-        series[1].push(slice.against||0);
-        series[2].push(slice.observing||0);
+        series[0].push((slice.for||0) * this.state.filterHeights.for);
+        series[1].push((slice.against||0) * this.state.filterHeights.against);
+        series[2].push((slice.observing||0) * this.state.filterHeights.observing);
         return series;
       }.bind(this), [[],[],[]]);
 
@@ -83,6 +115,9 @@ module.exports = React.createClass({
       if (ylabels.length > 8) {
         ylabels = ylabels.filter(function(a,i) { return i%2; });
       }
+      ylabels = _.reduce(ylabels, function(ylabels, y) {
+        return ylabels.concat({ y: y, label: this.formatNumber(y) });
+      }, [{ y:0, label: 'Total shares' }], this);
 
       // place callout for confirmation
       var callout;
@@ -138,6 +173,9 @@ module.exports = React.createClass({
             </div>
           </div>
 
+          {this.state.populated ? 
+
+          <div>
           <section className="filters filters-section">
             <button onClick={this.setFilter.bind(this, null)} className={'filter filter-all filter-category-all' + (!this.state.filter ? ' is-selected' : '')}>
               <div className="filter-content">
@@ -162,7 +200,7 @@ module.exports = React.createClass({
                 </div>
               </div>
             </button>
-            <div className={'filter-categories filter-categories-' + _.size(shares)}>
+            <div className={'filter-categories filter-categories-' + _.filter(claim.sharesByStance(), function(c) { return c; }).length}>
               { claim.articlesByStance('for').length > 0 ?
                 <button onClick={this.setFilter.bind(this, 'for')} className={'filter filter-category filter-category-for' + (this.state.filter === 'for' ? ' is-selected' : '')}>
                   <div className="filter-content">
@@ -249,17 +287,14 @@ module.exports = React.createClass({
 
           <section className="section section-content">
             <h3 className="section-title">Shares over time</h3>
-            {this.state.populated && this.state.barChartWidth ?
-              <Barchart width={this.state.barChartWidth - 100} height={200} ref="chart" marginTop={75} marginLeft={80} marginRight={20} ylabels={ylabels} labels={labels} series={data} colors={colors} fontSize={12} gap={0.6} callout={callout} color="#252424"/>
-              :
-              <div id="bar-chart-placeholder">Loading...</div>
-            }
+            <Barchart width={this.state.barChartWidth - 120} height={200} ref="chart" marginTop={callout ? 75: 10} marginLeft={100} marginRight={20} ylabels={ylabels} labels={labels} series={data} colors={colors} fontSize={12} gap={0.6} callout={callout} color="#252424"/>
           </section>
 
           <section className="page-articles">
             <h3 className="articles-title">Sources</h3>
             <ul className="articles">
               {_.first(claim.articlesByStance(this.state.filter), 10).map(function(article) {
+                var isConfirmingArticle = article.url && article.url==claim.get('truthinessUrl');
                 return (
                   <li key={article.id}>
                     <article className="article">
@@ -279,6 +314,7 @@ module.exports = React.createClass({
                       </div>
                       <footer className="article-footer">
                         <div className="shares">
+                          { isConfirmingArticle ? <span>{claim.truthinessText()}</span> : null }
                           <span className="shares-value">{this.formatNumber(article.shares)}</span>
                           <span className="shares-label">Shares</span>
                         </div>
@@ -289,6 +325,12 @@ module.exports = React.createClass({
               }, this)}
             </ul>
           </section>
+          </div>
+          :
+
+          <section><h4 className="filter-title">Loading shares...</h4></section>
+          }
+
         </div>
       </div>
     );
