@@ -39184,40 +39184,17 @@ var React = require('react');
 module.exports = React.createClass({displayName: 'exports',
   render: function() {
     return (
+
       /* JSX for about page */
       React.DOM.div({className: "container"}, 
         React.DOM.h1(null, "About Emergent"), 
-        React.DOM.p(null, 
-          "Emergent is a real-time rumor tracker. It's part of a research project with" + ' ' +
-          "the ", React.DOM.a({href: "http://towcenter.org/"}, "Tow Center for Digital Journalism"), " at" + ' ' +
-          "Columbia University that focuses on how unverified information and rumor are" + ' ' +
-          "reported in the media. It aims to develop and best practices for debunking" + ' ' +
-          "misinformation. Read more about the" + ' ' +
-          "research ", React.DOM.a({href: "http://www.craigsilverman.ca/2014/09/02/researching-rumors-and-debunking-for-the-tow-center-at-columbia-university/"}, "here"), "."
-        ), 
-        React.DOM.p(null, 
-          "Have a rumor we should be tracking? A source we should add to an existing story?" + ' ' +
-          "Feedback to share? ", React.DOM.a({href: "mailto:craig@craigsilverman.ca"}, "Email us"), "."
-        ), 
-        React.DOM.p(null, 
-          "You can also ", React.DOM.a({href: "http://eepurl.com/3mb9T"}, "sign up to our mailing list"), " for" + ' ' +
-          "occasional updates. (We never sell or share your info.)"
-        ), 
-        React.DOM.p(null, 
-          "You can view a list of rumors being tracked on the homepage, along with their" + ' ' +
-          "current claim state (True, False, Unverified). Click on a story to visit a page" + ' ' +
-          "that visualizes the sources reporting the rumor, and a breakdown of social shares" + ' ' +
-          "per source."
-        ), 
-
-        React.DOM.h2(null, "Credits"), 
-        React.DOM.ul({className: "credits"}, 
-          React.DOM.li(null, React.DOM.strong(null, "Founder/Editor"), ": ", React.DOM.a({href: "http://www.craigsilverman.ca"}, "Craig Silverman")), 
-          React.DOM.li(null, React.DOM.strong(null, "Lead Developer"), ": ", React.DOM.a({href: "http://adamhooper.com"}, "Adam Hooper")), 
-          React.DOM.li(null, React.DOM.strong(null, "Design and Interaction"), ": ", React.DOM.a({href: "http://www.normative.com"}, "Normative")), 
-          React.DOM.li(null, React.DOM.strong(null, "Research Assistant"), ": Joscelyn Shawn Ganjhara Jurich")
-        )
+        React.DOM.p(null, "Emergent is a real-time rumor tracker. It's part of a research project with the Tow Center for Digital Journalism that focuses on how unverified information and rumor is reported in the media, and best practices for debunking misinformation. Read more about it ", React.DOM.a({href: "http://www.craigsilverman.ca/2014/09/02/researching-rumors-and-debunking-for-the-tow-center-at-columbia-university/"}, "here"), "."), 
+        React.DOM.p(null, "You can view a list of rumors being tracked on the hompeage, along with their current claim state (True, False, Unverified). Click on a story to visit a page that visualizes the sources reporting the rumor, and a breakdown of social shares per source."), 
+        React.DOM.p(null, "Have a rumor we should be tracking? A source we should add to an existing story? Feedback to share? ", React.DOM.a({href: "mailto:craig@craigsilverman.ca"}, "Email us"), "."), 
+        React.DOM.p(null, "You can also ", React.DOM.a({href: "http://eepurl.com/3mb9T"}, "sign up to our mailing list"), " for occasional updates.(We never sell or share your info.)"), 
+        React.DOM.p(null, "Founder/Editor: Craig Silverman | Lead Developer: Adam Hooper | Design and Interaction: ", React.DOM.a({href: "http://www.normative.com"}, "Normative"), " | Research Assistant: Joscelyn Shawn Ganjhara Jurich")
       )
+
     );
   }
 });
@@ -39825,27 +39802,9 @@ module.exports = React.createClass({displayName: 'exports',
 /** @jsx React.DOM */
 
 var React = require('react');
-var Router = require('react-router');
-var Link = Router.Link;
-
-var nUpdatesToIgnore = 2;
+var Link = require('react-router').Link;
 
 module.exports = React.createClass({displayName: 'exports',
-  mixins: [ Router.ActiveState ],
-
-  updateActiveState: function() {
-    // react-router sends two updates on page load. We want zero, because
-    // our first call to window.ga() happens when window.ga() actually
-    // loads.
-    if (nUpdatesToIgnore > 0) {
-      nUpdatesToIgnore -= 1;
-    } else {
-      if (window.ga) {
-        window.ga('send', 'pageview');
-      }
-    }
-  },
-
   render: function() {
     return (
       React.DOM.div(null, 
