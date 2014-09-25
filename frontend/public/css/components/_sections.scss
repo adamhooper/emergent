@@ -5,10 +5,10 @@
 
 .section-title {
   @extend %section-title;
+  margin-bottom: .75em;
 }
 
 .section-content {
   @extend %content;
   @extend %content-background;
-  margin-bottom: 2em;
 }

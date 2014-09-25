@@ -1,0 +1,20 @@
+.social {
+  list-style-type: none;
+  margin-top: 1em;
+  padding-left: 0;
+
+  > li {
+    display: inline-block;
+
+    + li {
+      margin-left: 1.25em;
+    }
+  }
+}
+
+.social-value {
+  font-size: 1.2em;
+  font-weight: 500;
+  line-height: 24px; // NOTE: equal to height of icons
+  margin-left: .2em;
+}

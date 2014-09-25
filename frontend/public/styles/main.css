@@ -722,6 +722,27 @@ strong {
   vertical-align: middle;
   width: 26px; }
 
+.icon-facebook,
+.icon-twitter,
+.icon-google {
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: 20px 20px;
+  display: inline-block;
+  height: 24px;
+  vertical-align: top;
+  width: 24px; }
+
+.icon-facebook {
+  background-image: url('/images/facebook.svg');
+  width: 18px; }
+
+.icon-twitter {
+  background-image: url('/images/twitter.svg'); }
+
+.icon-google {
+  background-image: url('/images/google.svg'); }
+
 .list-unstyled {
   list-style-type: none;
   padding-left: 0; }
@@ -763,7 +784,7 @@ ul.credits {
   clear: both; }
 
 .article-title {
-  font-size: 1.1em;
+  font-size: 1.2em;
   font-weight: 500;
   margin-bottom: .5em;
   margin-top: 0; }
@@ -875,11 +896,11 @@ ul.credits {
 .filter {
   background-color: #ffffff;
   border-style: solid;
-  border-width: 1px;
+  border-width: 2px;
   display: inline-block;
   font-weight: 500;
   letter-spacing: 1px;
-  opacity: .75;
+  opacity: .65;
   padding: .5em 1em;
   text-transform: uppercase;
   transition: opacity .2s ease;
@@ -957,6 +978,11 @@ ul.credits {
   padding-bottom: 2em;
   padding-top: 2em; }
 
+.page-meta .meta {
+  border-top: 1px solid #c1c1c1;
+  margin-top: 1em;
+  padding-top: 1em; }
+
 .site {
   background-color: #eaeaea; }
 
@@ -978,9 +1004,6 @@ ul.credits {
     color: #eaeaea;
     text-decoration: none; }
 
-svg {
-  margin-top: -20px; }
-
 .site-footer {
   background-color: #ffffff;
   border-top: 1px solid rgba(0, 0, 0, 0.15);
@@ -992,16 +1015,15 @@ svg {
 .section {
   margin-bottom: 2em; }
 
-.section-content {
-  margin-bottom: 2em; }
+.section-title {
+  margin-bottom: .75em; }
 
 .articles .shares {
   text-align: center; }
-
-.share {
+.page-meta .shares {
   display: inline-block; }
-  .share + .share {
-    margin-left: 2em; }
+  .page-meta .shares + .shares {
+    margin-left: 1em; }
 
 .shares-label {
   display: block;
@@ -1014,6 +1036,21 @@ svg {
   font-size: 1.6em;
   font-weight: 500;
   line-height: 1; }
+
+.social {
+  list-style-type: none;
+  margin-top: 1em;
+  padding-left: 0; }
+  .social > li {
+    display: inline-block; }
+    .social > li + li {
+      margin-left: 1.25em; }
+
+.social-value {
+  font-size: 1.2em;
+  font-weight: 500;
+  line-height: 24px;
+  margin-left: .2em; }
 
 .sources {
   font-size: .9em;

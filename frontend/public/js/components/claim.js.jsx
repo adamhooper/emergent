@@ -162,23 +162,6 @@ module.exports = React.createClass({
               </header>
               <div className="page-meta">
 
-                <div className="shares">
-                  <span className="shares-value">{claim.articlesByStance().length}</span>
-                  <span className="shares-label">Sources</span>
-                </div>
-                <div className="shares">
-                  <span className="shares-value">{this.formatNumber(totalShares)}</span>
-                  <span className="shares-label">Shares</span>
-                </div>
-                {_.map(claim.sharesByProvider(), function(shares, provider) {
-                  return (
-                    <div className="share">
-                      <span className="shares-value">{Math.round(shares / totalShares * 100)}%</span>
-                      <span className="shares-label">{provider}</span>
-                    </div>
-                  );
-                }, this)}
-
                 <div className={'status status-' + claim.get('truthiness')}>
                   <span className="status-label">Claim State</span>
                   <span className="status-value">{claim.truthinessText()}</span>
@@ -187,6 +170,28 @@ module.exports = React.createClass({
                   <span className="status-label">Most Shared Claim</span>
                   <span className="status-value">{mostShared ? mostShared.stance : ''}</span>
                 </div>
+
+                <div className="meta">
+                  <div className="shares">
+                    <span className="shares-value">{claim.articlesByStance().length}</span>
+                    <span className="shares-label">sources</span>
+                  </div>
+                  <div className="shares">
+                    <span className="shares-value">{this.formatNumber(totalShares)}</span>
+                    <span className="shares-label">shares</span>
+                  </div>
+                  <ul className="social">
+                  {_.map(claim.sharesByProvider(), function(shares, provider) {
+                      return (
+                        <li>
+                          <span className={'icon icon-' + provider}>{provider}</span>
+                          <span className="social-value">{Math.round(shares / totalShares * 100)}%</span>
+                        </li>
+                      );
+                    }, this)}
+                  </ul>
+                </div>
+
               </div>
             </div>
 
@@ -278,7 +283,6 @@ module.exports = React.createClass({
           </div>
         </div>
 
-
         {this.state.populated ?
           <div className="page-content">
             <div className="container">
@@ -290,12 +294,14 @@ module.exports = React.createClass({
                   { claim.articlesByStance('observing').length > 0 ? <li><button onClick={this.setFilter.bind(this, 'observing')} className={'filter filter-category filter-category-observing' + (this.state.filter === 'observing' ? ' is-selected' : '')}>Observing</button></li> : null }
                 </ul>
               </nav>
-              <section className="section section-content">
-                <h3 className="section-title">Shares over time</h3>
-                <Barchart width={this.state.barChartWidth - 120} height={200} ref="chart" marginTop={callout ? 75: 10} marginLeft={100} marginRight={20} ylabels={ylabels} labels={labels} series={data} colors={colors} fontSize={12} gap={0.6} callout={callout} color="#252424"/>
+              <section className="section">
+                <h3 className="section-title">Shares Over Time</h3>
+                <div className="section-content">
+                  <Barchart width={this.state.barChartWidth - 120} height={200} ref="chart" marginBottom={20} marginTop={callout ? 75: 10} marginLeft={100} marginRight={20} ylabels={ylabels} labels={labels} series={data} colors={colors} fontSize={12} gap={0.6} callout={callout} color="#252424"/>
+                </div>
               </section>
               <section className="page-articles">
-                <h3 className="articles-title">Sources</h3>
+                <h3 className="section-title">Sources</h3>
                 <ul className="articles">
                   {_.first(claim.articlesByStance(this.state.filter), 10).map(function(article) {
                     return (
@@ -328,7 +334,7 @@ module.exports = React.createClass({
                 </ul>
               </section>
             </div>
-            </div>
+          </div>
         : null }
       </div>
     );

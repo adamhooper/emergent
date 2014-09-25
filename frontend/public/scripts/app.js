@@ -39666,23 +39666,6 @@ module.exports = React.createClass({displayName: 'exports',
               ), 
               React.DOM.div({className: "page-meta"}, 
 
-                React.DOM.div({className: "shares"}, 
-                  React.DOM.span({className: "shares-value"}, claim.articlesByStance().length), 
-                  React.DOM.span({className: "shares-label"}, "Sources")
-                ), 
-                React.DOM.div({className: "shares"}, 
-                  React.DOM.span({className: "shares-value"}, this.formatNumber(totalShares)), 
-                  React.DOM.span({className: "shares-label"}, "Shares")
-                ), 
-                _.map(claim.sharesByProvider(), function(shares, provider) {
-                  return (
-                    React.DOM.div({className: "share"}, 
-                      React.DOM.span({className: "shares-value"}, Math.round(shares / totalShares * 100), "%"), 
-                      React.DOM.span({className: "shares-label"}, provider)
-                    )
-                  );
-                }, this), 
-
                 React.DOM.div({className: 'status status-' + claim.get('truthiness')}, 
                   React.DOM.span({className: "status-label"}, "Claim State"), 
                   React.DOM.span({className: "status-value"}, claim.truthinessText())
@@ -39690,7 +39673,29 @@ module.exports = React.createClass({displayName: 'exports',
                 React.DOM.div({className: 'status status-' + (mostShared ? mostShared.stance : '')}, 
                   React.DOM.span({className: "status-label"}, "Most Shared Claim"), 
                   React.DOM.span({className: "status-value"}, mostShared ? mostShared.stance : '')
+                ), 
+
+                React.DOM.div({className: "meta"}, 
+                  React.DOM.div({className: "shares"}, 
+                    React.DOM.span({className: "shares-value"}, claim.articlesByStance().length), 
+                    React.DOM.span({className: "shares-label"}, "sources")
+                  ), 
+                  React.DOM.div({className: "shares"}, 
+                    React.DOM.span({className: "shares-value"}, this.formatNumber(totalShares)), 
+                    React.DOM.span({className: "shares-label"}, "shares")
+                  ), 
+                  React.DOM.ul({className: "social"}, 
+                  _.map(claim.sharesByProvider(), function(shares, provider) {
+                      return (
+                        React.DOM.li(null, 
+                          React.DOM.span({className: 'icon icon-' + provider}, provider), 
+                          React.DOM.span({className: "social-value"}, Math.round(shares / totalShares * 100), "%")
+                        )
+                      );
+                    }, this)
+                  )
                 )
+
               )
             ), 
 
@@ -39782,7 +39787,6 @@ module.exports = React.createClass({displayName: 'exports',
           )
         ), 
 
-
         this.state.populated ?
           React.DOM.div({className: "page-content"}, 
             React.DOM.div({className: "container"}, 
@@ -39794,12 +39798,14 @@ module.exports = React.createClass({displayName: 'exports',
                    claim.articlesByStance('observing').length > 0 ? React.DOM.li(null, React.DOM.button({onClick: this.setFilter.bind(this, 'observing'), className: 'filter filter-category filter-category-observing' + (this.state.filter === 'observing' ? ' is-selected' : '')}, "Observing")) : null
                 )
               ), 
-              React.DOM.section({className: "section section-content"}, 
-                React.DOM.h3({className: "section-title"}, "Shares over time"), 
-                Barchart({width: this.state.barChartWidth - 120, height: 200, ref: "chart", marginTop: callout ? 75: 10, marginLeft: 100, marginRight: 20, ylabels: ylabels, labels: labels, series: data, colors: colors, fontSize: 12, gap: 0.6, callout: callout, color: "#252424"})
+              React.DOM.section({className: "section"}, 
+                React.DOM.h3({className: "section-title"}, "Shares Over Time"), 
+                React.DOM.div({className: "section-content"}, 
+                  Barchart({width: this.state.barChartWidth - 120, height: 200, ref: "chart", marginBottom: 20, marginTop: callout ? 75: 10, marginLeft: 100, marginRight: 20, ylabels: ylabels, labels: labels, series: data, colors: colors, fontSize: 12, gap: 0.6, callout: callout, color: "#252424"})
+                )
               ), 
               React.DOM.section({className: "page-articles"}, 
-                React.DOM.h3({className: "articles-title"}, "Sources"), 
+                React.DOM.h3({className: "section-title"}, "Sources"), 
                 React.DOM.ul({className: "articles"}, 
                   _.first(claim.articlesByStance(this.state.filter), 10).map(function(article) {
                     return (
@@ -39832,7 +39838,7 @@ module.exports = React.createClass({displayName: 'exports',
                 )
               )
             )
-            )
+          )
         : null
       )
     );

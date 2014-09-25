@@ -1,17 +1,16 @@
 .shares {
-
   // inside articles list
   .articles & {
     text-align: center;
   }
-}
 
+  // inside page meta
+  .page-meta & {
+    display: inline-block;
 
-.share {
-  display: inline-block;
-
-  & + & {
-    margin-left: 2em;
+    + .shares {
+      margin-left: 2em;
+    }
   }
 }
 
@@ -31,10 +30,4 @@
   font-size: 1.6em;
   font-weight: 500;
   line-height: 1;
-
-  // inside articles list
-  // inside filter meta
-  .articles &,
-  .card-meta & {
-  }
 }

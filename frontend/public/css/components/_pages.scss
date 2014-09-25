@@ -15,3 +15,12 @@
   padding-bottom: 2em;
   padding-top: 2em;
 }
+
+// TODO: don't do this
+.page-meta {
+  .meta {
+    border-top: 1px solid palette(base);
+    margin-top: 1em;
+    padding-top: 1em;
+  }
+}
