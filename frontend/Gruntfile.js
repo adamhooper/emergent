@@ -49,4 +49,5 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
 
   grunt.registerTask('default', ['browserify', 'uglify', 'watch']);
+  grunt.registerTask('dist', ['browserify', 'uglify', 'sass']);
 };
