@@ -39539,11 +39539,9 @@ module.exports = React.createClass({displayName: 'exports',
         };
       }
       window.callout = callout;
-
-      var mostShared = _.first(claim.articlesByStance());
     }
 
-    var mostShared = _.first(claim.articlesByStance()),
+    var mostShared = claim.mostShared(),
       startedTracking = claim.startedTracking(),
       originDate = claim.originDate();
 
@@ -39569,9 +39567,9 @@ module.exports = React.createClass({displayName: 'exports',
                   React.DOM.span({className: "status-label"}, "Claim State"), 
                   React.DOM.span({className: "status-value"}, claim.truthinessText())
                 ), 
-                React.DOM.div({className: 'status status-' + (mostShared ? mostShared.stance : '')}, 
+                React.DOM.div({className: 'status status-' + (mostShared ? mostShared : '')}, 
                   React.DOM.span({className: "status-label"}, "Most Shared Claim"), 
-                  React.DOM.span({className: "status-value"}, mostShared ? mostShared.stance : '')
+                  React.DOM.span({className: "status-value"}, mostShared ? mostShared : '')
                 ), 
 
                  this.state.populated ?
@@ -39608,7 +39606,7 @@ module.exports = React.createClass({displayName: 'exports',
                       React.DOM.div({className: "card-meta"}, 
                         React.DOM.p({className: "sources"}, claim.articlesByStance('for').length, " sources"), 
                         React.DOM.div({className: "shares"}, 
-                          React.DOM.span({className: "shares-value"}, mostShared.stance === 'for' ? React.DOM.span({className: "icon icon-most-shared"}) : null, shares.for ? this.formatNumber(shares.for) : 0), 
+                          React.DOM.span({className: "shares-value"}, mostShared === 'for' ? React.DOM.span({className: "icon icon-most-shared"}) : null, shares.for ? this.formatNumber(shares.for) : 0), 
                           React.DOM.span({className: "shares-label"}, "shares")
                         )
                       )
@@ -39618,7 +39616,7 @@ module.exports = React.createClass({displayName: 'exports',
                       _.first(claim.articlesByStance('for'), 1).map(function(article) {
                         return (
                           React.DOM.article({className: "article article-source", key: article.id}, 
-                            React.DOM.h4({className: "article-title"}, article.source, " - ", React.DOM.time({datetime: article.createdAt}, moment(article.createdAt).format('MMMM Do YYYY'))), 
+                            React.DOM.h4({className: "article-title"}, article.source, " - ", React.DOM.time({dateTime: article.createdAt}, moment(article.createdAt).format('MMMM Do YYYY'))), 
                             React.DOM.p({className: "article-description"}, Link({to: "article", params: { slug: claim.get('slug'), articleId: article.id}}, this.truncateString(article.headline))), 
                             React.DOM.p(null, React.DOM.strong(null, this.formatNumber(article.shares) + ' shares'))
                           )
@@ -39635,7 +39633,7 @@ module.exports = React.createClass({displayName: 'exports',
                       React.DOM.div({className: "card-meta"}, 
                         React.DOM.p({className: "sources"}, claim.articlesByStance('against').length, " sources"), 
                         React.DOM.div({className: "shares"}, 
-                          React.DOM.span({className: "shares-value"}, mostShared.stance === 'against' ? React.DOM.span({className: "icon icon-most-shared"}) : null, shares.against ? this.formatNumber(shares.against) : 0), 
+                          React.DOM.span({className: "shares-value"}, mostShared === 'against' ? React.DOM.span({className: "icon icon-most-shared"}) : null, shares.against ? this.formatNumber(shares.against) : 0), 
                           React.DOM.span({className: "shares-label"}, "shares")
                         )
                       )
@@ -39645,7 +39643,7 @@ module.exports = React.createClass({displayName: 'exports',
                       _.first(claim.articlesByStance('against'), 1).map(function(article) {
                         return (
                           React.DOM.article({className: "article article-source", key: article.id}, 
-                            React.DOM.h4({className: "article-title"}, article.source, " - ", React.DOM.time({datetime: article.createdAt}, moment(article.createdAt).format('MMMM Do YYYY'))), 
+                            React.DOM.h4({className: "article-title"}, article.source, " - ", React.DOM.time({dateTime: article.createdAt}, moment(article.createdAt).format('MMMM Do YYYY'))), 
                             React.DOM.p({className: "article-description"}, Link({to: "article", params: { slug: claim.get('slug'), articleId: article.id}}, this.truncateString(article.headline))), 
                             React.DOM.p(null, React.DOM.strong(null, this.formatNumber(article.shares) + ' shares'))
                           )
@@ -39662,7 +39660,7 @@ module.exports = React.createClass({displayName: 'exports',
                       React.DOM.div({className: "card-meta"}, 
                         React.DOM.p({className: "sources"}, claim.articlesByStance('observing').length, " sources"), 
                         React.DOM.div({className: "shares"}, 
-                          React.DOM.span({className: "shares-value"}, mostShared.stance === 'observing' ? React.DOM.span({className: "icon icon-most-shared"}) : null, shares.observing ? this.formatNumber(shares.observing) : 0), 
+                          React.DOM.span({className: "shares-value"}, mostShared === 'observing' ? React.DOM.span({className: "icon icon-most-shared"}) : null, shares.observing ? this.formatNumber(shares.observing) : 0), 
                           React.DOM.span({className: "shares-label"}, "shares")
                         )
                       )
@@ -39672,7 +39670,7 @@ module.exports = React.createClass({displayName: 'exports',
                       _.first(claim.articlesByStance('observing'), 1).map(function(article) {
                         return (
                           React.DOM.article({className: "article article-source", key: article.id}, 
-                            React.DOM.h4({className: "article-title"}, article.source, " - ", React.DOM.time({datetime: article.createdAt}, moment(article.createdAt).format('MMMM Do YYYY'))), 
+                            React.DOM.h4({className: "article-title"}, article.source, " - ", React.DOM.time({dateTime: article.createdAt}, moment(article.createdAt).format('MMMM Do YYYY'))), 
                             React.DOM.p({className: "article-description"}, Link({to: "article", params: { slug: claim.get('slug'), articleId: article.id}}, this.truncateString(article.headline))), 
                             React.DOM.p(null, React.DOM.strong(null, this.formatNumber(article.shares) + ' shares'))
                           )
@@ -39722,7 +39720,7 @@ module.exports = React.createClass({displayName: 'exports',
                             : ''
                           ), 
                           React.DOM.div({className: "article-content"}, 
-                            React.DOM.h4({className: "article-title"}, Link({to: "article", params: { slug: claim.get('slug'), articleId: article.id}}, article.source), " - ", React.DOM.time({datetime: article.createdAt}, moment(article.createdAt).format('MMMM Do YYYY'))), 
+                            React.DOM.h4({className: "article-title"}, Link({to: "article", params: { slug: claim.get('slug'), articleId: article.id}}, article.source), " - ", React.DOM.time({dateTime: article.createdAt}, moment(article.createdAt).format('MMMM Do YYYY'))), 
                             React.DOM.p({className: "article-description"}, article.headline)
                           ), 
                           React.DOM.footer({className: "article-footer"}, 
@@ -39970,6 +39968,13 @@ module.exports = Backbone.Model.extend({
       }, this);
     }, this);
     return shares;
+  },
+
+  /* stance with most shares overall */
+  mostShared: function() {
+    return _.reduce(this.sharesByStance(), function(pair, num, stance) {
+      return num > pair[1] ? [stance, num] : pair;
+    }, ['', 0])[0];
   },
 
   /* returns sorted list of articles for a given stance, including shares and stance attribtes. if stance is empty, return all */

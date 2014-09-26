@@ -140,11 +140,9 @@ module.exports = React.createClass({
         };
       }
       window.callout = callout;
-
-      var mostShared = _.first(claim.articlesByStance());
     }
 
-    var mostShared = _.first(claim.articlesByStance()),
+    var mostShared = claim.mostShared(),
       startedTracking = claim.startedTracking(),
       originDate = claim.originDate();
 
@@ -170,9 +168,9 @@ module.exports = React.createClass({
                   <span className="status-label">Claim State</span>
                   <span className="status-value">{claim.truthinessText()}</span>
                 </div>
-                <div className={'status status-' + (mostShared ? mostShared.stance : '')}>
+                <div className={'status status-' + (mostShared ? mostShared : '')}>
                   <span className="status-label">Most Shared Claim</span>
-                  <span className="status-value">{mostShared ? mostShared.stance : ''}</span>
+                  <span className="status-value">{mostShared ? mostShared : ''}</span>
                 </div>
 
                 { this.state.populated ?
@@ -209,7 +207,7 @@ module.exports = React.createClass({
                       <div className="card-meta">
                         <p className="sources">{claim.articlesByStance('for').length} sources</p>
                         <div className="shares">
-                          <span className="shares-value">{mostShared.stance === 'for' ? <span className="icon icon-most-shared"/> : null}{shares.for ? this.formatNumber(shares.for) : 0}</span>
+                          <span className="shares-value">{mostShared === 'for' ? <span className="icon icon-most-shared"/> : null}{shares.for ? this.formatNumber(shares.for) : 0}</span>
                           <span className="shares-label">shares</span>
                         </div>
                       </div>
@@ -219,7 +217,7 @@ module.exports = React.createClass({
                       {_.first(claim.articlesByStance('for'), 1).map(function(article) {
                         return (
                           <article className="article article-source" key={article.id}>
-                            <h4 className="article-title">{article.source} - <time datetime={article.createdAt}>{moment(article.createdAt).format('MMMM Do YYYY')}</time></h4>
+                            <h4 className="article-title">{article.source} - <time dateTime={article.createdAt}>{moment(article.createdAt).format('MMMM Do YYYY')}</time></h4>
                             <p className="article-description"><Link to="article" params={{ slug: claim.get('slug'), articleId: article.id }}>{this.truncateString(article.headline)}</Link></p>
                             <p><strong>{this.formatNumber(article.shares) + ' shares'}</strong></p>
                           </article>
@@ -236,7 +234,7 @@ module.exports = React.createClass({
                       <div className="card-meta">
                         <p className="sources">{claim.articlesByStance('against').length} sources</p>
                         <div className="shares">
-                          <span className="shares-value">{mostShared.stance === 'against' ? <span className="icon icon-most-shared"/> : null}{shares.against ? this.formatNumber(shares.against) : 0}</span>
+                          <span className="shares-value">{mostShared === 'against' ? <span className="icon icon-most-shared"/> : null}{shares.against ? this.formatNumber(shares.against) : 0}</span>
                           <span className="shares-label">shares</span>
                         </div>
                       </div>
@@ -246,7 +244,7 @@ module.exports = React.createClass({
                       {_.first(claim.articlesByStance('against'), 1).map(function(article) {
                         return (
                           <article className="article article-source" key={article.id}>
-                            <h4 className="article-title">{article.source} - <time datetime={article.createdAt}>{moment(article.createdAt).format('MMMM Do YYYY')}</time></h4>
+                            <h4 className="article-title">{article.source} - <time dateTime={article.createdAt}>{moment(article.createdAt).format('MMMM Do YYYY')}</time></h4>
                             <p className="article-description"><Link to="article" params={{ slug: claim.get('slug'), articleId: article.id }}>{this.truncateString(article.headline)}</Link></p>
                             <p><strong>{this.formatNumber(article.shares) + ' shares'}</strong></p>
                           </article>
@@ -263,7 +261,7 @@ module.exports = React.createClass({
                       <div className="card-meta">
                         <p className="sources">{claim.articlesByStance('observing').length} sources</p>
                         <div className="shares">
-                          <span className="shares-value">{mostShared.stance === 'observing' ? <span className="icon icon-most-shared"/> : null}{shares.observing ? this.formatNumber(shares.observing) : 0}</span>
+                          <span className="shares-value">{mostShared === 'observing' ? <span className="icon icon-most-shared"/> : null}{shares.observing ? this.formatNumber(shares.observing) : 0}</span>
                           <span className="shares-label">shares</span>
                         </div>
                       </div>
@@ -273,7 +271,7 @@ module.exports = React.createClass({
                       {_.first(claim.articlesByStance('observing'), 1).map(function(article) {
                         return (
                           <article className="article article-source" key={article.id}>
-                            <h4 className="article-title">{article.source} - <time datetime={article.createdAt}>{moment(article.createdAt).format('MMMM Do YYYY')}</time></h4>
+                            <h4 className="article-title">{article.source} - <time dateTime={article.createdAt}>{moment(article.createdAt).format('MMMM Do YYYY')}</time></h4>
                             <p className="article-description"><Link to="article" params={{ slug: claim.get('slug'), articleId: article.id }}>{this.truncateString(article.headline)}</Link></p>
                             <p><strong>{this.formatNumber(article.shares) + ' shares'}</strong></p>
                           </article>
@@ -323,7 +321,7 @@ module.exports = React.createClass({
                             : ''}
                           </header>
                           <div className="article-content">
-                            <h4 className="article-title"><Link to="article" params={{ slug: claim.get('slug'), articleId: article.id }}>{article.source}</Link> - <time datetime={article.createdAt}>{moment(article.createdAt).format('MMMM Do YYYY')}</time></h4>
+                            <h4 className="article-title"><Link to="article" params={{ slug: claim.get('slug'), articleId: article.id }}>{article.source}</Link> - <time dateTime={article.createdAt}>{moment(article.createdAt).format('MMMM Do YYYY')}</time></h4>
                             <p className="article-description">{article.headline}</p>
                           </div>
                           <footer className="article-footer">

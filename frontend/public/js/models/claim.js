@@ -57,6 +57,13 @@ module.exports = Backbone.Model.extend({
     return shares;
   },
 
+  /* stance with most shares overall */
+  mostShared: function() {
+    return _.reduce(this.sharesByStance(), function(pair, num, stance) {
+      return num > pair[1] ? [stance, num] : pair;
+    }, ['', 0])[0];
+  },
+
   /* returns sorted list of articles for a given stance, including shares and stance attribtes. if stance is empty, return all */
   articlesByStance: function(stance) {
 
