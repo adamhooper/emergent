@@ -13,7 +13,7 @@ module.exports = React.createClass({
             Emergent is a real-time rumor tracker. It's part of a research project with
             the <a href="http://towcenter.org/">Tow Center for Digital Journalism</a> at
             Columbia University that focuses on how unverified information and rumor are
-            reported in the media. It aims to develop and best practices for debunking
+            reported in the media. It aims to develop best practices for debunking
             misinformation. Read more about the
             research <a href="http://www.craigsilverman.ca/2014/09/02/researching-rumors-and-debunking-for-the-tow-center-at-columbia-university/">here</a>.
           </p>
