@@ -10,16 +10,15 @@
 
 API_PORT_START="150" # 1500, 1501
 EDITOR_PORT_START="160" # 1600, 1601
-API_COMMAND="/usr/local/bin/node /home/app/node_modules/forever/bin/monitor bin/api.js"
-EDITOR_COMMAND="/usr/local/bin/node /home/app/node_modules/forever/bin/monitor bin/editor.js"
-URL_FETCHER_COMMAND="/usr/local/bin/node /home/app/node_modules/forever/bin/monitor bin/url-fetcher.js"
 
 set -x
+set -e
 
-DIR="$(dirname "$0")"
+CWD="$(pwd)"
 
-(cd "$DIR/.." && bin/npm-install-components.sh)
-(cd "$DIR/../data-store" && env NODE_ENV=production bin/sequelize db:migrate)
+forever_cmd() {
+  echo "/usr/local/bin/node /home/app/node_modules/forever/bin/forever -a -l /home/app/var/log/$1.log start --minUptime 1000 --spinSleepTime 1000 $CWD/bin/$1.js"
+}
 
 # Returns an open port number as a string.
 #
@@ -54,18 +53,28 @@ find_open_port_starting_with() {
 # * grep is installed
 # * the final digit of the port is always "0" or "1"
 # * the server is always run by the current user
-# * the server is always run in its own process session
+# * the server's master process is a direct child of init (PID 1)
 # * we're on Linux, with /proc mounted properly
 #
 # $1: the first digits of the port number. For instance, "150" if we alternate
 #     between ports "1500" and "1501".
-find_running_pids_for_port_starting_with() {
+find_forever_uids_for_port_starting_with() {
   # ss output might look like:
   # LISTEN     0      128                       *:1500                     *:*      users:(("node",1709,10))
   # LISTEN     0      128                       *:1501                     *:*      users:(("node",1691,10))
   node_pids="$(ss -plnt | grep ":${1}[01]" | sed -e 's/.*:((.*",\(.*\),.*/\1/')"
   for node_pid in $node_pids; do
-    echo $(cat /proc/$node_pid/stat | cut -d' ' -f6)
+    # forever list output might look like:
+    # info:    Forever processes running
+    # data:        uid  command             script                            forever pid   logfile                              uptime         
+    # data:    [0] 0JUH /usr/local/bin/node /home/app/code/bin/editor.js      1657    1659  /home/app/var/log/editor.js.log      4:11:2:35.892  
+    # data:    [1] n1at /usr/local/bin/node /home/app/code/bin/frontend.js    1672    1676  /home/app/var/log/frontend.js.log    4:11:2:33.679  
+    # data:    [2] YJZU /usr/local/bin/node /home/app/code/bin/api.js         1689    1693  /home/app/var/log/api.js.log         4:11:2:30.459  
+    # data:    [3] _1Zc /usr/local/bin/node /home/app/code/bin/url-fetcher.js 1703    28088 /home/app/var/log/url-fetcher.js.log 2:15:31:41.890 
+
+    parent_pid=$(cat /proc/$node_pid/stat | cut -d' ' -f5)
+    forever_uid=$(forever list --plain | sed -e 's/  */ /g' | cut -d' ' -f3,6 | grep " $parent_pid" | cut -d' ' -f1)
+    echo $forever_uid
   done
 }
 
@@ -97,14 +106,14 @@ rolling_restart() {
   port_start="$1"
   cmdline="$2"
 
-  old_pids=$(echo find_running_pids_for_port_starting_with($port_start))
-  echo "Rolling over alongside server PID: $old_pids"
+  old_uids=$(find_forever_uids_for_port_starting_with $port_start)
+  echo "Rolling over alongside server UID: $old_uids"
 
-  new_port=$(echo find_open_port_starting_with($port_start))
-  cmd="env - NODE_ENV=production PORT=$new_port $cmdline"
+  new_port=$(find_open_port_starting_with $port_start)
+  cmd="env NODE_ENV=production PORT=$new_port $cmdline"
 
   echo "Starting command that should daemonize: $cmd ..."
-  $(cmd)
+  $cmd
 
   server="http://localhost:$new_port"
   echo "Waiting for server to come online at $server ..."
@@ -113,24 +122,22 @@ rolling_restart() {
     sleep 1
   done
 
-  for old_pid in $old_pids; do
-    echo "killing old server $old_pid ..."
-    kill $old_pid
+  for old_uid in $old_uids; do
+    echo "killing old server $old_uid ..."
+    forever stop $old_uid
   done
-
-  echo "It'll die eventually. We're done here."
 }
 
 restart_api() {
-  rolling_restart("$API_PORT_START", "$API_COMMAND")
+  rolling_restart "$API_PORT_START" "$(forever_cmd api)"
 }
 
 restart_editor() {
-  rolling_restart("$EDITOR_PORT_START", "$EDITOR_COMMAND")
+  rolling_restart "$EDITOR_PORT_START" "$(forever_cmd editor)"
 }
 
 restart_url_fetcher() {
-  for url_fetcher_pid in $(find_running_pids_for_command("$URL_FETCHER_COMMAND")); do
+  for url_fetcher_pid in $(find_running_pids_for_command url-fetcher.js); do
     echo "Killing url-fetcher with PID $url_fetcher_pid ..."
     kill $url_fetcher_pid
     echo "Waiting for PID $url_fetcher_pid to disappear..."
@@ -140,9 +147,12 @@ restart_url_fetcher() {
     done
   done
 
-  echo "Starting command that should daemonize: $URL_FETCHER_COMMAND ..."
-  $(URL_FETCHER_COMMAND)
+  cmd=$(forever_cmd url-fetcher)
+  echo "Starting command that should daemonize: $cmd ..."
+  $($cmd)
 }
 
-bin/install-npm-components.sh
-restart_api()
+(bin/npm-install-components.sh)
+(cd "$CWD/data-store" && env NODE_ENV=production bin/sequelize db:migrate)
+restart_api
+restart_editor
