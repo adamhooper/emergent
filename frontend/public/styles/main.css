@@ -525,6 +525,16 @@ th {
   font-size: 1.5em;
   margin-top: 0; }
 
+.sr-only {
+  border: 0;
+  clip: rect(0, 0, 0, 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px; }
+
 @media (min-width: 0) {
   .container {
     max-width: 90%;
@@ -584,6 +594,16 @@ th {
 
   .site-menu {
     width: 74.46809%;
+    float: right;
+    margin-right: 0; }
+
+  .mailchimp {
+    width: 65.95745%;
+    float: left;
+    margin-right: 2.12766%; }
+
+  .social-media {
+    width: 31.91489%;
     float: right;
     margin-right: 0; }
 
@@ -702,6 +722,11 @@ p {
 
 strong {
   font-weight: 500; }
+
+.social-media {
+  text-align: right; }
+  .social-media .icon {
+    background-size: 24px 24px; }
 
 .icon {
   text-indent: -9999px; }

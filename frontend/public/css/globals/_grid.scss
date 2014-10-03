@@ -42,6 +42,7 @@
 
 @include breakpoint($breakpoint-desktop) {
 
+  //
   // Site
 
   .site-logo {
@@ -50,6 +51,17 @@
 
   .site-menu {
     @include span(last 9 of 12);
+  }
+
+
+  //
+  // Footer
+  .mailchimp {
+    @include span(8 of 12);
+  }
+
+  .social-media {
+    @include span(last 4 of 12);
   }
 
 
