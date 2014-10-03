@@ -124,8 +124,11 @@ rolling_restart() {
     sleep 1
   done
 
+  echo "Sleeping, so nginx notices our new server is online..."
+  sleep 5
+
   for old_uid in $old_uids; do
-    echo "killing old server $old_uid ..."
+    echo "Killing old server $old_uid ..."
     forever stop $old_uid
   done
 }
