@@ -2,28 +2,27 @@
 
 DIR="$(dirname "$0")"
 
-#if $(git diff --quiet); then
-#  echo "Updating and shrinkwrapping packages..."
-#  (cd api && npm shrinkwrap) || exit 1
-#  (cd data-store && npm shrinkwrap) || exit 1
-#  (cd editor && npm shrinkwrap) || exit 1
-#  (cd job-queue && npm shrinkwrap) || exit 1
-#  (cd frontend && npm shrinkwrap) || exit 1
-#  (cd url-fetcher && npm shrinkwrap) || exit 1
-#  git add */npm-shrinkwrap.json || exit 1
-#  git commit -m 'Update and shrinkwrap packages for deploy' # if it fails, nothing has changed
-#
-#  echo "Compiling editor assets for production..."
-#  (cd editor && bower update) || exit 1
-#  (cd editor && gulp prod) || exit 1
-#  git add -A editor/dist frontend/public || exit 1
-#  git commit -m 'Recompile editor assets for deploy' # if it fails, nothing changed
-#
-#  git push origin master          || exit 1 # if everyone does this every time...
-#  git push truthmaker HEAD:master || exit 1 # ... this (the actual deploy) should be fast-forward
-#else
-#  echo "You cannot deploy, as you have changes in your local repository." >&2
-#  exit 1
-#fi
+if $(git diff --quiet); then
+  echo "Updating and shrinkwrapping packages..."
+  (cd api && npm shrinkwrap) || exit 1
+  (cd data-store && npm shrinkwrap) || exit 1
+  (cd editor && npm shrinkwrap) || exit 1
+  (cd job-queue && npm shrinkwrap) || exit 1
+  (cd frontend && npm shrinkwrap) || exit 1
+  (cd url-fetcher && npm shrinkwrap) || exit 1
+  git add */npm-shrinkwrap.json || exit 1
+  git commit -m 'Update and shrinkwrap packages for deploy' # if it fails, nothing has changed
 
-(cd "$DIR" && npm install && MINA_CONFIG=production.json node_modules/mina/bin/mina-cli deploy)
+  echo "Compiling editor assets for production..."
+  (cd editor && bower update) || exit 1
+  (cd editor && gulp prod) || exit 1
+  git add -A editor/dist frontend/public || exit 1
+  git commit -m 'Recompile editor assets for deploy' # if it fails, nothing changed
+
+  git push origin master          || exit 1 # if everyone does this every time...
+  git push truthmaker HEAD:master || exit 1 # ... this (the actual deploy) should be fast-forward
+  (cd "$DIR" && npm install && MINA_CONFIG=production.json node_modules/mina/bin/mina-cli deploy)
+else
+  echo "You cannot deploy, as you have changes in your local repository." >&2
+  exit 1
+fi
