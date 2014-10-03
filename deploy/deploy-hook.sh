@@ -11,6 +11,8 @@
 API_PORT_START="150" # 1500, 1501
 EDITOR_PORT_START="160" # 1600, 1601
 
+SS=/usr/sbin/ss
+
 set -x
 set -e
 
@@ -36,7 +38,7 @@ forever_cmd() {
 find_open_port_starting_with() {
   port0="${1}0"
   port1="${1}1"
-  if $(ss -plnt | grep ":$port0" > /dev/null); then
+  if $($SS -plnt | grep ":$port0" > /dev/null); then
     echo $port1
   else
     echo $port0
@@ -62,7 +64,7 @@ find_forever_uids_for_port_starting_with() {
   # ss output might look like:
   # LISTEN     0      128                       *:1500                     *:*      users:(("node",1709,10))
   # LISTEN     0      128                       *:1501                     *:*      users:(("node",1691,10))
-  node_pids="$(ss -plnt | grep ":${1}[01]" | sed -e 's/.*:((.*",\(.*\),.*/\1/')"
+  node_pids="$($SS -plnt | grep ":${1}[01]" | sed -e 's/.*:((.*",\(.*\),.*/\1/')"
   for node_pid in $node_pids; do
     # forever list output might look like:
     # info:    Forever processes running
