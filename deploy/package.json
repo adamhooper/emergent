@@ -13,6 +13,7 @@
   },
   "homepage": "https://github.com/adamhooper/truthmaker",
   "devDependencies": {
-    "awsbox": "~0.7.0"
+    "awsbox": "~0.7.0",
+    "mina": "^1.0.5"
   }
 }

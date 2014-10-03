@@ -1,0 +1,14 @@
+{
+  "server": "app@emergent.info",
+  "port": 22,
+  "server_dir": "/home/app/emergent",
+  "repo": "/home/app/git",
+  "prj_git_relative_dir": "",
+  "branch": "master",
+  "force_regenerate_git_dir": false,
+  "shared_dirs": [
+  ],
+  "prerun": [
+  ],
+  "run_cmd": "deploy/deploy-hook.sh"
+}
