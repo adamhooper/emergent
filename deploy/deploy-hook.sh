@@ -13,7 +13,6 @@ EDITOR_PORT_START="160" # 1600, 1601
 
 SS=/usr/sbin/ss
 
-set -x
 set -e
 
 CWD="$(pwd)"
