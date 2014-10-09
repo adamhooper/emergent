@@ -1,1 +1,0 @@
-beforeEach(function(){jasmine.addMatchers({toHaveOwnProperty:function(e){var t=this.actual;return t.hasOwnProperty(e)}})});

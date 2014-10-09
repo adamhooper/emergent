@@ -1,1 +1,0 @@
-(function(){exports.name="Q",exports.uri="https://s3-us-west-1.amazonaws.com/q-releases/q.js",exports.adapter="global.fulfilledPromise = Q.resolve;\nglobal.rejectedPromise = Q.reject;\nglobal.defer = Q.defer;"}).call(this);

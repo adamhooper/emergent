@@ -1,2 +1,10 @@
-define [ 'app', 'startup' ], (App) ->
-  App.start() # invoke 'startup' code
+$ = require('jquery')
+Backbone = require('backbone')
+Backbone.$ = $
+
+App = require('./app')
+
+require('./startup')
+
+$ ->
+  App.start()

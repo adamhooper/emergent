@@ -1,10 +1,9 @@
-define [
-  'marionette'
-  './ArticleVersionItemView'
-], (Marionette, ArticleVersionItemView) ->
-  class ArticleVersionListView extends Marionette.CollectionView
-    tagName: 'ul'
-    className: 'article-versions'
-    itemView: ArticleVersionItemView
+Marionette = require('backbone.marionette')
+ArticleVersionItemView = require('./ArticleVersionItemView')
 
-    initialize: ->
+module.exports = class ArticleVersionListView extends Marionette.CollectionView
+  tagName: 'ul'
+  className: 'article-versions'
+  childView: ArticleVersionItemView
+
+  initialize: ->

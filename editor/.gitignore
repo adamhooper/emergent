@@ -1,6 +1,4 @@
 node_modules
-assets/js/bower_components
-.tmp/public/js/bower_components
 .tmp
 lib-cov
 *.seed

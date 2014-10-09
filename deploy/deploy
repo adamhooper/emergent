@@ -14,7 +14,6 @@ if $(git diff --quiet); then
   git commit -m 'Update and shrinkwrap packages for deploy' # if it fails, nothing has changed
 
   echo "Compiling editor assets for production..."
-  (cd editor && bower update) || exit 1
   (cd editor && gulp prod) || exit 1
   git add -A editor/dist frontend/public || exit 1
   git commit -m 'Recompile editor assets for deploy' # if it fails, nothing changed

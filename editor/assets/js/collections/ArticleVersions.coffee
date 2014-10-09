@@ -1,12 +1,11 @@
-define [
-  'backbone'
-  'models/ArticleVersion'
-], (Backbone, ArticleVersion) ->
-  class ArticleVersions extends Backbone.Collection
-    model: ArticleVersion
-    url: -> "/articles/#{@articleId}/versions"
+Backbone = require('backbone')
+ArticleVersion = require('../models/ArticleVersion')
 
-    initialize: (models, options) ->
-      throw 'Must set options.articleId, a UUID' if !options.articleId
+module.exports = class ArticleVersions extends Backbone.Collection
+  model: ArticleVersion
+  url: -> "/articles/#{@articleId}/versions"
 
-      @articleId = options.articleId
+  initialize: (models, options) ->
+    throw 'Must set options.articleId, a UUID' if !options.articleId
+
+    @articleId = options.articleId

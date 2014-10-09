@@ -1,26 +1,19 @@
 module.exports = (config) ->
   config.set
-    basePath: ''
-    frameworks: ['mocha', 'requirejs' ]
+    browsers: [ 'PhantomJS' ]
+    frameworks: [ 'browserify', 'mocha' ]
+    reporters: [ 'mocha' ]
     files: [
-      'test-js/phantomjs/phantomjs_dateparse_polyfill.js'
-      'test-js/test-main.coffee'
-      {pattern: 'assets/js/**/*.js', included: false}
-      {pattern: 'assets/js/**/*.coffee', included: false}
-      {pattern: 'test-js/**/*Spec.js', included: false}
-      {pattern: 'test-js/**/*Spec.coffee', included: false}
-    ]
-    exclude: [
-      'assets/js/main.js'
-      'assets/js/bower_components/**/*spec.js'
+      'test-js/test_helper.coffee'
+      'test-js/**/*Spec.coffee'
     ]
     preprocessors: {
-      '**/*.coffee': ['coffee']
+      '**/*.coffee': [ 'browserify' ]
     }
-    reporters: ['dots']
-    port: 9876
-    colors: true
+
+    browserify:
+      extensions: [ '.js', '.coffee' ]
+      transform: [ 'coffeeify' ]
+      debug: true
+
     logLevel: config.LOG_INFO
-    autoWatch: true
-    browsers: ['PhantomJS']
-    singleRun: false

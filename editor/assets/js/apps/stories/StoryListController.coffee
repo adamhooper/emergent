@@ -1,8 +1,8 @@
-define [
-  'app'
-  'models/Story'
-  'views/StoryListLayout'
-], (App, Story, StoryListLayout) ->
+App = require('../../app')
+Story = require('../../models/Story')
+StoryListLayout = require('../../views/StoryListLayout')
+
+module.exports =
   go: ->
     App.request('stories/index')
       .then (collection) ->

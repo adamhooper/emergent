@@ -1,6 +1,5 @@
-define [
-  'backbone'
-], (Backbone) ->
-  class Article extends Backbone.Model
-    defaults:
-      url: ''
+Backbone = require('backbone')
+
+module.exports = class Article extends Backbone.Model
+  defaults:
+    url: ''

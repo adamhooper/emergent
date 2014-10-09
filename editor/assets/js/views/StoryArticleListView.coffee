@@ -1,27 +1,23 @@
-define [
-  'marionette'
-  'views/StoryArticleListItemView'
-], (
-  Marionette
-  StoryArticleListItemView
-) ->
-  class StoryArticleListView extends Marionette.CollectionView
-    tagName: 'ul'
-    className: 'story-articles'
-    itemView: StoryArticleListItemView
+Marionette = require('backbone.marionette')
+StoryArticleListItemView = require('./StoryArticleListItemView')
 
-    initialize: ->
-      @on('itemview:click', @onClick)
-      @on('itemview:create', @onCreate)
+module.exports = class StoryArticleListView extends Marionette.CollectionView
+  tagName: 'ul'
+  className: 'story-articles'
+  childView: StoryArticleListItemView
 
-    onClick: (view, model) ->
-      @setFocusView(view)
-      @trigger('focus', model)
+  initialize: ->
+    @on('childview:click', @onClick)
+    @on('childview:create', @onCreate)
 
-    onCreate: (view, model) ->
-      @collection.add({})
+  onClick: (view, model) ->
+    @setFocusView(view)
+    @trigger('focus', model)
 
-    setFocusView: (view) ->
-      @focusView.$el.removeClass('focus') if @focusView?
-      @focusView = view
-      @focusView.$el.addClass('focus') if @focusView?
+  onCreate: (view, model) ->
+    @collection.add({})
+
+  setFocusView: (view) ->
+    @focusView.$el.removeClass('focus') if @focusView?
+    @focusView = view
+    @focusView.$el.addClass('focus') if @focusView?

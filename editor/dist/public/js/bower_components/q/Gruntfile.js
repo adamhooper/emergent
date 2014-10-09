@@ -1,1 +1,0 @@
-module.exports=function(e){e.loadNpmTasks("grunt-contrib-uglify"),e.initConfig({uglify:{"q.min.js":["q.js"],options:{report:"gzip"}}}),e.registerTask("default",["uglify"])};

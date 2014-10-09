@@ -1,1 +1,0 @@
-(function(){var e;e=require("sinon"),describe("Regressions",function(){return specify("GH-19: functions with `proxy` properties",function(){var t,n;return t=function(){},t.proxy=5,n=e.spy(t),n(),expect(function(){return n.should.have.been.called}).to.not["throw"]()})})}).call(this);

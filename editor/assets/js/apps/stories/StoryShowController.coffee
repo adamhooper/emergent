@@ -1,11 +1,11 @@
-define [
-  'app'
-  'q'
-  'models/Article'
-  'views/StoryShowLayout'
-], (App, Q, Article, StoryShowLayout) ->
+App = require('../../app')
+Promise = require('bluebird')
+Article = require('../../models/Article')
+StoryShowLayout = require('../../views/StoryShowLayout')
+
+module.exports =
   go: (slug) ->
-    Q.all([
+    Promise.all([
       App.request('stories/show', slug)
       App.request('story-articles/index', slug)
     ])

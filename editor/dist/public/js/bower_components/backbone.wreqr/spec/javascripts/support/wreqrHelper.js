@@ -1,1 +1,0 @@
-(function(e){e.Wreqr=Backbone.Wreqr})(this);

@@ -1,1 +1,0 @@
-(function(){define(["app","apps/stories/StoryApp"],function(e,t){return e.on("initialize:after",function(){Backbone.history!=null&&Backbone.history.start();if(e.getCurrentRoute()==="")return e.trigger("stories:list")})})}).call(this);

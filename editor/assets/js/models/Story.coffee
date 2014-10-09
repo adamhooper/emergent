@@ -1,25 +1,26 @@
-define [ 'backbone' ], (Backbone) ->
-  class Story extends Backbone.Model
-    idAttribute: 'slug'
-    urlRoot: '/stories'
+Backbone = require('backbone')
 
-    defaults:
-      slug: ''
-      headline: ''
-      description: ''
-      origin: ''
-      originUrl: null
-      published: false
-      truthiness: 'unknown'
-      truthinessDate: null
+module.exports = class Story extends Backbone.Model
+  idAttribute: 'slug'
+  urlRoot: '/stories'
 
-    initialize: (attributes, options) ->
-      @_isNew = options?.isNew || false
+  defaults:
+    slug: ''
+    headline: ''
+    description: ''
+    origin: ''
+    originUrl: null
+    published: false
+    truthiness: 'unknown'
+    truthinessDate: null
 
-    save: (args...) ->
-      ret = super(args...)
-      @_isNew = false
-      ret
+  initialize: (attributes, options) ->
+    @_isNew = options?.isNew || false
 
-    isNew: ->
-      @_isNew
+  save: (args...) ->
+    ret = super(args...)
+    @_isNew = false
+    ret
+
+  isNew: ->
+    @_isNew

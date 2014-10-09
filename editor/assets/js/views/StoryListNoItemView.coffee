@@ -1,5 +1,6 @@
-define [ 'marionette' ], (Marionette) ->
-  class StoryListNoItemView extends Marionette.ItemView
-    tagName: 'li'
-    className: 'empty'
-    template: -> 'We have no stories'
+Marionette = require('backbone.marionette')
+
+module.exports = class StoryListNoItemView extends Marionette.ItemView
+  tagName: 'li'
+  className: 'empty'
+  template: -> 'We have no stories'

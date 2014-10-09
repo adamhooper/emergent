@@ -1,1 +1,0 @@
-var defer=function(){var e=[],t;return{resolve:function(n){t=n;for(var r=0,i=e.length;r<i;r++){var s=e[r];s(t)}e=undefined},then:function(n){e?e.push(n):n(t)}}};

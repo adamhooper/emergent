@@ -1,8 +1,8 @@
-define [
-  'jquery'
-  '../collections/Stories'
-  '../models/Story'
-], ($, Stories, Story) ->
+$ = require('jquery')
+Stories = require('../collections/Stories')
+Story = require('../models/Story')
+
+module.exports =
   # Exposes server-side API methods to a Backbone.Wreqr.RequestResponse
   installToReqres: (reqres) ->
     API =

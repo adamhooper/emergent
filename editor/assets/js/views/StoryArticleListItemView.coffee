@@ -1,57 +1,59 @@
-define [ 'underscore', 'marionette' ], (_, Marionette) ->
-  class StoryArticleListItemCollapsedView extends Marionette.ItemView
-    tagName: 'li'
-    className: 'article'
+_ = require('lodash')
+Marionette = require('backbone.marionette')
 
-    template: _.template('''
-      <% if (!isNew) { %>
-        <a href="#"><%- url %></a>
-      <% } else { %>
-        <form method="post" action="#">
-          <div class="input-group">
-            <input name="url" class="form-control" placeholder="http://url.related.to/this/story">
-            <span class="input-group-btn">
-              <button type="submit" class="btn btn-primary">Add</button>
-            </span>
-          </div>
-        </form>
-      <% } %>
-    ''')
+module.exports = class StoryArticleListItemCollapsedView extends Marionette.ItemView
+  tagName: 'li'
+  className: 'article'
 
-    ui:
-      url: 'input[name=url]'
+  template: _.template('''
+    <% if (!isNew) { %>
+      <a href="#"><%- url %></a>
+    <% } else { %>
+      <form method="post" action="#">
+        <div class="input-group">
+          <input name="url" class="form-control" placeholder="http://url.related.to/this/story">
+          <span class="input-group-btn">
+            <button type="submit" class="btn btn-primary">Add</button>
+          </span>
+        </div>
+      </form>
+    <% } %>
+  ''')
 
-    events:
-      'submit form': 'onSubmit'
-      'click a': 'onClick'
+  ui:
+    url: 'input[name=url]'
 
-    serializeData: ->
-      json = @model.toJSON()
+  events:
+    'submit form': 'onSubmit'
+    'click a': 'onClick'
 
-      isNew: @model.isNew()
-      url: json.url
+  serializeData: ->
+    json = @model.toJSON()
 
-    onClick: (e) ->
-      e.preventDefault()
-      @trigger('click', @model)
+    isNew: @model.isNew()
+    url: json.url
 
-    onSubmit: (e) ->
-      e.preventDefault()
+  onClick: (e) ->
+    e.preventDefault()
+    @trigger('click', @model)
 
-      url = @ui.url.val().trim()
+  onSubmit: (e) ->
+    e.preventDefault()
 
-      if url
-        @model.save({ url: url }, {
-          success: (model, response) => @onSubmitSuccess(response)
-          error: (model, response) => @onSubmitError(response)
-        })
-        @$('.input-group-btn').replaceWith('<span class="input-group-addon form-control-feedback"><i class="spin">⟳</i></span>')
-        @$('input').prop('disabled', true)
-        @trigger('create', @model)
+    url = @ui.url.val().trim()
 
-    onSubmitSuccess: (response) ->
-      @render()
+    if url
+      @model.save({ url: url }, {
+        success: (model, response) => @onSubmitSuccess(response)
+        error: (model, response) => @onSubmitError(response)
+      })
+      @$('.input-group-btn').replaceWith('<span class="input-group-addon form-control-feedback"><i class="spin">⟳</i></span>')
+      @$('input').prop('disabled', true)
+      @trigger('create', @model)
 
-    onSubmitError: (response) ->
-      @$('.form-control-feedback').replaceWith('<span class="input-group-addon form-control-feedback"><i class="error">✘</i></span>')
-      @$el.addClass('has-error')
+  onSubmitSuccess: (response) ->
+    @render()
+
+  onSubmitError: (response) ->
+    @$('.form-control-feedback').replaceWith('<span class="input-group-addon form-control-feedback"><i class="error">✘</i></span>')
+    @$el.addClass('has-error')

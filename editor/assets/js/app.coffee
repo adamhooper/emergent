@@ -1,27 +1,26 @@
-define [
-  'marionette'
-  'backbone'
-], (Marionette, Backbone) ->
-  App = new Marionette.Application()
+Backbone = require('backbone')
+Marionette = require('backbone.marionette')
 
-  App.addRegions
-    mainRegion: '#app'
+App = new Marionette.Application()
 
-  App.navigate = (route, options) ->
-    options ||= {}
-    Backbone.history.navigate(route, options)
+App.addRegions
+  mainRegion: '#app'
 
-  App.getCurrentRoute = -> Backbone.history.fragment
+App.navigate = (route, options) ->
+  options ||= {}
+  Backbone.history.navigate(route, options)
 
-  App.startSubApp = (appName, args) ->
-    currentApp = if appName?
-      App.module(appName)
-    else
-      null
+App.getCurrentRoute = -> Backbone.history.fragment
 
-    if currentApp != App.currentApp
-      App.currentApp?.stop()
-      App.currentApp = currentApp
-      App.currentApp?.start(args)
+App.startSubApp = (appName, args) ->
+  currentApp = if appName?
+    App.module(appName)
+  else
+    null
 
-  App
+  if currentApp != App.currentApp
+    App.currentApp?.stop()
+    App.currentApp = currentApp
+    App.currentApp?.start(args)
+
+module.exports = App

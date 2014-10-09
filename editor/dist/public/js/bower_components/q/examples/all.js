@@ -1,1 +1,0 @@
-function eventually(e){return Q.delay(e,1e3)}var Q=require("../q");Q.all([1,2,3].map(eventually)).done(function(e){console.log(x)}),Q.all([eventually(10),eventually(20)]).spread(function(e,t){console.log(e,t)}).done();

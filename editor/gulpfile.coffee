@@ -1,124 +1,66 @@
+browserify = require('browserify')
 gulp = require('gulp')
-clean = require('gulp-clean')
-coffee = require('gulp-coffee')
-fs = require('fs')
 gutil = require('gulp-util')
 less = require('gulp-less')
-minifyCss = require('gulp-minify-css')
-requirejs = require('requirejs')
 rimraf = require('rimraf')
+source = require('vinyl-source-stream')
 watch = require('gulp-watch')
+watchify = require('watchify')
 
-paths =
-  # Coffee puts stuff in .tmp/dev
-  #
-  # In dev mode, we'll copy that to .tmp/public; in prod, we'll bundle with JS.
-  coffee:
-    src: 'assets/js/**/*.coffee'
-    dest: '.tmp/dev/js'
-
-  # Put stuff in .tmp/dev, alongside the CoffeeScript, ready for bundling.
-  js:
-    src: 'assets/js/**/*.js'
-    dest: '.tmp/dev/js'
-
-  # We compile just the one file.
-  #
-  # We put it in .tmp/dev; in production, we'll minify it.
-  less:
-    src: 'assets/styles/main.less'
-    dest: '.tmp/dev/styles'
-
-  # Fonts go straight to public/, in any environment.
-  fonts:
-    src: 'assets/fonts/**/*'
-    dest: '.tmp/public/fonts'
-
-  # For watching, we need to watch every .less file
-  allLess:
-    src: 'assets/styles/**/*.less'
-
-  # All stuff in ./tmp/dev/ should be in .tmp/public/ during dev
-  dev:
-    src: '.tmp/dev/**/*'
-    dest: '.tmp/public'
-
-  devCss:
-    src: '.tmp/dev/styles/**/*.css'
-    dest: '.tmp/public/styles'
-
-compileCoffee = ->
-  gulp.src(paths.coffee.src)
-    .pipe(coffee().on('error', gutil.log))
-    .pipe(gulp.dest(paths.coffee.dest))
-
-copyJs = ->
-  gulp.src(paths.js.src)
-    .pipe(gulp.dest(paths.js.dest))
-
-compileLess = ->
-  gulp.src(paths.less.src)
-    .pipe(less().on('error', gutil.log))
-    .pipe(gulp.dest(paths.less.dest))
-
-copyDir = (src, dest) ->
-  gulp.src(src)
-    .pipe(gulp.dest(dest))
-
-gulp.task 'clean', ->
-  gulp.src('.tmp/public/', read: false)
-    .pipe(clean(force: true))
-
-gulp.task('coffee', compileCoffee)
-gulp.task('less', compileLess)
-gulp.task('js', -> copyDir(paths.js.src, paths.js.dest))
-gulp.task('fonts', -> copyDir(paths.fonts.src, paths.fonts.dest))
-gulp.task('dev-to-public', -> copyDir(paths.dev.src, paths.dev.dest))
-
-gulp.task('compileAssets', [ 'coffee', 'js', 'less', 'fonts' ])
-
-gulp.task 'linkAssets', [ 'compileAssets' ], ->
-  copyDir(paths.dev.src, paths.dev.dest)
-
-gulp.task 'deployJs', [ 'coffee', 'js' ], (cb) ->
-  requirejs.optimize({
-    appDir: '.tmp/dev'
-    baseUrl: 'js'
-    dir: '.tmp/public'
-    mainConfigFile: '.tmp/dev/js/requirejs-config.js'
-    modules: [
-      { name: 'main' }
+buildBrowserify = ->
+  browserify({
+    cache: {}
+    packageCache: {}
+    fullPaths: true
+    entries: [
+      './assets/js/main.coffee'
     ]
-  }, (output) ->
-    console.log(output)
-    cb()
-  , (err) ->
-    console.warn(err)
-    cb(err)
-  )
+    extensions: [ '.js', '.coffee' ]
+    debug: true
+  })
+    .transform('coffeeify')
 
-gulp.task 'deployRjsLoader', [ 'js' ], ->
-  gulp.src('.tmp/dev/js/bower_components/requirejs/require.js')
-    .pipe(gulp.dest('.tmp/public/js/bower_components/requirejs'))
+gulp.task 'browserify', ->
+  buildBrowserify()
+    .plugin('minifyify', map: 'main.js', output: './dist/public/js/main.js.map')
+    .bundle()
+    .on('error', console.warn)
+    .pipe(source('main.js'))
+    .pipe(gulp.dest('./dist/public/js/'))
 
-gulp.task 'deployCss', [ 'less' ], ->
-  gulp.src(paths.devCss.src)
-    .pipe(minifyCss())
-    .pipe(gulp.dest(paths.devCss.dest))
+gulp.task 'browserify-dev', ->
+  bundler = watchify(buildBrowserify(), watchify.args)
 
-gulp.task 'realDefault', [ 'compileAssets', 'linkAssets' ], ->
-  gulp.watch(paths.coffee.src, [ 'coffee' ])
-  gulp.watch(paths.js.src, [ 'js' ])
-  gulp.watch(paths.allLess.src, [ 'less' ])
-  gulp.watch(paths.fonts.src, [ 'fonts' ])
-  gulp.watch(paths.dev.src, [ 'dev-to-public' ])
+  rebundle = ->
+    bundler.bundle()
+      .on('error', console.warn)
+      .pipe(source('main.js'))
+      .pipe(gulp.dest('./dist/public/js/'))
 
-gulp.task 'realProd', [ 'deployJs', 'deployRjsLoader', 'deployCss', 'fonts' ], ->
-  rimraf 'dist/public', ->
-    copyDir('.tmp/public/**/*', 'dist/public')
+  bundler.on('update', rebundle)
+  rebundle()
+
+gulp.task 'fonts', ->
+  gulp.src('assets/fonts/**/*')
+    .pipe(gulp.dest('dist/public/fonts'))
+
+gulp.task 'less', ->
+  gulp.src('assets/styles/main.less')
+    .pipe(less().on('error', gutil.log))
+    .pipe(gulp.dest('dist/public/styles'))
+
+gulp.task 'clean', (done) ->
+  rimraf('dist', done)
+
+gulp.task 'realDefault', [ 'browserify-dev', 'fonts', 'less' ], ->
+  gulp.watch('assets/styles/**/*.less', [ 'less' ])
+  gulp.watch('assets/fonts/**/*', [ 'fonts' ])
+
+gulp.task 'realProd', [ 'browserify', 'fonts', 'less' ], ->
 
 gulp.task 'default', [ 'clean' ], ->
   gulp.start('realDefault')
+  require('./index')
 
 gulp.task 'prod', [ 'clean' ], ->
   gulp.start('realProd')

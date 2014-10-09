@@ -1,4 +1,6 @@
-define [ 'backbone', '../models/Story' ], (Backbone, Story) ->
-  class Stories extends Backbone.Collection
-    url: '/stories'
-    model: Story
+Backbone = require('backbone')
+Story = require('../models/Story')
+
+module.exports = class Stories extends Backbone.Collection
+  url: '/stories'
+  model: Story
