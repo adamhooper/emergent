@@ -1,5 +1,4 @@
 module.exports =
-  version: 2
   domains: [ 'www.abc.net.au' ]
   parse: (url, $, h) ->
     if /www.abc.net.au\/news\//.test(url)

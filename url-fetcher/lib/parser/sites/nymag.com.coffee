@@ -1,5 +1,4 @@
 module.exports =
-  version: 2
   domains: [ 'nymag.com' ]
   parse: (url, $, h) ->
     $headline = $('h1[itemprop=headline]')
