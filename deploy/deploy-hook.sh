@@ -143,7 +143,7 @@ restart_url_fetcher() {
 
   cmd=$(forever_cmd url-fetcher)
   echo "Starting command that should daemonize: $cmd ..."
-  $($cmd)
+  $cmd
 }
 
 bin/npm-install-components.sh
