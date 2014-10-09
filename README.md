@@ -4,7 +4,7 @@ There's a lot to do. No time to write about it.
 
 First, install NodeJS. Then, in this directory:
 
-    npm install -g mocha karma-cli bower supervisor
+    npm install -g mocha karma-cli supervisor
     bin/npm-install-components.sh
 
 Next, install `redis-server` and `postgresql`.

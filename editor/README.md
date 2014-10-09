@@ -7,8 +7,8 @@ The *frontend* is a Backbone.Marionette client-side application. It
 renders everything. Code is in `assets/js`, assets are in `test-js/`.
 This code must work across supported web browsers.
 
-In between, Express serves up files from `views/` and `.tmp/public`.
-Gulp generates the files in `.tmp/public`.
+In between, Express serves up files from `views/` and `dist/public`.
+Gulp generates the files in `dist/public`.
 
 We prefer CoffeeScript, but plain JavaScript shouldn't break anything.
 
@@ -31,6 +31,6 @@ developing.
 
 # Deploying
 
-Run `gulp prod` to compile assets. (This can whir for a minute.)
+Run `gulp prod` to compile assets.
 
 Run `npm start`. This will run the server.
