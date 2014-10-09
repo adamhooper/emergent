@@ -68,10 +68,10 @@ find_forever_uids_for_port_starting_with() {
     # forever list output might look like:
     # info:    Forever processes running
     # data:        uid  command             script                            forever pid   logfile                              uptime         
-    # data:    [0] 0JUH /usr/local/bin/node /home/app/code/bin/editor.js      1657    1659  /home/app/var/log/editor.js.log      4:11:2:35.892  
-    # data:    [1] n1at /usr/local/bin/node /home/app/code/bin/frontend.js    1672    1676  /home/app/var/log/frontend.js.log    4:11:2:33.679  
-    # data:    [2] YJZU /usr/local/bin/node /home/app/code/bin/api.js         1689    1693  /home/app/var/log/api.js.log         4:11:2:30.459  
-    # data:    [3] _1Zc /usr/local/bin/node /home/app/code/bin/url-fetcher.js 1703    28088 /home/app/var/log/url-fetcher.js.log 2:15:31:41.890 
+    # data:    [0] 0JUH /usr/local/bin/node /home/app/code/bin/editor.js      1657    1659  /home/app/var/log/editor.log      4:11:2:35.892  
+    # data:    [1] n1at /usr/local/bin/node /home/app/code/bin/frontend.js    1672    1676  /home/app/var/log/frontend.log    4:11:2:33.679  
+    # data:    [2] YJZU /usr/local/bin/node /home/app/code/bin/api.js         1689    1693  /home/app/var/log/api.log         4:11:2:30.459  
+    # data:    [3] _1Zc /usr/local/bin/node /home/app/code/bin/url-fetcher.js 1703    28088 /home/app/var/log/url-fetcher.log 2:15:31:41.890 
 
     parent_pid=$(cat /proc/$node_pid/stat | cut -d' ' -f5)
     forever_uid=$(forever list --plain | sed -e 's/  */ /g' | cut -d' ' -f3,6 | grep " $parent_pid" | cut -d' ' -f1)
@@ -79,19 +79,14 @@ find_forever_uids_for_port_starting_with() {
   done
 }
 
-# Finds the PIDs of the given command, using ps and grep
+# Finds the forever UID of the given command
 #
 # Assumptions:
-# * The process shows up in `ps x` as $1
 # * The process is owned by the current user
-# * The process doesn't include the string " pts/" anywhere
 #
-# $1: the command used to start the program
-find_running_pids_for_command() {
-  # Grep output looks like:
-  #  1703 ?        Ssl    0:23 /usr/local/bin/node /home/app/node_modules/forever/bin/monitor /home/app/code/bin/url-fetcher.js
-  # 28426 pts/0    R+     0:00 grep url-fetcher
-  echo $(ps x | grep "$1" | grep -v ' pts/' | sed -e 's/\s*\([0-9]*\).*/\1/')
+# $1: the JavaScript command -- e.g., "url-fetcher.js"
+find_forever_uids_for_command() {
+  forever list --plain | grep "$1" | sed -e 's/  */ /g' | cut -d' ' -f3
 }
 
 # Rolls over the given service
@@ -141,14 +136,9 @@ restart_editor() {
 }
 
 restart_url_fetcher() {
-  for url_fetcher_pid in $(find_running_pids_for_command url-fetcher.js); do
-    echo "Killing url-fetcher with PID $url_fetcher_pid ..."
-    kill $url_fetcher_pid
-    echo "Waiting for PID $url_fetcher_pid to disappear..."
-    while $(ps $url_fetcher_pid > /dev/null); do
-      echo "..."
-      sleep 1
-    done
+  for url_fetcher_pid in $(find_forever_uids_for_command url-fetcher.js); do
+    echo "Killing url-fetcher with UID $url_fetcher_pid ..."
+    forever stop $url_fetcher_pid
   done
 
   cmd=$(forever_cmd url-fetcher)
@@ -156,7 +146,8 @@ restart_url_fetcher() {
   $($cmd)
 }
 
-(bin/npm-install-components.sh)
-(cd "$CWD/data-store" && env NODE_ENV=production bin/sequelize db:migrate)
+bin/npm-install-components.sh
 restart_api
 restart_editor
+restart_url_fetcher
+(cd "$CWD/data-store" && env NODE_ENV=production bin/sequelize db:migrate)
