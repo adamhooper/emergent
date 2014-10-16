@@ -38,7 +38,7 @@ WriteableFields = [
 module.exports =
   index: (req, res) ->
     validArticle(req)
-      .then((article) -> ArticleVersion.findAll(where: { articleId: article.id }, order: [ 'createdAt' ]))
+      .then((article) -> ArticleVersion.findAll(where: { articleId: article.id }, order: '(SELECT "createdAt" FROM "UrlVersion" WHERE id = "urlVersionId")'))
       .then((versions) -> (v.toJSON() for v in versions))
       .then (versions) ->
         # Join UrlVersion
