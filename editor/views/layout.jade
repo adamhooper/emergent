@@ -11,6 +11,12 @@ html(lang='en')
       .container
         .navbar-header
           a.navbar-brand Truthmaker
+          if user
+            ul.nav.navbar-nav
+              li
+                a(href='#stories' role='button') Stories
+              li
+                a(href='#unseen' role='button') Unseen changes
         .navbar-collapse.collapse
           ul.nav.navbar-nav.navbar-right.nav-login
             if user
