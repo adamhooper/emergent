@@ -5853,18 +5853,18 @@ button.close {
   list-style: none;
   border-top: 1px solid transparent;
 }
-.story-show-layout ul.story-articles li.article {
+.story-show-layout ul.story-articles > li {
   box-sizing: border-box;
   height: 2.5em;
 }
-.story-show-layout ul.story-articles li.article a {
+.story-show-layout ul.story-articles > li a {
   display: block;
   line-height: 2.5em;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.story-show-layout ul.story-articles li.article.focus {
+.story-show-layout ul.story-articles > li.focus {
   font-weight: bold;
 }
 .story-show-layout ul.story-articles form {
@@ -5890,6 +5890,10 @@ button.close {
 }
 .story-show-layout .new-article {
   margin-top: 8em;
+}
+.story-show-layout .article-version-list {
+  padding-left: 0;
+  list-style: none;
 }
 .story-show-layout .article-version-list ins {
   color: #5b5;
@@ -5957,6 +5961,114 @@ button.close {
 .story-show-layout .article-version-list-placeholder .help {
   color: #999999;
   line-height: 2.5em;
+}
+.unseen-article-list-layout > .articles h3 {
+  font-size: 1em;
+  font-weight: bold;
+  font-family: monospace;
+}
+.unseen-article-list-layout > .articles ul {
+  padding-left: 0;
+  list-style: none;
+}
+.unseen-article-list-layout > .articles ul.articles {
+  padding-left: 0;
+  list-style: none;
+  border-top: 1px solid transparent;
+}
+.unseen-article-list-layout > .articles ul.articles > li {
+  box-sizing: border-box;
+  height: 2.5em;
+}
+.unseen-article-list-layout > .articles ul.articles > li a {
+  display: block;
+  line-height: 2.5em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.unseen-article-list-layout > .articles ul.articles > li.focus {
+  font-weight: bold;
+}
+.unseen-article-list-layout > .articles ul.articles li.focus {
+  background: #428bca;
+  color: white;
+  border-radius: .25em;
+  padding-left: 1em;
+  padding-right: 1em;
+}
+.unseen-article-list-layout > .articles ul.articles li.focus a {
+  color: inherit;
+}
+.unseen-article-list-layout .explanation {
+  color: #999999;
+}
+.unseen-article-list-layout ul.article-versions {
+  padding-left: 0;
+  list-style: none;
+}
+.unseen-article-list-layout ul.article-versions ins {
+  color: #5b5;
+}
+.unseen-article-list-layout ul.article-versions del {
+  color: #b55;
+}
+.unseen-article-list-layout ul.article-versions a.toggle-edit-url-version {
+  display: block;
+  margin: 1em 0;
+}
+.unseen-article-list-layout ul.article-versions article {
+  max-height: 20em;
+  overflow: auto;
+  padding: 1em;
+  background: #f5f5f5;
+}
+.unseen-article-list-layout ul.article-versions article h4.headline {
+  font-size: 1em;
+  font-weight: bold;
+}
+.unseen-article-list-layout ul.article-versions article p.published {
+  color: #999999;
+}
+.unseen-article-list-layout ul.article-versions article .body {
+  margin: 1.5em 0 1em;
+}
+.unseen-article-list-layout ul.article-versions ul.article-versions {
+  padding-left: 0;
+  list-style: none;
+}
+.unseen-article-list-layout ul.article-versions li.article-version h3 {
+  color: #bb5;
+}
+.unseen-article-list-layout ul.article-versions li.article-version h3 a {
+  color: inherit;
+}
+.unseen-article-list-layout ul.article-versions li.article-version h3::after {
+  content: "✍";
+}
+.unseen-article-list-layout ul.article-versions li.article-version.complete h3 {
+  color: #5b5;
+}
+.unseen-article-list-layout ul.article-versions li.article-version.complete h3::after {
+  content: "✔";
+}
+.unseen-article-list-layout ul.article-versions li.article-version:not(.expanded) form {
+  display: none;
+}
+.unseen-article-list-layout ul.article-versions li.article-version:not(.expanded) h3::before {
+  content: "▸ ";
+}
+.unseen-article-list-layout ul.article-versions li.article-version.expanded h3::before {
+  content: "▾ ";
+}
+.unseen-article-list-layout ul.article-versions fieldset.url-version:not(.editing) legend {
+  margin-bottom: 0;
+}
+.unseen-article-list-layout ul.article-versions fieldset.url-version:not(.editing) .edit {
+  display: none;
+}
+.unseen-article-list-layout ul.article-versions fieldset.url-version.editing .read-only {
+  display: none;
 }
 .spin {
   -webkit-animation: spin 2s infinite linear;

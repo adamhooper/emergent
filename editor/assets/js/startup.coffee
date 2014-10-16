@@ -1,6 +1,8 @@
 Backbone = require('backbone')
 App = require('./app')
-StoryApp = require('./apps/stories/StoryApp')
+
+require('./apps/stories/StoryApp')
+require('./apps/stories/UnseenArticleApp')
 
 App.on 'start', ->
   if Backbone.history?

@@ -1,0 +1,37 @@
+.unseen-article-list-layout {
+  &>.articles {
+    h3 {
+      font-size: 1em;
+      font-weight: bold;
+      font-family: monospace;
+    }
+
+    ul {
+      .list-unstyled();
+    }
+
+    ul.articles {
+      .article-url-list();
+
+      li.focus {
+        background: @brand-primary;
+        color: white;
+        border-radius: .25em;
+        padding-left: 1em;
+        padding-right: 1em;
+
+        a {
+          color: inherit;
+        }
+      }
+    }
+  }
+
+  .explanation {
+    .text-muted();
+  }
+
+  ul.article-versions {
+    .article-version-list();
+  }
+}

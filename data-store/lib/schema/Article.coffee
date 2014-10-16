@@ -34,3 +34,17 @@ module.exports =
       type: Sequelize.STRING
       allowNull: false
       validate: { isEmail: true }
+
+  classMethods:
+    findAllWithUnseenVersion: (options={}, queryOptions={}) ->
+      options = _.extend({
+        where: '''
+          id IN (
+            SELECT DISTINCT "articleId"
+            FROM "ArticleVersion"
+            WHERE "headlineStance" IS NULL OR "stance" IS NULL
+          )
+          '''
+        order: [[ 'storyId' ]]
+      }, options)
+      @findAll(options, queryOptions)

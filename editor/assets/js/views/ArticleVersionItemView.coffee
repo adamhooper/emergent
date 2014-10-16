@@ -2,7 +2,7 @@ _ = require('lodash')
 $ = require('jquery')
 Marionette = require('backbone.marionette')
 moment = require('moment')
-diff_match_patch = require('diff_match_patch')
+diff_match_patch = require('diff_match_patch').diff_match_patch
 
 textToHtml = (text) ->
   text
@@ -129,6 +129,7 @@ module.exports = class ArticleVersionItemView extends Marionette.ItemView
 
     @model.save @getDataFromForm(),
       success: =>
+        @$el.removeClass('expanded')
         @render() # isNew may change; form must reset
         if isCreate
           @model.collection.add({}) # new placeholder

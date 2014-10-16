@@ -39,25 +39,7 @@
   }
 
   ul.story-articles {
-    .list-unstyled();
-    border-top: 1px solid transparent;
-
-    li.article {
-      box-sizing: border-box;
-      height: 2.5em;
-
-      a {
-        display: block;
-        line-height: 2.5em;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-
-      &.focus {
-        font-weight: bold;
-      }
-    }
+    .article-url-list();
 
     form {
       // Make the input line up with everything else
@@ -91,89 +73,7 @@
   }
 
   .article-version-list {
-    ins {
-      color: #5b5;
-    }
-
-    del {
-      color: #b55;
-    }
-
-    a.toggle-edit-url-version {
-      display: block;
-      margin: 1em 0;
-    }
-
-    article {
-      max-height: 20em;
-      overflow: auto;
-      padding: 1em;
-      background: @well-bg;
-
-      h4.headline {
-        font-size: 1em;
-        font-weight: bold;
-      }
-
-      p.published {
-        .text-muted();
-      }
-
-      .body {
-        margin: 1.5em 0 1em;
-      }
-    }
-
-    ul.article-versions {
-      .list-unstyled();
-    }
-
-    li.article-version {
-      h3 {
-        a {
-          color: inherit;
-        }
-        color: #bb5;
-        &::after {
-          content: "✍";
-        }
-      }
-      &.complete h3 {
-        color: #5b5;
-        &::after {
-          content: "✔";
-        }
-      }
-
-      &:not(.expanded) {
-        form { display: none; }
-
-        h3 {
-          &::before {
-            content: "▸ ";
-          }
-        }
-      }
-
-      &.expanded {
-        h3 {
-          &::before {
-            content: "▾ ";
-          }
-        }
-      }
-    }
-
-    fieldset.url-version {
-      &:not(.editing) {
-        legend { margin-bottom: 0; }
-        .edit { display: none; }
-      }
-
-      &.editing {
-        .read-only { display: none; }
-      }
-    }
+    .article-version-list();
   }
 
   .article-version-list-placeholder {
