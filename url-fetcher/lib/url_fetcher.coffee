@@ -29,11 +29,7 @@ class UrlFetcher
         responseHeaders: JSON.stringify(response.headers)
         body: response.body
 
-      UrlGet.create(data)
-        .tap ->
-          UrlGet.destroy(urlId: id, createdAt: { lt: new Date(new Date().valueOf() - MaxUrlGetAgeInMs) })
-          null # ignore return value
-        .nodeify(done)
+      UrlGet.create(data).nodeify(done)
 
 UrlFetcher.request = require('request') # so we can stub it out during tests
 
