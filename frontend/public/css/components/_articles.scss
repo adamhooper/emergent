@@ -10,6 +10,18 @@
   margin-bottom: 1em;
 }
 
+.articles-search {
+  margin-bottom: 2em;
+
+  > label {
+    margin-right: .5em;
+  }
+
+  > input[type="search"] {
+    font-weight: 500;
+  }
+}
+
 .articles {
   list-style-type: none;
   margin-bottom: 0;

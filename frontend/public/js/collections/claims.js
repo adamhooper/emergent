@@ -10,6 +10,10 @@ module.exports = Backbone.Collection.extend({
     return response.claims;
   },
 
+  filtered: function(regex) {
+    return this.filter(function(claim) { return claim.searchableText().match(new RegExp(regex, 'gi')); });
+  },
+
   comparator: function(c1, c2) {
     return c1.get('createdAt') < c2.get('createdAt') ? 1 : -1;
   }
