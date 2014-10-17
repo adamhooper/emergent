@@ -4,10 +4,11 @@ models = require('../../data-store').models
 _ = require('lodash')
 
 describe 'url_reparser', ->
-  expectCreate = (n, urlId, urlGet, urlVersion, transaction) ->
+  expectCreate = (n, urlId, urlGet, urlVersion, transaction, ms=null) ->
     f = models.UrlVersion.create
     expect(f).to.have.been.called
     expect(f.args[n][0]).to.deep.eq
+      millisecondsSincePreviousUrlGet: ms
       body: urlVersion.body
       byline: urlVersion.byline
       headline: urlVersion.headline
@@ -147,8 +148,8 @@ describe 'url_reparser', ->
       @htmlParser.parse.onCall(1).returns(@v2)
       @subject.reparse @urlId, @url, (err) =>
         expect(err).to.be.null
-        expectCreate(0, @urlId, @g1, @v1, @transaction)
-        expectCreate(1, @urlId, @g2, @v2, @transaction)
+        expectCreate(0, @urlId, @g1, @v1, @transaction, null)
+        expectCreate(1, @urlId, @g2, @v2, @transaction, 1000)
         done()
 
     it 'should not create a second UrlVersion when the two are identical', (done) ->
@@ -166,7 +167,7 @@ describe 'url_reparser', ->
       @htmlParser.parse.returns(@v1)
       @subject.reparse @urlId, @url, (err) =>
         expect(err).to.be.null
-        expectCreate(0, @urlId, @g1, @v1, @transaction)
+        expectCreate(0, @urlId, @g1, @v1, @transaction, null)
         done()
 
     it 'should add a UrlVersion after the last UrlVersion', (done) ->
@@ -177,7 +178,7 @@ describe 'url_reparser', ->
       @subject.reparse @urlId, @url, (err) =>
         expect(err).to.be.null
         expect(models.UrlVersion.create).to.have.been.calledOnce
-        expectCreate(0, @urlId, @g2, @v2, @transaction)
+        expectCreate(0, @urlId, @g2, @v2, @transaction, 1000)
         done()
 
     it 'should skip a UrlVersion when it is unchanged', (done) ->

@@ -18,21 +18,32 @@ module.exports = class FetchHandler
 
   handle: (queue, id, url, done) ->
     @_fetch(id, url)
-      .then (obj) ->
-        if obj.statusCode != 200
-          throw new Error("#{url} gave HTTP status #{obj.statusCode}")
-        obj
-      .then((obj) => @htmlParser.parse(url, obj.body))
-      .then (data) ->
-        sha1 = models.UrlVersion.calculateSha1Hex(data)
+      .then (urlGet) =>
+        if urlGet.statusCode != 200
+          throw new Error("#{url} gave HTTP status #{urlGet.statusCode}")
+        [ urlGet, @htmlParser.parse(url, urlGet.body) ]
+      .spread (urlGet, parsed) ->
+        sha1 = models.UrlVersion.calculateSha1Hex(parsed)
         # Check the last-stored UrlVersion. Create a new one if it's different.
         models.UrlVersion.find(where: { urlId: id }, order: [[ 'createdAt', 'DESC' ]])
           .then (prev) ->
             if prev?.sha1 == sha1
               null
             else
-              data = _.extend({ urlId: id }, data)
-              models.UrlVersion.create(data, null)
+              models.UrlGet.max('createdAt', where: {
+                urlId: id
+                createdAt: { lt: urlGet.createdAt }
+              })
+                .then (previousUrlGetCreatedAt) ->
+                  ms = if previousUrlGetCreatedAt
+                    urlGet.createdAt - previousUrlGetCreatedAt
+                  else
+                    null
+                  data = _.extend({
+                    urlId: id
+                    millisecondsSincePreviousUrlGet: ms
+                  }, parsed)
+                  models.UrlVersion.create(data, null)
       .then (newUvOrNull) =>
         if (uvid = newUvOrNull?.id)?
           @log("FetchHandler.handle created new UrlVersion for #{url}")

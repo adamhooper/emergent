@@ -92,3 +92,7 @@ module.exports = class Model
   # Returns a Promise of undefined
   destroy: (where) ->
     @_impl.destroy(arguments...)
+
+  # Returns the maximum of a column
+  max: (column, options) ->
+    @_impl.max(column, options)

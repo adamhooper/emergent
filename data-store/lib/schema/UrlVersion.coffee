@@ -33,6 +33,11 @@ module.exports =
       referencesId: 'id'
       comment: 'The source that we parsed'
 
+    millisecondsSincePreviousUrlGet:
+      type: Sequelize.BIGINT
+      allowNull: true
+      comment: 'milliseconds since the UrlGet.createdAt _prior_ to that of urlGetId'
+
     createdAt:
       type: Sequelize.DATE
       allowNull: false

@@ -11,6 +11,7 @@ describe 'FetchHandler', ->
     @sandbox.stub(models.UrlVersion, 'create')
     @sandbox.stub(models.Article, 'findAll').returns(Promise.resolve([]))
     @sandbox.stub(models.ArticleVersion, 'create').returns(Promise.resolve({}))
+    @sandbox.stub(models.UrlGet, 'max').returns(Promise.resolve(null))
 
     @parsedObject =
       source: 'source'
@@ -29,6 +30,7 @@ describe 'FetchHandler', ->
     @fetchedObject =
       statusCode: 200
       body: '<html><body>body</body><html>'
+      createdAt: new Date(2000)
 
     @fetcher =
       fetch: sinon.stub().callsArgWith(2, null, @fetchedObject)
@@ -45,7 +47,10 @@ describe 'FetchHandler', ->
     beforeEach ->
       @id = '2764594f-bd77-49f0-9c73-31503eaede8f'
       @url = 'http://example.org'
-      @go = (done) => @handler.handle(@queue, @id, @url, done)
+      @go = (cb) =>
+        @handler.handle @queue, @id, @url, (err) =>
+          expect(err).to.be.null
+          cb(err)
 
     it 'should fetch the original URL', (done) ->
       @go =>
@@ -106,7 +111,22 @@ describe 'FetchHandler', ->
 
       it 'should insert a new UrlVersion', (done) ->
         @go =>
-          obj = _.extend({ urlId: @id }, @parsedObject)
+          obj = _.extend({ urlId: @id, millisecondsSincePreviousUrlGet: null }, @parsedObject)
+          expect(models.UrlVersion.create).to.have.been.calledWith(obj)
+          done()
+
+      it 'should set millisecondsSincePreviousUrlGet when we have an older UrlGet', (done) ->
+        models.UrlGet.max.returns(Promise.resolve(1000))
+        @go =>
+          expect(models.UrlGet.max).to.have.been.calledWith('createdAt', where: { createdAt: { lt: @fetchedObject.createdAt }, urlId: @id})
+          obj = _.extend({ urlId: @id, millisecondsSincePreviousUrlGet: 1000 }, @parsedObject)
+          expect(models.UrlVersion.create).to.have.been.calledWith(obj)
+          done()
+
+      it 'should set millisecondsSincePreviousUrlGet=null when we have no other UrlGets', (done) ->
+        models.UrlGet.max.returns(Promise.resolve(null))
+        @go =>
+          obj = _.extend({ urlId: @id, millisecondsSincePreviousUrlGet: null }, @parsedObject)
           expect(models.UrlVersion.create).to.have.been.calledWith(obj)
           done()
 
@@ -134,14 +154,14 @@ describe 'FetchHandler', ->
           expect(models.UrlVersion.create).to.have.been.called
           done()
 
-    describe 'when a different UrlVersion exists', ->
+    describe 'when a UrlVersion for a different Url exists', ->
       beforeEach ->
         models.UrlVersion.find.returns(Promise.resolve(sha1: '1f28fcbf9c90691c5e847ef994ba6e6c05970453'))
         models.UrlVersion.create.returns(Promise.resolve(id: '42ffe765-3b77-4f15-be97-a7cb9e6bd98f'))
 
       it 'should insert a new UrlVersion', (done) ->
         @go =>
-          obj = _.extend({ urlId: @id }, @parsedObject)
+          obj = _.extend({ urlId: @id, millisecondsSincePreviousUrlGet: null }, @parsedObject)
           expect(models.UrlVersion.create).to.have.been.calledWith(obj)
           done()
 

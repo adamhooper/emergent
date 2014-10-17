@@ -76,6 +76,7 @@ module.exports = class UrlReparser
         opChain = Promise.resolve(null)
 
         curUrlVersion = null # the head of the "fresh" list of UrlVersions
+        previousUrlGet = null
         nextSavedUrlVersion = urlVersions.shift() # next in the "stale" list
 
         while (urlGet = urlGets.shift())?
@@ -99,11 +100,16 @@ module.exports = class UrlReparser
             # Note we do this command synchronously: a cheap hack to make sure the
             # variables don't change beneath us, and it's okay because we can run
             # these queries in any order as long as they're all committed together
+            newUrlVersion.millisecondsSincePreviousUrlGet = if previousUrlGet?
+              urlGet.createdAt - previousUrlGet.createdAt
+            else
+              null
             opChain = opChain.then(@_createUrlVersion(newUrlVersion, urlGet.createdAt, transaction))
           else
             # nothing
 
           curUrlVersion = newUrlVersion
+          previousUrlGet = urlGet
 
         opChain
           .then(transaction.commit.bind(transaction))
