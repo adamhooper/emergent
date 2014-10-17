@@ -2,9 +2,14 @@
 // Base form styles
 
 input[type="text"],
-input[type="email"] {
+input[type="email"],
+input[type="search"] {
   box-shadow: 0;
   padding: .5em .75em;
+}
+
+input[type="search"] {
+  width: 60%;
 }
 
 input[type="submit"] {

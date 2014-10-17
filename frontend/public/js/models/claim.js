@@ -6,6 +6,10 @@ module.exports = Backbone.Model.extend({
 
   stances: ['for', 'against', 'observing'],
 
+  searchableText: function() {
+    return this.get('headline') + " " + this.get('description');
+  },
+
   truthinessText: function() {
     return this.get('truthiness')=='true' || this.get('truthiness')=='false' ? 'Confirmed ' + this.get('truthiness') : 'Unverified';
   },

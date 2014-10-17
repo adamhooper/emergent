@@ -773,9 +773,13 @@ strong {
   padding-left: 0; }
 
 input[type="text"],
-input[type="email"] {
+input[type="email"],
+input[type="search"] {
   box-shadow: 0;
   padding: .5em .75em; }
+
+input[type="search"] {
+  width: 60%; }
 
 input[type="submit"] {
   border: 0;
@@ -792,6 +796,13 @@ ul.credits {
 
 .articles-title {
   margin-bottom: 1em; }
+
+.articles-search {
+  margin-bottom: 2em; }
+  .articles-search > label {
+    margin-right: .5em; }
+  .articles-search > input[type="search"] {
+    font-weight: 500; }
 
 .articles {
   list-style-type: none;

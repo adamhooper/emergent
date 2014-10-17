@@ -10,8 +10,24 @@ module.exports = React.createClass({
 
   mixins: [BackboneCollection],
 
+  getInitialState: function() {
+    return {
+      filter: ''
+    }
+  },
+
   componentWillMount: function() {
     this.subscribeTo(this.props.claims);
+  },
+
+  setFilter: function(e) {
+    this.setState({
+      filter: e.target.value
+    });
+  },
+
+  filteredClaims: function() {
+    return this.props.claims.filtered(this.state.filter);
   },
 
   formatNumber: function(str) {
@@ -23,8 +39,12 @@ module.exports = React.createClass({
       <div className="page">
         <div className="page-content">
           <div className="container">
+            <div className="articles-search">
+              <label for="claims-filter">Filter claims:</label>
+              <input type="search" id="claims-filter" placeholder="Enter a word, phrase, etc." onChange={this.setFilter}/>
+            </div>
             <ul className="articles">
-              {this.props.claims.map(function(claim, i) {
+              {this.filteredClaims().map(function(claim, i) {
                 return (
                   <li key={claim.id}>
                     <article className="article">
