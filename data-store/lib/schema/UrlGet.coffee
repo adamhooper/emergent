@@ -1,6 +1,6 @@
 Sequelize = require('sequelize')
 
-# An HTTP response from a GET of the give URL.
+# An HTTP response from a GET of the given URL.
 #
 # Every Url has a number of UrlGet objects: one per GET request of that URL.
 # (Truthmaker will poll with a GET request every once in a while to monitor
