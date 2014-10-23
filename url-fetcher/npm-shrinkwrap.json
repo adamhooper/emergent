@@ -119,6 +119,23 @@
         }
       }
     },
+    "colors": {
+      "version": "1.0.3",
+      "from": "colors@",
+      "resolved": "https://registry.npmjs.org/colors/-/colors-1.0.3.tgz"
+    },
+    "debug": {
+      "version": "2.1.0",
+      "from": "debug@",
+      "resolved": "https://registry.npmjs.org/debug/-/debug-2.1.0.tgz",
+      "dependencies": {
+        "ms": {
+          "version": "0.6.2",
+          "from": "ms@0.6.2",
+          "resolved": "https://registry.npmjs.org/ms/-/ms-0.6.2.tgz"
+        }
+      }
+    },
     "js-priority-queue": {
       "version": "0.1.0",
       "from": "https://registry.npmjs.org/js-priority-queue/-/js-priority-queue-0.1.0.tgz",
@@ -137,6 +154,11 @@
       "version": "0.2.2",
       "from": "https://registry.npmjs.org/moment-timezone/-/moment-timezone-0.2.2.tgz",
       "resolved": "https://registry.npmjs.org/moment-timezone/-/moment-timezone-0.2.2.tgz"
+    },
+    "ms": {
+      "version": "0.6.2",
+      "from": "ms@",
+      "resolved": "https://registry.npmjs.org/ms/-/ms-0.6.2.tgz"
     },
     "request": {
       "version": "2.42.0",
