@@ -76,7 +76,7 @@ module.exports =
       .tap (claim) ->
         if !claim?
           res.status(404)
-          throw new Error("Claim not found")
+          throw new Error('Claim not found')
       .tap (claim) ->
         getShareCounts([claim.id]).then((count) -> claim.nShares = count)
       .then(claimToJson)
