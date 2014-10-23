@@ -24,6 +24,9 @@ describe 'FetchHandler', ->
     @queue =
       queue: sinon.spy()
 
+    @timeChooser =
+      chooseTime: sinon.stub().returns(1000)
+
     @parser =
       parse: sinon.stub().returns(@parsedObject)
 
@@ -38,6 +41,7 @@ describe 'FetchHandler', ->
     @handler = new FetchHandler
       htmlParser: @parser
       urlFetcher: @fetcher
+      taskTimeChooser: @timeChooser
       log: sinon.spy()
 
   afterEach ->
@@ -47,8 +51,9 @@ describe 'FetchHandler', ->
     beforeEach ->
       @id = '2764594f-bd77-49f0-9c73-31503eaede8f'
       @url = 'http://example.org'
+      @nPreviousFetches = 5
       @go = (cb) =>
-        @handler.handle @queue, @id, @url, (err) =>
+        @handler.handle @queue, @id, @url, @nPreviousFetches, (err) =>
           expect(err).to.be.null
           cb(err)
 
@@ -69,20 +74,43 @@ describe 'FetchHandler', ->
         done()
 
     it 'should queue another fetch', (done) ->
+      @timeChooser.chooseTime.returns(new Date(3000))
       @go =>
-        expect(@queue.queue).to.have.been.calledWith(@id, @url, new Date(1 * 3600 * 1000))
+        expect(@queue.queue).to.have.been.calledWith
+          urlId: @id
+          url: @url
+          nPreviousFetches: @nPreviousFetches + 1
+          at: new Date(3000)
         done()
 
     it 'should queue another fetch even when UrlFetcher fails', (done) ->
       @fetcher.fetch.callsArgWith(2, new Error("Fake fetch failure for #{@url}"))
+      @sandbox.clock.tick(1000)
+      @timeChooser.chooseTime.returns(new Date(3000))
       @go =>
-        expect(@queue.queue).to.have.been.calledWith(@id, @url, new Date(1 * 3600 * 1000))
+        expect(@timeChooser.chooseTime).to.have.been.calledWith(@nPreviousFetches + 1, new Date(1000))
+        expect(@queue.queue).to.have.been.calledWith
+          urlId: @id
+          url: @url
+          nPreviousFetches: @nPreviousFetches + 1
+          at: new Date(3000)
         done()
 
     it 'should queue another fetch even when HtmlParser fails', (done) ->
       @parser.parse.callsArgWith(2, new Error("Fake parse failure for #{@url}"))
+      @timeChooser.chooseTime.returns(new Date(3000))
       @go =>
-        expect(@queue.queue).to.have.been.calledWith(@id, @url, new Date(1 * 3600 * 1000))
+        expect(@queue.queue).to.have.been.calledWith
+          urlId: @id
+          url: @url
+          nPreviousFetches: @nPreviousFetches + 1
+          at: new Date(3000)
+        done()
+
+    it 'should not queue another fetch when the taskTimeChooser returns null', (done) ->
+      @timeChooser.chooseTime.returns(null)
+      @go =>
+        expect(@queue.queue).not.to.have.been.called
         done()
 
     describe 'when this UrlVersion already exists', ->

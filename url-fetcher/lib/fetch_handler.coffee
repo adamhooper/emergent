@@ -9,14 +9,16 @@ module.exports = class FetchHandler
   constructor: (options) ->
     throw 'Must pass options.htmlParser, an HtmlParser' if !options.htmlParser
     throw 'Must pass options.urlFetcher, a UrlFetcher' if !options.urlFetcher
+    throw 'Must pass taskTimeChooser, a TaskTimeChooser' if !options.taskTimeChooser
 
     @log = options.log || console.log
     @htmlParser = options.htmlParser
+    @taskTimeChooser = options.taskTimeChooser
     urlFetcher = options.urlFetcher
 
     @_fetch = Promise.promisify(urlFetcher.fetch, urlFetcher)
 
-  handle: (queue, id, url, done) ->
+  handle: (queue, id, url, nPreviousFetches, done) ->
     @_fetch(id, url)
       .then (urlGet) =>
         if urlGet.statusCode != 200
@@ -55,5 +57,13 @@ module.exports = class FetchHandler
           @log("FetchHandler.handle determined #{url} did not change")
           null
       .catch((e) => @log("FetchHandler.handle error: #{e.message}"))
-      .finally(=> queue.queue(id, url, new Date(new Date().valueOf() + FetchDelayInMs)))
+      .finally =>
+        nFetches = nPreviousFetches + 1
+        nextDate = @taskTimeChooser.chooseTime(nFetches, new Date())
+        if nextDate?
+          queue.queue
+            urlId: id
+            url: url
+            nPreviousFetches: nFetches
+            at: nextDate
       .nodeify(done)

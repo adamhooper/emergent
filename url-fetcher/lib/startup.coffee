@@ -19,7 +19,9 @@ module.exports = class Startup
   # * `queue` a `Queue`
   constructor: (options) ->
     throw 'Must pass queues, an Object mapping service name to UrlTaskQueue' if !options.queues
+    throw 'Must pass taskTimeChooser, a TaskTimeChooser' if !options.taskTimeChooser
     @queues = options.queues
+    @taskTimeChooser = options.taskTimeChooser
 
   addAllUrlsToQueues: (done) ->
     serviceToNextRunTime = {} # service -> date in ms
@@ -29,11 +31,10 @@ module.exports = class Startup
         serviceToNextRunTime[service] = now
     )()
 
-    serviceAndIdToLastDate = {} # service -> url id -> date in ms
-    # (why are dates in ms? Because we do math on them)
+    serviceAndIdToNextDate = {} # service -> url id -> Date
 
     models.sequelize.query("""
-      SELECT 'fetch' AS service, u.id, GREATEST(MAX(uv."createdAt"), MAX(ug."createdAt")) AS "lastDate"
+      SELECT 'fetch' AS service, u.id, COUNT(DISTINCT ug.id) AS "nGets", GREATEST(MAX(uv."createdAt"), MAX(ug."createdAt")) AS "lastDate"
       FROM "Url" u
       LEFT JOIN "UrlVersion" uv ON u.id = uv."urlId"
       LEFT JOIN "UrlGet" ug ON u.id = ug."urlId"
@@ -41,29 +42,28 @@ module.exports = class Startup
 
       UNION
 
-      SELECT service::varchar AS service, "urlId" AS id, MAX("createdAt") AS "lastDate"
+      SELECT service::varchar AS service, "urlId" AS id, COUNT(*) AS "nGets", MAX("createdAt") AS "lastDate"
       FROM "UrlPopularityGet"
       GROUP BY "urlId", service
     """)
-      .then (rows) ->
+      .then (rows) =>
         for row in rows
+          nextDate = @taskTimeChooser.chooseTime(row.nGets, row.lastDate)
           serviceAndIdToLastDate[row.service] ?= {}
-          serviceAndIdToLastDate[row.service][row.id] = row.lastDate.valueOf()
+          serviceAndIdToLastDate[row.service][row.id] = nextDate
         null
       .then -> models.Url.findAllRaw()
       .then (urls) =>
         for url in urls
           for service in Services
-            # Queue it at least FetchDelayInMs after the task was last run (so
-            # that restarts have very little impact on scheduling)
-            lastDate = serviceAndIdToLastDate[service][url.id]
-
-            nextDate = if lastDate?
-              lastDate + FetchDelayInMs
-            else
+            nextDate = if url.id not of serviceAndIdToNextDate[service]
+              # It's a new URL; fetch it ASAP
               0
+            else
+              serviceAndIdToNextDate[service][url.id]
 
-            @queues[service].queue(url.id, url.url, new Date(nextDate))
+            if nextDate?
+              @queues[service].queue(url.id, url.url, nextDate)
       .nodeify(done)
 
   runNewParsers: (done) ->
