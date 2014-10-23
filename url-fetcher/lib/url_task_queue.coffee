@@ -34,7 +34,7 @@ module.exports = class UrlTaskQueue
 
     @task = options.task
     @throttleMs = options.throttleMs ? 0
-    @log = options.log ? console.log
+    @log = options.log ? require('debug')('UrlTaskQueue')
     @_lastTick = null
 
     @priorityQueue = new PriorityQueue
@@ -77,7 +77,7 @@ module.exports = class UrlTaskQueue
     @_timeout = setTimeout((=> @_tick()), @throttleMs)
 
     job = @priorityQueue.dequeue()
-    @log("handling (#{job.id} #{job.url})")
+    @log("handling #{job.id} #{job.url}")
     @task(@, job.id, job.url)
 
   startHandling: ->

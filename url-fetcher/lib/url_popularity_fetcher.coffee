@@ -19,12 +19,14 @@ module.exports = class UrlPopularityFetcher
   constructor: (options) ->
     throw 'Must pass service, a String' if !options.service
     throw 'Must pass fetchLogic, a Function' if !options.fetchLogic
+    throw 'Must pass taskTimeChooser, a TaskTimeChooser' if !options.taskTimeChooser
 
     @service = options.service
     @fetchLogic = options.fetchLogic
     @fetchLogicPromise = Promise.promisify(@fetchLogic)
+    @taskTimeChooser = options.taskTimeChooser
 
-  fetch: (queue, urlId, url, done) ->
+  fetch: (queue, urlId, url, nPreviousFetches, done) ->
     @fetchLogicPromise(url)
       .then (data) =>
         UrlPopularityGet.create
@@ -32,5 +34,13 @@ module.exports = class UrlPopularityFetcher
           service: @service
           shares: data.n
           rawData: data.rawData
-      .finally(=> queue.queue(urlId, url, new Date(new Date().valueOf() + DelayInMs)))
+      .finally =>
+        nFetches = nPreviousFetches + 1
+        nextDate = @taskTimeChooser.chooseTime(nFetches, new Date())
+        if nextDate?
+          queue.queue
+            urlId: urlId
+            url: url
+            nPreviousFetches: nFetches
+            at: nextDate
       .nodeify(done)
