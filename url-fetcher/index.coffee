@@ -1,4 +1,7 @@
+process.env.DEBUG='*'
+
 fs = require('fs')
+debug = require('debug')('index')
 
 FetchHandler = require('./lib/fetch_handler')
 HtmlParser = require('./lib/parser/html_parser')
@@ -18,7 +21,7 @@ FetchLogic = {}
   FetchLogic.facebook.access_token = fs.readFileSync(__dirname + '/../../facebook-app-token', 'ascii').trim()
 )()
 
-console.log('Emptying redis...')
+debug('Emptying redis...')
 jobQueue = new JobQueue(key: 'urls')
 jobQueue.clear() # redis commands are queued: this will come before all others
 
@@ -34,41 +37,41 @@ taskTimeChooser = (->
   new TaskTimeChooser(delays: delays)
 )()
 
-console.log('Initializing work queue...')
+debug('Initializing work queue...')
 
 buildPopularityHandler = (service) ->
   upf = new UrlPopularityFetcher
     service: service
     fetchLogic: FetchLogic[service]
     taskTimeChooser: taskTimeChooser
-    log: (args...) -> console.log("[#{service}]: ", args...)
+    log: require('debug')("fetch:#{service}")
   new UrlTaskQueue
     throttleMs: 613 # be prompt, but don't swamp these services
     task: upf.fetch.bind(upf)
-    log: (args...) -> console.log("[#{service} queue]: ", args...)
+    log: require('debug')("queue:#{service}")
 
 queues =
   fetch: new UrlTaskQueue
-    log: (args...) -> console.log("[fetch queue]: ", args...)
+    log: require('debug')("queue:url")
     task: (->
       fh = new FetchHandler
         urlFetcher: new UrlFetcher
         htmlParser: HtmlParser
         taskTimeChooser: taskTimeChooser
-        log: (args...) -> console.log("[fetch]: ", args...)
+        log: require('debug')("fetch:url")
       fh.handle.bind(fh)
     )()
 
 for service in Services
   queues[service] = buildPopularityHandler(service)
 
-console.log('Loading URLs...')
+debug('Loading URLs...')
 startup = new Startup
   taskTimeChooser: taskTimeChooser
   queues: queues
 
 startup.run ->
-  console.log('Running...')
+  debug('Running...')
 
   handleJob = ->
     jobQueue.dequeue (err, url) ->

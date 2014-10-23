@@ -11,7 +11,7 @@ module.exports = class FetchHandler
     throw 'Must pass options.urlFetcher, a UrlFetcher' if !options.urlFetcher
     throw 'Must pass taskTimeChooser, a TaskTimeChooser' if !options.taskTimeChooser
 
-    @log = options.log || console.log
+    @log = options.log || require('debug')('FetchHandler')
     @htmlParser = options.htmlParser
     @taskTimeChooser = options.taskTimeChooser
     urlFetcher = options.urlFetcher

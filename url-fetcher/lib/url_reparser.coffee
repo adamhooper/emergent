@@ -8,7 +8,7 @@ module.exports = class UrlReparser
     throw 'Must pass options.htmlParser, an HtmlParser' if 'htmlParser' not of options
 
     @_parse = options.htmlParser.parse.bind(options.htmlParser)
-    @_log = options?.log ? console.log
+    @_log = options?.log ? require('debug')('UrlReparser')
 
   # A reparse is like a merge.
   #

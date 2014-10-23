@@ -1,4 +1,7 @@
 Promise = require('bluebird')
+debug = require('debug')('startup')
+ms = require('ms')
+bold = require('colors/safe').bold
 
 HtmlParser = require('./parser/html_parser')
 UrlsToReparseFinder = require('./urls_to_reparse_finder')
@@ -48,10 +51,18 @@ module.exports = class Startup
       GROUP BY "urlId", service
     """)
       .then (rows) =>
+        now = new Date().valueOf()
         for row in rows
           nPreviousGets = @taskTimeChooser.guessNPreviousInvocations(row.firstDate, row.lastDate)
           nextDate = @taskTimeChooser.chooseTime(nPreviousGets, row.lastDate)
-          console.log("#{row.service} handler fetched #{row.id} on #{row.firstDate.toISOString()} and #{row.lastDate.toISOString()}, worth #{nPreviousGets} gets; next is at #{nextDate.toISOString()}")
+          debug('%s handler fetched %s %s and %s, worth %s gets; next is in %s',
+            row.service,
+            row.id,
+            bold("#{ms(now - row.firstDate)} ago"),
+            bold("#{ms(now - row.lastDate)} ago"),
+            bold(nPreviousGets)
+            bold("#{ms(nextDate - now)}")
+          )
           serviceAndIdToNextDate[row.service] ?= {}
           serviceAndIdToNextDate[row.service][row.id] = nextDate
         null
@@ -76,15 +87,15 @@ module.exports = class Startup
     find = Promise.promisify(finder.findUrlsToReparse, finder)
     reparse = Promise.promisify(reparser.reparse, reparser)
 
-    console.log("Looking for URLs that need re-parsing...")
+    debug("Looking for URLs that need re-parsing...")
     find()
       .map(((url) ->
-        console.log("Reparsing URL #{url.id}: #{url.url}...")
+        debug("Reparsing URL #{url.id}: #{url.url}...")
         reparse(url.id, url.url)
           .then(null)
           .catch (e) ->
-            console.log("Failed reparse: #{e.message}. Skipping....")
-            console.log(e.stack)
+            debug(e.stack)
+            debug("Failed reparse: #{e.message}. Skipping....")
       ), concurrency: 1)
       .nodeify(done)
 
