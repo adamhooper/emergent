@@ -24,17 +24,14 @@ module.exports = class Startup
     @taskTimeChooser = options.taskTimeChooser
 
   addAllUrlsToQueues: (done) ->
-    serviceToNextRunTime = {} # service -> date in ms
-    (->
-      now = new Date().valueOf()
-      for service in Services
-        serviceToNextRunTime[service] = now
-    )()
-
     serviceAndIdToNextDate = {} # service -> url id -> Date
 
     models.sequelize.query("""
-      SELECT 'fetch' AS service, u.id, COUNT(DISTINCT ug.id) AS "nGets", GREATEST(MAX(uv."createdAt"), MAX(ug."createdAt")) AS "lastDate"
+      SELECT
+        'fetch' AS service,
+        u.id,
+        LEAST(MIN(uv."createdAt"), MIN(ug."createdAt")) AS "firstDate",
+        GREATEST(MAX(uv."createdAt"), MAX(ug."createdAt")) AS "lastDate"
       FROM "Url" u
       LEFT JOIN "UrlVersion" uv ON u.id = uv."urlId"
       LEFT JOIN "UrlGet" ug ON u.id = ug."urlId"
@@ -42,15 +39,21 @@ module.exports = class Startup
 
       UNION
 
-      SELECT service::varchar AS service, "urlId" AS id, COUNT(*) AS "nGets", MAX("createdAt") AS "lastDate"
+      SELECT
+        service::varchar AS service,
+        "urlId" AS id,
+        MIN("createdAt") AS "firstDate",
+        MAX("createdAt") AS "lastDate"
       FROM "UrlPopularityGet"
       GROUP BY "urlId", service
     """)
       .then (rows) =>
         for row in rows
-          nextDate = @taskTimeChooser.chooseTime(row.nGets, row.lastDate)
-          serviceAndIdToLastDate[row.service] ?= {}
-          serviceAndIdToLastDate[row.service][row.id] = nextDate
+          nPreviousGets = @taskTimeChooser.guessNPreviousInvocations(row.firstDate, row.lastDate)
+          nextDate = @taskTimeChooser.chooseTime(nPreviousGets, row.lastDate)
+          console.log("#{row.service} handler fetched #{row.id} on #{row.firstDate.toISOString()} and #{row.lastDate.toISOString()}, worth #{nPreviousGets} gets; next is at #{nextDate.toISOString()}")
+          serviceAndIdToNextDate[row.service] ?= {}
+          serviceAndIdToNextDate[row.service][row.id] = nextDate
         null
       .then -> models.Url.findAllRaw()
       .then (urls) =>

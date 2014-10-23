@@ -64,6 +64,7 @@ for service in Services
 
 console.log('Loading URLs...')
 startup = new Startup
+  taskTimeChooser: taskTimeChooser
   queues: queues
 
 startup.run ->

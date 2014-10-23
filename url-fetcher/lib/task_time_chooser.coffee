@@ -12,7 +12,6 @@
 # chooser.chooseTime(1, new Date()) # chooses two minutes in the future
 # chooser.guessNPreviousInvocations(lastInvocationDate, firstInvocationDate) # returns a Number
 # ```
-FIXME CODE guessNPreviousInvocations
 module.exports = class TaskTimeChooser
   constructor: (options) ->
     throw 'Must pass options.delays, an Array of Numbers representing milliseconds' if !options.delays
@@ -24,3 +23,13 @@ module.exports = class TaskTimeChooser
       new Date(lastInvocationTime.valueOf() + delay)
     else
       null
+
+  guessNPreviousInvocations: (firstInvocationDate, previousInvocationDate) ->
+    cur = firstInvocationDate.valueOf()
+    last = previousInvocationDate.valueOf()
+    i = 0
+    while cur <= last
+      return @delays.length if i >= @delays.length
+      cur += @delays[i]
+      i += 1
+    i - 1
