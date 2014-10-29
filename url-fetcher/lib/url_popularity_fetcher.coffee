@@ -26,7 +26,10 @@ module.exports = class UrlPopularityFetcher
     @fetchLogicPromise = Promise.promisify(@fetchLogic)
     @taskTimeChooser = options.taskTimeChooser
 
-  fetch: (queue, urlId, url, nPreviousFetches, done) ->
+  fetch: (queue, job, done) ->
+    urlId = job.urlId
+    url = job.url
+    nPreviousFetches = job.nPreviousFetches
     @fetchLogicPromise(url)
       .then (data) =>
         UrlPopularityGet.create

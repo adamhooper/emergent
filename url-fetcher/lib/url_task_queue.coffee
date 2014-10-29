@@ -1,4 +1,5 @@
 PriorityQueue = require('js-priority-queue')
+ms = require('ms')
 
 strcmp = (a, b) ->
   if a < b
@@ -41,9 +42,15 @@ module.exports = class UrlTaskQueue
       comparator: (a, b) ->
         (a.at - b.at) || strcmp(a.id, b.id) # earliest first, then tie-break
 
-  queue: (urlId, url, at) ->
-    throw 'Must pass urlId, url and at' if !at?
-    @priorityQueue.queue(id: urlId, url: url, at: at.valueOf())
+  queue: (job) ->
+    throw 'Must pass job.urlId' if !job.urlId?
+    throw 'Must pass job url' if !job.url?
+    throw 'Must pass job.at' if !job.at?
+    throw 'Must pass job.nPreviousFetches' if !job.nPreviousFetches?
+
+    @log("queueing #{job.urlId} #{job.url} in #{ms(job.at - new Date())}")
+
+    @priorityQueue.queue(job)
 
     if @_handling
       @_tick()
@@ -77,8 +84,8 @@ module.exports = class UrlTaskQueue
     @_timeout = setTimeout((=> @_tick()), @throttleMs)
 
     job = @priorityQueue.dequeue()
-    @log("handling #{job.id} #{job.url}")
-    @task(@, job.id, job.url)
+    @log("handling #{job.urlId} #{job.url}")
+    @task(@, job)
 
   startHandling: ->
     @_handling = true

@@ -18,7 +18,10 @@ module.exports = class FetchHandler
 
     @_fetch = Promise.promisify(urlFetcher.fetch, urlFetcher)
 
-  handle: (queue, id, url, nPreviousFetches, done) ->
+  handle: (queue, job, done) ->
+    id = job.urlId
+    url = job.url
+    nPreviousFetches = job.nPreviousFetches
     @_fetch(id, url)
       .then (urlGet) =>
         if urlGet.statusCode != 200

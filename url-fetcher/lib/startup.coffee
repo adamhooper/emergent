@@ -1,3 +1,4 @@
+_ = require('lodash')
 Promise = require('bluebird')
 debug = require('debug')('startup')
 ms = require('ms')
@@ -27,18 +28,17 @@ module.exports = class Startup
     @taskTimeChooser = options.taskTimeChooser
 
   addAllUrlsToQueues: (done) ->
-    serviceAndIdToNextDate = {} # service -> url id -> Date
+    serviceAndIdToNextDate = {} # service -> url id -> { at, nPreviousFetches }
 
     models.sequelize.query("""
       SELECT
         'fetch' AS service,
-        u.id,
+        COALESCE(ug."urlId", uv."urlId") AS id,
         LEAST(MIN(uv."createdAt"), MIN(ug."createdAt")) AS "firstDate",
         GREATEST(MAX(uv."createdAt"), MAX(ug."createdAt")) AS "lastDate"
-      FROM "Url" u
-      LEFT JOIN "UrlVersion" uv ON u.id = uv."urlId"
-      LEFT JOIN "UrlGet" ug ON u.id = ug."urlId"
-      GROUP BY u.id
+      FROM "UrlVersion" uv
+      FULL JOIN "UrlGet" ug ON uv."urlId" = ug."urlId"
+      GROUP BY ug."urlId", uv."urlId"
 
       UNION
 
@@ -53,31 +53,41 @@ module.exports = class Startup
       .then (rows) =>
         now = new Date().valueOf()
         for row in rows
-          nPreviousGets = @taskTimeChooser.guessNPreviousInvocations(row.firstDate, row.lastDate)
-          nextDate = @taskTimeChooser.chooseTime(nPreviousGets, row.lastDate)
+          nPreviousFetches = @taskTimeChooser.guessNPreviousInvocations(row.firstDate, row.lastDate)
+          nextDate = @taskTimeChooser.chooseTime(nPreviousFetches, row.lastDate)
           debug('%s handler fetched %s %s and %s, worth %s gets; next is in %s',
             row.service,
             row.id,
             bold("#{ms(now - row.firstDate)} ago"),
             bold("#{ms(now - row.lastDate)} ago"),
-            bold(nPreviousGets)
+            bold(nPreviousFetches)
             bold("#{ms(nextDate - now)}")
           )
           serviceAndIdToNextDate[row.service] ?= {}
-          serviceAndIdToNextDate[row.service][row.id] = nextDate
+          serviceAndIdToNextDate[row.service][row.id] =
+            at: nextDate
+            nPreviousFetches: nPreviousFetches
         null
       .then -> models.Url.findAllRaw()
       .then (urls) =>
+        debug('URLS', urls)
         for url in urls
           for service in Services
             nextDate = if url.id not of serviceAndIdToNextDate[service]
               # It's a new URL; fetch it ASAP
-              0
+              at: 0
+              nPreviousFetches: 0
             else
               serviceAndIdToNextDate[service][url.id]
 
-            if nextDate?
-              @queues[service].queue(url.id, url.url, nextDate)
+            debug(url.url, service, nextDate)
+
+            if nextDate.at?
+              @queues[service].queue
+                urlId: url.id
+                url: url.url
+                at: nextDate.at
+                nPreviousFetches: nextDate.nPreviousFetches
       .nodeify(done)
 
   runNewParsers: (done) ->

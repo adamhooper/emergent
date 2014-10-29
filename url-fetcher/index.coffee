@@ -70,14 +70,19 @@ startup = new Startup
   taskTimeChooser: taskTimeChooser
   queues: queues
 
-startup.run ->
+startup.run (err) ->
+  throw err if err?
   debug('Running...')
 
   handleJob = ->
     jobQueue.dequeue (err, url) ->
       throw err if err?
       for __, queue of queues
-        queue.queue(url.id, url.url, new Date())
+        queue.queue
+          urlId: url.id
+          url: url.url
+          at: new Date()
+          nPreviousFetches: 0
       process.nextTick(handleJob)
 
   handleJob()
