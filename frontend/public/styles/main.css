@@ -1162,6 +1162,22 @@ ul.credits {
 .status-observing .status-value {
   background-color: #f9be58; }
 
+.tracking {
+  border-left: 0.25em solid #c1c1c1;
+  margin-bottom: .25em;
+  padding-bottom: .25em;
+  padding-left: .75em;
+  padding-top: .25em; }
+
+.tracking-unknown {
+  border-left-color: #f9be58; }
+
+.tracking-false {
+  border-left-color: #dd5b53; }
+
+.tracking-true {
+  border-left-color: #7ecc76; }
+
 .addthis_toolbox {
   margin-top: 2em; }
   .addthis_toolbox.addthis_default_style .at300b {

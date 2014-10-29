@@ -39657,7 +39657,8 @@ module.exports = React.createClass({displayName: 'exports',
 
     var mostShared = claim.mostShared(),
       startedTracking = claim.startedTracking(),
-      originDate = claim.originDate();
+      originDate = claim.originDate(),
+      truthinessDate = claim.get('truthinessDate');
 
     return (
 
@@ -39668,12 +39669,10 @@ module.exports = React.createClass({displayName: 'exports',
             React.DOM.div({className: "section"}, 
               React.DOM.header({className: "section-header"}, 
                 React.DOM.h1({className: "page-title"}, claim.get('headline')), 
-                React.DOM.ul({className: "list-unstyled"}, 
-                  claim.get('origin') ? React.DOM.li(null, React.DOM.strong(null, "Originated: "), moment(originDate).format('MMM D, YYYY H:mm') + ' (' + moment(originDate).fromNow() + ')', " ", claim.get('originUrl') ? React.DOM.a({href: claim.get('originUrl'), target: "_blank"}, "View Article") : null) : null, 
-                  React.DOM.li(null, React.DOM.strong(null, "Started Tracking:"), " ", moment(startedTracking).format('MMM D, YYYY H:mm') + ' (' + moment(startedTracking).fromNow() + ')')
-                ), 
-                React.DOM.div(null, claim.get('description')), 
-                claim.get('origin') ? React.DOM.p(null, React.DOM.strong(null, "Origin: "), claim.get('origin')) : null
+                React.DOM.p(null, claim.get('description')), 
+                claim.get('origin') ? React.DOM.p({className: "tracking"}, React.DOM.strong(null, "Originated: "), moment(originDate).format('MMM D, YYYY H:mm') + ' (' + moment(originDate).fromNow() + ')', " ", claim.get('originUrl') ? React.DOM.a({href: claim.get('originUrl'), target: "_blank"}, "View Article") : null, React.DOM.br(null), claim.get('origin')) : null, 
+                React.DOM.p({className: "tracking"}, React.DOM.strong(null, "Started Tracking:"), " ", moment(startedTracking).format('MMM D, YYYY H:mm') + ' (' + moment(startedTracking).fromNow() + ')'), 
+                claim.get('truthiness') ? React.DOM.p({className: "tracking tracking-" + claim.get('truthiness')}, React.DOM.strong(null, "Confirmed: "), moment(truthinessDate).format('MMM D, YYYY H:mm') + ' (' + moment(truthinessDate).fromNow() + ')', " ", claim.get('originUrl') ? React.DOM.a({href: claim.get('truthinessUrl'), target: "_blank"}, "View Article") : null, React.DOM.br(null), claim.get('truthinessDescription')) : null
               ), 
               React.DOM.div({className: "page-meta"}, 
 

@@ -1,0 +1,33 @@
+//
+// Base styles
+
+.tracking {
+  border-left: .25em solid palette(base);
+  margin-bottom: .25em;
+  padding-bottom: .25em;
+  padding-left: .75em;
+  padding-top: .25em;
+}
+
+//
+// Types of status
+
+.tracking-unknown {
+  border-left-color: palette(status, unknown);
+}
+
+.tracking-false {
+  border-left-color: palette(status, false);
+}
+
+.tracking-true {
+  border-left-color: palette(status, true);
+}
+
+
+
+// article
+// - for, against, observing, ignoring
+
+// claim
+// - true, false, unverified
