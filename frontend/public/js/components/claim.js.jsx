@@ -159,7 +159,7 @@ module.exports = React.createClass({
                 <p>{claim.get('description')}</p>
                 {claim.get('origin') ? <p className="tracking"><strong>Originated: </strong>{moment(originDate).format('MMM D, YYYY H:mm') + ' (' + moment(originDate).fromNow() + ')'} {claim.get('originUrl') ? <a href={claim.get('originUrl')} target="_blank">View Article</a> : null}<br />{claim.get('origin')}</p> : null}
                 <p className="tracking"><strong>Started Tracking:</strong> {moment(startedTracking).format('MMM D, YYYY H:mm') + ' (' + moment(startedTracking).fromNow() + ')'}</p>
-                {claim.get('truthiness') ? <p className={"tracking tracking-" + claim.get('truthiness')}><strong>Confirmed: </strong>{moment(truthinessDate).format('MMM D, YYYY H:mm') + ' (' + moment(truthinessDate).fromNow() + ')'} {claim.get('truthinessUrl') ? <a href={claim.get('truthinessUrl')} target="_blank">View Article</a> : null}<br />{claim.get('truthinessDescription')}</p> : null}
+                {claim.get('truthiness') != 'unknown' ? <p className={"tracking tracking-" + claim.get('truthiness')}><strong>Resolved: </strong>{moment(truthinessDate).format('MMM D, YYYY H:mm') + ' (' + moment(truthinessDate).fromNow() + ')'} {claim.get('truthinessUrl') ? <a href={claim.get('truthinessUrl')} target="_blank">View Article</a> : null}<br />{claim.get('truthinessDescription')}</p> : null}
               </header>
               <div className="page-meta">
 
