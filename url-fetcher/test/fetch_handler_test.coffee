@@ -53,7 +53,12 @@ describe 'FetchHandler', ->
       @url = 'http://example.org'
       @nPreviousFetches = 5
       @go = (cb) =>
-        @handler.handle @queue, @id, @url, @nPreviousFetches, (err) =>
+        job =
+          urlId: @id
+          url: @url
+          nPreviousFetches: @nPreviousFetches
+          at: new Date(0)
+        @handler.handle @queue, job, (err) =>
           expect(err).to.be.null
           cb(err)
 

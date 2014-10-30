@@ -17,95 +17,104 @@ describe 'UrlTaskQueue', ->
       log: @log
       throttleMs: 123
 
+    @doQueue = (urlId, url, at) =>
+      @queue.queue
+        urlId: urlId
+        url: url
+        at: at
+        nPreviousFetches: 0
+
+    @expectLastCall = (urlId, url) =>
+      expect(@task).to.have.been.calledWith(@queue)
+      job = @task.lastCall.args[1]
+      expect(job).to.have.property('urlId', urlId)
+      expect(job).to.have.property('url', url)
+
   afterEach ->
     @queue.stopHandling()
     @sandbox.restore()
 
   it 'should run a task on start', ->
-    @queue.queue(@id1, 'http://example.org', new Date())
+    @doQueue(@id1, 'http://example.org', new Date())
     @queue.startHandling()
     @sandbox.clock.tick(1)
-    expect(@task).to.have.been.calledWith(@queue, @id1, 'http://example.org')
+    @expectLastCall(@id1, 'http://example.org')
 
   it 'should throttle multiple tasks', ->
-    @queue.queue(@id1, 'http://example.org/1', new Date())
-    @queue.queue(@id2, 'http://example.org/2', new Date())
-    @queue.queue(@id3, 'http://example.org/3', new Date())
+    # Set the dates in order: if all are set for the same time, then the
+    # priority queue could return 3 before 2.
+    @doQueue(@id1, 'http://example.org/1', new Date(0))
+    @doQueue(@id2, 'http://example.org/2', new Date(1))
+    @doQueue(@id3, 'http://example.org/3', new Date(2))
     @queue.startHandling()
+    @sandbox.clock.tick(122)
+    @expectLastCall(@id1, 'http://example.org/1') # not 2 or 3
     @sandbox.clock.tick(1)
-    expect(@task).to.have.been.calledWith(@queue, @id1)
-    expect(@task).not.to.have.been.calledWith(@queue, @id2)
-    @sandbox.clock.tick(123)
-    expect(@task).to.have.been.calledWith(@queue, @id2)
-    expect(@task).not.to.have.been.calledWith(@queue, @id3)
-    @sandbox.clock.tick(123)
-    expect(@task).to.have.been.calledWith(@queue, @id3)
+    @expectLastCall(@id2, 'http://example.org/2')
+    @sandbox.clock.tick(122)
+    @expectLastCall(@id2, 'http://example.org/2') # not 3
+    @sandbox.clock.tick(1)
+    @expectLastCall(@id3, 'http://example.org/3')
 
   it 'should run tasks in the future', ->
-    @queue.queue(@id1, 'http://example.org', new Date(new Date().valueOf() + 1000))
+    @doQueue(@id1, 'http://example.org', new Date(new Date().valueOf() + 1000))
     @queue.startHandling()
     @sandbox.clock.tick(999)
     expect(@task).not.to.have.been.called
     @sandbox.clock.tick(1)
-    expect(@task).to.have.been.calledWith(@queue, @id1, 'http://example.org')
+    @expectLastCall(@id1, 'http://example.org')
 
   it 'should run a task later than the throttle delay', ->
-    @queue.queue(@id1, 'http://example.org/1', new Date())
-    @queue.queue(@id2, 'http://example.org/2', new Date(124))
+    @doQueue(@id1, 'http://example.org/1', new Date())
+    @doQueue(@id2, 'http://example.org/2', new Date(124))
     @queue.startHandling()
     @sandbox.clock.tick(123)
-    expect(@task).to.have.been.calledWith(@queue, @id1)
-    expect(@task).not.to.have.been.calledWith(@queue, @id2)
+    @expectLastCall(@id1, 'http://example.org/1') # not 2
     @sandbox.clock.tick(1)
-    expect(@task).to.have.been.calledWith(@queue, @id2)
+    @expectLastCall(@id2, 'http://example.org/2')
 
   it 'should run tasks in order', ->
-    @queue.queue(@id1, 'http://example.org/1', new Date(new Date().valueOf() + 1000))
-    @queue.queue(@id3, 'http://example.org/3', new Date(new Date().valueOf() + 3000))
-    @queue.queue(@id2, 'http://example.org/2', new Date(new Date().valueOf() + 2000))
+    @doQueue(@id1, 'http://example.org/1', new Date(new Date().valueOf() + 1000))
+    @doQueue(@id3, 'http://example.org/3', new Date(new Date().valueOf() + 3000))
+    @doQueue(@id2, 'http://example.org/2', new Date(new Date().valueOf() + 2000))
     @queue.startHandling()
     @sandbox.clock.tick(1000)
-    expect(@task).to.have.been.calledWith(@queue, @id1, 'http://example.org/1')
-    expect(@task).not.to.have.been.calledWith(@queue, @id2, 'http://example.org/2')
-    expect(@task).not.to.have.been.calledWith(@queue, @id3, 'http://example.org/3')
+    @expectLastCall(@id1, 'http://example.org/1')
     @sandbox.clock.tick(1000)
-    expect(@task).to.have.been.calledWith(@queue, @id2, 'http://example.org/2')
-    expect(@task).not.to.have.been.calledWith(@queue, @id3, 'http://example.org/3')
+    @expectLastCall(@id2, 'http://example.org/2')
     @sandbox.clock.tick(1000)
-    expect(@task).to.have.been.calledWith(@queue, @id3, 'http://example.org/3')
+    @expectLastCall(@id3, 'http://example.org/3')
 
   describe 'when started empty', ->
     beforeEach -> @queue.startHandling()
 
     it 'should run a task immediately', ->
-      @queue.queue(@id1, 'http://example.org', new Date())
+      @doQueue(@id1, 'http://example.org', new Date())
       @sandbox.clock.tick(1)
-      expect(@task).to.have.been.calledWith(@queue, @id1, 'http://example.org')
+      @expectLastCall(@id1, 'http://example.org')
 
     it 'should schedule a task for later', ->
-      @queue.queue(@id1, 'http://example.org', new Date(new Date().valueOf() + 1000))
+      @doQueue(@id1, 'http://example.org', new Date(new Date().valueOf() + 1000))
       @sandbox.clock.tick(999)
       expect(@task).not.to.have.been.called
       @sandbox.clock.tick(1)
-      expect(@task).to.have.been.calledWith(@queue, @id1, 'http://example.org')
+      @expectLastCall(@id1, 'http://example.org')
 
     it 'should schedule a sooner task before the queued one', ->
       t1 = new Date().valueOf()
 
-      @queue.queue(@id1, 'http://example.org', new Date(t1 + 1000))
+      @doQueue(@id1, 'http://example.org/1', new Date(t1 + 1000))
       @sandbox.clock.tick(500)
-      @queue.queue(@id2, 'http://example.org', new Date(t1 + 750))
+      @doQueue(@id2, 'http://example.org/2', new Date(t1 + 750))
       @sandbox.clock.tick(249)
-      expect(@task).not.to.have.been.calledWith(@queue, @id1)
-      expect(@task).not.to.have.been.calledWith(@queue, @id2)
+      expect(@task).not.to.have.been.calledWith(@queue)
       @sandbox.clock.tick(1)
-      expect(@task).not.to.have.been.calledWith(@queue, @id1)
-      expect(@task).to.have.been.calledWith(@queue, @id2)
+      @expectLastCall(@id2, 'http://example.org/2')
       @sandbox.clock.tick(250)
-      expect(@task).to.have.been.calledWith(@queue, @id1)
+      @expectLastCall(@id1, 'http://example.org/1')
 
     it 'should do nothing when stopped', ->
-      @queue.queue(@id1, 'http://example.org', new Date(new Date().valueOf() + 1000))
+      @doQueue(@id1, 'http://example.org', new Date(new Date().valueOf() + 1000))
       @sandbox.clock.tick(999)
       @queue.stopHandling()
       @sandbox.clock.tick(1)
@@ -117,10 +126,10 @@ describe 'UrlTaskQueue', ->
     it 'should let a handler queue something', ->
       # Not sure why this would ever fail if the others pass ... but it should
       # inspire confidence because this is how we're going to use it.
-      @queue.queue(@id1, 'http://example.org/1', new Date(new Date().valueOf() + 1000))
+      @doQueue(@id1, 'http://example.org/1', new Date(new Date().valueOf() + 1000))
       @sandbox.clock.tick(1000)
-      @task.lastCall.args[0].queue(@id2, 'http://example.org/2', new Date(new Date().valueOf() + 1000))
+      @task.lastCall.args[0].queue(urlId: @id2, url: 'http://example.org/2', at: new Date(new Date().valueOf() + 1000), nPreviousFetches: 1)
       @sandbox.clock.tick(999)
-      expect(@queue.task).not.to.have.been.calledWith(@queue, @id2, 'http://example.org/2')
+      @expectLastCall(@id1, 'http://example.org/1') # id2 wasn't called yet
       @sandbox.clock.tick(1)
-      expect(@queue.task).to.have.been.calledWith(@queue, @id2, 'http://example.org/2')
+      @expectLastCall(@id2, 'http://example.org/2')
