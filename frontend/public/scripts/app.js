@@ -39677,7 +39677,7 @@ module.exports = React.createClass({displayName: 'exports',
               React.DOM.div({className: "page-meta"}, 
 
                 React.DOM.div({className: 'status status-' + claim.get('truthiness')}, 
-                  React.DOM.span({className: "status-label"}, "Claim State"), 
+                  React.DOM.span({className: "status-label"}, "Claim Status"), 
                   React.DOM.span({className: "status-value"}, claim.truthinessText())
                 ), 
                 React.DOM.div({className: 'status status-' + (mostShared ? mostShared : '')}, 
@@ -40057,7 +40057,7 @@ module.exports = Backbone.Model.extend({
   },
 
   truthinessText: function() {
-    return this.get('truthiness')=='true' || this.get('truthiness')=='false' ? 'Confirmed ' + this.get('truthiness') : 'Unverified';
+    return this.get('truthiness')=='true' || this.get('truthiness')=='false' ? this.get('truthiness').toUpperCase() : 'Unverified';
   },
 
   /* retrieve articles and timeslices if we just have a base object */
