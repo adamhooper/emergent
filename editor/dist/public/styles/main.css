@@ -5926,27 +5926,52 @@ button.close {
   list-style: none;
 }
 .story-show-layout .article-version-list li.article-version h3 {
+  font: inherit;
+  font-size: 1.2em;
   color: #bb5;
 }
 .story-show-layout .article-version-list li.article-version h3 a {
+  display: block;
   color: inherit;
 }
-.story-show-layout .article-version-list li.article-version h3::after {
-  content: "✍";
+.story-show-layout .article-version-list li.article-version h3 i.version-headline-stance,
+.story-show-layout .article-version-list li.article-version h3 i.version-stance {
+  position: relative;
+  top: 1px;
+  display: inline-block;
+  font-family: 'Glyphicons Halflings';
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
-.story-show-layout .article-version-list li.article-version.complete h3 {
+.story-show-layout .article-version-list li.article-version h3 i.version-headline-stance-for:before,
+.story-show-layout .article-version-list li.article-version h3 i.version-stance-for:before {
+  content: "\e125";
+}
+.story-show-layout .article-version-list li.article-version h3 i.version-headline-stance-against:before,
+.story-show-layout .article-version-list li.article-version h3 i.version-stance-against:before {
+  content: "\e126";
+}
+.story-show-layout .article-version-list li.article-version h3 i.version-headline-stance-observing:before,
+.story-show-layout .article-version-list li.article-version h3 i.version-stance-observing:before {
+  content: "\e105";
+}
+.story-show-layout .article-version-list li.article-version h3 i.version-headline-stance-ignoring:before,
+.story-show-layout .article-version-list li.article-version h3 i.version-stance-ignoring:before {
+  content: "\e106";
+}
+.story-show-layout .article-version-list li.article-version.complete h3 a {
   color: #5b5;
-}
-.story-show-layout .article-version-list li.article-version.complete h3::after {
-  content: "✔";
 }
 .story-show-layout .article-version-list li.article-version:not(.expanded) form {
   display: none;
 }
-.story-show-layout .article-version-list li.article-version:not(.expanded) h3::before {
+.story-show-layout .article-version-list li.article-version:not(.expanded) h3 a::before {
   content: "▸ ";
 }
-.story-show-layout .article-version-list li.article-version.expanded h3::before {
+.story-show-layout .article-version-list li.article-version.expanded h3 a::before {
   content: "▾ ";
 }
 .story-show-layout .article-version-list fieldset.url-version:not(.editing) legend {
@@ -6038,27 +6063,52 @@ button.close {
   list-style: none;
 }
 .unseen-article-list-layout ul.article-versions li.article-version h3 {
+  font: inherit;
+  font-size: 1.2em;
   color: #bb5;
 }
 .unseen-article-list-layout ul.article-versions li.article-version h3 a {
+  display: block;
   color: inherit;
 }
-.unseen-article-list-layout ul.article-versions li.article-version h3::after {
-  content: "✍";
+.unseen-article-list-layout ul.article-versions li.article-version h3 i.version-headline-stance,
+.unseen-article-list-layout ul.article-versions li.article-version h3 i.version-stance {
+  position: relative;
+  top: 1px;
+  display: inline-block;
+  font-family: 'Glyphicons Halflings';
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
-.unseen-article-list-layout ul.article-versions li.article-version.complete h3 {
+.unseen-article-list-layout ul.article-versions li.article-version h3 i.version-headline-stance-for:before,
+.unseen-article-list-layout ul.article-versions li.article-version h3 i.version-stance-for:before {
+  content: "\e125";
+}
+.unseen-article-list-layout ul.article-versions li.article-version h3 i.version-headline-stance-against:before,
+.unseen-article-list-layout ul.article-versions li.article-version h3 i.version-stance-against:before {
+  content: "\e126";
+}
+.unseen-article-list-layout ul.article-versions li.article-version h3 i.version-headline-stance-observing:before,
+.unseen-article-list-layout ul.article-versions li.article-version h3 i.version-stance-observing:before {
+  content: "\e105";
+}
+.unseen-article-list-layout ul.article-versions li.article-version h3 i.version-headline-stance-ignoring:before,
+.unseen-article-list-layout ul.article-versions li.article-version h3 i.version-stance-ignoring:before {
+  content: "\e106";
+}
+.unseen-article-list-layout ul.article-versions li.article-version.complete h3 a {
   color: #5b5;
-}
-.unseen-article-list-layout ul.article-versions li.article-version.complete h3::after {
-  content: "✔";
 }
 .unseen-article-list-layout ul.article-versions li.article-version:not(.expanded) form {
   display: none;
 }
-.unseen-article-list-layout ul.article-versions li.article-version:not(.expanded) h3::before {
+.unseen-article-list-layout ul.article-versions li.article-version:not(.expanded) h3 a::before {
   content: "▸ ";
 }
-.unseen-article-list-layout ul.article-versions li.article-version.expanded h3::before {
+.unseen-article-list-layout ul.article-versions li.article-version.expanded h3 a::before {
   content: "▾ ";
 }
 .unseen-article-list-layout ul.article-versions fieldset.url-version:not(.editing) legend {

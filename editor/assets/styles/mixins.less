@@ -62,25 +62,29 @@
 
   li.article-version {
     h3 {
+      font: inherit;
+      font-size: 1.2em;
+
       a {
+        display: block;
         color: inherit;
       }
       color: #bb5;
-      &::after {
-        content: "✍";
-      }
+
+      i.version-headline-stance, i.version-stance { .glyphicon(); }
+      i.version-headline-stance-for, i.version-stance-for { .glyphicon-thumbs-up(); }
+      i.version-headline-stance-against, i.version-stance-against { .glyphicon-thumbs-down(); }
+      i.version-headline-stance-observing, i.version-stance-observing { .glyphicon-eye-open(); }
+      i.version-headline-stance-ignoring, i.version-stance-ignoring { .glyphicon-eye-close(); }
     }
-    &.complete h3 {
+    &.complete h3 a {
       color: #5b5;
-      &::after {
-        content: "✔";
-      }
     }
 
     &:not(.expanded) {
       form { display: none; }
 
-      h3 {
+      h3 a {
         &::before {
           content: "▸ ";
         }
@@ -88,7 +92,7 @@
     }
 
     &.expanded {
-      h3 {
+      h3 a {
         &::before {
           content: "▾ ";
         }
