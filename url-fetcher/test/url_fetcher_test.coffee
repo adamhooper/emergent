@@ -7,7 +7,7 @@ UrlGet = models.UrlGet
 
 DayInMs = 86400 * 1000
 
-describe 'url_fetcher', ->
+describe 'UrlFetcher', ->
   beforeEach ->
     @response =
       statusCode: 200
@@ -32,7 +32,14 @@ describe 'url_fetcher', ->
   it 'should GET the page', (done) ->
     UrlGet.create.returns(Promise.reject(null))
     @fetcher.fetch '560f5f77-5b44-46cf-a3a8-1722917184de', 'http://example.org', ->
-      expect(UrlFetcher.request.get).to.have.been.calledWith('http://example.org')
+      expect(UrlFetcher.request.get).to.have.been.called
+      expect(UrlFetcher.request.get.args[0][0]).to.have.property('url', 'http://example.org')
+      done()
+
+  it 'should identify as EmergentBot', (done) ->
+    UrlGet.create.returns(Promise.reject(null))
+    @fetcher.fetch '560f5f77-5b44-46cf-a3a8-1722917184de', 'http://example.org', ->
+      expect(UrlFetcher.request.get.args[0][0].headers).to.have.property('User-Agent', 'EmergentBot (+http://www.emergent.info)')
       done()
 
   it 'should error when the GET errors', (done) ->

@@ -20,7 +20,12 @@ class UrlFetcher
   fetch: (id, url, done) ->
     done ?= (->)
 
-    UrlFetcher.request.get url, (err, response) =>
+    options =
+      url: url
+      headers:
+        'User-Agent': 'EmergentBot (+http://www.emergent.info)'
+
+    UrlFetcher.request.get options, (err, response) =>
       return done(err) if err?
 
       data =
