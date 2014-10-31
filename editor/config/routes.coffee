@@ -30,3 +30,5 @@ module.exports =
     'get /unseen-articles': 'UnseenArticleController.index'
 
     'get /unparsed-urls': 'UnparsedUrlController.index'
+
+    'get /dashboard/unparsed-domains': 'DashboardController.index_unparsed_domains'
