@@ -13,4 +13,4 @@ module.exports =
       headline: $('div#article-header h1')
       byline: $('[itemprop=author]')
       publishedAt: new Date($('meta[property="article:modified_time"]').attr('content'))
-      body: $('div#article-body-blocks p')
+      body: $('#article-header [itemprop=description], div#article-body-blocks p')
