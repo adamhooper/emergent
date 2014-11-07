@@ -31,6 +31,7 @@ describe 'FetchHandler', ->
       parse: sinon.stub().returns(@parsedObject)
 
     @fetchedObject =
+      id: '7e9b53b5-4862-4093-93b6-11b54487ae5e'
       statusCode: 200
       body: '<html><body>body</body><html>'
       createdAt: new Date(2000)
@@ -144,7 +145,7 @@ describe 'FetchHandler', ->
 
       it 'should insert a new UrlVersion', (done) ->
         @go =>
-          obj = _.extend({ urlId: @id, millisecondsSincePreviousUrlGet: null }, @parsedObject)
+          obj = _.extend({ urlId: @id, millisecondsSincePreviousUrlGet: null, urlGetId: @fetchedObject.id }, @parsedObject)
           expect(models.UrlVersion.create).to.have.been.calledWith(obj)
           done()
 
@@ -152,14 +153,14 @@ describe 'FetchHandler', ->
         models.UrlGet.max.returns(Promise.resolve(1000))
         @go =>
           expect(models.UrlGet.max).to.have.been.calledWith('createdAt', where: { createdAt: { lt: @fetchedObject.createdAt }, urlId: @id})
-          obj = _.extend({ urlId: @id, millisecondsSincePreviousUrlGet: 1000 }, @parsedObject)
+          obj = _.extend({ urlId: @id, millisecondsSincePreviousUrlGet: 1000, urlGetId: @fetchedObject.id }, @parsedObject)
           expect(models.UrlVersion.create).to.have.been.calledWith(obj)
           done()
 
       it 'should set millisecondsSincePreviousUrlGet=null when we have no other UrlGets', (done) ->
         models.UrlGet.max.returns(Promise.resolve(null))
         @go =>
-          obj = _.extend({ urlId: @id, millisecondsSincePreviousUrlGet: null }, @parsedObject)
+          obj = _.extend({ urlId: @id, millisecondsSincePreviousUrlGet: null, urlGetId: @fetchedObject.id }, @parsedObject)
           expect(models.UrlVersion.create).to.have.been.calledWith(obj)
           done()
 
@@ -194,7 +195,7 @@ describe 'FetchHandler', ->
 
       it 'should insert a new UrlVersion', (done) ->
         @go =>
-          obj = _.extend({ urlId: @id, millisecondsSincePreviousUrlGet: null }, @parsedObject)
+          obj = _.extend({ urlId: @id, millisecondsSincePreviousUrlGet: null, urlGetId: @fetchedObject.id }, @parsedObject)
           expect(models.UrlVersion.create).to.have.been.calledWith(obj)
           done()
 

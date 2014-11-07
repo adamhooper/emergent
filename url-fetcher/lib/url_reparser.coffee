@@ -75,6 +75,9 @@ module.exports = class UrlReparser
         # Process the UrlGets synchronously; execute updates asynchronously.
         opChain = Promise.resolve(null)
 
+        chainOp = (op, args...) =>
+          opChain = opChain.then(=> @[op](args...))
+
         curUrlVersion = null # the head of the "fresh" list of UrlVersions
         previousUrlGet = null
         nextSavedUrlVersion = urlVersions.shift() # next in the "stale" list
@@ -87,24 +90,18 @@ module.exports = class UrlReparser
 
           if newUrlVersion.urlGetId == nextSavedUrlVersion?.urlGetId
             # re-save existing version
-            # Note we do this commands synchronously: a cheap hack to make sure the
-            # variables don't change beneath us, and it's okay because we can run
-            # these queries in any order as long as they're all committed together
             if newUrlVersion.sha1 == nextSavedUrlVersion.sha1
-              opChain = opChain.then(@_updateUrlVersionParserVersion(nextSavedUrlVersion, newUrlVersion.parserVersion, transaction))
+              chainOp('_updateUrlVersionParserVersion', nextSavedUrlVersion, newUrlVersion.parserVersion, transaction)
             else
-              opChain = opChain.then(@_updateUrlVersion(nextSavedUrlVersion, newUrlVersion, transaction))
+              chainOp('_updateUrlVersion', nextSavedUrlVersion, newUrlVersion, transaction)
             nextSavedUrlVersion = urlVersions.shift()
           else if newUrlVersion.sha1 != curUrlVersion?.sha1
             # add new version
-            # Note we do this command synchronously: a cheap hack to make sure the
-            # variables don't change beneath us, and it's okay because we can run
-            # these queries in any order as long as they're all committed together
             newUrlVersion.millisecondsSincePreviousUrlGet = if previousUrlGet?
               urlGet.createdAt - previousUrlGet.createdAt
             else
               null
-            opChain = opChain.then(@_createUrlVersion(newUrlVersion, urlGet.createdAt, transaction))
+            chainOp('_createUrlVersion', newUrlVersion, urlGet.createdAt, transaction)
           else
             # nothing
 

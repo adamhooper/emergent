@@ -46,6 +46,7 @@ module.exports = class FetchHandler
                     null
                   data = _.extend({
                     urlId: id
+                    urlGetId: urlGet.id
                     millisecondsSincePreviousUrlGet: ms
                   }, parsed)
                   models.UrlVersion.create(data, null)
