@@ -1,5 +1,5 @@
 module.exports =
-  version: 3
+  version: 2
   domains: [ 'www.theguardian.com' ]
   parse: (url, $, h) ->
     if $('meta[property="og:type"]').attr('content') == 'video'
