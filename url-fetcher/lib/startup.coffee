@@ -110,6 +110,10 @@ module.exports = class Startup
       .nodeify(done)
 
   run: (done) ->
-    @runNewParsers (err) =>
-      return done(err) if err
-      @addAllUrlsToQueues(done)
+    @addAllUrlsToQueues (err) =>
+      if !err?
+        debug("Spawning re-parsing handler in the background")
+        @runNewParsers (x) ->
+          debug("Finished running new parsers. Error (if any): ", x)
+
+      done(err)
