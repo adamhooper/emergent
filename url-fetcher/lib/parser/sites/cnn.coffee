@@ -1,4 +1,5 @@
 module.exports =
+  version: 2
   domains: [ 'www.cnn.com' ]
   parse: (url, $, h) ->
     # e.g., "By Chief Washington Correspondent Jake Tapper, Nick Paton Walsh and Sherisse Pham, CNN"

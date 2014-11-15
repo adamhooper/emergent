@@ -1,4 +1,5 @@
 module.exports =
+  version: 2
   domains: [ 'pando.com' ]
   parse: (url, $, h) ->
     $article = $('.post-content')

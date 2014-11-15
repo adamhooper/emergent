@@ -1,4 +1,5 @@
 module.exports =
+  version: 2
   domains: [ 'www.ibtimes.com' ]
   parse: (url, $, h) ->
     source: 'International Business Times US'

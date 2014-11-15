@@ -1,4 +1,5 @@
 module.exports =
+  version: 2
   domains: [ 'www.newsweek.com' ]
   parse: (url, $, h) ->
     $article = $('article.full-article')

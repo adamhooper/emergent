@@ -1,4 +1,5 @@
 module.exports =
+  version: 2
   domains: [ 'www.huffingtonpost.com', 'www.huffingtonpost.co.uk' ]
   parse: (url, $, h) ->
     $content = $('#mainentrycontent, .entry-content')

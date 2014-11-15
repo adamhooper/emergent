@@ -1,4 +1,5 @@
 module.exports =
+  version: 2
   domains: [ 'www.mirror.co.uk' ]
   parse: (url, $, h) ->
     source: 'mirror.co.uk'

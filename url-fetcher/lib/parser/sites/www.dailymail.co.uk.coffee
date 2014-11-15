@@ -1,4 +1,5 @@
 module.exports =
+  version: 2
   domains: [ 'www.dailymail.co.uk' ]
   parse: (url, $, h) ->
     $content = $('div#content')

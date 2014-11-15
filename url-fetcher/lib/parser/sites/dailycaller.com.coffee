@@ -1,4 +1,5 @@
 module.exports =
+  version: 2
   domains: [ 'dailycaller.com' ]
   parse: (url, $, h) ->
     $dateline = $('.dateline')

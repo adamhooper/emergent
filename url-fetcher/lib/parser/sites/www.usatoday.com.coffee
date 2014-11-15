@@ -1,4 +1,5 @@
 module.exports =
+  version: 2
   domains: [ 'www.usatoday.com' ]
   parse: (url, $, h) ->
     $article = $('article.story, div[itemprop=articleBody]').eq(0)
