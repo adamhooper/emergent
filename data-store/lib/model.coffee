@@ -36,6 +36,7 @@ module.exports = class Model
     if !options.raw
       instance = instanceWithTracking(instance, email, true, options)
     instance._impl.save(null, options)
+      .then(-> instance)
 
   # Returns a Promise of an Instance or `null`.
   find: (idOrOptions) ->
