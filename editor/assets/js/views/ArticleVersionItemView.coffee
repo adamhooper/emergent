@@ -128,7 +128,7 @@ module.exports = class ArticleVersionItemView extends Marionette.ItemView
             <a href="#" class="toggle-edit-url-version">Edit what the website says</a>
           <% } %>
         </div>
-        <% if (!isNew && createdBy !== null) { %>
+        <% if (isNew || createdBy !== null) { %>
           <div class="edit">
             <div class="form-group">
               <label for="version-<%- cid %>-source">Source (publication)</label>
@@ -280,11 +280,16 @@ module.exports = class ArticleVersionItemView extends Marionette.ItemView
     createdAtString: moment(json.urlVersion.createdAt).format('YYYY-MM-DD \\a\\t h:mm A')
 
   getDataFromForm: ->
-    urlVersion:
-      source: @ui.source.val().trim()
-      headline: @ui.headline.val().trim()
-      byline: @ui.byline.val().trim()
-      body: @ui.body.val().trim()
-    stance: @ui.stance.filter(':checked').val() || null
-    headlineStance: @ui.headlineStance.filter(':checked').val() || null
-    comment: @ui.comment.val().trim()
+    ret =
+      stance: @ui.stance.filter(':checked').val() || null
+      headlineStance: @ui.headlineStance.filter(':checked').val() || null
+      comment: @ui.comment.val().trim()
+
+    if @ui.source.length
+      ret.urlVersion =
+        source: @ui.source.val().trim()
+        headline: @ui.headline.val().trim()
+        byline: @ui.byline.val().trim()
+        body: @ui.body.val().trim()
+
+    ret
