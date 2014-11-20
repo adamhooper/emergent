@@ -62,7 +62,7 @@ module.exports = class ArticleVersionItemView extends Marionette.ItemView
     <% } else { %>
       <h3 class="version-existing">
         <a href="#" class="toggle-expand">
-          <span class="version-created-at">Fetched <time datetime="<%- createdAt %>"><%- createdAtString %></time></span>
+          <span class="version-created-at"><%- createdBy ? 'Manually added' : 'Fetched' %> <time datetime="<%- createdAt %>"><%- createdAtString %></time></span>
           <i class="version-stance version-headline-stance-<%- headlineStance %>" title="Headline stance: <%- headlineStance %>"/>
           <i class="version-stance version-stance-<%- stance %>" title="Body stance: <%- stance %>"/>
         </a>
@@ -125,34 +125,40 @@ module.exports = class ArticleVersionItemView extends Marionette.ItemView
             </p>
             <div class="body"><%= urlVersion.bodyHtml %></div>
           </article>
-          <a href="#" class="toggle-edit-url-version">Edit what the website says</a>
+          <% if (createdBy !== null) { %>
+            <a href="#" class="toggle-edit-url-version">Edit what the website says</a>
+          <% } %>
         </div>
-        <div class="edit">
-          <div class="form-group">
-            <label for="version-<%- cid %>-source">Source (publication)</label>
-            <input id="version-<%- cid %>-source" name="source" class="form-control" placeholder="e.g., The New York Times" value="<%- urlVersion.source %>" required>
+        <% if (!isNew && createdBy !== null) { %>
+          <div class="edit">
+            <div class="form-group">
+              <label for="version-<%- cid %>-source">Source (publication)</label>
+              <input id="version-<%- cid %>-source" name="source" class="form-control" placeholder="e.g., The New York Times" value="<%- urlVersion.source %>" required>
+            </div>
+            <div class="form-group">
+              <label for="version-<%- cid %>-headline">Headline</label>
+              <input id="version-<%- cid %>-headline" name="headline" class="form-control" placeholder="e.g., Man Bites Dog" value="<%- urlVersion.headline %>" required>
+            </div>
+            <div class="form-group">
+              <label for="version-<%- cid %>-published-at">Published/Updated date</label>
+              <input type="datetime-local" id="version-<%- cid %>-published-at" name="published-at" class="form-control" value="<%- urlVersion.publishedAt %>" required>
+              <small class="help-block">(in your timezone)</small>
+            </div>
+            <div class="form-group">
+              <label for="version-<%- cid %>-byline">Byline</label>
+              <input id="version-<%- cid %>-byline" name="byline" class="form-control" placeholder="e.g., Adam Hooper, Craig Silverman" value="<%- urlVersion.byline %>">
+            </div>
+            <div class="form-group">
+              <label for="version-<%- cid %>-body">Body</label>
+              <textarea id="version-<%- cid %>-body" name="body" class="form-control" rows="5" placeholder="e.g. Each paragraph was separated from its neighbors by two newlines." required><%- urlVersion.body %></textarea>
+            </div>
           </div>
-          <div class="form-group">
-            <label for="version-<%- cid %>-headline">Headline</label>
-            <input id="version-<%- cid %>-headline" name="headline" class="form-control" placeholder="e.g., Man Bites Dog" value="<%- urlVersion.headline %>" required>
-          </div>
-          <div class="form-group">
-            <label for="version-<%- cid %>-published-at">Published/Updated date</label>
-            <input type="datetime-local" id="version-<%- cid %>-published-at" name="published-at" class="form-control" value="<%- urlVersion.publishedAt %>" required>
-            <small class="help-block">(in your timezone)</small>
-          </div>
-          <div class="form-group">
-            <label for="version-<%- cid %>-byline">Byline</label>
-            <input id="version-<%- cid %>-byline" name="byline" class="form-control" placeholder="e.g., Adam Hooper, Craig Silverman" value="<%- urlVersion.byline %>">
-          </div>
-          <div class="form-group">
-            <label for="version-<%- cid %>-body">Body</label>
-            <textarea id="version-<%- cid %>-body" name="body" class="form-control" rows="5" placeholder="e.g. Each paragraph was separated from its neighbors by two newlines." required><%- urlVersion.body %></textarea>
-          </div>
-        </div>
+        <% } %>
       </fieldset>
-      <button type="submit" class="btn btn-primary save"><%- isNew ? "Create version" : "Save changes" %></button>
-      <% if (!isNew) { %>
+      <% if (isNew || createdBy !== null) { %>
+        <button type="submit" class="btn btn-primary save"><%- isNew ? "Create version" : "Save changes" %></button>
+      <% } %>
+      <% if (!isNew && createdBy !== null) { %>
         <button type="submit" class="btn btn-danger delete">Delete this version</button>
       <% } %>
     </form>
@@ -193,6 +199,7 @@ module.exports = class ArticleVersionItemView extends Marionette.ItemView
     data = @getDataFromForm()
     data.stance = prevModel.get('stance')
     data.headlineStance = prevModel.get('headlineStance')
+    delete data.urlVersion
 
     @model.save data,
       success: =>
@@ -262,6 +269,8 @@ module.exports = class ArticleVersionItemView extends Marionette.ItemView
   serializeData: ->
     json = @model.toJSON()
 
+    console.log(json)
+
     publishedAt = moment(json.urlVersion.publishedAt)
 
     isNew: @model.isNew()
@@ -278,6 +287,7 @@ module.exports = class ArticleVersionItemView extends Marionette.ItemView
     stance: json.stance ? ''
     headlineStance: json.headlineStance ? ''
     comment: json.comment
+    createdBy: json.urlVersion.createdBy
     createdAt: json.urlVersion.createdAt
     createdAtString: moment(json.urlVersion.createdAt).format('YYYY-MM-DD \\a\\t h:mm A')
 

@@ -78,9 +78,13 @@ module.exports =
       .then (av) ->
         UrlVersion.find(av.urlVersionId)
           .then (uv) ->
-            row = {}
-            (row[k] = req.body.urlVersion?[k]) for k in WriteableUrlVersionFields
-            UrlVersion.update(uv, row, req.user.email)
+            # Update the UrlVersion if it was manually-created (createdBy!=null)
+            if uv.createdBy? && req.body.urlVersion?
+              row = {}
+              (row[k] = req.body.urlVersion[k]) for k in WriteableUrlVersionFields
+              UrlVersion.update(uv, row, req.user.email)
+            else
+              uv
           .then (uv) ->
             row = {}
             (row[k] = req.body[k]) for k in WriteableFields

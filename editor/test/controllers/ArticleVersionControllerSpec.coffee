@@ -1,3 +1,4 @@
+_ = require('lodash')
 Promise = require('bluebird')
 
 Story = global.models.Story
@@ -17,6 +18,7 @@ describe 'ArticleVersionController', ->
     Promise.promisify(ret.end, ret)()
 
   beforeEach ->
+    @sandbox = sinon.sandbox.create()
     @email = 'user@example.org'
     @url = null
     @urlVersion = null  # with an ArticleVersion
@@ -42,6 +44,9 @@ describe 'ArticleVersionController', ->
         comment: ''
       }, @email)).then((x) => @articleVersion = x)
       .catch(console.error)
+
+  afterEach ->
+    @sandbox.restore()
 
   describe '#index', ->
     indexReq = (articleId) -> req('get', "/articles/#{articleId}/versions")
@@ -146,6 +151,29 @@ describe 'ArticleVersionController', ->
             t("urlVersion.#{k}", v)
           expect(json.urlVersion.sha1).to.be.a('String')
           expect(json.urlVersion.sha1).to.have.length(40)
+
+    describe 'when the UrlVersion was created automatically', ->
+      beforeEach ->
+        UrlVersion.update(@urlVersion, { createdBy: null }, null) # XXX does this hack rely on a bug in model.coffee?
+          .then((x) => @urlVersion = x)
+
+      it 'should not modify the UrlVersion', ->
+        @sandbox.stub(UrlVersion, 'update')
+
+        updateReq(@article.id, @articleVersion.id, candidateVersion)
+          .tap (res) => 
+            expect(UrlVersion.update).not.to.have.been.called
+
+      it 'should return the original UrlVersion', ->
+        updateReq(@article.id, @articleVersion.id, candidateVersion)
+          .tap (res) =>
+            uv = res.body.urlVersion
+
+            expect(uv).to.have.property('urlId', @url.id)
+            expect(uv).to.have.property('source', 'source')
+            expect(uv).to.have.property('headline', 'headline1')
+            expect(uv).to.have.property('byline', 'byline1')
+            expect(uv).to.have.property('body', 'body1\n\nbody1\n\nbody1')
 
   describe '#destroy', ->
     destroyReq = (articleId, versionId) -> req('delete', "/articles/#{articleId}/versions/#{versionId}")
