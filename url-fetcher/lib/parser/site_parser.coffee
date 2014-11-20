@@ -32,16 +32,9 @@ module.exports = class SiteParser
   #   {
   #     source: ''        # e.g., "The New York Times"
   #     headline: ''      # e.g., "Dog bites man". Don't worry about capitals.
-  #     publishedAt: null # a Moment (http://momentjs.com), a Date, or `null`
   #     byline: []        # an Array of String author names.
   #     body: []          # an Array of String body text lines
   #   }
-  #
-  # Ensure that publishedAt has the timezone applied. If you're parsing a
-  # website that doesn't mention the timezone, assume the timezone based on the
-  # website's location. For instance, Snopes is in California, so parse its
-  # time in then `"America/Los_Angeles"` timezone. (This is why we integrate
-  # with MomentJS.)
   #
   # Arguments:
   #   url: the URL being parsed.

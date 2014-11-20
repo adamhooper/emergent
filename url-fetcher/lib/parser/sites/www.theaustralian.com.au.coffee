@@ -11,5 +11,4 @@ module.exports =
     source: 'The Australian'
     headline: $('h1.heading')
     byline: $('cite.author').text().trim().split(/, | and /)
-    publishedAt: $('.date-and-time').attr('title')
     body: $body.find('p')

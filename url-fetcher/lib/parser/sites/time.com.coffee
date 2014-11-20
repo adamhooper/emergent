@@ -8,5 +8,4 @@ module.exports =
     source: 'Time'
     headline: $article.find('h2').first()
     byline: $article.find('a[itemprop=author]')
-    publishedAt: h.moment.tz($article.find('.article-meta time').last().attr('datetime'), 'America/New_York')
     body: $body.find('h2, p').filter(':not(aside, iframe)')

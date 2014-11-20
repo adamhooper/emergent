@@ -27,7 +27,6 @@ describe 'UrlVersionController', ->
         source: 'source'
         headline: 'headline1'
         byline: 'byline1'
-        publishedAt: new Date().toISOString()
         body: 'body1\n\nbody1\n\nbody1'
       }, 'user@example.org')
       .then (v) => @v11 = v
@@ -36,7 +35,6 @@ describe 'UrlVersionController', ->
         source: 'source'
         headline: 'headline2'
         byline: 'byline2'
-        publishedAt: new Date().toISOString()
         body: 'body2\n\nbody2\n\nbody2'
       }, 'user@example.org')
       .then (v) => @v12 = v
@@ -65,7 +63,6 @@ describe 'UrlVersionController', ->
       source: 'source'
       headline: 'headline3'
       byline: 'byline3'
-      publishedAt: '2014-07-25T14:36:12.900Z'
       body: 'body3\n\nbody3\n\nbody3'
 
     it 'should return 404 when the url does not exist', ->
@@ -92,7 +89,6 @@ describe 'UrlVersionController', ->
       source: 'source'
       headline: 'headline3'
       byline: 'byline3'
-      publishedAt: '2014-07-25T14:36:12.900Z'
       body: 'body3\n\nbody3\n\nbody3'
 
     it 'should return 404 when the url does not exist', ->

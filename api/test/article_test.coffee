@@ -4,7 +4,6 @@ createUrlVersion = (urlId, attrs) ->
   attrs = _.extend({
     urlId: urlId
     source: 'source'
-    publishedAt: new Date()
     byline: 'byline'
     headline: 'headline'
     body: 'body'

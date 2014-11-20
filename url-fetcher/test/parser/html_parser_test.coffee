@@ -6,7 +6,6 @@ describe 'HtmlParser', ->
       headline: ''
       byline: []
       body: []
-      publishedAt: null
 
   describe 'with multiple SiteParsers', ->
     beforeEach ->
@@ -74,15 +73,6 @@ describe 'HtmlParser', ->
     it 'should return the headline', -> @handleResultProperty('headline', 'foo', 'foo')
     it 'should return the body', -> @handleResultProperty('body', [ 'para1', 'para2' ], "para1\n\npara2")
     it 'should return the byline', -> @handleResultProperty('byline', [ 'Adam Hooper', 'Craig Silverman' ], 'Adam Hooper, Craig Silverman')
-    it 'should return a null publishedAt as null', -> @handleResultProperty('publishedAt', null, null)
-
-    it 'should return a Moment publishedAt as a Date', ->
-      aMoment = require('moment')()
-      @handleResultProperty('publishedAt', aMoment, aMoment.toDate())
-
-    it 'should return a Date publishedAt as a Date', ->
-      date = new Date()
-      @handleResultProperty('publishedAt', date, date)
 
     it 'should return the parser version', ->
       val = @subject.parse('http://example.org', '<html></html>')

@@ -13,7 +13,6 @@ describe 'url_reparser', ->
       byline: urlVersion.byline
       headline: urlVersion.headline
       parserVersion: urlVersion.parserVersion
-      publishedAt: urlVersion.publishedAt
       sha1: urlVersion.sha1 # we have a test to ensure it calculates this
       source: urlVersion.source
       urlGetId: urlGet.id
@@ -59,7 +58,6 @@ describe 'url_reparser', ->
       source: 'source 1'
       headline: 'headline 1'
       byline: 'byline 1'
-      publishedAt: new Date(1000)
       body: 'body 1'
       parserVersion: 2
       sha1: 'b62cd9a289f71398fe7a561065401e9b36c1a0c5'
@@ -68,7 +66,6 @@ describe 'url_reparser', ->
       source: 'source 2'
       headline: 'headline 2'
       byline: 'byline 2'
-      publishedAt: new Date(2000)
       body: 'body 2'
       parserVersion: 2
       sha1: 'd6321b78e755731023bebbb2e86befea209442c4'

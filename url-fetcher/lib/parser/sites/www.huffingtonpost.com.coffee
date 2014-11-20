@@ -10,12 +10,7 @@ module.exports =
     if byline.length == 0
       byline = $('a.wire_author').text().split(/,| and /g).map((s) -> s.trim())
 
-    updatedString = $('.updated time').attr('datetime')
-    if !updatedString
-      updatedString = $('span.updated[title]').attr('title')
-
     source: $('header .branding strong.title').text() || 'The Huffington Post'
     headline: $('h1')
     byline: byline
-    publishedAt: new Date(updatedString)
-    body: h.texts($content.find('p'))
+    body: $content.find('p')

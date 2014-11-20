@@ -6,7 +6,6 @@ rowToSha1 = (row) ->
     row.source
     row.headline
     row.byline
-    row.publishedAt?.toISOString() || 'null'
     row.body
   ].join('\u0000')
   hash = crypto.createHash('sha1')
@@ -73,11 +72,6 @@ module.exports =
       allowNull: false
       comment: 'parsed comma-separated list of author names at this URL'
 
-    publishedAt:
-      type: Sequelize.DATE
-      allowNull: false
-      comment: 'parsed published/updated date for this URL'
-
     body:
       type: Sequelize.TEXT
       allowNull: false
@@ -86,7 +80,7 @@ module.exports =
     sha1:
       type: Sequelize.STRING.BINARY
       allowNull: false
-      comment: 'SHA-1 digest of "source\\0headline\\0byline\\0publishedAt.toISOString()\0body"'
+      comment: 'SHA-1 digest of "source\\0headline\\0byline\\0body"'
       get: -> @getDataValue('sha1')?.toString('hex') || null
       set: (v) -> v && @setDataValue('sha1', new Buffer(v, 'hex')) || null
 

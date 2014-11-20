@@ -17,7 +17,6 @@ describe 'FetchHandler', ->
       source: 'source'
       headline: 'headline'
       byline: 'byline'
-      publishedAt: new Date(1)
       body: 'body'
       version: 1
 

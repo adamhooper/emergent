@@ -1,3 +1,5 @@
+_ = require('lodash')
+
 Url = global.models.Url
 UrlVersion = global.models.UrlVersion
 
@@ -18,15 +20,10 @@ WriteableFields = [
   'source'
   'headline'
   'byline'
-  'publishedAt'
   'body'
 ]
 
-parseRow = (body) ->
-  row = {}
-  (row[f] = body[f]) for f in WriteableFields
-  row.publishedAt = new Date(row.publishedAt)
-  row
+parseRow = (body) -> _.pick(body, WriteableFields...)
 
 module.exports =
   index: (req, res) ->

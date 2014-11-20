@@ -1,22 +1,5 @@
 cheerio = require('cheerio')
-moment = require('moment-timezone')
 _ = require('lodash')
-
-# Western news websites use a few abbreviations for timezones. In theory there
-# could be conflicts, but most of the time these are correct. (If there are
-# conflicts on a particular news website, we can specify different date-parsing
-# logic in that news website's parse() method.)
-#
-# Wonky syntax is because moment-timezone breaks if we re-link the same zone.
-for [ short, long ] in [
-  [ 'ET', 'America/New_York' ]
-  [ 'EDT', 'America/New_York' ]
-  [ 'EST', 'America/New_York' ]
-  [ 'PDT', 'America/Los_Angeles' ]
-  [ 'PST', 'America/Los_Angeles' ]
-]
-  if !moment.tz.zone(short)?
-    moment.tz.link("#{long}|#{short}")
 
 class Helpers
   constructor: (@$) ->
@@ -39,8 +22,6 @@ class Helpers
   domain: (url) ->
     m = /https?:\/\/([^\/]+)/.exec(url)
     m?[1]
-
-  moment: moment
 
 class HtmlParser
   constructor: ->
@@ -78,12 +59,11 @@ class HtmlParser
       else
         null
 
-    # All but publishedAt must be non-null in actual code. But null can be
-    # handy during test-driven development, so we handle it on byline/body.
+    # All must be non-null in actual code. But null can be handy during
+    # test-driven development, so we handle it on byline/body.
     source: toString(ret.source)
     headline: toString(ret.headline)
     byline: toArray(ret.byline).join(", ")
-    publishedAt: toDate(ret.publishedAt)
     body: toArray(ret.body).join("\n\n")
     parserVersion: siteParser.version
 
@@ -103,7 +83,6 @@ class HtmlParser
   #     source: ''         # e.g., "The New York Times"
   #     headline: ''       # e.g., "Dog bites man". Don't worry about capitals.
   #     byline: ''         # e.g., "Adam Hooper, Craig Silverman"
-  #     publishedAt: null  # or a Date object
   #     body: "foo\n\nbar" # paragraphs separated by two newlines
   #   }
   parse: (url, html) ->

@@ -12,5 +12,4 @@ module.exports =
     source: 'Austrian Times'
     byline: $('.autor').text().trim().split(/\s*,\s*/)
     headline: $('h1').text()
-    publishedAt: h.moment.tz($('.articledate').text(), 'DD. MM. YY. - HH:mm', 'Europe/Vienna')
     body: body

@@ -3,15 +3,6 @@ module.exports =
   parse: (url, $, h) ->
     $article = $('td.contentColumn')
 
-    # Search for "Last updated:" in a <b> within a <font>. The next text node is the date.
-    publishedAt = null
-    for b in $article.find('b')
-      if b.children[0]?.data == 'Last updated:'
-        timeText = b.parent.next?.data
-        break
-    if timeText?
-      publishedAt = h.moment.tz(timeText, 'D MMMM YYYY', 'America/Los_Angeles')
-
     # Parse the body. This is hard.
     lines = []
     thisLine = []
@@ -54,5 +45,4 @@ module.exports =
     source: 'Snopes'
     headline: $article.find('h1').text()
     byline: []
-    publishedAt: publishedAt
     body: lines

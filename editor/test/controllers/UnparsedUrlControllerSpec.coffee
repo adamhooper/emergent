@@ -7,7 +7,6 @@ describe 'UnparsedUrlController', ->
       urlId: urlId
       source: 'source'
       body: 'body'
-      publishedAt: new Date()
       byline: 'byline'
       headline: 'headline'
     }, user)

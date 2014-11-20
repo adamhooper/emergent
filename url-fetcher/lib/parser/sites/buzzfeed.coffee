@@ -16,6 +16,5 @@ module.exports =
 
     source: 'BuzzFeed'
     headline: $('h1#post-title').text()
-    byline: h.texts($userInfo.find('a[rel=author]'))
-    publishedAt: new Date($userInfo.find('span.ago time').attr('datetime'))
-    body: h.texts($body.find('h2, p:not(.print)'))
+    byline: $userInfo.find('a[rel=author]')
+    body: $body.find('h2, p:not(.print)')

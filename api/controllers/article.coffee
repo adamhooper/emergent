@@ -58,7 +58,6 @@ articleToJson = (row) ->
     headline: row.headline
     byline: row.byline
     source: row.source
-    publishedAt: row.publishedAt?.toISOString?()
     createdAt: row.createdAt.toISOString()
   else
     null
@@ -80,7 +79,6 @@ module.exports =
         uv.headline AS headline,
         uv.byline AS byline,
         uv.source AS source,
-        uv."publishedAt" AS "publishedAt",
         uv."createdAt" AS "createdAt"
       FROM "Article" a
       INNER JOIN "Url" u ON a."urlId" = u.id

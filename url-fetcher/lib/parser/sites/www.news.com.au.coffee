@@ -5,7 +5,6 @@ module.exports =
     $body.find('.article-media, .module, script').remove()
 
     source: 'news.com.au'
-    headline: $('h1').text().trim()
-    byline: h.texts($('.story-info li').filter('.byline, .source').find('cite'))
-    publishedAt: new Date($('.story-info .date-and-time').attr('title'))
-    body: h.texts($body.find('p'))
+    headline: $('h1')
+    byline: $('.story-info li').filter('.byline, .source').find('cite')
+    body: $body.find('p')

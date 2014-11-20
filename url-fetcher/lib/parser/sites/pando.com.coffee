@@ -11,5 +11,4 @@ module.exports =
     source: 'Pando'
     headline: $('h1')
     byline: $byline.find('[rel=author]')
-    publishedAt: new Date($('meta[property="article:modified_time"]').attr('content'))
     body: $article.children()

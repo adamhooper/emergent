@@ -156,7 +156,7 @@ module.exports = Backbone.Model.extend({
 
   originDate: function() {
     if (this.get('articles')) {
-      return _.pluck(this.get('articles'), 'publishedAt').sort()[0];
+      return _.pluck(this.get('articles'), 'createdAt').sort()[0];
     }
   },
 

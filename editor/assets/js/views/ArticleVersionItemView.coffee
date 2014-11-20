@@ -49,7 +49,6 @@ module.exports = class ArticleVersionItemView extends Marionette.ItemView
     urlVersion: 'fieldset.url-version'
     source: 'input[name=source]'
     headline: 'input[name=headline]'
-    publishedAt: 'input[name=published-at]'
     byline: 'input[name=byline]'
     body: 'textarea[name=body]'
     stance: 'input[name=stance]'
@@ -138,11 +137,6 @@ module.exports = class ArticleVersionItemView extends Marionette.ItemView
             <div class="form-group">
               <label for="version-<%- cid %>-headline">Headline</label>
               <input id="version-<%- cid %>-headline" name="headline" class="form-control" placeholder="e.g., Man Bites Dog" value="<%- urlVersion.headline %>" required>
-            </div>
-            <div class="form-group">
-              <label for="version-<%- cid %>-published-at">Published/Updated date</label>
-              <input type="datetime-local" id="version-<%- cid %>-published-at" name="published-at" class="form-control" value="<%- urlVersion.publishedAt %>" required>
-              <small class="help-block">(in your timezone)</small>
             </div>
             <div class="form-group">
               <label for="version-<%- cid %>-byline">Byline</label>
@@ -239,7 +233,6 @@ module.exports = class ArticleVersionItemView extends Marionette.ItemView
       { name: 'Source', key: 'source' }
       { name: 'Headline', key: 'headline' }
       { name: 'Byline', key: 'byline' }
-      { name: 'Published', key: 'publishedAt' }
     ]
 
     $dl = $('<dl/>')
@@ -269,10 +262,6 @@ module.exports = class ArticleVersionItemView extends Marionette.ItemView
   serializeData: ->
     json = @model.toJSON()
 
-    console.log(json)
-
-    publishedAt = moment(json.urlVersion.publishedAt)
-
     isNew: @model.isNew()
     index: @model.collection.indexOf(@model)
     cid: @model.cid
@@ -280,7 +269,6 @@ module.exports = class ArticleVersionItemView extends Marionette.ItemView
     urlVersion:
       source: json.urlVersion.source
       headline: json.urlVersion.headline
-      publishedAt: publishedAt.format('YYYY-MM-DDTHH:mm:ss')
       byline: json.urlVersion.byline
       body: json.urlVersion.body
       bodyHtml: @getBodyHtml()
@@ -295,7 +283,6 @@ module.exports = class ArticleVersionItemView extends Marionette.ItemView
     urlVersion:
       source: @ui.source.val().trim()
       headline: @ui.headline.val().trim()
-      publishedAt: moment(@ui.publishedAt.val()).toDate()
       byline: @ui.byline.val().trim()
       body: @ui.body.val().trim()
     stance: @ui.stance.filter(':checked').val() || null

@@ -10,5 +10,4 @@ module.exports =
     source: 'The Telegraph'
     headline: json.title.trim()
     byline: json.authors
-    publishedAt: new Date(json.pub_date)
-    body: h.texts($body.find('p'))
+    body: $body.find('p')

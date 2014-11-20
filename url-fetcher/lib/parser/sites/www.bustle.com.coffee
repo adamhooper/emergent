@@ -18,5 +18,4 @@ module.exports =
     source: 'Bustle'
     headline: obj.title
     byline: [ obj.author?.name || '' ]
-    publishedAt: new Date(obj.updated_at)
     body: h.texts($body)

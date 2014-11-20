@@ -11,5 +11,4 @@ module.exports =
     source: 'Cult of Mac'
     headline: meta.title
     byline: [ meta.author_name ]
-    publishedAt: new Date($('meta[property="og:updated_time"]').attr('content'))
-    body: h.texts($article.find('p'))
+    body: $article.find('p')

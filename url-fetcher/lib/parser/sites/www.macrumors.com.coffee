@@ -15,5 +15,4 @@ module.exports =
     source: 'MacRumors'
     headline: $('h1.title')
     byline: byline.split(/\s*,\s*/)
-    publishedAt: h.moment.tz(dateString, 'dddd MMMM D, YYYY h:mm a', 'America/Los_Angeles')
     body: body

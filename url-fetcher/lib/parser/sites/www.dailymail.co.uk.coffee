@@ -12,14 +12,7 @@ module.exports =
     $end.nextAll().remove()
     $end.remove()
 
-    timeText = $('span.article-timestamp')
-      .last() # if there's an "updated" timestamp after the "published" one, use it
-      .text() # e.g., '22:27 GMT, 10 April 2014'
-      .replace('BST', '+01:00')
-      .replace('GMT', 'Z')
-
     source: 'Daily Mail'
     headline: $content.find('h1')
     byline: $bylines.find('.author')
-    publishedAt: new Date($('meta[property="article:modified_time"]').attr('content').substring(0, 24))
     body: $content.find('ul.article-summary li, .article-text p')

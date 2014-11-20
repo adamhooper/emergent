@@ -12,7 +12,6 @@ describe 'HTML examples', ->
       result = HtmlParser.parse(url, html)
       expect(result.headline).to.eq(expected.headline) if expected.headline?
       expect(result.byline).to.eq(expected.byline) if expected.byline?
-      expect(result.publishedAt?.toISOString()).to.eq(expected.publishedAt) if expected.publishedAt?
       expect(result.source).to.eq(expected.source) if expected.source?
       expect(normalizeBody(result.body)).to.deep.eq(normalizeBody(expected.body)) if expected.body?
 

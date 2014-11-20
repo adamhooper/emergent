@@ -9,9 +9,8 @@ module.exports =
 
       source: 'abc.net.au'
       headline: $headline
-      byline: h.texts($byline.find('a, span'))
-      publishedAt: new Date($('meta[property="og:updated_time"]').attr('content'))
-      body: h.texts($article.children().filter(':not(div)'))
+      byline: $byline.find('a, span')
+      body: $article.children().filter(':not(div)')
     else
       publishing = $('#main .publishing').text().split(/\sreported this story on\s/)
       $article = $('#article')
@@ -24,5 +23,4 @@ module.exports =
       source: 'abc.net.au'
       headline: $('#main h1')
       byline: [ publishing[0] ]
-      publishedAt: h.moment.tz(publishing[1], 'dddd, MMMM D, YYYY HH:mm:SS', 'Australia/Sydney')
       body: body

@@ -16,5 +16,4 @@ module.exports =
     source: 'Mashable'
     headline: $article.find('h1').text()
     byline: bylines
-    publishedAt: new Date($article.find('time').attr('datetime'))
     body: h.texts($article.find('p'))

@@ -33,7 +33,6 @@ describe 'ArticleVersionController', ->
         source: 'source'
         headline: 'headline1'
         byline: 'byline1'
-        publishedAt: new Date().toISOString()
         body: 'body1\n\nbody1\n\nbody1'
       }, @email)).then((x) => @urlVersion = x)
       .then(=> ArticleVersion.create({
@@ -72,7 +71,6 @@ describe 'ArticleVersionController', ->
           expect(json[0].urlVersionId).to.eq(@urlVersion.id)
           expect(json[0].urlVersion).to.exist
           expect(json[0].urlVersion).to.have.property('id', @urlVersion.id)
-          expect(json[0].urlVersion).to.have.property('publishedAt', @urlVersion.publishedAt.toISOString())
           expect(json[0].urlVersion).to.have.property('body', @urlVersion.body)
           expect(json[0].stance).to.be.null
           expect(json[0].headlineStance).to.be.null
@@ -89,7 +87,6 @@ describe 'ArticleVersionController', ->
         source: 'source'
         headline: 'headline2'
         byline: 'byline2'
-        publishedAt: '2014-07-25T14:36:12.900Z'
         body: 'body2\n\nbody2\n\nbody2'
 
     it 'should return 404 when the Article does not exist', ->
@@ -124,7 +121,6 @@ describe 'ArticleVersionController', ->
         source: 'source'
         headline: 'headline2'
         byline: 'byline2'
-        publishedAt: '2014-07-25T14:36:12.900Z'
         body: 'body2\n\nbody2\n\nbody2'
 
     it 'should return 404 when the Article does not exist', ->

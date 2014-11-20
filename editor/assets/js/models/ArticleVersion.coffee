@@ -8,6 +8,5 @@ module.exports = class ArticleVersion extends Backbone.Model
     urlVersion:
       source: ''
       headline: ''
-      publishedAt: null
       byline: ''
       body: ''

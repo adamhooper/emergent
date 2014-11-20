@@ -11,12 +11,9 @@ module.exports =
     else
       byline = $('[rel=author]')
 
-    publishedAt = $('meta[property="article:published_time"], .metaTime [itemprop=datePublished]').eq(0).attr('content')
-
     $article = $('div.entryText, div[itemprop=articleBody]').eq(0)
 
     source: 'NYMag'
     headline: $headline
     byline: byline
-    publishedAt: publishedAt
     body: $article.find('p')

@@ -21,5 +21,4 @@ module.exports =
     source: 'The Jerusalem Post'
     headline: $article.find('h1, .article-title')
     byline: h.texts($article.find('div.author>*, [rel="Author"]')).map((s) -> s.replace(/^By /, ''))
-    publishedAt: h.moment.tz($article.find('div.date, .article-date-time').text(), 'MM/DD/YYYY HH:mm', 'Asia/Jerusalem')
     body: body

@@ -25,7 +25,6 @@ WriteableUrlVersionFields = [
   'source'
   'headline'
   'byline'
-  'publishedAt'
   'body'
 ]
 
@@ -59,7 +58,6 @@ module.exports =
         row = { urlId: article.urlId }
         for k in WriteableUrlVersionFields
           row[k] = req.body.urlVersion?[k]
-        row.publishedAt = new Date(row.publishedAt)
         UrlVersion.create(row, req.user.email)
           .then (urlVersion) ->
             row = { articleId: article.id, urlVersionId: urlVersion.id }

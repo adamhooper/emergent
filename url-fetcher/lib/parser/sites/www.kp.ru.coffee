@@ -6,4 +6,5 @@ module.exports =
 
     source: 'kp.ru'
     headline: $h1.text()
+    byline: []
     body: h.texts($('#hypercontext').children('p'))

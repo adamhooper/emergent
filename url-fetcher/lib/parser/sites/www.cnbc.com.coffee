@@ -7,7 +7,6 @@ module.exports =
     $body.find('.twitter-tweet').remove()
 
     source: 'CNBC'
-    headline: $('h1').text()
-    byline: h.texts($('[rel=author]'))
-    publishedAt: new Date($('meta[property="article:modified_time"]').attr('content'))
-    body: h.texts($body.children())
+    headline: $('h1')
+    byline: $('[rel=author]')
+    body: $body.children()
