@@ -29,10 +29,12 @@ describe 'url_reparser', ->
     @sandbox.stub(models.UrlVersion, 'findAll').returns(Promise.resolve([]))
     @sandbox.stub(models.UrlVersion, 'create').returns(Promise.resolve(id: '00000000-0000-0000-0000-000000000000'))
     @sandbox.stub(models.UrlVersion, 'update').returns(Promise.resolve(id: '00000000-0000-0000-0000-000000000000'))
+    @sandbox.stub(models.UrlVersion, 'destroy').returns(Promise.resolve(null))
     @sandbox.stub(models.Article, 'findAll').returns(Promise.resolve([]))
     @sandbox.stub(models.ArticleVersion, 'findAll').returns(Promise.resolve([]))
     @sandbox.stub(models.ArticleVersion, 'create').returns(Promise.resolve(id: '00000000-0000-0000-0000-000000000000'))
     @sandbox.stub(models.ArticleVersion, 'bulkUpdate').returns(Promise.resolve(id: '00000000-0000-0000-0000-000000000000'))
+    @sandbox.stub(models.ArticleVersion, 'destroy').returns(Promise.resolve(null))
 
     @urlId = 'f5c681b9-4869-476f-a324-6bd78b8c7100'
     @url = 'http://example.org'
@@ -223,4 +225,19 @@ describe 'url_reparser', ->
           null,
           transaction: @transaction
         )
+        done()
+
+    it 'should delete a UrlVersion if it is redundant', (done) ->
+      v1 = _.extend({}, @v1, urlGetId: @g1.id)
+      v2 = _.extend({}, @v2, urlGetId: @g2.id)
+      models.UrlGet.findAll.returns(Promise.resolve([ @g1, @g2 ]))
+      models.UrlVersion.findAll.returns(Promise.resolve([ v1, v2 ]))
+      v3 = _.extend({}, v1, parserVersion: 3)
+      @htmlParser.parse.returns(v3)
+      @subject.reparse @urlId, @url, (err) =>
+        expect(err).to.be.null
+        expect(models.UrlVersion.create).not.to.have.been.called
+        expect(models.UrlVersion.update).to.have.been.calledWith(v1)
+        expect(models.ArticleVersion.destroy).to.have.been.called
+        expect(models.UrlVersion.destroy).to.have.been.called
         done()
