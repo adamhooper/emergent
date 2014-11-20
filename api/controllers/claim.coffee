@@ -61,10 +61,13 @@ module.exports =
   'get /claims': (req, res, next) ->
     models.Story.findAll(where: { published: true })
       .tap (claims) ->
-        getShareCounts(claims.map((c) -> c.id))
-          .tap (counts) ->
-            (c.nShares = counts[c.id]) for c in claims
-            null
+        if claims.length
+          getShareCounts(claims.map((c) -> c.id))
+            .tap (counts) ->
+              (c.nShares = counts[c.id]) for c in claims
+              null
+        else
+          null
       .then((claims) -> { claims: claims.map(claimToJson) })
       .then (json) ->
         res.header('cache-control', 'public, max-age=300')
