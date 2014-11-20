@@ -1,18 +1,33 @@
 <!DOCTYPE html>
 <html lang="en-CA">
 <head>
-  <script src="/scripts/app.js"></script>
+  <script src="/scripts/app.min.js"></script>
   <link rel="stylesheet" type="text/css" href="/styles/main.css" />
+  <title>Emergent</title>
 </head>
 
 <body class="site">
 
-  <header class="site-header">
+  <main id="react"></main>
+
+  <footer class="site-footer">
     <div class="container">
-      <h1>Emergent</h1>
+      <div class="mailchimp">
+        <div id="mc_embed_signup">
+          <h2 class="mailchimp-title">Subscribe to our mailing list</h2>
+          <form action="//craigsilverman.us2.list-manage.com/subscribe/post?u=657b595bbd3c63e045787f019&amp;id=80df098e56" method="post" id="mc-embedded-subscribe-form" class="mailchimp" name="mc-embedded-subscribe-form" target="_blank" novalidate>
+        	  <label for="mce-EMAIL">Email Address</label>
+        	  <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+            <div style="position: absolute; left: -5000px;"><input type="text" name="b_657b595bbd3c63e045787f019_80df098e56" tabindex="-1" value=""></div>
+            <input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button">
+          </form>
+        </div>
+      </div>
+      <div class="social-media">
+        <a href="http://www.twitter.com/EmergentDotInfo" class="icon icon-twitter"><span class="sr-only">Twitter: @EmergentDotInfo</span></a>
+      </div>
     </div>
-  </header>
-  <main id="react" class="container"></main>
+  </footer>
 
 </body>
 
