@@ -3,16 +3,16 @@ StoryListView = require('./StoryListView')
 NewStoryView = require('./NewStoryView')
 
 module.exports = class StoryListLayout extends Marionette.LayoutView
+  className: 'container story-list-layout'
+
   template: -> """
-    <div class="story-list-layout">
-      <h1>Stories</h1>
-      <div class="explanation">
-        <p>A Story is an actual event: myth, truth, or somewhere in between. Lots of news sites may write lots of articles about a single Story.</p>
-        <p>Here are the stories in the system already:</p>
-      </div>
-      <div class="story-list"></div>
-      <div class="new-story-form"></div>
+    <h1>Stories</h1>
+    <div class="explanation">
+      <p>A Story is an actual event: myth, truth, or somewhere in between. Lots of news sites may write lots of articles about a single Story.</p>
+      <p>Here are the stories in the system already:</p>
     </div>
+    <div class="story-list"></div>
+    <div class="new-story-form"></div>
     """
 
   regions:

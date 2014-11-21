@@ -5,3 +5,35 @@
 @import 'apps/StoryShow.less';
 @import 'apps/UnseenArticleList.less';
 @import 'spin.less';
+
+html, body {
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  h1 {
+    margin-top: 0;
+  }
+
+  &>nav.navbar {
+    position: absolute;
+    width: 100%;
+    height: @navbar-height;
+    z-index: 1;
+  }
+
+  &>.main {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    padding-top: @navbar-height + @navbar-margin-bottom;
+  }
+
+  #app {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+}

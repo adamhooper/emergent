@@ -5,10 +5,16 @@ ArticleVersionListPlaceholderView = require('./ArticleVersionListPlaceholderView
 StoryWithUnseenArticlesListView = require('./StoryWithUnseenArticlesListView')
 
 module.exports = class UnseenArticleListLayout extends Marionette.LayoutView
+  className: 'container unseen-article-list-layout'
+
   template: -> """
-    <div class="unseen-article-list-layout">
-      <h1>Unseen Updates</h1>
-      <p class="explanation">Websites change behind your back. This page will show you all the updates you haven't seen. Please set their stances.</p>
+    <div class="row header">
+      <div class="col-xs-12">
+        <h1>Unseen Updates</h1>
+        <p class="explanation">Websites change behind your back. This page will show you all the updates you haven't seen. Please set their stances.</p>
+      </div>
+    </div>
+    <div class="row body">
       <div class="col-xs-4 articles">
       </div>
       <div class="col-xs-8 versions">

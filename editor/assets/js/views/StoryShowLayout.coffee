@@ -6,7 +6,7 @@ ArticleVersionListView = require('./ArticleVersionListView')
 ArticleVersionListPlaceholderView = require('./ArticleVersionListPlaceholderView')
 
 module.exports = class StoryShowLayout extends Marionette.LayoutView
-  className: 'story-show-layout'
+  className: 'container story-show-layout'
 
   template: -> '''
     <div class="row">
