@@ -12,12 +12,22 @@ module.exports =
       reporterText = reporterText.substring(reporterText.indexOf(' ') + 1)
       reporterText.split(/\s*,\s*|\s*,? and\s*/)
 
-    $body = if $article.children('p').length
-      $article.children('p, span.cross-head')
+    source = if $('div.the-papers.main-content-container').length
+      'BBC The Papers'
     else
-      $('.live-event-summary li, .description p, .commentary-title')
+      'BBC'
 
-    source: 'BBC'
+    # Normal story
+    $body = $article.children('p, span.cross-head')
+
+    if !$body.length
+      # Live event
+      $body = $('.live-event-summary li, .description p, .commentary-title')
+    if !$body.length
+      # The Papers
+      $body = $article.find('.caption span')
+
+    source: source
     headline: $('h1')
     byline: bylines
     body: $body
