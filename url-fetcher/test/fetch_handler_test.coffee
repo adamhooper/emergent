@@ -120,11 +120,13 @@ describe 'FetchHandler', ->
 
     describe 'when this UrlVersion already exists', ->
       beforeEach ->
-        models.UrlVersion.find.returns(Promise.resolve(sha1: '1f28fcbf9c90691c5e847ef994ba6e6c05970452'))
+        models.UrlVersion.find.returns(Promise.resolve(sha1: '6101b8c4cb486e0c4b140357b0165b8bd493ad1b'))
 
       it 'should check the UrlVersion', (done) ->
         @go =>
-          expect(models.UrlVersion.find).to.have.been.calledWith(where: { urlId: @id }, order: [[ 'createdAt', 'DESC' ]])
+          expect(models.UrlVersion.find).to.have.been.calledWith
+            where: { urlId: @id, createdBy: null }
+            order: [[ 'createdAt', 'DESC' ]]
           done()
 
       it 'should not insert a new UrlVersion', (done) ->
