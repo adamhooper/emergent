@@ -48,17 +48,6 @@ class HtmlParser
       else
         ''
 
-    toDate = (x) ->
-      if _.isDate(x) # Date
-        x
-      else if x?.toDate? # Moment
-        x.toDate()
-      else if x
-        x = toString(x)
-        new Date(x)
-      else
-        null
-
     # All must be non-null in actual code. But null can be handy during
     # test-driven development, so we handle it on byline/body.
     source: toString(ret.source)
