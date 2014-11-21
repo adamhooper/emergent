@@ -1,4 +1,5 @@
 module.exports =
+  version: 2
   domains: [ 'www.slate.com' ]
   parse: (url, $, h) ->
     source: 'Slate'
