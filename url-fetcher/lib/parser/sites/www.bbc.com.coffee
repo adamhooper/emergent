@@ -1,5 +1,5 @@
 module.exports =
-  version: 2
+  version: 3
   domains: [ 'www.bbc.com' ]
   parse: (url, $, h) ->
     $article = $('div.story-body').first()
