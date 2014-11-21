@@ -60,7 +60,7 @@ module.exports = class UrlReparser
     models.UrlVersion.update(urlVersion, { parserVersion: parserVersion }, null, transaction: transaction)
 
   _updateUrlVersion: (urlVersion, attributes, transaction) ->
-    @_log("UrlVersion.update urlId #{urlVersion.urlId}, urlGetId #{urlVersion.urlGetId}, sha1 #{urlVersion.sha1}, setting everything parserVersion #{parserVersion}")
+    @_log("UrlVersion.update urlId #{urlVersion.urlId}, urlGetId #{urlVersion.urlGetId}, sha1 #{urlVersion.sha1}, setting everything")
     Promise.all([
       models.UrlVersion.update(urlVersion, attributes, null, transaction: transaction)
       models.ArticleVersion.bulkUpdate({ stance: null, headlineStance: null }, { urlVersionId: urlVersion.id }, null, transaction: transaction)
