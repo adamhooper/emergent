@@ -60,7 +60,7 @@ describe 'url_reparser', ->
       byline: 'byline 1'
       body: 'body 1'
       parserVersion: 2
-      sha1: 'b62cd9a289f71398fe7a561065401e9b36c1a0c5'
+      sha1: 'e249e976f454c143ee4421f420dcfe59593f67ba'
 
     @v2 =
       source: 'source 2'
