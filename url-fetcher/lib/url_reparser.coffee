@@ -60,7 +60,7 @@ module.exports = class UrlReparser
     models.UrlVersion.update(urlVersion, { parserVersion: parserVersion }, null, transaction: transaction)
 
   _updateUrlVersion: (urlVersion, attributes, transaction) ->
-    @_log("UrlVersion.update urlId #{urlVersion.urlId}, urlGetId #{urlVersion.urlGetId}, sha1 #{urlVersion.sha1}, setting everything")
+    @_log("UrlVersion.update urlId #{urlVersion.urlId}, urlGetId #{urlVersion.urlGetId}, sha1 #{urlVersion.sha1} -> #{attributes.sha1}, setting everything")
     Promise.all([
       models.UrlVersion.update(urlVersion, attributes, null, transaction: transaction)
       models.ArticleVersion.bulkUpdate({ stance: null, headlineStance: null }, { urlVersionId: urlVersion.id }, null, transaction: transaction)
@@ -86,7 +86,6 @@ module.exports = class UrlReparser
         curUrlVersion = null # the head of the "fresh" list of UrlVersions
         previousUrlGet = null
         nextSavedUrlVersion = urlVersions.shift() # next in the "stale" list
-        lastSavedUrlVersion = null
 
         while (urlGet = urlGets.shift())?
           try
@@ -95,7 +94,7 @@ module.exports = class UrlReparser
             return opChain.finally(-> transaction.rollback().throw(e))
 
           if newUrlVersion.urlGetId == nextSavedUrlVersion?.urlGetId
-            if newUrlVersion.sha1 == lastSavedUrlVersion?.sha1
+            if newUrlVersion.sha1 == curUrlVersion?.sha1
               # newUrlVersion is a duplicate.
               # That means nextSavedUrlVersion is a duplicate; delete it.
               chainOp('_destroyUrlVersion', nextSavedUrlVersion, transaction)
@@ -105,7 +104,6 @@ module.exports = class UrlReparser
                 chainOp('_updateUrlVersionParserVersion', nextSavedUrlVersion, newUrlVersion.parserVersion, transaction)
               else
                 chainOp('_updateUrlVersion', nextSavedUrlVersion, newUrlVersion, transaction)
-              lastSavedUrlVersion = nextSavedUrlVersion
             nextSavedUrlVersion = urlVersions.shift()
           else if newUrlVersion.sha1 != curUrlVersion?.sha1
             # add new version
@@ -114,7 +112,6 @@ module.exports = class UrlReparser
             else
               null
             chainOp('_createUrlVersion', newUrlVersion, urlGet.createdAt, transaction)
-            lastSavedUrlVersion = newUrlVersion
           else
             # nothing
 
