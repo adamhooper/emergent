@@ -1,4 +1,5 @@
 module.exports =
+  version: 2
   domains: [ 'nationalreport.net' ]
   parse: (url, $, h) ->
     $body = $('.entry-content')
