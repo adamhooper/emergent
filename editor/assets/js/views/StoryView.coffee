@@ -62,7 +62,7 @@ module.exports = class StoryView extends Marionette.ItemView
           </p>
           <% if (truthinessDescription || truthinessUrl) { %>
             <p class="not-editing">
-              <strong>Why:</strong>
+              <strong>Why is it true or false?</strong>
               <% if (truthinessDescription) { %>
                 <%- truthinessDescription %>
               <% } %>
@@ -98,8 +98,8 @@ module.exports = class StoryView extends Marionette.ItemView
             <input type="datetime-local" class="form-control" id="claim-truthiness-date" name="truthinessDate" value="<%- truthinessDateLocal %>">
           </div>
           <div class="form-group truthiness-description editing">
-            <label for="claim-truthiness-description">Why, in tweet form?</label>
-            <input class="form-control" id="claim-truthiness-description" name="truthinessDescription" value="<%- truthinessDescription %>">
+            <label for="claim-truthiness-description">Why:</label>
+            <textarea class="form-control" id="claim-truthiness-description" rows="5" name="truthinessDescription" placeholder="A gnome told me."><%- truthinessDescription %></textarea>
           </div>
           <div class="form-group truthiness-url editing">
             <label for="claim-truthiness-url">Which URL broke the truth?</label>
