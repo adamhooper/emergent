@@ -12,6 +12,7 @@
     "serve-static": "~> 1.6.2"
   },
   "devDependencies": {
+    "autolinker": "^0.15.0",
     "backbone": "latest",
     "grunt": "latest",
     "grunt-browserify": "latest",

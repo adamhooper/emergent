@@ -6,6 +6,7 @@ var Barchart = require('./bar_chart.js.jsx');
 var Link = require('react-router').Link;
 var _ = require('underscore');
 var moment = require('moment');
+var Autolinker = require('autolinker');
 
 module.exports = React.createClass({
 
@@ -85,6 +86,7 @@ module.exports = React.createClass({
   },
 
   render: function() {
+    var linker = new Autolinker();
     var claim = this.state.claim;
     var shares = claim.sharesByStance();
     var colors = [
@@ -157,7 +159,7 @@ module.exports = React.createClass({
               <header className="section-header">
                 <h1 className="page-title">{claim.get('headline')}</h1>
                 <p>{claim.get('description')}</p>
-                {claim.get('origin') ? <p className="tracking"><strong>Originated: </strong>{moment(originDate).format('MMM D, YYYY H:mm') + ' (' + moment(originDate).fromNow() + ')'} {claim.get('originUrl') ? <a href={claim.get('originUrl')} target="_blank">View Article</a> : null}<br />{claim.get('origin')}</p> : null}
+                {claim.get('origin') ? <p className="tracking"><strong>Originated: </strong>{moment(originDate).format('MMM D, YYYY H:mm') + ' (' + moment(originDate).fromNow() + ')'} {claim.get('originUrl') ? <a href={claim.get('originUrl')} target="_blank">View Article</a> : null}<br /><span dangerouslySetInnerHTML={{__html: linker.link(claim.get('origin'))}}/></p> : null}
                 <p className="tracking"><strong>Started Tracking:</strong> {moment(startedTracking).format('MMM D, YYYY H:mm') + ' (' + moment(startedTracking).fromNow() + ')'}</p>
                 {claim.get('truthiness') != 'unknown' ? <p className={"tracking tracking-" + claim.get('truthiness')}><strong>Resolved: </strong>{moment(truthinessDate).format('MMM D, YYYY H:mm') + ' (' + moment(truthinessDate).fromNow() + ')'} {claim.get('truthinessUrl') ? <a href={claim.get('truthinessUrl')} target="_blank">View Article</a> : null}<br />{claim.get('truthinessDescription')}</p> : null}
               </header>

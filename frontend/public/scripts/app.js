@@ -1,4 +1,2001 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+(function (root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    // AMD. Register as an anonymous module.
+    define([], function () {
+      return (root.returnExportsGlobal = factory());
+    });
+  } else if (typeof exports === 'object') {
+    // Node. Does not work with strict CommonJS, but
+    // only CommonJS-like enviroments that support module.exports,
+    // like Node.
+    module.exports = factory();
+  } else {
+    root['Autolinker'] = factory();
+  }
+}(this, function () {
+
+	/*!
+	 * Autolinker.js
+	 * 0.15.0
+	 *
+	 * Copyright(c) 2014 Gregory Jacobs <greg@greg-jacobs.com>
+	 * MIT Licensed. http://www.opensource.org/licenses/mit-license.php
+	 *
+	 * https://github.com/gregjacobs/Autolinker.js
+	 */
+	/**
+	 * @class Autolinker
+	 * @extends Object
+	 * 
+	 * Utility class used to process a given string of text, and wrap the URLs, email addresses, and Twitter handles in 
+	 * the appropriate anchor (&lt;a&gt;) tags to turn them into links.
+	 * 
+	 * Any of the configuration options may be provided in an Object (map) provided to the Autolinker constructor, which
+	 * will configure how the {@link #link link()} method will process the links.
+	 * 
+	 * For example:
+	 * 
+	 *     var autolinker = new Autolinker( {
+	 *         newWindow : false,
+	 *         truncate  : 30
+	 *     } );
+	 *     
+	 *     var html = autolinker.link( "Joe went to www.yahoo.com" );
+	 *     // produces: 'Joe went to <a href="http://www.yahoo.com">yahoo.com</a>'
+	 * 
+	 * 
+	 * The {@link #static-link static link()} method may also be used to inline options into a single call, which may
+	 * be more convenient for one-off uses. For example:
+	 * 
+	 *     var html = Autolinker.link( "Joe went to www.yahoo.com", {
+	 *         newWindow : false,
+	 *         truncate  : 30
+	 *     } );
+	 *     // produces: 'Joe went to <a href="http://www.yahoo.com">yahoo.com</a>'
+	 * 
+	 * 
+	 * ## Custom Replacements of Links
+	 * 
+	 * If the configuration options do not provide enough flexibility, a {@link #replaceFn} may be provided to fully customize
+	 * the output of Autolinker. This function is called once for each URL/Email/Twitter handle match that is encountered.
+	 * 
+	 * For example:
+	 * 
+	 *     var input = "...";  // string with URLs, Email Addresses, and Twitter Handles
+	 *     
+	 *     var linkedText = Autolinker.link( input, {
+	 *         replaceFn : function( autolinker, match ) {
+	 *             console.log( "href = ", match.getAnchorHref() );
+	 *             console.log( "text = ", match.getAnchorText() );
+	 *         
+	 *             switch( match.getType() ) {
+	 *                 case 'url' : 
+	 *                     console.log( "url: ", match.getUrl() );
+	 *                     
+	 *                     if( match.getUrl().indexOf( 'mysite.com' ) === -1 ) {
+	 *                         var tag = autolinker.getTagBuilder().build( match );  // returns an `Autolinker.HtmlTag` instance, which provides mutator methods for easy changes
+	 *                         tag.setAttr( 'rel', 'nofollow' );
+	 *                         tag.addClass( 'external-link' );
+	 *                         
+	 *                         return tag;
+	 *                         
+	 *                     } else {
+	 *                         return true;  // let Autolinker perform its normal anchor tag replacement
+	 *                     }
+	 *                     
+	 *                 case 'email' :
+	 *                     var email = match.getEmail();
+	 *                     console.log( "email: ", email );
+	 *                     
+	 *                     if( email === "my@own.address" ) {
+	 *                         return false;  // don't auto-link this particular email address; leave as-is
+	 *                     } else {
+	 *                         return;  // no return value will have Autolinker perform its normal anchor tag replacement (same as returning `true`)
+	 *                     }
+	 *                 
+	 *                 case 'twitter' :
+	 *                     var twitterHandle = match.getTwitterHandle();
+	 *                     console.log( twitterHandle );
+	 *                     
+	 *                     return '<a href="http://newplace.to.link.twitter.handles.to/">' + twitterHandle + '</a>';
+	 *             }
+	 *         }
+	 *     } );
+	 * 
+	 * 
+	 * The function may return the following values:
+	 * 
+	 * - `true` (Boolean): Allow Autolinker to replace the match as it normally would.
+	 * - `false` (Boolean): Do not replace the current match at all - leave as-is.
+	 * - Any String: If a string is returned from the function, the string will be used directly as the replacement HTML for
+	 *   the match.
+	 * - An {@link Autolinker.HtmlTag} instance, which can be used to build/modify an HTML tag before writing out its HTML text.
+	 * 
+	 * @constructor
+	 * @param {Object} [config] The configuration options for the Autolinker instance, specified in an Object (map).
+	 */
+	var Autolinker = function( cfg ) {
+		Autolinker.Util.assign( this, cfg );  // assign the properties of `cfg` onto the Autolinker instance. Prototype properties will be used for missing configs.
+
+		this.matchValidator = new Autolinker.MatchValidator();
+	};
+
+
+	Autolinker.prototype = {
+		constructor : Autolinker,  // fix constructor property
+
+		/**
+		 * @cfg {Boolean} urls
+		 * 
+		 * `true` if miscellaneous URLs should be automatically linked, `false` if they should not be.
+		 */
+		urls : true,
+
+		/**
+		 * @cfg {Boolean} email
+		 * 
+		 * `true` if email addresses should be automatically linked, `false` if they should not be.
+		 */
+		email : true,
+
+		/**
+		 * @cfg {Boolean} twitter
+		 * 
+		 * `true` if Twitter handles ("@example") should be automatically linked, `false` if they should not be.
+		 */
+		twitter : true,
+
+		/**
+		 * @cfg {Boolean} newWindow
+		 * 
+		 * `true` if the links should open in a new window, `false` otherwise.
+		 */
+		newWindow : true,
+
+		/**
+		 * @cfg {Boolean} stripPrefix
+		 * 
+		 * `true` if 'http://' or 'https://' and/or the 'www.' should be stripped from the beginning of URL links' text, 
+		 * `false` otherwise.
+		 */
+		stripPrefix : true,
+
+		/**
+		 * @cfg {Number} truncate
+		 * 
+		 * A number for how many characters long URLs/emails/twitter handles should be truncated to inside the text of 
+		 * a link. If the URL/email/twitter is over this number of characters, it will be truncated to this length by 
+		 * adding a two period ellipsis ('..') to the end of the string.
+		 * 
+		 * For example: A url like 'http://www.yahoo.com/some/long/path/to/a/file' truncated to 25 characters might look
+		 * something like this: 'yahoo.com/some/long/pat..'
+		 */
+
+		/**
+		 * @cfg {String} className
+		 * 
+		 * A CSS class name to add to the generated links. This class will be added to all links, as well as this class
+		 * plus url/email/twitter suffixes for styling url/email/twitter links differently.
+		 * 
+		 * For example, if this config is provided as "myLink", then:
+		 * 
+		 * - URL links will have the CSS classes: "myLink myLink-url"
+		 * - Email links will have the CSS classes: "myLink myLink-email", and
+		 * - Twitter links will have the CSS classes: "myLink myLink-twitter"
+		 */
+		className : "",
+
+		/**
+		 * @cfg {Function} replaceFn
+		 * 
+		 * A function to individually process each URL/Email/Twitter match found in the input string.
+		 * 
+		 * See the class's description for usage.
+		 * 
+		 * This function is called with the following parameters:
+		 * 
+		 * @cfg {Autolinker} replaceFn.autolinker The Autolinker instance, which may be used to retrieve child objects from (such
+		 *   as the instance's {@link #getTagBuilder tag builder}).
+		 * @cfg {Autolinker.match.Match} replaceFn.match The Match instance which can be used to retrieve information about the
+		 *   {@link Autolinker.match.Url URL}/{@link Autolinker.match.Email email}/{@link Autolinker.match.Twitter Twitter}
+		 *   match that the `replaceFn` is currently processing.
+		 */
+
+
+		/**
+		 * @private
+		 * @property {RegExp} htmlCharacterEntitiesRegex
+		 *
+		 * The regular expression that matches common HTML character entities.
+		 * 
+		 * Ignoring &amp; as it could be part of a query string -- handling it separately.
+		 */
+		htmlCharacterEntitiesRegex: /(&nbsp;|&#160;|&lt;|&#60;|&gt;|&#62;)/gi,
+
+		/**
+		 * @private
+		 * @property {RegExp} matcherRegex
+		 * 
+		 * The regular expression that matches URLs, email addresses, and Twitter handles.
+		 * 
+		 * This regular expression has the following capturing groups:
+		 * 
+		 * 1. Group that is used to determine if there is a Twitter handle match (i.e. \@someTwitterUser). Simply check for its 
+		 *    existence to determine if there is a Twitter handle match. The next couple of capturing groups give information 
+		 *    about the Twitter handle match.
+		 * 2. The whitespace character before the \@sign in a Twitter handle. This is needed because there are no lookbehinds in
+		 *    JS regular expressions, and can be used to reconstruct the original string in a replace().
+		 * 3. The Twitter handle itself in a Twitter match. If the match is '@someTwitterUser', the handle is 'someTwitterUser'.
+		 * 4. Group that matches an email address. Used to determine if the match is an email address, as well as holding the full 
+		 *    address. Ex: 'me@my.com'
+		 * 5. Group that matches a URL in the input text. Ex: 'http://google.com', 'www.google.com', or just 'google.com'.
+		 *    This also includes a path, url parameters, or hash anchors. Ex: google.com/path/to/file?q1=1&q2=2#myAnchor
+		 * 6. Group that matches a protocol URL (i.e. 'http://google.com'). This is used to match protocol URLs with just a single
+		 *    word, like 'http://localhost', where we won't double check that the domain name has at least one '.' in it.
+		 * 7. A protocol-relative ('//') match for the case of a 'www.' prefixed URL. Will be an empty string if it is not a 
+		 *    protocol-relative match. We need to know the character before the '//' in order to determine if it is a valid match
+		 *    or the // was in a string we don't want to auto-link.
+		 * 8. A protocol-relative ('//') match for the case of a known TLD prefixed URL. Will be an empty string if it is not a 
+		 *    protocol-relative match. See #6 for more info. 
+		 */
+		matcherRegex : (function() {
+			var twitterRegex = /(^|[^\w])@(\w{1,15})/,              // For matching a twitter handle. Ex: @gregory_jacobs
+
+			    emailRegex = /(?:[\-;:&=\+\$,\w\.]+@)/,             // something@ for email addresses (a.k.a. local-part)
+
+			    protocolRegex = /(?:[A-Za-z][-.+A-Za-z0-9]+:(?![A-Za-z][-.+A-Za-z0-9]+:\/\/)(?!\d+\/?)(?:\/\/)?)/,  // match protocol, allow in format "http://" or "mailto:". However, do not match the first part of something like 'link:http://www.google.com' (i.e. don't match "link:"). Also, make sure we don't interpret 'google.com:8000' as if 'google.com' was a protocol here (i.e. ignore a trailing port number in this regex)
+			    wwwRegex = /(?:www\.)/,                             // starting with 'www.'
+			    domainNameRegex = /[A-Za-z0-9\.\-]*[A-Za-z0-9\-]/,  // anything looking at all like a domain, non-unicode domains, not ending in a period
+			    tldRegex = /\.(?:international|construction|contractors|enterprises|photography|productions|foundation|immobilien|industries|management|properties|technology|christmas|community|directory|education|equipment|institute|marketing|solutions|vacations|bargains|boutique|builders|catering|cleaning|clothing|computer|democrat|diamonds|graphics|holdings|lighting|partners|plumbing|supplies|training|ventures|academy|careers|company|cruises|domains|exposed|flights|florist|gallery|guitars|holiday|kitchen|neustar|okinawa|recipes|rentals|reviews|shiksha|singles|support|systems|agency|berlin|camera|center|coffee|condos|dating|estate|events|expert|futbol|kaufen|luxury|maison|monash|museum|nagoya|photos|repair|report|social|supply|tattoo|tienda|travel|viajes|villas|vision|voting|voyage|actor|build|cards|cheap|codes|dance|email|glass|house|mango|ninja|parts|photo|shoes|solar|today|tokyo|tools|watch|works|aero|arpa|asia|best|bike|blue|buzz|camp|club|cool|coop|farm|fish|gift|guru|info|jobs|kiwi|kred|land|limo|link|menu|mobi|moda|name|pics|pink|post|qpon|rich|ruhr|sexy|tips|vote|voto|wang|wien|wiki|zone|bar|bid|biz|cab|cat|ceo|com|edu|gov|int|kim|mil|net|onl|org|pro|pub|red|tel|uno|wed|xxx|xyz|ac|ad|ae|af|ag|ai|al|am|an|ao|aq|ar|as|at|au|aw|ax|az|ba|bb|bd|be|bf|bg|bh|bi|bj|bm|bn|bo|br|bs|bt|bv|bw|by|bz|ca|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|co|cr|cu|cv|cw|cx|cy|cz|de|dj|dk|dm|do|dz|ec|ee|eg|er|es|et|eu|fi|fj|fk|fm|fo|fr|ga|gb|gd|ge|gf|gg|gh|gi|gl|gm|gn|gp|gq|gr|gs|gt|gu|gw|gy|hk|hm|hn|hr|ht|hu|id|ie|il|im|in|io|iq|ir|is|it|je|jm|jo|jp|ke|kg|kh|ki|km|kn|kp|kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|me|mg|mh|mk|ml|mm|mn|mo|mp|mq|mr|ms|mt|mu|mv|mw|mx|my|mz|na|nc|ne|nf|ng|ni|nl|no|np|nr|nu|nz|om|pa|pe|pf|pg|ph|pk|pl|pm|pn|pr|ps|pt|pw|py|qa|re|ro|rs|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sj|sk|sl|sm|sn|so|sr|st|su|sv|sx|sy|sz|tc|td|tf|tg|th|tj|tk|tl|tm|tn|to|tp|tr|tt|tv|tw|tz|ua|ug|uk|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|ye|yt|za|zm|zw)\b/,   // match our known top level domains (TLDs)
+
+			    // Allow optional path, query string, and hash anchor, not ending in the following characters: "?!:,.;"
+			    // http://blog.codinghorror.com/the-problem-with-urls/
+			    urlSuffixRegex = /[\-A-Za-z0-9+&@#\/%=~_()|'$*\[\]?!:,.;]*[\-A-Za-z0-9+&@#\/%=~_()|'$*\[\]]/;
+
+			return new RegExp( [
+				'(',  // *** Capturing group $1, which can be used to check for a twitter handle match. Use group $3 for the actual twitter handle though. $2 may be used to reconstruct the original string in a replace() 
+					// *** Capturing group $2, which matches the whitespace character before the '@' sign (needed because of no lookbehinds), and 
+					// *** Capturing group $3, which matches the actual twitter handle
+					twitterRegex.source,
+				')',
+
+				'|',
+
+				'(',  // *** Capturing group $4, which is used to determine an email match
+					emailRegex.source,
+					domainNameRegex.source,
+					tldRegex.source,
+				')',
+
+				'|',
+
+				'(',  // *** Capturing group $5, which is used to match a URL
+					'(?:', // parens to cover match for protocol (optional), and domain
+						'(',  // *** Capturing group $6, for a protocol-prefixed url (ex: http://google.com)
+							protocolRegex.source,
+							domainNameRegex.source,
+						')',
+
+						'|',
+
+						'(?:',  // non-capturing paren for a 'www.' prefixed url (ex: www.google.com)
+							'(.?//)?',  // *** Capturing group $7 for an optional protocol-relative URL. Must be at the beginning of the string or start with a non-word character
+							wwwRegex.source,
+							domainNameRegex.source,
+						')',
+
+						'|',
+
+						'(?:',  // non-capturing paren for known a TLD url (ex: google.com)
+							'(.?//)?',  // *** Capturing group $8 for an optional protocol-relative URL. Must be at the beginning of the string or start with a non-word character
+							domainNameRegex.source,
+							tldRegex.source,
+						')',
+					')',
+
+					'(?:' + urlSuffixRegex.source + ')?',  // match for path, query string, and/or hash anchor - optional
+				')'
+			].join( "" ), 'gi' );
+		} )(),
+
+		/**
+		 * @private
+		 * @property {RegExp} charBeforeProtocolRelMatchRegex
+		 * 
+		 * The regular expression used to retrieve the character before a protocol-relative URL match.
+		 * 
+		 * This is used in conjunction with the {@link #matcherRegex}, which needs to grab the character before a protocol-relative
+		 * '//' due to the lack of a negative look-behind in JavaScript regular expressions. The character before the match is stripped
+		 * from the URL.
+		 */
+		charBeforeProtocolRelMatchRegex : /^(.)?\/\//,
+
+		/**
+		 * @private
+		 * @property {Autolinker.MatchValidator} matchValidator
+		 * 
+		 * The MatchValidator object, used to filter out any false positives from the {@link #matcherRegex}. See
+		 * {@link Autolinker.MatchValidator} for details.
+		 */
+
+		/**
+		 * @private
+		 * @property {Autolinker.HtmlParser} htmlParser
+		 * 
+		 * The HtmlParser instance used to skip over HTML tags, while finding text nodes to process. This is lazily instantiated
+		 * in the {@link #getHtmlParser} method.
+		 */
+
+		/**
+		 * @private
+		 * @property {Autolinker.AnchorTagBuilder} tagBuilder
+		 * 
+		 * The AnchorTagBuilder instance used to build the URL/email/Twitter replacement anchor tags. This is lazily instantiated
+		 * in the {@link #getTagBuilder} method.
+		 */
+
+
+		/**
+		 * Automatically links URLs, email addresses, and Twitter handles found in the given chunk of HTML. 
+		 * Does not link URLs found within HTML tags.
+		 * 
+		 * For instance, if given the text: `You should go to http://www.yahoo.com`, then the result
+		 * will be `You should go to &lt;a href="http://www.yahoo.com"&gt;http://www.yahoo.com&lt;/a&gt;`
+		 * 
+		 * This method finds the text around any HTML elements in the input `textOrHtml`, which will be the text that is processed.
+		 * Any original HTML elements will be left as-is, as well as the text that is already wrapped in anchor (&lt;a&gt;) tags.
+		 * 
+		 * @param {String} textOrHtml The HTML or text to link URLs, email addresses, and Twitter handles within (depending on if
+		 *   the {@link #urls}, {@link #email}, and {@link #twitter} options are enabled).
+		 * @return {String} The HTML, with URLs/emails/Twitter handles automatically linked.
+		 */
+		link : function( textOrHtml ) {
+			var me = this,  // for closure
+			    htmlParser = this.getHtmlParser(),
+			    htmlCharacterEntitiesRegex = this.htmlCharacterEntitiesRegex,
+			    anchorTagStackCount = 0,  // used to only process text around anchor tags, and any inner text/html they may have
+			    resultHtml = [];
+
+			htmlParser.parse( textOrHtml, {
+				// Process HTML nodes in the input `textOrHtml`
+				processHtmlNode : function( tagText, tagName, isClosingTag ) {
+					if( tagName === 'a' ) {
+						if( !isClosingTag ) {  // it's the start <a> tag
+							anchorTagStackCount++;
+						} else {   // it's the end </a> tag
+							anchorTagStackCount = Math.max( anchorTagStackCount - 1, 0 );  // attempt to handle extraneous </a> tags by making sure the stack count never goes below 0
+						}
+					}
+					resultHtml.push( tagText );  // now add the text of the tag itself verbatim
+				},
+
+				// Process text nodes in the input `textOrHtml`
+				processTextNode : function( text ) {
+					if( anchorTagStackCount === 0 ) {
+						// If we're not within an <a> tag, process the text node
+						var unescapedText = Autolinker.Util.splitAndCapture( text, htmlCharacterEntitiesRegex );  // split at HTML entities, but include the HTML entities in the results array
+
+						for ( var i = 0, len = unescapedText.length; i < len; i++ ) {
+							var textToProcess = unescapedText[ i ],
+							    processedTextNode = me.processTextNode( textToProcess );
+
+							resultHtml.push( processedTextNode );
+						}
+
+					} else {
+						// `text` is within an <a> tag, simply append the text - we do not want to autolink anything 
+						// already within an <a>...</a> tag
+						resultHtml.push( text );
+					}
+				}
+			} );
+
+			return resultHtml.join( "" );
+		},
+
+
+		/**
+		 * Lazily instantiates and returns the {@link #htmlParser} instance for this Autolinker instance.
+		 * 
+		 * @protected
+		 * @return {Autolinker.HtmlParser}
+		 */
+		getHtmlParser : function() {
+			var htmlParser = this.htmlParser;
+
+			if( !htmlParser ) {
+				htmlParser = this.htmlParser = new Autolinker.HtmlParser();
+			}
+
+			return htmlParser;
+		},
+
+
+		/**
+		 * Returns the {@link #tagBuilder} instance for this Autolinker instance, lazily instantiating it
+		 * if it does not yet exist.
+		 * 
+		 * This method may be used in a {@link #replaceFn} to generate the {@link Autolinker.HtmlTag HtmlTag} instance that 
+		 * Autolinker would normally generate, and then allow for modifications before returning it. For example:
+		 * 
+		 *     var html = Autolinker.link( "Test google.com", {
+		 *         replaceFn : function( autolinker, match ) {
+		 *             var tag = autolinker.getTagBuilder().build( match );  // returns an {@link Autolinker.HtmlTag} instance
+		 *             tag.setAttr( 'rel', 'nofollow' );
+		 *             
+		 *             return tag;
+		 *         }
+		 *     } );
+		 *     
+		 *     // generated html:
+		 *     //   Test <a href="http://google.com" target="_blank" rel="nofollow">google.com</a>
+		 * 
+		 * @return {Autolinker.AnchorTagBuilder}
+		 */
+		getTagBuilder : function() {
+			var tagBuilder = this.tagBuilder;
+
+			if( !tagBuilder ) {
+				tagBuilder = this.tagBuilder = new Autolinker.AnchorTagBuilder( {
+					newWindow   : this.newWindow,
+					truncate    : this.truncate,
+					className   : this.className
+				} );
+			}
+
+			return tagBuilder;
+		},
+
+
+		/**
+		 * Process the text that lies inbetween HTML tags. This method does the actual wrapping of URLs with
+		 * anchor tags.
+		 * 
+		 * @private
+		 * @param {String} text The text to auto-link.
+		 * @return {String} The text with anchor tags auto-filled.
+		 */
+		processTextNode : function( text ) {
+			var me = this;  // for closure
+
+			return text.replace( this.matcherRegex, function( matchStr, $1, $2, $3, $4, $5, $6, $7, $8 ) {
+				var matchDescObj = me.processCandidateMatch( matchStr, $1, $2, $3, $4, $5, $6, $7, $8 );  // match description object
+
+				// Return out with no changes for match types that are disabled (url, email, twitter), or for matches that are 
+				// invalid (false positives from the matcherRegex, which can't use look-behinds since they are unavailable in JS).
+				if( !matchDescObj ) {
+					return matchStr;
+
+				} else {
+					// Generate the replacement text for the match
+					var matchReturnVal = me.createMatchReturnVal( matchDescObj.match, matchDescObj.matchStr );
+					return matchDescObj.prefixStr + matchReturnVal + matchDescObj.suffixStr;
+				}
+			} );
+		},
+
+
+		/**
+		 * Processes a candidate match from the {@link #matcherRegex}. 
+		 * 
+		 * Not all matches found by the regex are actual URL/email/Twitter matches, as determined by the {@link #matchValidator}. In
+		 * this case, the method returns `null`. Otherwise, a valid Object with `prefixStr`, `match`, and `suffixStr` is returned.
+		 * 
+		 * @private
+		 * @param {String} matchStr The full match that was found by the {@link #matcherRegex}.
+		 * @param {String} twitterMatch The matched text of a Twitter handle, if the match is a Twitter match.
+		 * @param {String} twitterHandlePrefixWhitespaceChar The whitespace char before the @ sign in a Twitter handle match. This 
+		 *   is needed because of no lookbehinds in JS regexes, and is need to re-include the character for the anchor tag replacement.
+		 * @param {String} twitterHandle The actual Twitter user (i.e the word after the @ sign in a Twitter match).
+		 * @param {String} emailAddressMatch The matched email address for an email address match.
+		 * @param {String} urlMatch The matched URL string for a URL match.
+		 * @param {String} protocolUrlMatch The match URL string for a protocol match. Ex: 'http://yahoo.com'. This is used to match
+		 *   something like 'http://localhost', where we won't double check that the domain name has at least one '.' in it.
+		 * @param {String} wwwProtocolRelativeMatch The '//' for a protocol-relative match from a 'www' url, with the character that 
+		 *   comes before the '//'.
+		 * @param {String} tldProtocolRelativeMatch The '//' for a protocol-relative match from a TLD (top level domain) match, with 
+		 *   the character that comes before the '//'.
+		 *   
+		 * @return {Object} A "match description object". This will be `null` if the match was invalid, or if a match type is disabled.
+		 *   Otherwise, this will be an Object (map) with the following properties:
+		 * @return {String} return.prefixStr The char(s) that should be prepended to the replacement string. These are char(s) that
+		 *   were needed to be included from the regex match that were ignored by processing code, and should be re-inserted into 
+		 *   the replacement stream.
+		 * @return {String} return.suffixStr The char(s) that should be appended to the replacement string. These are char(s) that
+		 *   were needed to be included from the regex match that were ignored by processing code, and should be re-inserted into 
+		 *   the replacement stream.
+		 * @return {String} return.matchStr The `matchStr`, fixed up to remove characters that are no longer needed (which have been
+		 *   added to `prefixStr` and `suffixStr`).
+		 * @return {Autolinker.match.Match} return.match The Match object that represents the match that was found.
+		 */
+		processCandidateMatch : function( 
+			matchStr, twitterMatch, twitterHandlePrefixWhitespaceChar, twitterHandle, 
+			emailAddressMatch, urlMatch, protocolUrlMatch, wwwProtocolRelativeMatch, tldProtocolRelativeMatch
+		) {
+			var protocolRelativeMatch = wwwProtocolRelativeMatch || tldProtocolRelativeMatch,
+			    match,  // Will be an Autolinker.match.Match object
+
+			    prefixStr = "",       // A string to use to prefix the anchor tag that is created. This is needed for the Twitter handle match
+			    suffixStr = "";       // A string to suffix the anchor tag that is created. This is used if there is a trailing parenthesis that should not be auto-linked.
+
+
+			// Return out with `null` for match types that are disabled (url, email, twitter), or for matches that are 
+			// invalid (false positives from the matcherRegex, which can't use look-behinds since they are unavailable in JS).
+			if(
+				( twitterMatch && !this.twitter ) || ( emailAddressMatch && !this.email ) || ( urlMatch && !this.urls ) ||
+				!this.matchValidator.isValidMatch( urlMatch, protocolUrlMatch, protocolRelativeMatch ) 
+			) {
+				return null;
+			}
+
+			// Handle a closing parenthesis at the end of the match, and exclude it if there is not a matching open parenthesis
+			// in the match itself. 
+			if( this.matchHasUnbalancedClosingParen( matchStr ) ) {
+				matchStr = matchStr.substr( 0, matchStr.length - 1 );  // remove the trailing ")"
+				suffixStr = ")";  // this will be added after the generated <a> tag
+			}
+
+
+			if( emailAddressMatch ) {
+				match = new Autolinker.match.Email( { matchedText: matchStr, email: emailAddressMatch } );
+
+			} else if( twitterMatch ) {
+				// fix up the `matchStr` if there was a preceding whitespace char, which was needed to determine the match 
+				// itself (since there are no look-behinds in JS regexes)
+				if( twitterHandlePrefixWhitespaceChar ) {
+					prefixStr = twitterHandlePrefixWhitespaceChar;
+					matchStr = matchStr.slice( 1 );  // remove the prefixed whitespace char from the match
+				}
+				match = new Autolinker.match.Twitter( { matchedText: matchStr, twitterHandle: twitterHandle } );
+
+			} else {  // url match
+				// If it's a protocol-relative '//' match, remove the character before the '//' (which the matcherRegex needed
+				// to match due to the lack of a negative look-behind in JavaScript regular expressions)
+				if( protocolRelativeMatch ) {
+					var charBeforeMatch = protocolRelativeMatch.match( this.charBeforeProtocolRelMatchRegex )[ 1 ] || "";
+
+					if( charBeforeMatch ) {  // fix up the `matchStr` if there was a preceding char before a protocol-relative match, which was needed to determine the match itself (since there are no look-behinds in JS regexes)
+						prefixStr = charBeforeMatch;
+						matchStr = matchStr.slice( 1 );  // remove the prefixed char from the match
+					}
+				}
+
+				match = new Autolinker.match.Url( {
+					matchedText : matchStr,
+					url : matchStr,
+					protocolUrlMatch : !!protocolUrlMatch,
+					protocolRelativeMatch : !!protocolRelativeMatch,
+					stripPrefix : this.stripPrefix
+				} );
+			}
+
+			return {
+				prefixStr : prefixStr,
+				suffixStr : suffixStr,
+				matchStr  : matchStr,
+				match     : match
+			};
+		},
+
+
+		/**
+		 * Determines if a match found has an unmatched closing parenthesis. If so, this parenthesis will be removed
+		 * from the match itself, and appended after the generated anchor tag in {@link #processTextNode}.
+		 * 
+		 * A match may have an extra closing parenthesis at the end of the match because the regular expression must include parenthesis
+		 * for URLs such as "wikipedia.com/something_(disambiguation)", which should be auto-linked. 
+		 * 
+		 * However, an extra parenthesis *will* be included when the URL itself is wrapped in parenthesis, such as in the case of
+		 * "(wikipedia.com/something_(disambiguation))". In this case, the last closing parenthesis should *not* be part of the URL 
+		 * itself, and this method will return `true`.
+		 * 
+		 * @private
+		 * @param {String} matchStr The full match string from the {@link #matcherRegex}.
+		 * @return {Boolean} `true` if there is an unbalanced closing parenthesis at the end of the `matchStr`, `false` otherwise.
+		 */
+		matchHasUnbalancedClosingParen : function( matchStr ) {
+			var lastChar = matchStr.charAt( matchStr.length - 1 );
+
+			if( lastChar === ')' ) {
+				var openParensMatch = matchStr.match( /\(/g ),
+				    closeParensMatch = matchStr.match( /\)/g ),
+				    numOpenParens = ( openParensMatch && openParensMatch.length ) || 0,
+				    numCloseParens = ( closeParensMatch && closeParensMatch.length ) || 0;
+
+				if( numOpenParens < numCloseParens ) {
+					return true;
+				}
+			}
+
+			return false;
+		},
+
+
+		/**
+		 * Creates the return string value for a given match in the input string, for the {@link #processTextNode} method.
+		 * 
+		 * This method handles the {@link #replaceFn}, if one was provided.
+		 * 
+		 * @private
+		 * @param {Autolinker.match.Match} match The Match object that represents the match.
+		 * @param {String} matchStr The original match string, after having been preprocessed to fix match edge cases (see
+		 *   the `prefixStr` and `suffixStr` vars in {@link #processTextNode}.
+		 * @return {String} The string that the `match` should be replaced with. This is usually the anchor tag string, but
+		 *   may be the `matchStr` itself if the match is not to be replaced.
+		 */
+		createMatchReturnVal : function( match, matchStr ) {
+			// Handle a custom `replaceFn` being provided
+			var replaceFnResult;
+			if( this.replaceFn ) {
+				replaceFnResult = this.replaceFn.call( this, this, match );  // Autolinker instance is the context, and the first arg
+			}
+
+			if( typeof replaceFnResult === 'string' ) {
+				return replaceFnResult;  // `replaceFn` returned a string, use that
+
+			} else if( replaceFnResult === false ) {
+				return matchStr;  // no replacement for the match
+
+			} else if( replaceFnResult instanceof Autolinker.HtmlTag ) {
+				return replaceFnResult.toString();
+
+			} else {  // replaceFnResult === true, or no/unknown return value from function
+				// Perform Autolinker's default anchor tag generation
+				var tagBuilder = this.getTagBuilder(),
+				    anchorTag = tagBuilder.build( match );  // returns an Autolinker.HtmlTag instance
+
+				return anchorTag.toString();
+			}
+		}
+
+	};
+
+
+	/**
+	 * Automatically links URLs, email addresses, and Twitter handles found in the given chunk of HTML. 
+	 * Does not link URLs found within HTML tags.
+	 * 
+	 * For instance, if given the text: `You should go to http://www.yahoo.com`, then the result
+	 * will be `You should go to &lt;a href="http://www.yahoo.com"&gt;http://www.yahoo.com&lt;/a&gt;`
+	 * 
+	 * Example:
+	 * 
+	 *     var linkedText = Autolinker.link( "Go to google.com", { newWindow: false } );
+	 *     // Produces: "Go to <a href="http://google.com">google.com</a>"
+	 * 
+	 * @static
+	 * @param {String} textOrHtml The HTML or text to find URLs, email addresses, and Twitter handles within (depending on if
+	 *   the {@link #urls}, {@link #email}, and {@link #twitter} options are enabled).
+	 * @param {Object} [options] Any of the configuration options for the Autolinker class, specified in an Object (map).
+	 *   See the class description for an example call.
+	 * @return {String} The HTML text, with URLs automatically linked
+	 */
+	Autolinker.link = function( textOrHtml, options ) {
+		var autolinker = new Autolinker( options );
+		return autolinker.link( textOrHtml );
+	};
+
+
+	// Namespace for `match` classes
+	Autolinker.match = {};
+	/*global Autolinker */
+	/*jshint eqnull:true, boss:true */
+	/**
+	 * @class Autolinker.Util
+	 * @singleton
+	 * 
+	 * A few utility methods for Autolinker.
+	 */
+	Autolinker.Util = {
+
+		/**
+		 * @property {Function} abstractMethod
+		 * 
+		 * A function object which represents an abstract method.
+		 */
+		abstractMethod : function() { throw "abstract"; },
+
+
+		/**
+		 * Assigns (shallow copies) the properties of `src` onto `dest`.
+		 * 
+		 * @param {Object} dest The destination object.
+		 * @param {Object} src The source object.
+		 * @return {Object} The destination object (`dest`)
+		 */
+		assign : function( dest, src ) {
+			for( var prop in src ) {
+				if( src.hasOwnProperty( prop ) ) {
+					dest[ prop ] = src[ prop ];
+				}
+			}
+
+			return dest;
+		},
+
+
+		/**
+		 * Extends `superclass` to create a new subclass, adding the `protoProps` to the new subclass's prototype.
+		 * 
+		 * @param {Function} superclass The constructor function for the superclass.
+		 * @param {Object} protoProps The methods/properties to add to the subclass's prototype. This may contain the
+		 *   special property `constructor`, which will be used as the new subclass's constructor function.
+		 * @return {Function} The new subclass function.
+		 */
+		extend : function( superclass, protoProps ) {
+			var superclassProto = superclass.prototype;
+
+			var F = function() {};
+			F.prototype = superclassProto;
+
+			var subclass;
+			if( protoProps.hasOwnProperty( 'constructor' ) ) {
+				subclass = protoProps.constructor;
+			} else {
+				subclass = function() { superclassProto.constructor.apply( this, arguments ); };
+			}
+
+			var subclassProto = subclass.prototype = new F();  // set up prototype chain
+			subclassProto.constructor = subclass;  // fix constructor property
+			subclassProto.superclass = superclassProto;
+
+			delete protoProps.constructor;  // don't re-assign constructor property to the prototype, since a new function may have been created (`subclass`), which is now already there
+			Autolinker.Util.assign( subclassProto, protoProps );
+
+			return subclass;
+		},
+
+
+		/**
+		 * Truncates the `str` at `len - ellipsisChars.length`, and adds the `ellipsisChars` to the
+		 * end of the string (by default, two periods: '..'). If the `str` length does not exceed 
+		 * `len`, the string will be returned unchanged.
+		 * 
+		 * @param {String} str The string to truncate and add an ellipsis to.
+		 * @param {Number} truncateLen The length to truncate the string at.
+		 * @param {String} [ellipsisChars=..] The ellipsis character(s) to add to the end of `str`
+		 *   when truncated. Defaults to '..'
+		 */
+		ellipsis : function( str, truncateLen, ellipsisChars ) {
+			if( str.length > truncateLen ) {
+				ellipsisChars = ( ellipsisChars == null ) ? '..' : ellipsisChars;
+				str = str.substring( 0, truncateLen - ellipsisChars.length ) + ellipsisChars;
+			}
+			return str;
+		},
+
+
+		/**
+		 * Supports `Array.prototype.indexOf()` functionality for old IE (IE8 and below).
+		 * 
+		 * @param {Array} arr The array to find an element of.
+		 * @param {*} element The element to find in the array, and return the index of.
+		 * @return {Number} The index of the `element`, or -1 if it was not found.
+		 */
+		indexOf : function( arr, element ) {
+			if( Array.prototype.indexOf ) {
+				return arr.indexOf( element );
+
+			} else {
+				for( var i = 0, len = arr.length; i < len; i++ ) {
+					if( arr[ i ] === element ) return i;
+				}
+				return -1;
+			}
+		},
+
+
+
+		/**
+		 * Performs the functionality of what modern browsers do when `String.prototype.split()` is called
+		 * with a regular expression that contains capturing parenthesis.
+		 * 
+		 * For example:
+		 * 
+		 *     // Modern browsers: 
+		 *     "a,b,c".split( /(,)/ );  // --> [ 'a', ',', 'b', ',', 'c' ]
+		 *     
+		 *     // Old IE (including IE8):
+		 *     "a,b,c".split( /(,)/ );  // --> [ 'a', 'b', 'c' ]
+		 *     
+		 * This method emulates the functionality of modern browsers for the old IE case.
+		 * 
+		 * @param {String} str The string to split.
+		 * @param {RegExp} splitRegex The regular expression to split the input `str` on. The splitting
+		 *   character(s) will be spliced into the array, as in the "modern browsers" example in the 
+		 *   description of this method. 
+		 *   Note #1: the supplied regular expression **must** have the 'g' flag specified.
+		 *   Note #2: for simplicity's sake, the regular expression does not need 
+		 *   to contain capturing parenthesis - it will be assumed that any match has them.
+		 * @return {String[]} The split array of strings, with the splitting character(s) included.
+		 */
+		splitAndCapture : function( str, splitRegex ) {
+			if( !splitRegex.global ) throw new Error( "`splitRegex` must have the 'g' flag set" );
+
+			var result = [],
+			    lastIdx = 0,
+			    match;
+
+			while( match = splitRegex.exec( str ) ) {
+				result.push( str.substring( lastIdx, match.index ) );
+				result.push( match[ 0 ] );  // push the splitting char(s)
+
+				lastIdx = match.index + match[ 0 ].length;
+			}
+			result.push( str.substring( lastIdx ) );
+
+			return result;
+		}
+
+	};
+	/*global Autolinker */
+	/**
+	 * @private
+	 * @class Autolinker.HtmlParser
+	 * @extends Object
+	 * 
+	 * An HTML parser implementation which simply walks an HTML string and calls the provided visitor functions to process 
+	 * HTML and text nodes.
+	 * 
+	 * Autolinker uses this to only link URLs/emails/Twitter handles within text nodes, basically ignoring HTML tags.
+	 */
+	Autolinker.HtmlParser = Autolinker.Util.extend( Object, {
+
+		/**
+		 * @private
+		 * @property {RegExp} htmlRegex
+		 * 
+		 * The regular expression used to pull out HTML tags from a string. Handles namespaced HTML tags and
+		 * attribute names, as specified by http://www.w3.org/TR/html-markup/syntax.html.
+		 * 
+		 * Capturing groups:
+		 * 
+		 * 1. The "!DOCTYPE" tag name, if a tag is a &lt;!DOCTYPE&gt; tag.
+		 * 2. If it is an end tag, this group will have the '/'.
+		 * 3. The tag name for all tags (other than the &lt;!DOCTYPE&gt; tag)
+		 */
+		htmlRegex : (function() {
+			var tagNameRegex = /[0-9a-zA-Z][0-9a-zA-Z:]*/,
+			    attrNameRegex = /[^\s\0"'>\/=\x01-\x1F\x7F]+/,   // the unicode range accounts for excluding control chars, and the delete char
+			    attrValueRegex = /(?:".*?"|'.*?'|[^'"=<>`\s]+)/, // double quoted, single quoted, or unquoted attribute values
+			    nameEqualsValueRegex = attrNameRegex.source + '(?:\\s*=\\s*' + attrValueRegex.source + ')?';  // optional '=[value]'
+
+			return new RegExp( [
+				// for <!DOCTYPE> tag. Ex: <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">) 
+				'(?:',
+					'<(!DOCTYPE)',  // *** Capturing Group 1 - If it's a doctype tag
+
+						// Zero or more attributes following the tag name
+						'(?:',
+							'\\s+',  // one or more whitespace chars before an attribute
+
+							// Either:
+							// A. attr="value", or 
+							// B. "value" alone (To cover example doctype tag: <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">) 
+							'(?:', nameEqualsValueRegex, '|', attrValueRegex.source + ')',
+						')*',
+					'>',
+				')',
+
+				'|',
+
+				// All other HTML tags (i.e. tags that are not <!DOCTYPE>)
+				'(?:',
+					'<(/)?',  // Beginning of a tag. Either '<' for a start tag, or '</' for an end tag. 
+					          // *** Capturing Group 2: The slash or an empty string. Slash ('/') for end tag, empty string for start or self-closing tag.
+
+						// *** Capturing Group 3 - The tag name
+						'(' + tagNameRegex.source + ')',
+
+						// Zero or more attributes following the tag name
+						'(?:',
+							'\\s+',                // one or more whitespace chars before an attribute
+							nameEqualsValueRegex,  // attr="value" (with optional ="value" part)
+						')*',
+
+						'\\s*/?',  // any trailing spaces and optional '/' before the closing '>'
+					'>',
+				')'
+			].join( "" ), 'gi' );
+		} )(),
+
+
+		/**
+		 * Walks an HTML string, calling the `options.processHtmlNode` function for each HTML tag that is encountered, and calling
+		 * the `options.processTextNode` function when each text around HTML tags is encountered.
+		 * 
+		 * @param {String} html The HTML to parse.
+		 * @param {Object} [options] An Object (map) which may contain the following properties:
+		 * 
+		 * @param {Function} [options.processHtmlNode] A visitor function which allows processing of an encountered HTML node.
+		 *   This function is called with the following arguments:
+		 * @param {String} [options.processHtmlNode.tagText] The HTML tag text that was found.
+		 * @param {String} [options.processHtmlNode.tagName] The tag name for the HTML tag that was found. Ex: 'a' for an anchor tag.
+		 * @param {String} [options.processHtmlNode.isClosingTag] `true` if the tag is a closing tag (ex: &lt;/a&gt;), `false` otherwise.
+		 *  
+		 * @param {Function} [options.processTextNode] A visitor function which allows processing of an encountered text node.
+		 *   This function is called with the following arguments:
+		 * @param {String} [options.processTextNode.text] The text node that was matched.
+		 */
+		parse : function( html, options ) {
+			options = options || {};
+
+			var processHtmlNodeVisitor = options.processHtmlNode || function() {},
+			    processTextNodeVisitor = options.processTextNode || function() {},
+			    htmlRegex = this.htmlRegex,
+			    currentResult,
+			    lastIndex = 0;
+
+			// Loop over the HTML string, ignoring HTML tags, and processing the text that lies between them,
+			// wrapping the URLs in anchor tags
+			while( ( currentResult = htmlRegex.exec( html ) ) !== null ) {
+				var tagText = currentResult[ 0 ],
+				    tagName = currentResult[ 1 ] || currentResult[ 3 ],  // The <!DOCTYPE> tag (ex: "!DOCTYPE"), or another tag (ex: "a") 
+				    isClosingTag = !!currentResult[ 2 ],
+				    inBetweenTagsText = html.substring( lastIndex, currentResult.index );
+
+				if( inBetweenTagsText ) {
+					processTextNodeVisitor( inBetweenTagsText );
+				}
+
+				processHtmlNodeVisitor( tagText, tagName.toLowerCase(), isClosingTag );
+
+				lastIndex = currentResult.index + tagText.length;
+			}
+
+			// Process any remaining text after the last HTML element. Will process all of the text if there were no HTML elements.
+			if( lastIndex < html.length ) {
+				var text = html.substring( lastIndex );
+
+				if( text ) {
+					processTextNodeVisitor( text );
+				}
+			}
+		}
+
+	} );
+	/*global Autolinker */
+	/*jshint boss:true */
+	/**
+	 * @class Autolinker.HtmlTag
+	 * @extends Object
+	 * 
+	 * Represents an HTML tag, which can be used to easily build/modify HTML tags programmatically.
+	 * 
+	 * Autolinker uses this abstraction to create HTML tags, and then write them out as strings. You may also use
+	 * this class in your code, especially within a {@link Autolinker#replaceFn replaceFn}.
+	 * 
+	 * ## Examples
+	 * 
+	 * Example instantiation:
+	 * 
+	 *     var tag = new Autolinker.HtmlTag( {
+	 *         tagName : 'a',
+	 *         attrs   : { 'href': 'http://google.com', 'class': 'external-link' },
+	 *         innerHtml : 'Google'
+	 *     } );
+	 *     
+	 *     tag.toString();  // <a href="http://google.com" class="external-link">Google</a>
+	 *     
+	 *     // Individual accessor methods
+	 *     tag.getTagName();                 // 'a'
+	 *     tag.getAttr( 'href' );            // 'http://google.com'
+	 *     tag.hasClass( 'external-link' );  // true
+	 * 
+	 * 
+	 * Using mutator methods (which may be used in combination with instantiation config properties):
+	 * 
+	 *     var tag = new Autolinker.HtmlTag();
+	 *     tag.setTagName( 'a' );
+	 *     tag.setAttr( 'href', 'http://google.com' );
+	 *     tag.addClass( 'external-link' );
+	 *     tag.setInnerHtml( 'Google' );
+	 *     
+	 *     tag.getTagName();                 // 'a'
+	 *     tag.getAttr( 'href' );            // 'http://google.com'
+	 *     tag.hasClass( 'external-link' );  // true
+	 *     
+	 *     tag.toString();  // <a href="http://google.com" class="external-link">Google</a>
+	 *     
+	 * 
+	 * ## Example use within a {@link Autolinker#replaceFn replaceFn}
+	 * 
+	 *     var html = Autolinker.link( "Test google.com", {
+	 *         replaceFn : function( autolinker, match ) {
+	 *             var tag = autolinker.getTagBuilder().build( match );  // returns an {@link Autolinker.HtmlTag} instance, configured with the Match's href and anchor text
+	 *             tag.setAttr( 'rel', 'nofollow' );
+	 *             
+	 *             return tag;
+	 *         }
+	 *     } );
+	 *     
+	 *     // generated html:
+	 *     //   Test <a href="http://google.com" target="_blank" rel="nofollow">google.com</a>
+	 *     
+	 *     
+	 * ## Example use with a new tag for the replacement
+	 * 
+	 *     var html = Autolinker.link( "Test google.com", {
+	 *         replaceFn : function( autolinker, match ) {
+	 *             var tag = new Autolinker.HtmlTag( {
+	 *                 tagName : 'button',
+	 *                 attrs   : { 'title': 'Load URL: ' + match.getAnchorHref() },
+	 *                 innerHtml : 'Load URL: ' + match.getAnchorText()
+	 *             } );
+	 *             
+	 *             return tag;
+	 *         }
+	 *     } );
+	 *     
+	 *     // generated html:
+	 *     //   Test <button title="Load URL: http://google.com">Load URL: google.com</button>
+	 */
+	Autolinker.HtmlTag = Autolinker.Util.extend( Object, {
+
+		/**
+		 * @cfg {String} tagName
+		 * 
+		 * The tag name. Ex: 'a', 'button', etc.
+		 * 
+		 * Not required at instantiation time, but should be set using {@link #setTagName} before {@link #toString}
+		 * is executed.
+		 */
+
+		/**
+		 * @cfg {Object.<String, String>} attrs
+		 * 
+		 * An key/value Object (map) of attributes to create the tag with. The keys are the attribute names, and the
+		 * values are the attribute values.
+		 */
+
+		/**
+		 * @cfg {String} innerHtml
+		 * 
+		 * The inner HTML for the tag. 
+		 * 
+		 * Note the camel case name on `innerHtml`. Acronyms are camelCased in this utility (such as not to run into the acronym 
+		 * naming inconsistency that the DOM developers created with `XMLHttpRequest`). You may alternatively use {@link #innerHTML}
+		 * if you prefer, but this one is recommended.
+		 */
+
+		/**
+		 * @cfg {String} innerHTML
+		 * 
+		 * Alias of {@link #innerHtml}, accepted for consistency with the browser DOM api, but prefer the camelCased version
+		 * for acronym names.
+		 */
+
+
+		/**
+		 * @protected
+		 * @property {RegExp} whitespaceRegex
+		 * 
+		 * Regular expression used to match whitespace in a string of CSS classes.
+		 */
+		whitespaceRegex : /\s+/,
+
+
+		/**
+		 * @constructor
+		 * @param {Object} [cfg] The configuration properties for this class, in an Object (map)
+		 */
+		constructor : function( cfg ) {
+			Autolinker.Util.assign( this, cfg );
+
+			this.innerHtml = this.innerHtml || this.innerHTML;  // accept either the camelCased form or the fully capitalized acronym
+		},
+
+
+		/**
+		 * Sets the tag name that will be used to generate the tag with.
+		 * 
+		 * @param {String} tagName
+		 * @return {Autolinker.HtmlTag} This HtmlTag instance, so that method calls may be chained.
+		 */
+		setTagName : function( tagName ) {
+			this.tagName = tagName;
+			return this;
+		},
+
+
+		/**
+		 * Retrieves the tag name.
+		 * 
+		 * @return {String}
+		 */
+		getTagName : function() {
+			return this.tagName || "";
+		},
+
+
+		/**
+		 * Sets an attribute on the HtmlTag.
+		 * 
+		 * @param {String} attrName The attribute name to set.
+		 * @param {String} attrValue The attribute value to set.
+		 * @return {Autolinker.HtmlTag} This HtmlTag instance, so that method calls may be chained.
+		 */
+		setAttr : function( attrName, attrValue ) {
+			var tagAttrs = this.getAttrs();
+			tagAttrs[ attrName ] = attrValue;
+
+			return this;
+		},
+
+
+		/**
+		 * Retrieves an attribute from the HtmlTag. If the attribute does not exist, returns `undefined`.
+		 * 
+		 * @param {String} name The attribute name to retrieve.
+		 * @return {String} The attribute's value, or `undefined` if it does not exist on the HtmlTag.
+		 */
+		getAttr : function( attrName ) {
+			return this.getAttrs()[ attrName ];
+		},
+
+
+		/**
+		 * Sets one or more attributes on the HtmlTag.
+		 * 
+		 * @param {Object.<String, String>} attrs A key/value Object (map) of the attributes to set.
+		 * @return {Autolinker.HtmlTag} This HtmlTag instance, so that method calls may be chained.
+		 */
+		setAttrs : function( attrs ) {
+			var tagAttrs = this.getAttrs();
+			Autolinker.Util.assign( tagAttrs, attrs );
+
+			return this;
+		},
+
+
+		/**
+		 * Retrieves the attributes Object (map) for the HtmlTag.
+		 * 
+		 * @return {Object.<String, String>} A key/value object of the attributes for the HtmlTag.
+		 */
+		getAttrs : function() {
+			return this.attrs || ( this.attrs = {} );
+		},
+
+
+		/**
+		 * Sets the provided `cssClass`, overwriting any current CSS classes on the HtmlTag.
+		 * 
+		 * @param {String} cssClass One or more space-separated CSS classes to set (overwrite).
+		 * @return {Autolinker.HtmlTag} This HtmlTag instance, so that method calls may be chained.
+		 */
+		setClass : function( cssClass ) {
+			return this.setAttr( 'class', cssClass );
+		},
+
+
+		/**
+		 * Convenience method to add one or more CSS classes to the HtmlTag. Will not add duplicate CSS classes.
+		 * 
+		 * @param {String} cssClass One or more space-separated CSS classes to add.
+		 * @return {Autolinker.HtmlTag} This HtmlTag instance, so that method calls may be chained.
+		 */
+		addClass : function( cssClass ) {
+			var classAttr = this.getClass(),
+			    whitespaceRegex = this.whitespaceRegex,
+			    indexOf = Autolinker.Util.indexOf,  // to support IE8 and below
+			    classes = ( !classAttr ) ? [] : classAttr.split( whitespaceRegex ),
+			    newClasses = cssClass.split( whitespaceRegex ),
+			    newClass;
+
+			while( newClass = newClasses.shift() ) {
+				if( indexOf( classes, newClass ) === -1 ) {
+					classes.push( newClass );
+				}
+			}
+
+			this.getAttrs()[ 'class' ] = classes.join( " " );
+			return this;
+		},
+
+
+		/**
+		 * Convenience method to remove one or more CSS classes from the HtmlTag.
+		 * 
+		 * @param {String} cssClass One or more space-separated CSS classes to remove.
+		 * @return {Autolinker.HtmlTag} This HtmlTag instance, so that method calls may be chained.
+		 */
+		removeClass : function( cssClass ) {
+			var classAttr = this.getClass(),
+			    whitespaceRegex = this.whitespaceRegex,
+			    indexOf = Autolinker.Util.indexOf,  // to support IE8 and below
+			    classes = ( !classAttr ) ? [] : classAttr.split( whitespaceRegex ),
+			    removeClasses = cssClass.split( whitespaceRegex ),
+			    removeClass;
+
+			while( classes.length && ( removeClass = removeClasses.shift() ) ) {
+				var idx = indexOf( classes, removeClass );
+				if( idx !== -1 ) {
+					classes.splice( idx, 1 );
+				}
+			}
+
+			this.getAttrs()[ 'class' ] = classes.join( " " );
+			return this;
+		},
+
+
+		/**
+		 * Convenience method to retrieve the CSS class(es) for the HtmlTag, which will each be separated by spaces when
+		 * there are multiple.
+		 * 
+		 * @return {String}
+		 */
+		getClass : function() {
+			return this.getAttrs()[ 'class' ] || "";
+		},
+
+
+		/**
+		 * Convenience method to check if the tag has a CSS class or not.
+		 * 
+		 * @param {String} cssClass The CSS class to check for.
+		 * @return {Boolean} `true` if the HtmlTag has the CSS class, `false` otherwise.
+		 */
+		hasClass : function( cssClass ) {
+			return ( ' ' + this.getClass() + ' ' ).indexOf( ' ' + cssClass + ' ' ) !== -1;
+		},
+
+
+		/**
+		 * Sets the inner HTML for the tag.
+		 * 
+		 * @param {String} html The inner HTML to set.
+		 * @return {Autolinker.HtmlTag} This HtmlTag instance, so that method calls may be chained.
+		 */
+		setInnerHtml : function( html ) {
+			this.innerHtml = html;
+
+			return this;
+		},
+
+
+		/**
+		 * Retrieves the inner HTML for the tag.
+		 * 
+		 * @return {String}
+		 */
+		getInnerHtml : function() {
+			return this.innerHtml || "";
+		},
+
+
+		/**
+		 * Override of superclass method used to generate the HTML string for the tag.
+		 * 
+		 * @return {String}
+		 */
+		toString : function() {
+			var tagName = this.getTagName(),
+			    attrsStr = this.buildAttrsStr();
+
+			attrsStr = ( attrsStr ) ? ' ' + attrsStr : '';  // prepend a space if there are actually attributes
+
+			return [ '<', tagName, attrsStr, '>', this.getInnerHtml(), '</', tagName, '>' ].join( "" );
+		},
+
+
+		/**
+		 * Support method for {@link #toString}, returns the string space-separated key="value" pairs, used to populate 
+		 * the stringified HtmlTag.
+		 * 
+		 * @protected
+		 * @return {String} Example return: `attr1="value1" attr2="value2"`
+		 */
+		buildAttrsStr : function() {
+			if( !this.attrs ) return "";  // no `attrs` Object (map) has been set, return empty string
+
+			var attrs = this.getAttrs(),
+			    attrsArr = [];
+
+			for( var prop in attrs ) {
+				if( attrs.hasOwnProperty( prop ) ) {
+					attrsArr.push( prop + '="' + attrs[ prop ] + '"' );
+				}
+			}
+			return attrsArr.join( " " );
+		}
+
+	} );
+	/*global Autolinker */
+	/*jshint scripturl:true */
+	/**
+	 * @private
+	 * @class Autolinker.MatchValidator
+	 * @extends Object
+	 * 
+	 * Used by Autolinker to filter out false positives from the {@link Autolinker#matcherRegex}.
+	 * 
+	 * Due to the limitations of regular expressions (including the missing feature of look-behinds in JS regular expressions),
+	 * we cannot always determine the validity of a given match. This class applies a bit of additional logic to filter out any
+	 * false positives that have been matched by the {@link Autolinker#matcherRegex}.
+	 */
+	Autolinker.MatchValidator = Autolinker.Util.extend( Object, {
+
+		/**
+		 * @private
+		 * @property {RegExp} invalidProtocolRelMatchRegex
+		 * 
+		 * The regular expression used to check a potential protocol-relative URL match, coming from the 
+		 * {@link Autolinker#matcherRegex}. A protocol-relative URL is, for example, "//yahoo.com"
+		 * 
+		 * This regular expression checks to see if there is a word character before the '//' match in order to determine if 
+		 * we should actually autolink a protocol-relative URL. This is needed because there is no negative look-behind in 
+		 * JavaScript regular expressions. 
+		 * 
+		 * For instance, we want to autolink something like "Go to: //google.com", but we don't want to autolink something 
+		 * like "abc//google.com"
+		 */
+		invalidProtocolRelMatchRegex : /^[\w]\/\//,
+
+		/**
+		 * Regex to test for a full protocol, with the two trailing slashes. Ex: 'http://'
+		 * 
+		 * @private
+		 * @property {RegExp} hasFullProtocolRegex
+		 */
+		hasFullProtocolRegex : /^[A-Za-z][-.+A-Za-z0-9]+:\/\//,
+
+		/**
+		 * Regex to find the URI scheme, such as 'mailto:'.
+		 * 
+		 * This is used to filter out 'javascript:' and 'vbscript:' schemes.
+		 * 
+		 * @private
+		 * @property {RegExp} uriSchemeRegex
+		 */
+		uriSchemeRegex : /^[A-Za-z][-.+A-Za-z0-9]+:/,
+
+		/**
+		 * Regex to determine if at least one word char exists after the protocol (i.e. after the ':')
+		 * 
+		 * @private
+		 * @property {RegExp} hasWordCharAfterProtocolRegex
+		 */
+		hasWordCharAfterProtocolRegex : /:[^\s]*?[A-Za-z]/,
+
+
+		/**
+		 * Determines if a given match found by {@link Autolinker#processTextNode} is valid. Will return `false` for:
+		 * 
+		 * 1) URL matches which do not have at least have one period ('.') in the domain name (effectively skipping over 
+		 *    matches like "abc:def"). However, URL matches with a protocol will be allowed (ex: 'http://localhost')
+		 * 2) URL matches which do not have at least one word character in the domain name (effectively skipping over
+		 *    matches like "git:1.0").
+		 * 3) A protocol-relative url match (a URL beginning with '//') whose previous character is a word character 
+		 *    (effectively skipping over strings like "abc//google.com")
+		 * 
+		 * Otherwise, returns `true`.
+		 * 
+		 * @param {String} urlMatch The matched URL, if there was one. Will be an empty string if the match is not a URL match.
+		 * @param {String} protocolUrlMatch The match URL string for a protocol match. Ex: 'http://yahoo.com'. This is used to match
+		 *   something like 'http://localhost', where we won't double check that the domain name has at least one '.' in it.
+		 * @param {String} protocolRelativeMatch The protocol-relative string for a URL match (i.e. '//'), possibly with a preceding
+		 *   character (ex, a space, such as: ' //', or a letter, such as: 'a//'). The match is invalid if there is a word character
+		 *   preceding the '//'.
+		 * @return {Boolean} `true` if the match given is valid and should be processed, or `false` if the match is invalid and/or 
+		 *   should just not be processed.
+		 */
+		isValidMatch : function( urlMatch, protocolUrlMatch, protocolRelativeMatch ) {
+			if(
+				( protocolUrlMatch && !this.isValidUriScheme( protocolUrlMatch ) ) ||
+				this.urlMatchDoesNotHaveProtocolOrDot( urlMatch, protocolUrlMatch ) ||       // At least one period ('.') must exist in the URL match for us to consider it an actual URL, *unless* it was a full protocol match (like 'http://localhost')
+				this.urlMatchDoesNotHaveAtLeastOneWordChar( urlMatch, protocolUrlMatch ) ||  // At least one letter character must exist in the domain name after a protocol match. Ex: skip over something like "git:1.0"
+				this.isInvalidProtocolRelativeMatch( protocolRelativeMatch )                 // A protocol-relative match which has a word character in front of it (so we can skip something like "abc//google.com")
+			) {
+				return false;
+			}
+
+			return true;
+		},
+
+
+		/**
+		 * Determines if the URI scheme is a valid scheme to be autolinked. Returns `false` if the scheme is 
+		 * 'javascript:' or 'vbscript:'
+		 * 
+		 * @private
+		 * @param {String} uriSchemeMatch The match URL string for a full URI scheme match. Ex: 'http://yahoo.com' 
+		 *   or 'mailto:a@a.com'.
+		 * @return {Boolean} `true` if the scheme is a valid one, `false` otherwise.
+		 */
+		isValidUriScheme : function( uriSchemeMatch ) {
+			var uriScheme = uriSchemeMatch.match( this.uriSchemeRegex )[ 0 ];
+
+			return ( uriScheme !== 'javascript:' && uriScheme !== 'vbscript:' );
+		},
+
+
+		/**
+		 * Determines if a URL match does not have either:
+		 * 
+		 * a) a full protocol (i.e. 'http://'), or
+		 * b) at least one dot ('.') in the domain name (for a non-full-protocol match).
+		 * 
+		 * Either situation is considered an invalid URL (ex: 'git:d' does not have either the '://' part, or at least one dot
+		 * in the domain name. If the match was 'git:abc.com', we would consider this valid.)
+		 * 
+		 * @private
+		 * @param {String} urlMatch The matched URL, if there was one. Will be an empty string if the match is not a URL match.
+		 * @param {String} protocolUrlMatch The match URL string for a protocol match. Ex: 'http://yahoo.com'. This is used to match
+		 *   something like 'http://localhost', where we won't double check that the domain name has at least one '.' in it.
+		 * @return {Boolean} `true` if the URL match does not have a full protocol, or at least one dot ('.') in a non-full-protocol
+		 *   match.
+		 */
+		urlMatchDoesNotHaveProtocolOrDot : function( urlMatch, protocolUrlMatch ) {
+			return ( !!urlMatch && ( !protocolUrlMatch || !this.hasFullProtocolRegex.test( protocolUrlMatch ) ) && urlMatch.indexOf( '.' ) === -1 );
+		},
+
+
+		/**
+		 * Determines if a URL match does not have at least one word character after the protocol (i.e. in the domain name).
+		 * 
+		 * At least one letter character must exist in the domain name after a protocol match. Ex: skip over something 
+		 * like "git:1.0"
+		 * 
+		 * @private
+		 * @param {String} urlMatch The matched URL, if there was one. Will be an empty string if the match is not a URL match.
+		 * @param {String} protocolUrlMatch The match URL string for a protocol match. Ex: 'http://yahoo.com'. This is used to
+		 *   know whether or not we have a protocol in the URL string, in order to check for a word character after the protocol
+		 *   separator (':').
+		 * @return {Boolean} `true` if the URL match does not have at least one word character in it after the protocol, `false`
+		 *   otherwise.
+		 */
+		urlMatchDoesNotHaveAtLeastOneWordChar : function( urlMatch, protocolUrlMatch ) {
+			if( urlMatch && protocolUrlMatch ) {
+				return !this.hasWordCharAfterProtocolRegex.test( urlMatch );
+			} else {
+				return false;
+			}
+		},
+
+
+		/**
+		 * Determines if a protocol-relative match is an invalid one. This method returns `true` if there is a `protocolRelativeMatch`,
+		 * and that match contains a word character before the '//' (i.e. it must contain whitespace or nothing before the '//' in
+		 * order to be considered valid).
+		 * 
+		 * @private
+		 * @param {String} protocolRelativeMatch The protocol-relative string for a URL match (i.e. '//'), possibly with a preceding
+		 *   character (ex, a space, such as: ' //', or a letter, such as: 'a//'). The match is invalid if there is a word character
+		 *   preceding the '//'.
+		 * @return {Boolean} `true` if it is an invalid protocol-relative match, `false` otherwise.
+		 */
+		isInvalidProtocolRelativeMatch : function( protocolRelativeMatch ) {
+			return ( !!protocolRelativeMatch && this.invalidProtocolRelMatchRegex.test( protocolRelativeMatch ) );
+		}
+
+	} );
+	/*global Autolinker */
+	/*jshint sub:true */
+	/**
+	 * @protected
+	 * @class Autolinker.AnchorTagBuilder
+	 * @extends Object
+	 * 
+	 * Builds anchor (&lt;a&gt;) tags for the Autolinker utility when a match is found.
+	 * 
+	 * Normally this class is instantiated, configured, and used internally by an {@link Autolinker} instance, but may 
+	 * actually be retrieved in a {@link Autolinker#replaceFn replaceFn} to create {@link Autolinker.HtmlTag HtmlTag} instances
+	 * which may be modified before returning from the {@link Autolinker#replaceFn replaceFn}. For example:
+	 * 
+	 *     var html = Autolinker.link( "Test google.com", {
+	 *         replaceFn : function( autolinker, match ) {
+	 *             var tag = autolinker.getTagBuilder().build( match );  // returns an {@link Autolinker.HtmlTag} instance
+	 *             tag.setAttr( 'rel', 'nofollow' );
+	 *             
+	 *             return tag;
+	 *         }
+	 *     } );
+	 *     
+	 *     // generated html:
+	 *     //   Test <a href="http://google.com" target="_blank" rel="nofollow">google.com</a>
+	 */
+	Autolinker.AnchorTagBuilder = Autolinker.Util.extend( Object, {
+
+		/**
+		 * @cfg {Boolean} newWindow
+		 * @inheritdoc Autolinker#newWindow
+		 */
+
+		/**
+		 * @cfg {Number} truncate
+		 * @inheritdoc Autolinker#truncate
+		 */
+
+		/**
+		 * @cfg {String} className
+		 * @inheritdoc Autolinker#className
+		 */
+
+
+		/**
+		 * @constructor
+		 * @param {Object} [cfg] The configuration options for the AnchorTagBuilder instance, specified in an Object (map).
+		 */
+		constructor : function( cfg ) {
+			Autolinker.Util.assign( this, cfg );
+		},
+
+
+		/**
+		 * Generates the actual anchor (&lt;a&gt;) tag to use in place of the matched URL/email/Twitter text,
+		 * via its `match` object.
+		 * 
+		 * @param {Autolinker.match.Match} match The Match instance to generate an anchor tag from.
+		 * @return {Autolinker.HtmlTag} The HtmlTag instance for the anchor tag.
+		 */
+		build : function( match ) {
+			var tag = new Autolinker.HtmlTag( {
+				tagName   : 'a',
+				attrs     : this.createAttrs( match.getType(), match.getAnchorHref() ),
+				innerHtml : this.processAnchorText( match.getAnchorText() )
+			} );
+
+			return tag;
+		},
+
+
+		/**
+		 * Creates the Object (map) of the HTML attributes for the anchor (&lt;a&gt;) tag being generated.
+		 * 
+		 * @protected
+		 * @param {"url"/"email"/"twitter"} matchType The type of match that an anchor tag is being generated for.
+		 * @param {String} href The href for the anchor tag.
+		 * @return {Object} A key/value Object (map) of the anchor tag's attributes. 
+		 */
+		createAttrs : function( matchType, anchorHref ) {
+			var attrs = {
+				'href' : anchorHref  // we'll always have the `href` attribute
+			};
+
+			var cssClass = this.createCssClass( matchType );
+			if( cssClass ) {
+				attrs[ 'class' ] = cssClass;
+			}
+			if( this.newWindow ) {
+				attrs[ 'target' ] = "_blank";
+			}
+
+			return attrs;
+		},
+
+
+		/**
+		 * Creates the CSS class that will be used for a given anchor tag, based on the `matchType` and the {@link #className}
+		 * config.
+		 * 
+		 * @private
+		 * @param {"url"/"email"/"twitter"} matchType The type of match that an anchor tag is being generated for.
+		 * @return {String} The CSS class string for the link. Example return: "myLink myLink-url". If no {@link #className}
+		 *   was configured, returns an empty string.
+		 */
+		createCssClass : function( matchType ) {
+			var className = this.className;
+
+			if( !className ) 
+				return "";
+			else
+				return className + " " + className + "-" + matchType;  // ex: "myLink myLink-url", "myLink myLink-email", or "myLink myLink-twitter"
+		},
+
+
+		/**
+		 * Processes the `anchorText` by truncating the text according to the {@link #truncate} config.
+		 * 
+		 * @private
+		 * @param {String} anchorText The anchor tag's text (i.e. what will be displayed).
+		 * @return {String} The processed `anchorText`.
+		 */
+		processAnchorText : function( anchorText ) {
+			anchorText = this.doTruncate( anchorText );
+
+			return anchorText;
+		},
+
+
+		/**
+		 * Performs the truncation of the `anchorText`, if the `anchorText` is longer than the {@link #truncate} option.
+		 * Truncates the text to 2 characters fewer than the {@link #truncate} option, and adds ".." to the end.
+		 * 
+		 * @private
+		 * @param {String} text The anchor tag's text (i.e. what will be displayed).
+		 * @return {String} The truncated anchor text.
+		 */
+		doTruncate : function( anchorText ) {
+			return Autolinker.Util.ellipsis( anchorText, this.truncate || Number.POSITIVE_INFINITY );
+		}
+
+	} );
+	/*global Autolinker */
+	/**
+	 * @abstract
+	 * @class Autolinker.match.Match
+	 * 
+	 * Represents a match found in an input string which should be Autolinked. A Match object is what is provided in a 
+	 * {@link Autolinker#replaceFn replaceFn}, and may be used to query for details about the match.
+	 * 
+	 * For example:
+	 * 
+	 *     var input = "...";  // string with URLs, Email Addresses, and Twitter Handles
+	 *     
+	 *     var linkedText = Autolinker.link( input, {
+	 *         replaceFn : function( autolinker, match ) {
+	 *             console.log( "href = ", match.getAnchorHref() );
+	 *             console.log( "text = ", match.getAnchorText() );
+	 *         
+	 *             switch( match.getType() ) {
+	 *                 case 'url' : 
+	 *                     console.log( "url: ", match.getUrl() );
+	 *                     
+	 *                 case 'email' :
+	 *                     console.log( "email: ", match.getEmail() );
+	 *                     
+	 *                 case 'twitter' :
+	 *                     console.log( "twitter: ", match.getTwitterHandle() );
+	 *             }
+	 *         }
+	 *     } );
+	 *     
+	 * See the {@link Autolinker} class for more details on using the {@link Autolinker#replaceFn replaceFn}.
+	 */
+	Autolinker.match.Match = Autolinker.Util.extend( Object, {
+
+		/**
+		 * @cfg {String} matchedText (required)
+		 * 
+		 * The original text that was matched.
+		 */
+
+
+		/**
+		 * @constructor
+		 * @param {Object} cfg The configuration properties for the Match instance, specified in an Object (map).
+		 */
+		constructor : function( cfg ) {
+			Autolinker.Util.assign( this, cfg );
+		},
+
+
+		/**
+		 * Returns a string name for the type of match that this class represents.
+		 * 
+		 * @abstract
+		 * @return {String}
+		 */
+		getType : Autolinker.Util.abstractMethod,
+
+
+		/**
+		 * Returns the original text that was matched.
+		 * 
+		 * @return {String}
+		 */
+		getMatchedText : function() {
+			return this.matchedText;
+		},
+
+
+		/**
+		 * Returns the anchor href that should be generated for the match.
+		 * 
+		 * @abstract
+		 * @return {String}
+		 */
+		getAnchorHref : Autolinker.Util.abstractMethod,
+
+
+		/**
+		 * Returns the anchor text that should be generated for the match.
+		 * 
+		 * @abstract
+		 * @return {String}
+		 */
+		getAnchorText : Autolinker.Util.abstractMethod
+
+	} );
+	/*global Autolinker */
+	/**
+	 * @class Autolinker.match.Email
+	 * @extends Autolinker.match.Match
+	 * 
+	 * Represents a Email match found in an input string which should be Autolinked.
+	 * 
+	 * See this class's superclass ({@link Autolinker.match.Match}) for more details.
+	 */
+	Autolinker.match.Email = Autolinker.Util.extend( Autolinker.match.Match, {
+
+		/**
+		 * @cfg {String} email (required)
+		 * 
+		 * The email address that was matched.
+		 */
+
+
+		/**
+		 * Returns a string name for the type of match that this class represents.
+		 * 
+		 * @return {String}
+		 */
+		getType : function() {
+			return 'email';
+		},
+
+
+		/**
+		 * Returns the email address that was matched.
+		 * 
+		 * @return {String}
+		 */
+		getEmail : function() {
+			return this.email;
+		},
+
+
+		/**
+		 * Returns the anchor href that should be generated for the match.
+		 * 
+		 * @return {String}
+		 */
+		getAnchorHref : function() {
+			return 'mailto:' + this.email;
+		},
+
+
+		/**
+		 * Returns the anchor text that should be generated for the match.
+		 * 
+		 * @return {String}
+		 */
+		getAnchorText : function() {
+			return this.email;
+		}
+
+	} );
+	/*global Autolinker */
+	/**
+	 * @class Autolinker.match.Twitter
+	 * @extends Autolinker.match.Match
+	 * 
+	 * Represents a Twitter match found in an input string which should be Autolinked.
+	 * 
+	 * See this class's superclass ({@link Autolinker.match.Match}) for more details.
+	 */
+	Autolinker.match.Twitter = Autolinker.Util.extend( Autolinker.match.Match, {
+
+		/**
+		 * @cfg {String} twitterHandle (required)
+		 * 
+		 * The Twitter handle that was matched.
+		 */
+
+
+		/**
+		 * Returns the type of match that this class represents.
+		 * 
+		 * @return {String}
+		 */
+		getType : function() {
+			return 'twitter';
+		},
+
+
+		/**
+		 * Returns a string name for the type of match that this class represents.
+		 * 
+		 * @return {String}
+		 */
+		getTwitterHandle : function() {
+			return this.twitterHandle;
+		},
+
+
+		/**
+		 * Returns the anchor href that should be generated for the match.
+		 * 
+		 * @return {String}
+		 */
+		getAnchorHref : function() {
+			return 'https://twitter.com/' + this.twitterHandle;
+		},
+
+
+		/**
+		 * Returns the anchor text that should be generated for the match.
+		 * 
+		 * @return {String}
+		 */
+		getAnchorText : function() {
+			return '@' + this.twitterHandle;
+		}
+
+	} );
+	/*global Autolinker */
+	/**
+	 * @class Autolinker.match.Url
+	 * @extends Autolinker.match.Match
+	 * 
+	 * Represents a Url match found in an input string which should be Autolinked.
+	 * 
+	 * See this class's superclass ({@link Autolinker.match.Match}) for more details.
+	 */
+	Autolinker.match.Url = Autolinker.Util.extend( Autolinker.match.Match, {
+
+		/**
+		 * @cfg {String} url (required)
+		 * 
+		 * The url that was matched.
+		 */
+
+		/**
+		 * @cfg {Boolean} protocolUrlMatch (required)
+		 * 
+		 * `true` if the URL is a match which already has a protocol (i.e. 'http://'), `false` if the match was from a 'www' or
+		 * known TLD match.
+		 */
+
+		/**
+		 * @cfg {Boolean} protocolRelativeMatch (required)
+		 * 
+		 * `true` if the URL is a protocol-relative match. A protocol-relative match is a URL that starts with '//',
+		 * and will be either http:// or https:// based on the protocol that the site is loaded under.
+		 */
+
+		/**
+		 * @cfg {Boolean} stripPrefix (required)
+		 * @inheritdoc Autolinker#stripPrefix
+		 */
+
+
+		/**
+		 * @private
+		 * @property {RegExp} urlPrefixRegex
+		 * 
+		 * A regular expression used to remove the 'http://' or 'https://' and/or the 'www.' from URLs.
+		 */
+		urlPrefixRegex: /^(https?:\/\/)?(www\.)?/i,
+
+		/**
+		 * @private
+		 * @property {RegExp} protocolRelativeRegex
+		 * 
+		 * The regular expression used to remove the protocol-relative '//' from the {@link #url} string, for purposes
+		 * of {@link #getAnchorText}. A protocol-relative URL is, for example, "//yahoo.com"
+		 */
+		protocolRelativeRegex : /^\/\//,
+
+		/**
+		 * @private
+		 * @property {Boolean} protocolPrepended
+		 * 
+		 * Will be set to `true` if the 'http://' protocol has been prepended to the {@link #url} (because the
+		 * {@link #url} did not have a protocol)
+		 */
+		protocolPrepended : false,
+
+
+		/**
+		 * Returns a string name for the type of match that this class represents.
+		 * 
+		 * @return {String}
+		 */
+		getType : function() {
+			return 'url';
+		},
+
+
+		/**
+		 * Returns the url that was matched, assuming the protocol to be 'http://' if the original
+		 * match was missing a protocol.
+		 * 
+		 * @return {String}
+		 */
+		getUrl : function() {
+			var url = this.url;
+
+			// if the url string doesn't begin with a protocol, assume 'http://'
+			if( !this.protocolRelativeMatch && !this.protocolUrlMatch && !this.protocolPrepended ) {
+				url = this.url = 'http://' + url;
+
+				this.protocolPrepended = true;
+			}
+
+			return url;
+		},
+
+
+		/**
+		 * Returns the anchor href that should be generated for the match.
+		 * 
+		 * @return {String}
+		 */
+		getAnchorHref : function() {
+			var url = this.getUrl();
+
+			return url.replace( /&amp;/g, '&' );  // any &amp;'s in the URL should be converted back to '&' if they were displayed as &amp; in the source html 
+		},
+
+
+		/**
+		 * Returns the anchor text that should be generated for the match.
+		 * 
+		 * @return {String}
+		 */
+		getAnchorText : function() {
+			var anchorText = this.getUrl();
+
+			if( this.protocolRelativeMatch ) {
+				// Strip off any protocol-relative '//' from the anchor text
+				anchorText = this.stripProtocolRelativePrefix( anchorText );
+			}
+			if( this.stripPrefix ) {
+				anchorText = this.stripUrlPrefix( anchorText );
+			}
+			anchorText = this.removeTrailingSlash( anchorText );  // remove trailing slash, if there is one
+
+			return anchorText;
+		},
+
+
+		// ---------------------------------------
+
+		// Utility Functionality
+
+		/**
+		 * Strips the URL prefix (such as "http://" or "https://") from the given text.
+		 * 
+		 * @private
+		 * @param {String} text The text of the anchor that is being generated, for which to strip off the
+		 *   url prefix (such as stripping off "http://")
+		 * @return {String} The `anchorText`, with the prefix stripped.
+		 */
+		stripUrlPrefix : function( text ) {
+			return text.replace( this.urlPrefixRegex, '' );
+		},
+
+
+		/**
+		 * Strips any protocol-relative '//' from the anchor text.
+		 * 
+		 * @private
+		 * @param {String} text The text of the anchor that is being generated, for which to strip off the
+		 *   protocol-relative prefix (such as stripping off "//")
+		 * @return {String} The `anchorText`, with the protocol-relative prefix stripped.
+		 */
+		stripProtocolRelativePrefix : function( text ) {
+			return text.replace( this.protocolRelativeRegex, '' );
+		},
+
+
+		/**
+		 * Removes any trailing slash from the given `anchorText`, in preparation for the text to be displayed.
+		 * 
+		 * @private
+		 * @param {String} anchorText The text of the anchor that is being generated, for which to remove any trailing
+		 *   slash ('/') that may exist.
+		 * @return {String} The `anchorText`, with the trailing slash removed.
+		 */
+		removeTrailingSlash : function( anchorText ) {
+			if( anchorText.charAt( anchorText.length - 1 ) === '/' ) {
+				anchorText = anchorText.slice( 0, -1 );
+			}
+			return anchorText;
+		}
+
+	} );
+
+	return Autolinker;
+
+
+}));
+
+},{}],2:[function(require,module,exports){
 //     Backbone.js 1.1.2
 
 //     (c) 2010-2014 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
@@ -1608,7 +3605,7 @@
 
 }));
 
-},{"underscore":196}],2:[function(require,module,exports){
+},{"underscore":197}],3:[function(require,module,exports){
 /*!
  * The buffer module from node.js, for the browser.
  *
@@ -2660,7 +4657,7 @@ function decodeUtf8Char (str) {
   }
 }
 
-},{"base64-js":3,"ieee754":4,"is-array":5}],3:[function(require,module,exports){
+},{"base64-js":4,"ieee754":5,"is-array":6}],4:[function(require,module,exports){
 var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 
 ;(function (exports) {
@@ -2782,7 +4779,7 @@ var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 	exports.fromByteArray = uint8ToBase64
 }(typeof exports === 'undefined' ? (this.base64js = {}) : exports))
 
-},{}],4:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 exports.read = function(buffer, offset, isLE, mLen, nBytes) {
   var e, m,
       eLen = nBytes * 8 - mLen - 1,
@@ -2868,7 +4865,7 @@ exports.write = function(buffer, value, offset, isLE, mLen, nBytes) {
   buffer[offset + i - d] |= s * 128;
 };
 
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 
 /**
  * isArray
@@ -2903,7 +4900,7 @@ module.exports = isArray || function (val) {
   return !! val && '[object Array]' == str.call(val);
 };
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -3206,7 +5203,7 @@ function isUndefined(arg) {
   return arg === void 0;
 }
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -3271,7 +5268,7 @@ process.chdir = function (dir) {
     throw new Error('process.chdir is not supported');
 };
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 /*!
  * jQuery JavaScript Library v2.1.1
  * http://jquery.com/
@@ -12463,7 +14460,7 @@ return jQuery;
 
 }));
 
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 (function (global){
 //! moment.js
 //! version : 2.8.3
@@ -15323,7 +17320,7 @@ return jQuery;
 }).call(this);
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 var LocationDispatcher = require('../dispatchers/LocationDispatcher');
 var makePath = require('../utils/makePath');
 
@@ -15382,7 +17379,7 @@ var LocationActions = {
 
 module.exports = LocationActions;
 
-},{"../dispatchers/LocationDispatcher":17,"../utils/makePath":35}],11:[function(require,module,exports){
+},{"../dispatchers/LocationDispatcher":18,"../utils/makePath":36}],12:[function(require,module,exports){
 var merge = require('react/lib/merge');
 var Route = require('./Route');
 
@@ -15403,7 +17400,7 @@ function DefaultRoute(props) {
 
 module.exports = DefaultRoute;
 
-},{"./Route":15,"react/lib/merge":181}],12:[function(require,module,exports){
+},{"./Route":16,"react/lib/merge":182}],13:[function(require,module,exports){
 var React = require('react');
 var ActiveState = require('../mixins/ActiveState');
 var transitionTo = require('../actions/LocationActions').transitionTo;
@@ -15574,7 +17571,7 @@ var Link = React.createClass({
 
 module.exports = Link;
 
-},{"../actions/LocationActions":10,"../mixins/ActiveState":24,"../utils/hasOwnProperty":33,"../utils/makeHref":34,"../utils/withoutProperties":38,"react":195,"react/lib/warning":194}],13:[function(require,module,exports){
+},{"../actions/LocationActions":11,"../mixins/ActiveState":25,"../utils/hasOwnProperty":34,"../utils/makeHref":35,"../utils/withoutProperties":39,"react":196,"react/lib/warning":195}],14:[function(require,module,exports){
 var merge = require('react/lib/merge');
 var Route = require('./Route');
 
@@ -15596,7 +17593,7 @@ function NotFoundRoute(props) {
 
 module.exports = NotFoundRoute;
 
-},{"./Route":15,"react/lib/merge":181}],14:[function(require,module,exports){
+},{"./Route":16,"react/lib/merge":182}],15:[function(require,module,exports){
 var React = require('react');
 var Route = require('./Route');
 
@@ -15628,7 +17625,7 @@ function Redirect(props) {
 
 module.exports = Redirect;
 
-},{"./Route":15,"react":195}],15:[function(require,module,exports){
+},{"./Route":16,"react":196}],16:[function(require,module,exports){
 var React = require('react');
 var withoutProperties = require('../utils/withoutProperties');
 
@@ -15730,7 +17727,7 @@ var Route = React.createClass({
 
 module.exports = Route;
 
-},{"../utils/withoutProperties":38,"react":195}],16:[function(require,module,exports){
+},{"../utils/withoutProperties":39,"react":196}],17:[function(require,module,exports){
 var React = require('react');
 var warning = require('react/lib/warning');
 var copyProperties = require('react/lib/copyProperties');
@@ -16183,7 +18180,7 @@ function reversedArray(array) {
 
 module.exports = Routes;
 
-},{"../actions/LocationActions":10,"../components/Route":15,"../locations/DefaultLocation":19,"../locations/HashLocation":20,"../locations/HistoryLocation":21,"../locations/RefreshLocation":23,"../stores/ActiveStore":26,"../stores/PathStore":27,"../stores/RouteStore":28,"../utils/Path":29,"../utils/Redirect":30,"../utils/Transition":31,"react":195,"react/lib/copyProperties":148,"react/lib/warning":194,"when/lib/Promise":47}],17:[function(require,module,exports){
+},{"../actions/LocationActions":11,"../components/Route":16,"../locations/DefaultLocation":20,"../locations/HashLocation":21,"../locations/HistoryLocation":22,"../locations/RefreshLocation":24,"../stores/ActiveStore":27,"../stores/PathStore":28,"../stores/RouteStore":29,"../utils/Path":30,"../utils/Redirect":31,"../utils/Transition":32,"react":196,"react/lib/copyProperties":149,"react/lib/warning":195,"when/lib/Promise":48}],18:[function(require,module,exports){
 var copyProperties = require('react/lib/copyProperties');
 var Dispatcher = require('flux').Dispatcher;
 
@@ -16203,7 +18200,7 @@ var LocationDispatcher = copyProperties(new Dispatcher, {
 
 module.exports = LocationDispatcher;
 
-},{"flux":39,"react/lib/copyProperties":148}],18:[function(require,module,exports){
+},{"flux":40,"react/lib/copyProperties":149}],19:[function(require,module,exports){
 exports.goBack = require('./actions/LocationActions').goBack;
 exports.replaceWith = require('./actions/LocationActions').replaceWith;
 exports.transitionTo = require('./actions/LocationActions').transitionTo;
@@ -16220,14 +18217,14 @@ exports.AsyncState = require('./mixins/AsyncState');
 
 exports.makeHref = require('./utils/makeHref');
 
-},{"./actions/LocationActions":10,"./components/DefaultRoute":11,"./components/Link":12,"./components/NotFoundRoute":13,"./components/Redirect":14,"./components/Route":15,"./components/Routes":16,"./mixins/ActiveState":24,"./mixins/AsyncState":25,"./utils/makeHref":34}],19:[function(require,module,exports){
+},{"./actions/LocationActions":11,"./components/DefaultRoute":12,"./components/Link":13,"./components/NotFoundRoute":14,"./components/Redirect":15,"./components/Route":16,"./components/Routes":17,"./mixins/ActiveState":25,"./mixins/AsyncState":26,"./utils/makeHref":35}],20:[function(require,module,exports){
 (function (process){
 module.exports = process.env.NODE_ENV === 'test'
   ? require('./MemoryLocation')
   : require('./HashLocation');
 
 }).call(this,require('_process'))
-},{"./HashLocation":20,"./MemoryLocation":22,"_process":7}],20:[function(require,module,exports){
+},{"./HashLocation":21,"./MemoryLocation":23,"_process":8}],21:[function(require,module,exports){
 var invariant = require('react/lib/invariant');
 var ExecutionEnvironment = require('react/lib/ExecutionEnvironment');
 var getWindowPath = require('../utils/getWindowPath');
@@ -16306,7 +18303,7 @@ var HashLocation = {
 
 module.exports = HashLocation;
 
-},{"../utils/getWindowPath":32,"react/lib/ExecutionEnvironment":72,"react/lib/invariant":171}],21:[function(require,module,exports){
+},{"../utils/getWindowPath":33,"react/lib/ExecutionEnvironment":73,"react/lib/invariant":172}],22:[function(require,module,exports){
 var invariant = require('react/lib/invariant');
 var ExecutionEnvironment = require('react/lib/ExecutionEnvironment');
 var getWindowPath = require('../utils/getWindowPath');
@@ -16365,7 +18362,7 @@ var HistoryLocation = {
 
 module.exports = HistoryLocation;
 
-},{"../utils/getWindowPath":32,"react/lib/ExecutionEnvironment":72,"react/lib/invariant":171}],22:[function(require,module,exports){
+},{"../utils/getWindowPath":33,"react/lib/ExecutionEnvironment":73,"react/lib/invariant":172}],23:[function(require,module,exports){
 var warning = require('react/lib/warning');
 
 var _lastPath = null;
@@ -16415,7 +18412,7 @@ var MemoryLocation = {
 
 module.exports = MemoryLocation;
 
-},{"react/lib/warning":194}],23:[function(require,module,exports){
+},{"react/lib/warning":195}],24:[function(require,module,exports){
 var invariant = require('react/lib/invariant');
 var ExecutionEnvironment = require('react/lib/ExecutionEnvironment');
 var getWindowPath = require('../utils/getWindowPath');
@@ -16456,7 +18453,7 @@ var RefreshLocation = {
 
 module.exports = RefreshLocation;
 
-},{"../utils/getWindowPath":32,"react/lib/ExecutionEnvironment":72,"react/lib/invariant":171}],24:[function(require,module,exports){
+},{"../utils/getWindowPath":33,"react/lib/ExecutionEnvironment":73,"react/lib/invariant":172}],25:[function(require,module,exports){
 var ActiveStore = require('../stores/ActiveStore');
 
 /**
@@ -16523,7 +18520,7 @@ var ActiveState = {
 
 module.exports = ActiveState;
 
-},{"../stores/ActiveStore":26}],25:[function(require,module,exports){
+},{"../stores/ActiveStore":27}],26:[function(require,module,exports){
 var React = require('react');
 var resolveAsyncState = require('../utils/resolveAsyncState');
 
@@ -16633,7 +18630,7 @@ var AsyncState = {
 
 module.exports = AsyncState;
 
-},{"../utils/resolveAsyncState":36,"react":195}],26:[function(require,module,exports){
+},{"../utils/resolveAsyncState":37,"react":196}],27:[function(require,module,exports){
 var EventEmitter = require('events').EventEmitter;
 
 var CHANGE_EVENT = 'change';
@@ -16719,7 +18716,7 @@ var ActiveStore = {
 
 module.exports = ActiveStore;
 
-},{"events":6}],27:[function(require,module,exports){
+},{"events":7}],28:[function(require,module,exports){
 var warning = require('react/lib/warning');
 var EventEmitter = require('events').EventEmitter;
 var LocationActions = require('../actions/LocationActions');
@@ -16853,7 +18850,7 @@ var PathStore = {
 
 module.exports = PathStore;
 
-},{"../actions/LocationActions":10,"../dispatchers/LocationDispatcher":17,"../locations/HistoryLocation":21,"../locations/RefreshLocation":23,"../utils/supportsHistory":37,"events":6,"react/lib/warning":194}],28:[function(require,module,exports){
+},{"../actions/LocationActions":11,"../dispatchers/LocationDispatcher":18,"../locations/HistoryLocation":22,"../locations/RefreshLocation":24,"../utils/supportsHistory":38,"events":7,"react/lib/warning":195}],29:[function(require,module,exports){
 var React = require('react');
 var invariant = require('react/lib/invariant');
 var warning = require('react/lib/warning');
@@ -17011,7 +19008,7 @@ var RouteStore = {
 
 module.exports = RouteStore;
 
-},{"../utils/Path":29,"react":195,"react/lib/invariant":171,"react/lib/warning":194}],29:[function(require,module,exports){
+},{"../utils/Path":30,"react":196,"react/lib/invariant":172,"react/lib/warning":195}],30:[function(require,module,exports){
 var invariant = require('react/lib/invariant');
 var merge = require('qs/lib/utils').merge;
 var qs = require('qs');
@@ -17179,7 +19176,7 @@ var Path = {
 
 module.exports = Path;
 
-},{"qs":42,"qs/lib/utils":46,"react/lib/invariant":171}],30:[function(require,module,exports){
+},{"qs":43,"qs/lib/utils":47,"react/lib/invariant":172}],31:[function(require,module,exports){
 /**
  * Encapsulates a redirect to the given route.
  */
@@ -17191,7 +19188,7 @@ function Redirect(to, params, query) {
 
 module.exports = Redirect;
 
-},{}],31:[function(require,module,exports){
+},{}],32:[function(require,module,exports){
 var mixInto = require('react/lib/mixInto');
 var transitionTo = require('../actions/LocationActions').transitionTo;
 var Redirect = require('./Redirect');
@@ -17227,7 +19224,7 @@ mixInto(Transition, {
 
 module.exports = Transition;
 
-},{"../actions/LocationActions":10,"./Redirect":30,"react/lib/mixInto":184}],32:[function(require,module,exports){
+},{"../actions/LocationActions":11,"./Redirect":31,"react/lib/mixInto":185}],33:[function(require,module,exports){
 /**
  * Returns the current URL path from `window.location`, including query string
  */
@@ -17238,10 +19235,10 @@ function getWindowPath() {
 module.exports = getWindowPath;
 
 
-},{}],33:[function(require,module,exports){
+},{}],34:[function(require,module,exports){
 module.exports = Function.prototype.call.bind(Object.prototype.hasOwnProperty);
 
-},{}],34:[function(require,module,exports){
+},{}],35:[function(require,module,exports){
 var HashLocation = require('../locations/HashLocation');
 var PathStore = require('../stores/PathStore');
 var makePath = require('./makePath');
@@ -17261,7 +19258,7 @@ function makeHref(to, params, query) {
 
 module.exports = makeHref;
 
-},{"../locations/HashLocation":20,"../stores/PathStore":27,"./makePath":35}],35:[function(require,module,exports){
+},{"../locations/HashLocation":21,"../stores/PathStore":28,"./makePath":36}],36:[function(require,module,exports){
 var invariant = require('react/lib/invariant');
 var RouteStore = require('../stores/RouteStore');
 var Path = require('./Path');
@@ -17291,7 +19288,7 @@ function makePath(to, params, query) {
 
 module.exports = makePath;
 
-},{"../stores/RouteStore":28,"./Path":29,"react/lib/invariant":171}],36:[function(require,module,exports){
+},{"../stores/RouteStore":29,"./Path":30,"react/lib/invariant":172}],37:[function(require,module,exports){
 var Promise = require('when/lib/Promise');
 
 /**
@@ -17318,7 +19315,7 @@ function resolveAsyncState(asyncState, setState) {
 
 module.exports = resolveAsyncState;
 
-},{"when/lib/Promise":47}],37:[function(require,module,exports){
+},{"when/lib/Promise":48}],38:[function(require,module,exports){
 function supportsHistory() {
   /*! taken from modernizr
    * https://github.com/Modernizr/Modernizr/blob/master/LICENSE
@@ -17336,7 +19333,7 @@ function supportsHistory() {
 
 module.exports = supportsHistory;
 
-},{}],38:[function(require,module,exports){
+},{}],39:[function(require,module,exports){
 function withoutProperties(object, properties) {
   var result = {};
 
@@ -17350,7 +19347,7 @@ function withoutProperties(object, properties) {
 
 module.exports = withoutProperties;
 
-},{}],39:[function(require,module,exports){
+},{}],40:[function(require,module,exports){
 /**
  * Copyright (c) 2014, Facebook, Inc.
  * All rights reserved.
@@ -17362,7 +19359,7 @@ module.exports = withoutProperties;
 
 module.exports.Dispatcher = require('./lib/Dispatcher')
 
-},{"./lib/Dispatcher":40}],40:[function(require,module,exports){
+},{"./lib/Dispatcher":41}],41:[function(require,module,exports){
 /*
  * Copyright (c) 2014, Facebook, Inc.
  * All rights reserved.
@@ -17612,7 +19609,7 @@ var _prefix = 'ID_';
 
 module.exports = Dispatcher;
 
-},{"./invariant":41}],41:[function(require,module,exports){
+},{"./invariant":42}],42:[function(require,module,exports){
 /**
  * Copyright (c) 2014, Facebook, Inc.
  * All rights reserved.
@@ -17667,10 +19664,10 @@ var invariant = function(condition, format, a, b, c, d, e, f) {
 
 module.exports = invariant;
 
-},{}],42:[function(require,module,exports){
+},{}],43:[function(require,module,exports){
 module.exports = require('./lib');
 
-},{"./lib":43}],43:[function(require,module,exports){
+},{"./lib":44}],44:[function(require,module,exports){
 // Load modules
 
 var Stringify = require('./stringify');
@@ -17687,7 +19684,7 @@ module.exports = {
     parse: Parse
 };
 
-},{"./parse":44,"./stringify":45}],44:[function(require,module,exports){
+},{"./parse":45,"./stringify":46}],45:[function(require,module,exports){
 // Load modules
 
 var Utils = require('./utils');
@@ -17843,7 +19840,7 @@ module.exports = function (str, options) {
     return Utils.compact(obj);
 };
 
-},{"./utils":46}],45:[function(require,module,exports){
+},{"./utils":47}],46:[function(require,module,exports){
 // Load modules
 
 var Utils = require('./utils');
@@ -17903,7 +19900,7 @@ module.exports = function (obj, options) {
     return keys.join(delimiter);
 };
 
-},{"./utils":46}],46:[function(require,module,exports){
+},{"./utils":47}],47:[function(require,module,exports){
 (function (Buffer){
 // Load modules
 
@@ -18046,7 +20043,7 @@ exports.isBuffer = function (obj) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":2}],47:[function(require,module,exports){
+},{"buffer":3}],48:[function(require,module,exports){
 /** @license MIT License (c) copyright 2010-2014 original author or authors */
 /** @author Brian Cavalier */
 /** @author John Hann */
@@ -18065,7 +20062,7 @@ define(function (require) {
 });
 })(typeof define === 'function' && define.amd ? define : function (factory) { module.exports = factory(require); });
 
-},{"./Scheduler":49,"./async":50,"./makePromise":51}],48:[function(require,module,exports){
+},{"./Scheduler":50,"./async":51,"./makePromise":52}],49:[function(require,module,exports){
 /** @license MIT License (c) copyright 2010-2014 original author or authors */
 /** @author Brian Cavalier */
 /** @author John Hann */
@@ -18137,7 +20134,7 @@ define(function() {
 });
 }(typeof define === 'function' && define.amd ? define : function(factory) { module.exports = factory(); }));
 
-},{}],49:[function(require,module,exports){
+},{}],50:[function(require,module,exports){
 /** @license MIT License (c) copyright 2010-2014 original author or authors */
 /** @author Brian Cavalier */
 /** @author John Hann */
@@ -18221,7 +20218,7 @@ define(function(require) {
 });
 }(typeof define === 'function' && define.amd ? define : function(factory) { module.exports = factory(require); }));
 
-},{"./Queue":48}],50:[function(require,module,exports){
+},{"./Queue":49}],51:[function(require,module,exports){
 (function (process){
 /** @license MIT License (c) copyright 2010-2014 original author or authors */
 /** @author Brian Cavalier */
@@ -18296,7 +20293,7 @@ define(function(require) {
 }(typeof define === 'function' && define.amd ? define : function(factory) { module.exports = factory(require); }));
 
 }).call(this,require('_process'))
-},{"_process":7}],51:[function(require,module,exports){
+},{"_process":8}],52:[function(require,module,exports){
 /** @license MIT License (c) copyright 2010-2014 original author or authors */
 /** @author Brian Cavalier */
 /** @author John Hann */
@@ -19094,7 +21091,7 @@ define(function() {
 });
 }(typeof define === 'function' && define.amd ? define : function(factory) { module.exports = factory(); }));
 
-},{}],52:[function(require,module,exports){
+},{}],53:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -19128,7 +21125,7 @@ var AutoFocusMixin = {
 
 module.exports = AutoFocusMixin;
 
-},{"./focusNode":157}],53:[function(require,module,exports){
+},{"./focusNode":158}],54:[function(require,module,exports){
 /**
  * Copyright 2013 Facebook, Inc.
  *
@@ -19352,7 +21349,7 @@ var BeforeInputEventPlugin = {
 
 module.exports = BeforeInputEventPlugin;
 
-},{"./EventConstants":66,"./EventPropagators":71,"./ExecutionEnvironment":72,"./SyntheticInputEvent":137,"./keyOf":178}],54:[function(require,module,exports){
+},{"./EventConstants":67,"./EventPropagators":72,"./ExecutionEnvironment":73,"./SyntheticInputEvent":138,"./keyOf":179}],55:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -19475,7 +21472,7 @@ var CSSProperty = {
 
 module.exports = CSSProperty;
 
-},{}],55:[function(require,module,exports){
+},{}],56:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -19574,7 +21571,7 @@ var CSSPropertyOperations = {
 
 module.exports = CSSPropertyOperations;
 
-},{"./CSSProperty":54,"./dangerousStyleValue":152,"./hyphenateStyleName":169,"./memoizeStringOnly":180}],56:[function(require,module,exports){
+},{"./CSSProperty":55,"./dangerousStyleValue":153,"./hyphenateStyleName":170,"./memoizeStringOnly":181}],57:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014 Facebook, Inc.
@@ -19681,7 +21678,7 @@ PooledClass.addPoolingTo(CallbackQueue);
 module.exports = CallbackQueue;
 
 }).call(this,require('_process'))
-},{"./PooledClass":77,"./invariant":171,"./mixInto":184,"_process":7}],57:[function(require,module,exports){
+},{"./PooledClass":78,"./invariant":172,"./mixInto":185,"_process":8}],58:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -20070,7 +22067,7 @@ var ChangeEventPlugin = {
 
 module.exports = ChangeEventPlugin;
 
-},{"./EventConstants":66,"./EventPluginHub":68,"./EventPropagators":71,"./ExecutionEnvironment":72,"./ReactUpdates":127,"./SyntheticEvent":135,"./isEventSupported":172,"./isTextInputElement":174,"./keyOf":178}],58:[function(require,module,exports){
+},{"./EventConstants":67,"./EventPluginHub":69,"./EventPropagators":72,"./ExecutionEnvironment":73,"./ReactUpdates":128,"./SyntheticEvent":136,"./isEventSupported":173,"./isTextInputElement":175,"./keyOf":179}],59:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -20102,7 +22099,7 @@ var ClientReactRootIndex = {
 
 module.exports = ClientReactRootIndex;
 
-},{}],59:[function(require,module,exports){
+},{}],60:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -20368,7 +22365,7 @@ var CompositionEventPlugin = {
 
 module.exports = CompositionEventPlugin;
 
-},{"./EventConstants":66,"./EventPropagators":71,"./ExecutionEnvironment":72,"./ReactInputSelection":109,"./SyntheticCompositionEvent":133,"./getTextContentAccessor":166,"./keyOf":178}],60:[function(require,module,exports){
+},{"./EventConstants":67,"./EventPropagators":72,"./ExecutionEnvironment":73,"./ReactInputSelection":110,"./SyntheticCompositionEvent":134,"./getTextContentAccessor":167,"./keyOf":179}],61:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014 Facebook, Inc.
@@ -20550,7 +22547,7 @@ var DOMChildrenOperations = {
 module.exports = DOMChildrenOperations;
 
 }).call(this,require('_process'))
-},{"./Danger":63,"./ReactMultiChildUpdateTypes":114,"./getTextContentAccessor":166,"./invariant":171,"_process":7}],61:[function(require,module,exports){
+},{"./Danger":64,"./ReactMultiChildUpdateTypes":115,"./getTextContentAccessor":167,"./invariant":172,"_process":8}],62:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014 Facebook, Inc.
@@ -20852,7 +22849,7 @@ var DOMProperty = {
 module.exports = DOMProperty;
 
 }).call(this,require('_process'))
-},{"./invariant":171,"_process":7}],62:[function(require,module,exports){
+},{"./invariant":172,"_process":8}],63:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014 Facebook, Inc.
@@ -21049,7 +23046,7 @@ var DOMPropertyOperations = {
 module.exports = DOMPropertyOperations;
 
 }).call(this,require('_process'))
-},{"./DOMProperty":61,"./escapeTextForBrowser":155,"./memoizeStringOnly":180,"./warning":194,"_process":7}],63:[function(require,module,exports){
+},{"./DOMProperty":62,"./escapeTextForBrowser":156,"./memoizeStringOnly":181,"./warning":195,"_process":8}],64:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014 Facebook, Inc.
@@ -21240,7 +23237,7 @@ var Danger = {
 module.exports = Danger;
 
 }).call(this,require('_process'))
-},{"./ExecutionEnvironment":72,"./createNodesFromMarkup":151,"./emptyFunction":153,"./getMarkupWrap":163,"./invariant":171,"_process":7}],64:[function(require,module,exports){
+},{"./ExecutionEnvironment":73,"./createNodesFromMarkup":152,"./emptyFunction":154,"./getMarkupWrap":164,"./invariant":172,"_process":8}],65:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -21287,7 +23284,7 @@ var DefaultEventPluginOrder = [
 
 module.exports = DefaultEventPluginOrder;
 
-},{"./keyOf":178}],65:[function(require,module,exports){
+},{"./keyOf":179}],66:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -21434,7 +23431,7 @@ var EnterLeaveEventPlugin = {
 
 module.exports = EnterLeaveEventPlugin;
 
-},{"./EventConstants":66,"./EventPropagators":71,"./ReactMount":112,"./SyntheticMouseEvent":139,"./keyOf":178}],66:[function(require,module,exports){
+},{"./EventConstants":67,"./EventPropagators":72,"./ReactMount":113,"./SyntheticMouseEvent":140,"./keyOf":179}],67:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -21513,7 +23510,7 @@ var EventConstants = {
 
 module.exports = EventConstants;
 
-},{"./keyMirror":177}],67:[function(require,module,exports){
+},{"./keyMirror":178}],68:[function(require,module,exports){
 (function (process){
 /**
  * @providesModule EventListener
@@ -21589,7 +23586,7 @@ var EventListener = {
 module.exports = EventListener;
 
 }).call(this,require('_process'))
-},{"./emptyFunction":153,"_process":7}],68:[function(require,module,exports){
+},{"./emptyFunction":154,"_process":8}],69:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014 Facebook, Inc.
@@ -21883,7 +23880,7 @@ var EventPluginHub = {
 module.exports = EventPluginHub;
 
 }).call(this,require('_process'))
-},{"./EventPluginRegistry":69,"./EventPluginUtils":70,"./accumulate":145,"./forEachAccumulated":158,"./invariant":171,"./isEventSupported":172,"./monitorCodeUse":185,"_process":7}],69:[function(require,module,exports){
+},{"./EventPluginRegistry":70,"./EventPluginUtils":71,"./accumulate":146,"./forEachAccumulated":159,"./invariant":172,"./isEventSupported":173,"./monitorCodeUse":186,"_process":8}],70:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014 Facebook, Inc.
@@ -22170,7 +24167,7 @@ var EventPluginRegistry = {
 module.exports = EventPluginRegistry;
 
 }).call(this,require('_process'))
-},{"./invariant":171,"_process":7}],70:[function(require,module,exports){
+},{"./invariant":172,"_process":8}],71:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014 Facebook, Inc.
@@ -22398,7 +24395,7 @@ var EventPluginUtils = {
 module.exports = EventPluginUtils;
 
 }).call(this,require('_process'))
-},{"./EventConstants":66,"./invariant":171,"_process":7}],71:[function(require,module,exports){
+},{"./EventConstants":67,"./invariant":172,"_process":8}],72:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014 Facebook, Inc.
@@ -22545,7 +24542,7 @@ var EventPropagators = {
 module.exports = EventPropagators;
 
 }).call(this,require('_process'))
-},{"./EventConstants":66,"./EventPluginHub":68,"./accumulate":145,"./forEachAccumulated":158,"_process":7}],72:[function(require,module,exports){
+},{"./EventConstants":67,"./EventPluginHub":69,"./accumulate":146,"./forEachAccumulated":159,"_process":8}],73:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -22597,7 +24594,7 @@ var ExecutionEnvironment = {
 
 module.exports = ExecutionEnvironment;
 
-},{}],73:[function(require,module,exports){
+},{}],74:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -22788,7 +24785,7 @@ var HTMLDOMPropertyConfig = {
 
 module.exports = HTMLDOMPropertyConfig;
 
-},{"./DOMProperty":61,"./ExecutionEnvironment":72}],74:[function(require,module,exports){
+},{"./DOMProperty":62,"./ExecutionEnvironment":73}],75:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014 Facebook, Inc.
@@ -22951,7 +24948,7 @@ var LinkedValueUtils = {
 module.exports = LinkedValueUtils;
 
 }).call(this,require('_process'))
-},{"./ReactPropTypes":120,"./invariant":171,"_process":7}],75:[function(require,module,exports){
+},{"./ReactPropTypes":121,"./invariant":172,"_process":8}],76:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014 Facebook, Inc.
@@ -23007,7 +25004,7 @@ var LocalEventTrapMixin = {
 module.exports = LocalEventTrapMixin;
 
 }).call(this,require('_process'))
-},{"./ReactBrowserEventEmitter":80,"./accumulate":145,"./forEachAccumulated":158,"./invariant":171,"_process":7}],76:[function(require,module,exports){
+},{"./ReactBrowserEventEmitter":81,"./accumulate":146,"./forEachAccumulated":159,"./invariant":172,"_process":8}],77:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -23072,7 +25069,7 @@ var MobileSafariClickEventPlugin = {
 
 module.exports = MobileSafariClickEventPlugin;
 
-},{"./EventConstants":66,"./emptyFunction":153}],77:[function(require,module,exports){
+},{"./EventConstants":67,"./emptyFunction":154}],78:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014 Facebook, Inc.
@@ -23195,7 +25192,7 @@ var PooledClass = {
 module.exports = PooledClass;
 
 }).call(this,require('_process'))
-},{"./invariant":171,"_process":7}],78:[function(require,module,exports){
+},{"./invariant":172,"_process":8}],79:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014 Facebook, Inc.
@@ -23350,7 +25347,7 @@ React.version = '0.11.2';
 module.exports = React;
 
 }).call(this,require('_process'))
-},{"./DOMPropertyOperations":62,"./EventPluginUtils":70,"./ExecutionEnvironment":72,"./ReactChildren":81,"./ReactComponent":82,"./ReactCompositeComponent":84,"./ReactContext":85,"./ReactCurrentOwner":86,"./ReactDOM":87,"./ReactDOMComponent":89,"./ReactDefaultInjection":99,"./ReactDescriptor":102,"./ReactInstanceHandles":110,"./ReactMount":112,"./ReactMultiChild":113,"./ReactPerf":116,"./ReactPropTypes":120,"./ReactServerRendering":124,"./ReactTextComponent":126,"./onlyChild":186,"./warning":194,"_process":7}],79:[function(require,module,exports){
+},{"./DOMPropertyOperations":63,"./EventPluginUtils":71,"./ExecutionEnvironment":73,"./ReactChildren":82,"./ReactComponent":83,"./ReactCompositeComponent":85,"./ReactContext":86,"./ReactCurrentOwner":87,"./ReactDOM":88,"./ReactDOMComponent":90,"./ReactDefaultInjection":100,"./ReactDescriptor":103,"./ReactInstanceHandles":111,"./ReactMount":113,"./ReactMultiChild":114,"./ReactPerf":117,"./ReactPropTypes":121,"./ReactServerRendering":125,"./ReactTextComponent":127,"./onlyChild":187,"./warning":195,"_process":8}],80:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014 Facebook, Inc.
@@ -23400,7 +25397,7 @@ var ReactBrowserComponentMixin = {
 module.exports = ReactBrowserComponentMixin;
 
 }).call(this,require('_process'))
-},{"./ReactEmptyComponent":104,"./ReactMount":112,"./invariant":171,"_process":7}],80:[function(require,module,exports){
+},{"./ReactEmptyComponent":105,"./ReactMount":113,"./invariant":172,"_process":8}],81:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -23762,7 +25759,7 @@ var ReactBrowserEventEmitter = merge(ReactEventEmitterMixin, {
 
 module.exports = ReactBrowserEventEmitter;
 
-},{"./EventConstants":66,"./EventPluginHub":68,"./EventPluginRegistry":69,"./ReactEventEmitterMixin":106,"./ViewportMetrics":144,"./isEventSupported":172,"./merge":181}],81:[function(require,module,exports){
+},{"./EventConstants":67,"./EventPluginHub":69,"./EventPluginRegistry":70,"./ReactEventEmitterMixin":107,"./ViewportMetrics":145,"./isEventSupported":173,"./merge":182}],82:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014 Facebook, Inc.
@@ -23919,7 +25916,7 @@ var ReactChildren = {
 module.exports = ReactChildren;
 
 }).call(this,require('_process'))
-},{"./PooledClass":77,"./traverseAllChildren":193,"./warning":194,"_process":7}],82:[function(require,module,exports){
+},{"./PooledClass":78,"./traverseAllChildren":194,"./warning":195,"_process":8}],83:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014 Facebook, Inc.
@@ -24369,7 +26366,7 @@ var ReactComponent = {
 module.exports = ReactComponent;
 
 }).call(this,require('_process'))
-},{"./ReactDescriptor":102,"./ReactOwner":115,"./ReactUpdates":127,"./invariant":171,"./keyMirror":177,"./merge":181,"_process":7}],83:[function(require,module,exports){
+},{"./ReactDescriptor":103,"./ReactOwner":116,"./ReactUpdates":128,"./invariant":172,"./keyMirror":178,"./merge":182,"_process":8}],84:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014 Facebook, Inc.
@@ -24498,7 +26495,7 @@ var ReactComponentBrowserEnvironment = {
 module.exports = ReactComponentBrowserEnvironment;
 
 }).call(this,require('_process'))
-},{"./ReactDOMIDOperations":91,"./ReactMarkupChecksum":111,"./ReactMount":112,"./ReactPerf":116,"./ReactReconcileTransaction":122,"./getReactRootElementInContainer":165,"./invariant":171,"./setInnerHTML":189,"_process":7}],84:[function(require,module,exports){
+},{"./ReactDOMIDOperations":92,"./ReactMarkupChecksum":112,"./ReactMount":113,"./ReactPerf":117,"./ReactReconcileTransaction":123,"./getReactRootElementInContainer":166,"./invariant":172,"./setInnerHTML":190,"_process":8}],85:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014 Facebook, Inc.
@@ -25927,7 +27924,7 @@ var ReactCompositeComponent = {
 module.exports = ReactCompositeComponent;
 
 }).call(this,require('_process'))
-},{"./ReactComponent":82,"./ReactContext":85,"./ReactCurrentOwner":86,"./ReactDescriptor":102,"./ReactDescriptorValidator":103,"./ReactEmptyComponent":104,"./ReactErrorUtils":105,"./ReactOwner":115,"./ReactPerf":116,"./ReactPropTransferer":117,"./ReactPropTypeLocationNames":118,"./ReactPropTypeLocations":119,"./ReactUpdates":127,"./instantiateReactComponent":170,"./invariant":171,"./keyMirror":177,"./mapObject":179,"./merge":181,"./mixInto":184,"./monitorCodeUse":185,"./shouldUpdateReactComponent":191,"./warning":194,"_process":7}],85:[function(require,module,exports){
+},{"./ReactComponent":83,"./ReactContext":86,"./ReactCurrentOwner":87,"./ReactDescriptor":103,"./ReactDescriptorValidator":104,"./ReactEmptyComponent":105,"./ReactErrorUtils":106,"./ReactOwner":116,"./ReactPerf":117,"./ReactPropTransferer":118,"./ReactPropTypeLocationNames":119,"./ReactPropTypeLocations":120,"./ReactUpdates":128,"./instantiateReactComponent":171,"./invariant":172,"./keyMirror":178,"./mapObject":180,"./merge":182,"./mixInto":185,"./monitorCodeUse":186,"./shouldUpdateReactComponent":192,"./warning":195,"_process":8}],86:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -25996,7 +27993,7 @@ var ReactContext = {
 
 module.exports = ReactContext;
 
-},{"./merge":181}],86:[function(require,module,exports){
+},{"./merge":182}],87:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -26037,7 +28034,7 @@ var ReactCurrentOwner = {
 
 module.exports = ReactCurrentOwner;
 
-},{}],87:[function(require,module,exports){
+},{}],88:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014 Facebook, Inc.
@@ -26252,7 +28249,7 @@ ReactDOM.injection = injection;
 module.exports = ReactDOM;
 
 }).call(this,require('_process'))
-},{"./ReactDOMComponent":89,"./ReactDescriptor":102,"./ReactDescriptorValidator":103,"./mapObject":179,"./mergeInto":183,"_process":7}],88:[function(require,module,exports){
+},{"./ReactDOMComponent":90,"./ReactDescriptor":103,"./ReactDescriptorValidator":104,"./mapObject":180,"./mergeInto":184,"_process":8}],89:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -26323,7 +28320,7 @@ var ReactDOMButton = ReactCompositeComponent.createClass({
 
 module.exports = ReactDOMButton;
 
-},{"./AutoFocusMixin":52,"./ReactBrowserComponentMixin":79,"./ReactCompositeComponent":84,"./ReactDOM":87,"./keyMirror":177}],89:[function(require,module,exports){
+},{"./AutoFocusMixin":53,"./ReactBrowserComponentMixin":80,"./ReactCompositeComponent":85,"./ReactDOM":88,"./keyMirror":178}],90:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014 Facebook, Inc.
@@ -26745,7 +28742,7 @@ mixInto(ReactDOMComponent, ReactBrowserComponentMixin);
 module.exports = ReactDOMComponent;
 
 }).call(this,require('_process'))
-},{"./CSSPropertyOperations":55,"./DOMProperty":61,"./DOMPropertyOperations":62,"./ReactBrowserComponentMixin":79,"./ReactBrowserEventEmitter":80,"./ReactComponent":82,"./ReactMount":112,"./ReactMultiChild":113,"./ReactPerf":116,"./escapeTextForBrowser":155,"./invariant":171,"./keyOf":178,"./merge":181,"./mixInto":184,"_process":7}],90:[function(require,module,exports){
+},{"./CSSPropertyOperations":56,"./DOMProperty":62,"./DOMPropertyOperations":63,"./ReactBrowserComponentMixin":80,"./ReactBrowserEventEmitter":81,"./ReactComponent":83,"./ReactMount":113,"./ReactMultiChild":114,"./ReactPerf":117,"./escapeTextForBrowser":156,"./invariant":172,"./keyOf":179,"./merge":182,"./mixInto":185,"_process":8}],91:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -26801,7 +28798,7 @@ var ReactDOMForm = ReactCompositeComponent.createClass({
 
 module.exports = ReactDOMForm;
 
-},{"./EventConstants":66,"./LocalEventTrapMixin":75,"./ReactBrowserComponentMixin":79,"./ReactCompositeComponent":84,"./ReactDOM":87}],91:[function(require,module,exports){
+},{"./EventConstants":67,"./LocalEventTrapMixin":76,"./ReactBrowserComponentMixin":80,"./ReactCompositeComponent":85,"./ReactDOM":88}],92:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014 Facebook, Inc.
@@ -26994,7 +28991,7 @@ var ReactDOMIDOperations = {
 module.exports = ReactDOMIDOperations;
 
 }).call(this,require('_process'))
-},{"./CSSPropertyOperations":55,"./DOMChildrenOperations":60,"./DOMPropertyOperations":62,"./ReactMount":112,"./ReactPerf":116,"./invariant":171,"./setInnerHTML":189,"_process":7}],92:[function(require,module,exports){
+},{"./CSSPropertyOperations":56,"./DOMChildrenOperations":61,"./DOMPropertyOperations":63,"./ReactMount":113,"./ReactPerf":117,"./invariant":172,"./setInnerHTML":190,"_process":8}],93:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -27048,7 +29045,7 @@ var ReactDOMImg = ReactCompositeComponent.createClass({
 
 module.exports = ReactDOMImg;
 
-},{"./EventConstants":66,"./LocalEventTrapMixin":75,"./ReactBrowserComponentMixin":79,"./ReactCompositeComponent":84,"./ReactDOM":87}],93:[function(require,module,exports){
+},{"./EventConstants":67,"./LocalEventTrapMixin":76,"./ReactBrowserComponentMixin":80,"./ReactCompositeComponent":85,"./ReactDOM":88}],94:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014 Facebook, Inc.
@@ -27234,7 +29231,7 @@ var ReactDOMInput = ReactCompositeComponent.createClass({
 module.exports = ReactDOMInput;
 
 }).call(this,require('_process'))
-},{"./AutoFocusMixin":52,"./DOMPropertyOperations":62,"./LinkedValueUtils":74,"./ReactBrowserComponentMixin":79,"./ReactCompositeComponent":84,"./ReactDOM":87,"./ReactMount":112,"./invariant":171,"./merge":181,"_process":7}],94:[function(require,module,exports){
+},{"./AutoFocusMixin":53,"./DOMPropertyOperations":63,"./LinkedValueUtils":75,"./ReactBrowserComponentMixin":80,"./ReactCompositeComponent":85,"./ReactDOM":88,"./ReactMount":113,"./invariant":172,"./merge":182,"_process":8}],95:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014 Facebook, Inc.
@@ -27293,7 +29290,7 @@ var ReactDOMOption = ReactCompositeComponent.createClass({
 module.exports = ReactDOMOption;
 
 }).call(this,require('_process'))
-},{"./ReactBrowserComponentMixin":79,"./ReactCompositeComponent":84,"./ReactDOM":87,"./warning":194,"_process":7}],95:[function(require,module,exports){
+},{"./ReactBrowserComponentMixin":80,"./ReactCompositeComponent":85,"./ReactDOM":88,"./warning":195,"_process":8}],96:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -27476,7 +29473,7 @@ var ReactDOMSelect = ReactCompositeComponent.createClass({
 
 module.exports = ReactDOMSelect;
 
-},{"./AutoFocusMixin":52,"./LinkedValueUtils":74,"./ReactBrowserComponentMixin":79,"./ReactCompositeComponent":84,"./ReactDOM":87,"./merge":181}],96:[function(require,module,exports){
+},{"./AutoFocusMixin":53,"./LinkedValueUtils":75,"./ReactBrowserComponentMixin":80,"./ReactCompositeComponent":85,"./ReactDOM":88,"./merge":182}],97:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -27692,7 +29689,7 @@ var ReactDOMSelection = {
 
 module.exports = ReactDOMSelection;
 
-},{"./ExecutionEnvironment":72,"./getNodeForCharacterOffset":164,"./getTextContentAccessor":166}],97:[function(require,module,exports){
+},{"./ExecutionEnvironment":73,"./getNodeForCharacterOffset":165,"./getTextContentAccessor":167}],98:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014 Facebook, Inc.
@@ -27838,7 +29835,7 @@ var ReactDOMTextarea = ReactCompositeComponent.createClass({
 module.exports = ReactDOMTextarea;
 
 }).call(this,require('_process'))
-},{"./AutoFocusMixin":52,"./DOMPropertyOperations":62,"./LinkedValueUtils":74,"./ReactBrowserComponentMixin":79,"./ReactCompositeComponent":84,"./ReactDOM":87,"./invariant":171,"./merge":181,"./warning":194,"_process":7}],98:[function(require,module,exports){
+},{"./AutoFocusMixin":53,"./DOMPropertyOperations":63,"./LinkedValueUtils":75,"./ReactBrowserComponentMixin":80,"./ReactCompositeComponent":85,"./ReactDOM":88,"./invariant":172,"./merge":182,"./warning":195,"_process":8}],99:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -27915,7 +29912,7 @@ var ReactDefaultBatchingStrategy = {
 
 module.exports = ReactDefaultBatchingStrategy;
 
-},{"./ReactUpdates":127,"./Transaction":143,"./emptyFunction":153,"./mixInto":184}],99:[function(require,module,exports){
+},{"./ReactUpdates":128,"./Transaction":144,"./emptyFunction":154,"./mixInto":185}],100:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014 Facebook, Inc.
@@ -28047,7 +30044,7 @@ module.exports = {
 };
 
 }).call(this,require('_process'))
-},{"./BeforeInputEventPlugin":53,"./ChangeEventPlugin":57,"./ClientReactRootIndex":58,"./CompositionEventPlugin":59,"./DefaultEventPluginOrder":64,"./EnterLeaveEventPlugin":65,"./ExecutionEnvironment":72,"./HTMLDOMPropertyConfig":73,"./MobileSafariClickEventPlugin":76,"./ReactBrowserComponentMixin":79,"./ReactComponentBrowserEnvironment":83,"./ReactDOM":87,"./ReactDOMButton":88,"./ReactDOMForm":90,"./ReactDOMImg":92,"./ReactDOMInput":93,"./ReactDOMOption":94,"./ReactDOMSelect":95,"./ReactDOMTextarea":97,"./ReactDefaultBatchingStrategy":98,"./ReactDefaultPerf":100,"./ReactEventListener":107,"./ReactInjection":108,"./ReactInstanceHandles":110,"./ReactMount":112,"./SVGDOMPropertyConfig":128,"./SelectEventPlugin":129,"./ServerReactRootIndex":130,"./SimpleEventPlugin":131,"./createFullPageComponent":150,"_process":7}],100:[function(require,module,exports){
+},{"./BeforeInputEventPlugin":54,"./ChangeEventPlugin":58,"./ClientReactRootIndex":59,"./CompositionEventPlugin":60,"./DefaultEventPluginOrder":65,"./EnterLeaveEventPlugin":66,"./ExecutionEnvironment":73,"./HTMLDOMPropertyConfig":74,"./MobileSafariClickEventPlugin":77,"./ReactBrowserComponentMixin":80,"./ReactComponentBrowserEnvironment":84,"./ReactDOM":88,"./ReactDOMButton":89,"./ReactDOMForm":91,"./ReactDOMImg":93,"./ReactDOMInput":94,"./ReactDOMOption":95,"./ReactDOMSelect":96,"./ReactDOMTextarea":98,"./ReactDefaultBatchingStrategy":99,"./ReactDefaultPerf":101,"./ReactEventListener":108,"./ReactInjection":109,"./ReactInstanceHandles":111,"./ReactMount":113,"./SVGDOMPropertyConfig":129,"./SelectEventPlugin":130,"./ServerReactRootIndex":131,"./SimpleEventPlugin":132,"./createFullPageComponent":151,"_process":8}],101:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -28310,7 +30307,7 @@ var ReactDefaultPerf = {
 
 module.exports = ReactDefaultPerf;
 
-},{"./DOMProperty":61,"./ReactDefaultPerfAnalysis":101,"./ReactMount":112,"./ReactPerf":116,"./performanceNow":188}],101:[function(require,module,exports){
+},{"./DOMProperty":62,"./ReactDefaultPerfAnalysis":102,"./ReactMount":113,"./ReactPerf":117,"./performanceNow":189}],102:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -28515,7 +30512,7 @@ var ReactDefaultPerfAnalysis = {
 
 module.exports = ReactDefaultPerfAnalysis;
 
-},{"./merge":181}],102:[function(require,module,exports){
+},{"./merge":182}],103:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014 Facebook, Inc.
@@ -28770,7 +30767,7 @@ ReactDescriptor.isValidDescriptor = function(object) {
 module.exports = ReactDescriptor;
 
 }).call(this,require('_process'))
-},{"./ReactContext":85,"./ReactCurrentOwner":86,"./merge":181,"./warning":194,"_process":7}],103:[function(require,module,exports){
+},{"./ReactContext":86,"./ReactCurrentOwner":87,"./merge":182,"./warning":195,"_process":8}],104:[function(require,module,exports){
 /**
  * Copyright 2014 Facebook, Inc.
  *
@@ -29055,7 +31052,7 @@ var ReactDescriptorValidator = {
 
 module.exports = ReactDescriptorValidator;
 
-},{"./ReactCurrentOwner":86,"./ReactDescriptor":102,"./ReactPropTypeLocations":119,"./monitorCodeUse":185}],104:[function(require,module,exports){
+},{"./ReactCurrentOwner":87,"./ReactDescriptor":103,"./ReactPropTypeLocations":120,"./monitorCodeUse":186}],105:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014 Facebook, Inc.
@@ -29137,7 +31134,7 @@ var ReactEmptyComponent = {
 module.exports = ReactEmptyComponent;
 
 }).call(this,require('_process'))
-},{"./invariant":171,"_process":7}],105:[function(require,module,exports){
+},{"./invariant":172,"_process":8}],106:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -29176,7 +31173,7 @@ var ReactErrorUtils = {
 
 module.exports = ReactErrorUtils;
 
-},{}],106:[function(require,module,exports){
+},{}],107:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -29233,7 +31230,7 @@ var ReactEventEmitterMixin = {
 
 module.exports = ReactEventEmitterMixin;
 
-},{"./EventPluginHub":68}],107:[function(require,module,exports){
+},{"./EventPluginHub":69}],108:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -29424,7 +31421,7 @@ var ReactEventListener = {
 
 module.exports = ReactEventListener;
 
-},{"./EventListener":67,"./ExecutionEnvironment":72,"./PooledClass":77,"./ReactInstanceHandles":110,"./ReactMount":112,"./ReactUpdates":127,"./getEventTarget":162,"./getUnboundedScrollPosition":167,"./mixInto":184}],108:[function(require,module,exports){
+},{"./EventListener":68,"./ExecutionEnvironment":73,"./PooledClass":78,"./ReactInstanceHandles":111,"./ReactMount":113,"./ReactUpdates":128,"./getEventTarget":163,"./getUnboundedScrollPosition":168,"./mixInto":185}],109:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -29471,7 +31468,7 @@ var ReactInjection = {
 
 module.exports = ReactInjection;
 
-},{"./DOMProperty":61,"./EventPluginHub":68,"./ReactBrowserEventEmitter":80,"./ReactComponent":82,"./ReactCompositeComponent":84,"./ReactDOM":87,"./ReactEmptyComponent":104,"./ReactPerf":116,"./ReactRootIndex":123,"./ReactUpdates":127}],109:[function(require,module,exports){
+},{"./DOMProperty":62,"./EventPluginHub":69,"./ReactBrowserEventEmitter":81,"./ReactComponent":83,"./ReactCompositeComponent":85,"./ReactDOM":88,"./ReactEmptyComponent":105,"./ReactPerf":117,"./ReactRootIndex":124,"./ReactUpdates":128}],110:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -29614,7 +31611,7 @@ var ReactInputSelection = {
 
 module.exports = ReactInputSelection;
 
-},{"./ReactDOMSelection":96,"./containsNode":147,"./focusNode":157,"./getActiveElement":159}],110:[function(require,module,exports){
+},{"./ReactDOMSelection":97,"./containsNode":148,"./focusNode":158,"./getActiveElement":160}],111:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014 Facebook, Inc.
@@ -29956,7 +31953,7 @@ var ReactInstanceHandles = {
 module.exports = ReactInstanceHandles;
 
 }).call(this,require('_process'))
-},{"./ReactRootIndex":123,"./invariant":171,"_process":7}],111:[function(require,module,exports){
+},{"./ReactRootIndex":124,"./invariant":172,"_process":8}],112:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -30011,7 +32008,7 @@ var ReactMarkupChecksum = {
 
 module.exports = ReactMarkupChecksum;
 
-},{"./adler32":146}],112:[function(require,module,exports){
+},{"./adler32":147}],113:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014 Facebook, Inc.
@@ -30696,7 +32693,7 @@ var ReactMount = {
 module.exports = ReactMount;
 
 }).call(this,require('_process'))
-},{"./DOMProperty":61,"./ReactBrowserEventEmitter":80,"./ReactCurrentOwner":86,"./ReactDescriptor":102,"./ReactInstanceHandles":110,"./ReactPerf":116,"./containsNode":147,"./getReactRootElementInContainer":165,"./instantiateReactComponent":170,"./invariant":171,"./shouldUpdateReactComponent":191,"./warning":194,"_process":7}],113:[function(require,module,exports){
+},{"./DOMProperty":62,"./ReactBrowserEventEmitter":81,"./ReactCurrentOwner":87,"./ReactDescriptor":103,"./ReactInstanceHandles":111,"./ReactPerf":117,"./containsNode":148,"./getReactRootElementInContainer":166,"./instantiateReactComponent":171,"./invariant":172,"./shouldUpdateReactComponent":192,"./warning":195,"_process":8}],114:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -31128,7 +33125,7 @@ var ReactMultiChild = {
 
 module.exports = ReactMultiChild;
 
-},{"./ReactComponent":82,"./ReactMultiChildUpdateTypes":114,"./flattenChildren":156,"./instantiateReactComponent":170,"./shouldUpdateReactComponent":191}],114:[function(require,module,exports){
+},{"./ReactComponent":83,"./ReactMultiChildUpdateTypes":115,"./flattenChildren":157,"./instantiateReactComponent":171,"./shouldUpdateReactComponent":192}],115:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -31168,7 +33165,7 @@ var ReactMultiChildUpdateTypes = keyMirror({
 
 module.exports = ReactMultiChildUpdateTypes;
 
-},{"./keyMirror":177}],115:[function(require,module,exports){
+},{"./keyMirror":178}],116:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014 Facebook, Inc.
@@ -31331,7 +33328,7 @@ var ReactOwner = {
 module.exports = ReactOwner;
 
 }).call(this,require('_process'))
-},{"./emptyObject":154,"./invariant":171,"_process":7}],116:[function(require,module,exports){
+},{"./emptyObject":155,"./invariant":172,"_process":8}],117:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014 Facebook, Inc.
@@ -31420,7 +33417,7 @@ function _noMeasure(objName, fnName, func) {
 module.exports = ReactPerf;
 
 }).call(this,require('_process'))
-},{"_process":7}],117:[function(require,module,exports){
+},{"_process":8}],118:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014 Facebook, Inc.
@@ -31586,7 +33583,7 @@ var ReactPropTransferer = {
 module.exports = ReactPropTransferer;
 
 }).call(this,require('_process'))
-},{"./emptyFunction":153,"./invariant":171,"./joinClasses":176,"./merge":181,"_process":7}],118:[function(require,module,exports){
+},{"./emptyFunction":154,"./invariant":172,"./joinClasses":177,"./merge":182,"_process":8}],119:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014 Facebook, Inc.
@@ -31621,7 +33618,7 @@ if ("production" !== process.env.NODE_ENV) {
 module.exports = ReactPropTypeLocationNames;
 
 }).call(this,require('_process'))
-},{"_process":7}],119:[function(require,module,exports){
+},{"_process":8}],120:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -31652,7 +33649,7 @@ var ReactPropTypeLocations = keyMirror({
 
 module.exports = ReactPropTypeLocations;
 
-},{"./keyMirror":177}],120:[function(require,module,exports){
+},{"./keyMirror":178}],121:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -31997,7 +33994,7 @@ function getPreciseType(propValue) {
 
 module.exports = ReactPropTypes;
 
-},{"./ReactDescriptor":102,"./ReactPropTypeLocationNames":118,"./emptyFunction":153}],121:[function(require,module,exports){
+},{"./ReactDescriptor":103,"./ReactPropTypeLocationNames":119,"./emptyFunction":154}],122:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -32060,7 +34057,7 @@ PooledClass.addPoolingTo(ReactPutListenerQueue);
 
 module.exports = ReactPutListenerQueue;
 
-},{"./PooledClass":77,"./ReactBrowserEventEmitter":80,"./mixInto":184}],122:[function(require,module,exports){
+},{"./PooledClass":78,"./ReactBrowserEventEmitter":81,"./mixInto":185}],123:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -32244,7 +34241,7 @@ PooledClass.addPoolingTo(ReactReconcileTransaction);
 
 module.exports = ReactReconcileTransaction;
 
-},{"./CallbackQueue":56,"./PooledClass":77,"./ReactBrowserEventEmitter":80,"./ReactInputSelection":109,"./ReactPutListenerQueue":121,"./Transaction":143,"./mixInto":184}],123:[function(require,module,exports){
+},{"./CallbackQueue":57,"./PooledClass":78,"./ReactBrowserEventEmitter":81,"./ReactInputSelection":110,"./ReactPutListenerQueue":122,"./Transaction":144,"./mixInto":185}],124:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -32282,7 +34279,7 @@ var ReactRootIndex = {
 
 module.exports = ReactRootIndex;
 
-},{}],124:[function(require,module,exports){
+},{}],125:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014 Facebook, Inc.
@@ -32375,7 +34372,7 @@ module.exports = {
 };
 
 }).call(this,require('_process'))
-},{"./ReactDescriptor":102,"./ReactInstanceHandles":110,"./ReactMarkupChecksum":111,"./ReactServerRenderingTransaction":125,"./instantiateReactComponent":170,"./invariant":171,"_process":7}],125:[function(require,module,exports){
+},{"./ReactDescriptor":103,"./ReactInstanceHandles":111,"./ReactMarkupChecksum":112,"./ReactServerRenderingTransaction":126,"./instantiateReactComponent":171,"./invariant":172,"_process":8}],126:[function(require,module,exports){
 /**
  * Copyright 2014 Facebook, Inc.
  *
@@ -32492,7 +34489,7 @@ PooledClass.addPoolingTo(ReactServerRenderingTransaction);
 
 module.exports = ReactServerRenderingTransaction;
 
-},{"./CallbackQueue":56,"./PooledClass":77,"./ReactPutListenerQueue":121,"./Transaction":143,"./emptyFunction":153,"./mixInto":184}],126:[function(require,module,exports){
+},{"./CallbackQueue":57,"./PooledClass":78,"./ReactPutListenerQueue":122,"./Transaction":144,"./emptyFunction":154,"./mixInto":185}],127:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -32601,7 +34598,7 @@ mixInto(ReactTextComponent, {
 
 module.exports = ReactDescriptor.createFactory(ReactTextComponent);
 
-},{"./DOMPropertyOperations":62,"./ReactBrowserComponentMixin":79,"./ReactComponent":82,"./ReactDescriptor":102,"./escapeTextForBrowser":155,"./mixInto":184}],127:[function(require,module,exports){
+},{"./DOMPropertyOperations":63,"./ReactBrowserComponentMixin":80,"./ReactComponent":83,"./ReactDescriptor":103,"./escapeTextForBrowser":156,"./mixInto":185}],128:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014 Facebook, Inc.
@@ -32870,7 +34867,7 @@ var ReactUpdates = {
 module.exports = ReactUpdates;
 
 }).call(this,require('_process'))
-},{"./CallbackQueue":56,"./PooledClass":77,"./ReactCurrentOwner":86,"./ReactPerf":116,"./Transaction":143,"./invariant":171,"./mixInto":184,"./warning":194,"_process":7}],128:[function(require,module,exports){
+},{"./CallbackQueue":57,"./PooledClass":78,"./ReactCurrentOwner":87,"./ReactPerf":117,"./Transaction":144,"./invariant":172,"./mixInto":185,"./warning":195,"_process":8}],129:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -32969,7 +34966,7 @@ var SVGDOMPropertyConfig = {
 
 module.exports = SVGDOMPropertyConfig;
 
-},{"./DOMProperty":61}],129:[function(require,module,exports){
+},{"./DOMProperty":62}],130:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -33171,7 +35168,7 @@ var SelectEventPlugin = {
 
 module.exports = SelectEventPlugin;
 
-},{"./EventConstants":66,"./EventPropagators":71,"./ReactInputSelection":109,"./SyntheticEvent":135,"./getActiveElement":159,"./isTextInputElement":174,"./keyOf":178,"./shallowEqual":190}],130:[function(require,module,exports){
+},{"./EventConstants":67,"./EventPropagators":72,"./ReactInputSelection":110,"./SyntheticEvent":136,"./getActiveElement":160,"./isTextInputElement":175,"./keyOf":179,"./shallowEqual":191}],131:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -33209,7 +35206,7 @@ var ServerReactRootIndex = {
 
 module.exports = ServerReactRootIndex;
 
-},{}],131:[function(require,module,exports){
+},{}],132:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014 Facebook, Inc.
@@ -33632,7 +35629,7 @@ var SimpleEventPlugin = {
 module.exports = SimpleEventPlugin;
 
 }).call(this,require('_process'))
-},{"./EventConstants":66,"./EventPluginUtils":70,"./EventPropagators":71,"./SyntheticClipboardEvent":132,"./SyntheticDragEvent":134,"./SyntheticEvent":135,"./SyntheticFocusEvent":136,"./SyntheticKeyboardEvent":138,"./SyntheticMouseEvent":139,"./SyntheticTouchEvent":140,"./SyntheticUIEvent":141,"./SyntheticWheelEvent":142,"./invariant":171,"./keyOf":178,"_process":7}],132:[function(require,module,exports){
+},{"./EventConstants":67,"./EventPluginUtils":71,"./EventPropagators":72,"./SyntheticClipboardEvent":133,"./SyntheticDragEvent":135,"./SyntheticEvent":136,"./SyntheticFocusEvent":137,"./SyntheticKeyboardEvent":139,"./SyntheticMouseEvent":140,"./SyntheticTouchEvent":141,"./SyntheticUIEvent":142,"./SyntheticWheelEvent":143,"./invariant":172,"./keyOf":179,"_process":8}],133:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -33685,7 +35682,7 @@ SyntheticEvent.augmentClass(SyntheticClipboardEvent, ClipboardEventInterface);
 module.exports = SyntheticClipboardEvent;
 
 
-},{"./SyntheticEvent":135}],133:[function(require,module,exports){
+},{"./SyntheticEvent":136}],134:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -33738,7 +35735,7 @@ SyntheticEvent.augmentClass(
 module.exports = SyntheticCompositionEvent;
 
 
-},{"./SyntheticEvent":135}],134:[function(require,module,exports){
+},{"./SyntheticEvent":136}],135:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -33784,7 +35781,7 @@ SyntheticMouseEvent.augmentClass(SyntheticDragEvent, DragEventInterface);
 
 module.exports = SyntheticDragEvent;
 
-},{"./SyntheticMouseEvent":139}],135:[function(require,module,exports){
+},{"./SyntheticMouseEvent":140}],136:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -33950,7 +35947,7 @@ PooledClass.addPoolingTo(SyntheticEvent, PooledClass.threeArgumentPooler);
 
 module.exports = SyntheticEvent;
 
-},{"./PooledClass":77,"./emptyFunction":153,"./getEventTarget":162,"./merge":181,"./mergeInto":183}],136:[function(require,module,exports){
+},{"./PooledClass":78,"./emptyFunction":154,"./getEventTarget":163,"./merge":182,"./mergeInto":184}],137:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -33996,7 +35993,7 @@ SyntheticUIEvent.augmentClass(SyntheticFocusEvent, FocusEventInterface);
 
 module.exports = SyntheticFocusEvent;
 
-},{"./SyntheticUIEvent":141}],137:[function(require,module,exports){
+},{"./SyntheticUIEvent":142}],138:[function(require,module,exports){
 /**
  * Copyright 2013 Facebook, Inc.
  *
@@ -34050,7 +36047,7 @@ SyntheticEvent.augmentClass(
 module.exports = SyntheticInputEvent;
 
 
-},{"./SyntheticEvent":135}],138:[function(require,module,exports){
+},{"./SyntheticEvent":136}],139:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -34139,7 +36136,7 @@ SyntheticUIEvent.augmentClass(SyntheticKeyboardEvent, KeyboardEventInterface);
 
 module.exports = SyntheticKeyboardEvent;
 
-},{"./SyntheticUIEvent":141,"./getEventKey":160,"./getEventModifierState":161}],139:[function(require,module,exports){
+},{"./SyntheticUIEvent":142,"./getEventKey":161,"./getEventModifierState":162}],140:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -34229,7 +36226,7 @@ SyntheticUIEvent.augmentClass(SyntheticMouseEvent, MouseEventInterface);
 
 module.exports = SyntheticMouseEvent;
 
-},{"./SyntheticUIEvent":141,"./ViewportMetrics":144,"./getEventModifierState":161}],140:[function(require,module,exports){
+},{"./SyntheticUIEvent":142,"./ViewportMetrics":145,"./getEventModifierState":162}],141:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -34284,7 +36281,7 @@ SyntheticUIEvent.augmentClass(SyntheticTouchEvent, TouchEventInterface);
 
 module.exports = SyntheticTouchEvent;
 
-},{"./SyntheticUIEvent":141,"./getEventModifierState":161}],141:[function(require,module,exports){
+},{"./SyntheticUIEvent":142,"./getEventModifierState":162}],142:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -34353,7 +36350,7 @@ SyntheticEvent.augmentClass(SyntheticUIEvent, UIEventInterface);
 
 module.exports = SyntheticUIEvent;
 
-},{"./SyntheticEvent":135,"./getEventTarget":162}],142:[function(require,module,exports){
+},{"./SyntheticEvent":136,"./getEventTarget":163}],143:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -34421,7 +36418,7 @@ SyntheticMouseEvent.augmentClass(SyntheticWheelEvent, WheelEventInterface);
 
 module.exports = SyntheticWheelEvent;
 
-},{"./SyntheticMouseEvent":139}],143:[function(require,module,exports){
+},{"./SyntheticMouseEvent":140}],144:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014 Facebook, Inc.
@@ -34669,7 +36666,7 @@ var Transaction = {
 module.exports = Transaction;
 
 }).call(this,require('_process'))
-},{"./invariant":171,"_process":7}],144:[function(require,module,exports){
+},{"./invariant":172,"_process":8}],145:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -34708,7 +36705,7 @@ var ViewportMetrics = {
 
 module.exports = ViewportMetrics;
 
-},{"./getUnboundedScrollPosition":167}],145:[function(require,module,exports){
+},{"./getUnboundedScrollPosition":168}],146:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014 Facebook, Inc.
@@ -34766,7 +36763,7 @@ function accumulate(current, next) {
 module.exports = accumulate;
 
 }).call(this,require('_process'))
-},{"./invariant":171,"_process":7}],146:[function(require,module,exports){
+},{"./invariant":172,"_process":8}],147:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -34807,7 +36804,7 @@ function adler32(data) {
 
 module.exports = adler32;
 
-},{}],147:[function(require,module,exports){
+},{}],148:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -34858,7 +36855,7 @@ function containsNode(outerNode, innerNode) {
 
 module.exports = containsNode;
 
-},{"./isTextNode":175}],148:[function(require,module,exports){
+},{"./isTextNode":176}],149:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014 Facebook, Inc.
@@ -34916,7 +36913,7 @@ function copyProperties(obj, a, b, c, d, e, f) {
 module.exports = copyProperties;
 
 }).call(this,require('_process'))
-},{"_process":7}],149:[function(require,module,exports){
+},{"_process":8}],150:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -35009,7 +37006,7 @@ function createArrayFrom(obj) {
 
 module.exports = createArrayFrom;
 
-},{"./toArray":192}],150:[function(require,module,exports){
+},{"./toArray":193}],151:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014 Facebook, Inc.
@@ -35076,7 +37073,7 @@ function createFullPageComponent(componentClass) {
 module.exports = createFullPageComponent;
 
 }).call(this,require('_process'))
-},{"./ReactCompositeComponent":84,"./invariant":171,"_process":7}],151:[function(require,module,exports){
+},{"./ReactCompositeComponent":85,"./invariant":172,"_process":8}],152:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014 Facebook, Inc.
@@ -35173,7 +37170,7 @@ function createNodesFromMarkup(markup, handleScript) {
 module.exports = createNodesFromMarkup;
 
 }).call(this,require('_process'))
-},{"./ExecutionEnvironment":72,"./createArrayFrom":149,"./getMarkupWrap":163,"./invariant":171,"_process":7}],152:[function(require,module,exports){
+},{"./ExecutionEnvironment":73,"./createArrayFrom":150,"./getMarkupWrap":164,"./invariant":172,"_process":8}],153:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -35238,7 +37235,7 @@ function dangerousStyleValue(name, value) {
 
 module.exports = dangerousStyleValue;
 
-},{"./CSSProperty":54}],153:[function(require,module,exports){
+},{"./CSSProperty":55}],154:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -35283,7 +37280,7 @@ copyProperties(emptyFunction, {
 
 module.exports = emptyFunction;
 
-},{"./copyProperties":148}],154:[function(require,module,exports){
+},{"./copyProperties":149}],155:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014 Facebook, Inc.
@@ -35314,7 +37311,7 @@ if ("production" !== process.env.NODE_ENV) {
 module.exports = emptyObject;
 
 }).call(this,require('_process'))
-},{"_process":7}],155:[function(require,module,exports){
+},{"_process":8}],156:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -35362,7 +37359,7 @@ function escapeTextForBrowser(text) {
 
 module.exports = escapeTextForBrowser;
 
-},{}],156:[function(require,module,exports){
+},{}],157:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014 Facebook, Inc.
@@ -35425,7 +37422,7 @@ function flattenChildren(children) {
 module.exports = flattenChildren;
 
 }).call(this,require('_process'))
-},{"./traverseAllChildren":193,"./warning":194,"_process":7}],157:[function(require,module,exports){
+},{"./traverseAllChildren":194,"./warning":195,"_process":8}],158:[function(require,module,exports){
 /**
  * Copyright 2014 Facebook, Inc.
  *
@@ -35460,7 +37457,7 @@ function focusNode(node) {
 
 module.exports = focusNode;
 
-},{}],158:[function(require,module,exports){
+},{}],159:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -35498,7 +37495,7 @@ var forEachAccumulated = function(arr, cb, scope) {
 
 module.exports = forEachAccumulated;
 
-},{}],159:[function(require,module,exports){
+},{}],160:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -35534,7 +37531,7 @@ function getActiveElement() /*?DOMElement*/ {
 
 module.exports = getActiveElement;
 
-},{}],160:[function(require,module,exports){
+},{}],161:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014 Facebook, Inc.
@@ -35653,7 +37650,7 @@ function getEventKey(nativeEvent) {
 module.exports = getEventKey;
 
 }).call(this,require('_process'))
-},{"./invariant":171,"_process":7}],161:[function(require,module,exports){
+},{"./invariant":172,"_process":8}],162:[function(require,module,exports){
 /**
  * Copyright 2013 Facebook, Inc.
  *
@@ -35707,7 +37704,7 @@ function getEventModifierState(nativeEvent) {
 
 module.exports = getEventModifierState;
 
-},{}],162:[function(require,module,exports){
+},{}],163:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -35745,7 +37742,7 @@ function getEventTarget(nativeEvent) {
 
 module.exports = getEventTarget;
 
-},{}],163:[function(require,module,exports){
+},{}],164:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014 Facebook, Inc.
@@ -35869,7 +37866,7 @@ function getMarkupWrap(nodeName) {
 module.exports = getMarkupWrap;
 
 }).call(this,require('_process'))
-},{"./ExecutionEnvironment":72,"./invariant":171,"_process":7}],164:[function(require,module,exports){
+},{"./ExecutionEnvironment":73,"./invariant":172,"_process":8}],165:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -35951,7 +37948,7 @@ function getNodeForCharacterOffset(root, offset) {
 
 module.exports = getNodeForCharacterOffset;
 
-},{}],165:[function(require,module,exports){
+},{}],166:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -35993,7 +37990,7 @@ function getReactRootElementInContainer(container) {
 
 module.exports = getReactRootElementInContainer;
 
-},{}],166:[function(require,module,exports){
+},{}],167:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -36037,7 +38034,7 @@ function getTextContentAccessor() {
 
 module.exports = getTextContentAccessor;
 
-},{"./ExecutionEnvironment":72}],167:[function(require,module,exports){
+},{"./ExecutionEnvironment":73}],168:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -36084,7 +38081,7 @@ function getUnboundedScrollPosition(scrollable) {
 
 module.exports = getUnboundedScrollPosition;
 
-},{}],168:[function(require,module,exports){
+},{}],169:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -36124,7 +38121,7 @@ function hyphenate(string) {
 
 module.exports = hyphenate;
 
-},{}],169:[function(require,module,exports){
+},{}],170:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -36172,7 +38169,7 @@ function hyphenateStyleName(string) {
 
 module.exports = hyphenateStyleName;
 
-},{"./hyphenate":168}],170:[function(require,module,exports){
+},{"./hyphenate":169}],171:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014 Facebook, Inc.
@@ -36238,7 +38235,7 @@ function instantiateReactComponent(descriptor) {
 module.exports = instantiateReactComponent;
 
 }).call(this,require('_process'))
-},{"./invariant":171,"_process":7}],171:[function(require,module,exports){
+},{"./invariant":172,"_process":8}],172:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014 Facebook, Inc.
@@ -36302,7 +38299,7 @@ var invariant = function(condition, format, a, b, c, d, e, f) {
 module.exports = invariant;
 
 }).call(this,require('_process'))
-},{"_process":7}],172:[function(require,module,exports){
+},{"_process":8}],173:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -36374,7 +38371,7 @@ function isEventSupported(eventNameSuffix, capture) {
 
 module.exports = isEventSupported;
 
-},{"./ExecutionEnvironment":72}],173:[function(require,module,exports){
+},{"./ExecutionEnvironment":73}],174:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -36409,7 +38406,7 @@ function isNode(object) {
 
 module.exports = isNode;
 
-},{}],174:[function(require,module,exports){
+},{}],175:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -36460,7 +38457,7 @@ function isTextInputElement(elem) {
 
 module.exports = isTextInputElement;
 
-},{}],175:[function(require,module,exports){
+},{}],176:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -36492,7 +38489,7 @@ function isTextNode(object) {
 
 module.exports = isTextNode;
 
-},{"./isNode":173}],176:[function(require,module,exports){
+},{"./isNode":174}],177:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -36538,7 +38535,7 @@ function joinClasses(className/*, ... */) {
 
 module.exports = joinClasses;
 
-},{}],177:[function(require,module,exports){
+},{}],178:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014 Facebook, Inc.
@@ -36600,7 +38597,7 @@ var keyMirror = function(obj) {
 module.exports = keyMirror;
 
 }).call(this,require('_process'))
-},{"./invariant":171,"_process":7}],178:[function(require,module,exports){
+},{"./invariant":172,"_process":8}],179:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -36643,7 +38640,7 @@ var keyOf = function(oneKeyObj) {
 
 module.exports = keyOf;
 
-},{}],179:[function(require,module,exports){
+},{}],180:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -36697,7 +38694,7 @@ function mapObject(obj, func, context) {
 
 module.exports = mapObject;
 
-},{}],180:[function(require,module,exports){
+},{}],181:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -36738,7 +38735,7 @@ function memoizeStringOnly(callback) {
 
 module.exports = memoizeStringOnly;
 
-},{}],181:[function(require,module,exports){
+},{}],182:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -36777,7 +38774,7 @@ var merge = function(one, two) {
 
 module.exports = merge;
 
-},{"./mergeInto":183}],182:[function(require,module,exports){
+},{"./mergeInto":184}],183:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014 Facebook, Inc.
@@ -36928,7 +38925,7 @@ var mergeHelpers = {
 module.exports = mergeHelpers;
 
 }).call(this,require('_process'))
-},{"./invariant":171,"./keyMirror":177,"_process":7}],183:[function(require,module,exports){
+},{"./invariant":172,"./keyMirror":178,"_process":8}],184:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -36976,7 +38973,7 @@ function mergeInto(one, two) {
 
 module.exports = mergeInto;
 
-},{"./mergeHelpers":182}],184:[function(require,module,exports){
+},{"./mergeHelpers":183}],185:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -37012,7 +39009,7 @@ var mixInto = function(constructor, methodBag) {
 
 module.exports = mixInto;
 
-},{}],185:[function(require,module,exports){
+},{}],186:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014 Facebook, Inc.
@@ -37053,7 +39050,7 @@ function monitorCodeUse(eventName, data) {
 module.exports = monitorCodeUse;
 
 }).call(this,require('_process'))
-},{"./invariant":171,"_process":7}],186:[function(require,module,exports){
+},{"./invariant":172,"_process":8}],187:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014 Facebook, Inc.
@@ -37100,7 +39097,7 @@ function onlyChild(children) {
 module.exports = onlyChild;
 
 }).call(this,require('_process'))
-},{"./ReactDescriptor":102,"./invariant":171,"_process":7}],187:[function(require,module,exports){
+},{"./ReactDescriptor":103,"./invariant":172,"_process":8}],188:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -37135,7 +39132,7 @@ if (ExecutionEnvironment.canUseDOM) {
 
 module.exports = performance || {};
 
-},{"./ExecutionEnvironment":72}],188:[function(require,module,exports){
+},{"./ExecutionEnvironment":73}],189:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -37170,7 +39167,7 @@ var performanceNow = performance.now.bind(performance);
 
 module.exports = performanceNow;
 
-},{"./performance":187}],189:[function(require,module,exports){
+},{"./performance":188}],190:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -37257,7 +39254,7 @@ if (ExecutionEnvironment.canUseDOM) {
 
 module.exports = setInnerHTML;
 
-},{"./ExecutionEnvironment":72}],190:[function(require,module,exports){
+},{"./ExecutionEnvironment":73}],191:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -37308,7 +39305,7 @@ function shallowEqual(objA, objB) {
 
 module.exports = shallowEqual;
 
-},{}],191:[function(require,module,exports){
+},{}],192:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -37354,7 +39351,7 @@ function shouldUpdateReactComponent(prevDescriptor, nextDescriptor) {
 
 module.exports = shouldUpdateReactComponent;
 
-},{}],192:[function(require,module,exports){
+},{}],193:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014 Facebook, Inc.
@@ -37433,7 +39430,7 @@ function toArray(obj) {
 module.exports = toArray;
 
 }).call(this,require('_process'))
-},{"./invariant":171,"_process":7}],193:[function(require,module,exports){
+},{"./invariant":172,"_process":8}],194:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014 Facebook, Inc.
@@ -37630,7 +39627,7 @@ function traverseAllChildren(children, callback, traverseContext) {
 module.exports = traverseAllChildren;
 
 }).call(this,require('_process'))
-},{"./ReactInstanceHandles":110,"./ReactTextComponent":126,"./invariant":171,"_process":7}],194:[function(require,module,exports){
+},{"./ReactInstanceHandles":111,"./ReactTextComponent":127,"./invariant":172,"_process":8}],195:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014 Facebook, Inc.
@@ -37682,10 +39679,10 @@ if ("production" !== process.env.NODE_ENV) {
 module.exports = warning;
 
 }).call(this,require('_process'))
-},{"./emptyFunction":153,"_process":7}],195:[function(require,module,exports){
+},{"./emptyFunction":154,"_process":8}],196:[function(require,module,exports){
 module.exports = require('./lib/React');
 
-},{"./lib/React":78}],196:[function(require,module,exports){
+},{"./lib/React":79}],197:[function(require,module,exports){
 //     Underscore.js 1.7.0
 //     http://underscorejs.org
 //     (c) 2009-2014 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
@@ -39102,7 +41099,7 @@ module.exports = require('./lib/React');
   }
 }.call(this));
 
-},{}],197:[function(require,module,exports){
+},{}],198:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var $ = require('jquery');
@@ -39158,7 +41155,7 @@ window._ = require('underscore');
 window.app = app;
 window.React = React;
 
-},{"./collections/claims.js":198,"./components/about.js.jsx":199,"./components/article.js.jsx":200,"./components/claim.js.jsx":202,"./components/claims.js.jsx":203,"./components/root.js.jsx":204,"./models/claim.js":206,"jquery":8,"react":195,"react-router":18,"underscore":196}],198:[function(require,module,exports){
+},{"./collections/claims.js":199,"./components/about.js.jsx":200,"./components/article.js.jsx":201,"./components/claim.js.jsx":203,"./components/claims.js.jsx":204,"./components/root.js.jsx":205,"./models/claim.js":207,"jquery":9,"react":196,"react-router":19,"underscore":197}],199:[function(require,module,exports){
 var Backbone = require('backbone');
 var _ = require('underscore');
 var $ = Backbone.$ = require('jquery');
@@ -39180,7 +41177,7 @@ module.exports = Backbone.Collection.extend({
   }
 });
 
-},{"../models/claim.js":206,"backbone":1,"jquery":8,"underscore":196}],199:[function(require,module,exports){
+},{"../models/claim.js":207,"backbone":2,"jquery":9,"underscore":197}],200:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
@@ -39230,7 +41227,7 @@ module.exports = React.createClass({displayName: 'exports',
   }
 });
 
-},{"react":195}],200:[function(require,module,exports){
+},{"react":196}],201:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
@@ -39365,7 +41362,7 @@ module.exports = React.createClass({displayName: 'exports',
   }
 });
 
-},{"../mixins/backbone_collection.js":205,"moment":9,"react":195,"react-router":18,"underscore":196}],201:[function(require,module,exports){
+},{"../mixins/backbone_collection.js":206,"moment":10,"react":196,"react-router":19,"underscore":197}],202:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
@@ -39510,7 +41507,7 @@ module.exports = React.createClass({displayName: 'exports',
   }
 });
 
-},{"react":195,"underscore":196}],202:[function(require,module,exports){
+},{"react":196,"underscore":197}],203:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
@@ -39519,6 +41516,7 @@ var Barchart = require('./bar_chart.js.jsx');
 var Link = require('react-router').Link;
 var _ = require('underscore');
 var moment = require('moment');
+var Autolinker = require('autolinker');
 
 module.exports = React.createClass({displayName: 'exports',
 
@@ -39598,6 +41596,7 @@ module.exports = React.createClass({displayName: 'exports',
   },
 
   render: function() {
+    var linker = new Autolinker();
     var claim = this.state.claim;
     var shares = claim.sharesByStance();
     var colors = [
@@ -39670,7 +41669,7 @@ module.exports = React.createClass({displayName: 'exports',
               React.DOM.header({className: "section-header"}, 
                 React.DOM.h1({className: "page-title"}, claim.get('headline')), 
                 React.DOM.p(null, claim.get('description')), 
-                claim.get('origin') ? React.DOM.p({className: "tracking"}, React.DOM.strong(null, "Originated: "), moment(originDate).format('MMM D, YYYY H:mm') + ' (' + moment(originDate).fromNow() + ')', " ", claim.get('originUrl') ? React.DOM.a({href: claim.get('originUrl'), target: "_blank"}, "View Article") : null, React.DOM.br(null), claim.get('origin')) : null, 
+                claim.get('origin') ? React.DOM.p({className: "tracking"}, React.DOM.strong(null, "Originated: "), moment(originDate).format('MMM D, YYYY H:mm') + ' (' + moment(originDate).fromNow() + ')', " ", claim.get('originUrl') ? React.DOM.a({href: claim.get('originUrl'), target: "_blank"}, "View Article") : null, React.DOM.br(null), React.DOM.span({dangerouslySetInnerHTML: {__html: linker.link(claim.get('origin'))}})) : null, 
                 React.DOM.p({className: "tracking"}, React.DOM.strong(null, "Started Tracking:"), " ", moment(startedTracking).format('MMM D, YYYY H:mm') + ' (' + moment(startedTracking).fromNow() + ')'), 
                 claim.get('truthiness') != 'unknown' ? React.DOM.p({className: "tracking tracking-" + claim.get('truthiness')}, React.DOM.strong(null, "Resolved: "), moment(truthinessDate).format('MMM D, YYYY H:mm') + ' (' + moment(truthinessDate).fromNow() + ')', " ", claim.get('truthinessUrl') ? React.DOM.a({href: claim.get('truthinessUrl'), target: "_blank"}, "View Article") : null, React.DOM.br(null), claim.get('truthinessDescription')) : null
               ), 
@@ -39856,7 +41855,7 @@ module.exports = React.createClass({displayName: 'exports',
   }
 });
 
-},{"../mixins/backbone_collection.js":205,"./bar_chart.js.jsx":201,"moment":9,"react":195,"react-router":18,"underscore":196}],203:[function(require,module,exports){
+},{"../mixins/backbone_collection.js":206,"./bar_chart.js.jsx":202,"autolinker":1,"moment":10,"react":196,"react-router":19,"underscore":197}],204:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
@@ -39936,7 +41935,7 @@ module.exports = React.createClass({displayName: 'exports',
   }
 });
 
-},{"../mixins/backbone_collection.js":205,"moment":9,"react":195,"react-router":18,"underscore":196}],204:[function(require,module,exports){
+},{"../mixins/backbone_collection.js":206,"moment":10,"react":196,"react-router":19,"underscore":197}],205:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
@@ -39982,7 +41981,7 @@ module.exports = React.createClass({displayName: 'exports',
   }
 });
 
-},{"react":195,"react-router":18}],205:[function(require,module,exports){
+},{"react":196,"react-router":19}],206:[function(require,module,exports){
 /**
  * Ensure that changes to a components models/collections trigger reconciles
  */
@@ -40043,7 +42042,7 @@ module.exports = {
   }
 };
 
-},{"backbone":1,"underscore":196}],206:[function(require,module,exports){
+},{"backbone":2,"underscore":197}],207:[function(require,module,exports){
 var Backbone = require('backbone');
 var _ = require('underscore');
 var $ = Backbone.$ = require('jquery');
@@ -40242,4 +42241,4 @@ module.exports = Backbone.Model.extend({
   }
 });
 
-},{"backbone":1,"jquery":8,"underscore":196}]},{},[197]);
+},{"backbone":2,"jquery":9,"underscore":197}]},{},[198]);
