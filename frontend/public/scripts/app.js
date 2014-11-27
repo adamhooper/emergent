@@ -41668,7 +41668,7 @@ module.exports = React.createClass({displayName: 'exports',
             React.DOM.div({className: "section"}, 
               React.DOM.header({className: "section-header"}, 
                 React.DOM.h1({className: "page-title"}, claim.get('headline')), 
-                React.DOM.p(null, claim.get('description')), 
+                React.DOM.p({dangerouslySetInnerHTML: {__html: linker.link(claim.get('description'))}}), 
                 claim.get('origin') ? React.DOM.p({className: "tracking"}, React.DOM.strong(null, "Originated: "), moment(originDate).format('MMM D, YYYY H:mm') + ' (' + moment(originDate).fromNow() + ')', " ", claim.get('originUrl') ? React.DOM.a({href: claim.get('originUrl'), target: "_blank"}, "View Article") : null, React.DOM.br(null), React.DOM.span({dangerouslySetInnerHTML: {__html: linker.link(claim.get('origin'))}})) : null, 
                 React.DOM.p({className: "tracking"}, React.DOM.strong(null, "Started Tracking:"), " ", moment(startedTracking).format('MMM D, YYYY H:mm') + ' (' + moment(startedTracking).fromNow() + ')'), 
                 claim.get('truthiness') != 'unknown' ? React.DOM.p({className: "tracking tracking-" + claim.get('truthiness')}, React.DOM.strong(null, "Resolved: "), moment(truthinessDate).format('MMM D, YYYY H:mm') + ' (' + moment(truthinessDate).fromNow() + ')', " ", claim.get('truthinessUrl') ? React.DOM.a({href: claim.get('truthinessUrl'), target: "_blank"}, "View Article") : null, React.DOM.br(null), claim.get('truthinessDescription')) : null

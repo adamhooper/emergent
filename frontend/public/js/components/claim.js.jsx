@@ -158,7 +158,7 @@ module.exports = React.createClass({
             <div className="section">
               <header className="section-header">
                 <h1 className="page-title">{claim.get('headline')}</h1>
-                <p>{claim.get('description')}</p>
+                <p dangerouslySetInnerHTML={{__html: linker.link(claim.get('description'))}}/>
                 {claim.get('origin') ? <p className="tracking"><strong>Originated: </strong>{moment(originDate).format('MMM D, YYYY H:mm') + ' (' + moment(originDate).fromNow() + ')'} {claim.get('originUrl') ? <a href={claim.get('originUrl')} target="_blank">View Article</a> : null}<br /><span dangerouslySetInnerHTML={{__html: linker.link(claim.get('origin'))}}/></p> : null}
                 <p className="tracking"><strong>Started Tracking:</strong> {moment(startedTracking).format('MMM D, YYYY H:mm') + ' (' + moment(startedTracking).fromNow() + ')'}</p>
                 {claim.get('truthiness') != 'unknown' ? <p className={"tracking tracking-" + claim.get('truthiness')}><strong>Resolved: </strong>{moment(truthinessDate).format('MMM D, YYYY H:mm') + ' (' + moment(truthinessDate).fromNow() + ')'} {claim.get('truthinessUrl') ? <a href={claim.get('truthinessUrl')} target="_blank">View Article</a> : null}<br />{claim.get('truthinessDescription')}</p> : null}
