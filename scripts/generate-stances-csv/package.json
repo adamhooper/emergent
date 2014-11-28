@@ -1,0 +1,23 @@
+{
+  "name": "generate-stances-csv",
+  "version": "1.0.0",
+  "description": "Generates a \"stances\" CSV",
+  "scripts": {
+    "run": "node_modules/.bin/coffee index.coffee"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/craigsilverman/truthmaker.git"
+  },
+  "author": "Adam Hooper <adam@adamhooper.com>",
+  "license": "Proprietary",
+  "bugs": {
+    "url": "https://github.com/craigsilverman/truthmaker/issues"
+  },
+  "homepage": "https://github.com/craigsilverman/truthmaker",
+  "dependencies": {
+    "bluebird": "^2.3.11",
+    "coffee-script": "^1.8.0",
+    "lodash": "^2.4.1"
+  }
+}
