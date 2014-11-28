@@ -166,7 +166,7 @@ Promise.all([
       if /^[\u0020-\u0021\u0023-\u002b\u002d-\u007e]*$/.test(s)
         s
       else
-        '"' + s.replace('"', '""') + '"'
+        '"' + s.replace(/"/g, '""') + '"'
 
     date = (d) -> d?.toISOString() || ''
 
