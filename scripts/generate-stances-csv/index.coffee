@@ -131,9 +131,9 @@ Promise.all([
   models.Story.findAll({}, raw: true)
   models.Article.findAll({}, raw: true)
   models.Url.findAll({}, raw: true)
-  models.ArticleVersion.findAll({ order: [[ 'createdAt' ]] }, raw: true)
-  models.UrlVersion.findAll({ order: [[ 'createdAt' ]] }, raw: true)
-  models.UrlPopularityGet.findAll({ order: [[ 'createdAt' ]] }, raw: true)
+  models.ArticleVersion.findAll({}, raw: true)
+  models.UrlVersion.findAll({}, raw: true)
+  models.UrlPopularityGet.findAll({}, raw: true)
 ])
   .spread (stories, articles, urls, articleVersions, urlVersions, popularities) ->
     # Index stories
@@ -149,9 +149,14 @@ Promise.all([
       article.story = idToStory[article.storyId]
       article.url = idToUrl[article.urlId]
       # O(n^2) because it's probably faster than being clever
+      # We sort here instead of in SQL because it's a bunch of smaller jobs and
+      # it frees up Postgres for useful work
       article.articleVersions = (av for av in articleVersions when av.articleId == article.id)
+      article.articleVersions.sort((a, b) -> a.createdAt - b.createdAt)
       article.urlVersions = (uv for uv in urlVersions when uv.urlId == article.urlId)
+      article.urlVersions.sort((a, b) -> a.createdAt - b.createdAt)
       article.urlPopularityGets = (upg for upg in popularities when upg.urlId == article.urlId)
+      article.urlPopularityGets.sort((a, b) -> a.createdAt - b.createdAt)
 
     articles
   .then (articles) ->
