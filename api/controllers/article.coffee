@@ -48,22 +48,6 @@ popularitiesToShareCurves = (popularities) ->
     ret[service] = new ShareCurve(ps)
   ret
 
-articleToJson = (row) ->
-  ret =
-    id: row.id
-    url: row.url
-
-  ret.lastVersion = if row.articleVersionId?
-    articleVersionId: row.articleVersionId
-    headline: row.headline
-    byline: row.byline
-    source: row.source
-    createdAt: row.createdAt.toISOString()
-  else
-    null
-
-  ret
-
 module.exports =
   'get /claims/:claimId/articles': (req, res, next) ->
     models.sequelize.query('''
