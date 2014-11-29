@@ -42078,6 +42078,13 @@ module.exports = Backbone.Model.extend({
       _.each(slice.articles, function(article, articleId) {
         var last = articles[articleId];
         var current = _.clone(article.shares);
+        var entry = _.findWhere(this.get('articles'), { id: articleId });
+        if (entry && !entry.firstStance && article.stance) {
+          entry.firstStance = article.stance;
+        }          
+        if (entry && !entry.firstHeadlineStance && article.headlineStance) {
+          entry.firstHeadlineStance = article.headlineStance;
+        }          
         _.keys(current).forEach(function(provider) {
           if (last && current[provider]*2 > last[provider]) {
             article.shares[provider] = _.max([0, current[provider] - last[provider]]);
@@ -42097,7 +42104,8 @@ module.exports = Backbone.Model.extend({
     }
     _.each(this.get('slices'), function(slice) {
       _.each(slice.articles, function(shared, articleId) {
-        var bestStance = this.bestStance(shared);
+        var article = _.findWhere(this.get('articles'), { id: articleId });
+        var bestStance = this.bestStance(shared) || article.firstStance;
         if (_.contains(this.stances, bestStance)) {
           shares[bestStance] = _.reduce(shared.shares, function(s, n) { return s + n; }, shares[bestStance]||0);
         }
@@ -42137,8 +42145,8 @@ module.exports = Backbone.Model.extend({
     }
     _.each(this.get('slices'), function(slice) {
       _.each(slice.articles, function(shared, articleId) {
-        var bestStance = this.bestStance(shared);
         var article = articles[articleId] || _.clone(_.findWhere(this.get('articles'), { id: articleId }));
+        var bestStance = this.bestStance(shared) || article.firstStance;
         if (bestStance && article.stance != bestStance) {
           if (article.stance) {
             article.revised = bestStance;
@@ -42146,8 +42154,12 @@ module.exports = Backbone.Model.extend({
             article.stance = bestStance;
           }
         }
+          
         if (bestStance == stance) {
           article.shares = _.reduce(shared.shares, function(s, n) { return s + n; }, article.shares||0);
+        }
+        if (!bestStance && article.firstStance) {
+          console.log('null stance', articleId, slice.end, article, shared);
         }
         articles[articleId] = article;
       }, this);
@@ -42180,8 +42192,11 @@ module.exports = Backbone.Model.extend({
     var slices = [];
     _.each(this.get('slices'), function(slice) {
       var current = slice.articles[articleId];
+      var article = _.findWhere(this.get('articles'), { id: articleId });
       if (current) {
         var last = _.last(slices);
+        current.stance = current.stance || article.firstStance;
+        current.headlineStance = current.headlineStance || article.firstHeadlineStance;
         if (last && last.stance==(current.stance||last.stance) && last.headlineStance==(current.headlineStance||last.headlineStance)) {
           last.shares = _.reduce(last.shares, function(shares, count, service) {
             shares[service] = count + (current.shares[service]||0);
@@ -42191,7 +42206,7 @@ module.exports = Backbone.Model.extend({
           slices.push(_.defaults({ end: slice.end }, current));
         }
       }
-    });
+    }, this);
     return slices;
   },
 
