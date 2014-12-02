@@ -7,22 +7,22 @@
     "start": "node index.js"
   },
   "dependencies": {
-    "express": "~> 4.8.8",
-    "morgan": "^1.3.1",
-    "serve-static": "~> 1.6.2"
+    "express": "4.8.8",
+    "morgan": "1.3.1",
+    "serve-static": "1.6.2"
   },
   "devDependencies": {
-    "backbone": "latest",
-    "grunt": "latest",
-    "grunt-browserify": "latest",
-    "grunt-contrib-sass": "latest",
-    "grunt-contrib-watch": "latest",
-    "grunt-contrib-uglify": "latest",
-    "grunt-react": "latest",
-    "jquery": "latest",
-    "moment": "latest",
-    "react": "latest",
-    "react-router": "latest",
-    "underscore": "^1.7.0"
+    "backbone": "1.1.2",
+    "grunt": "0.4.5",
+    "grunt-browserify": "3.0.1",
+    "grunt-contrib-sass": "0.8.1",
+    "grunt-contrib-watch": "0.6.1",
+    "grunt-contrib-uglify": "0.6.0",
+    "grunt-react": "0.9.0",
+    "jquery": "2.1.1",
+    "moment": "2.8.3",
+    "react": "0.11.2",
+    "react-router": "0.7.0",
+    "underscore": "1.7.0"
   }
 }
