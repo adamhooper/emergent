@@ -19,11 +19,11 @@
     "grunt-contrib-sass": "latest",
     "grunt-contrib-watch": "latest",
     "grunt-contrib-uglify": "latest",
-    "grunt-react": "latest",
+    "grunt-react": "0.9.0",
     "jquery": "latest",
     "moment": "latest",
-    "react": "latest",
-    "react-router": "latest",
+    "react": "0.11.2",
+    "react-router": "0.7.0",
     "underscore": "^1.7.0"
   }
 }
