@@ -16,9 +16,9 @@
   }
 }
 
-.container {
+.container,
+.page-content {
   @extend %container;
-  width: 960px;
 }
 
 
@@ -41,7 +41,7 @@
 @include breakpoint($breakpoint-desktop) {
 
   //
-  // Site
+  // root.js.jsx
 
   .site-logo {
     @include span(3 of 12);
@@ -51,6 +51,17 @@
     @include span(last 9 of 12);
   }
 
+
+  //
+  // claims.js.jsx
+
+  .articles {
+    @include span(9 of 12);
+  }
+
+  .page-navigation {
+    @include span(last 3 of 12);
+  }
 
   //
   // Footer
@@ -92,36 +103,6 @@
   .page-about {
     .page-content {
       @include span(10 of 12);
-    }
-  }
-
-
-  .article {
-    .article-header {
-      @include full;
-    }
-
-    .article-content {
-      @include span(10 of 12);
-    }
-
-    .article-footer {
-      @include span(last 2 of 12);
-    }
-  }
-
-
-  .article-revision {
-    .article-header {
-      @include span(2.5 of 12);
-    }
-
-    .article-content {
-      @include span(7.5 of 12);
-    }
-
-    .article-footer {
-      @include span(last 2 of 12);
     }
   }
 

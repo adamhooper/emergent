@@ -38,39 +38,43 @@ module.exports = React.createClass({
     return (
       <div className="page">
         <div className="page-content">
-          <div className="container">
-            <div className="articles-search">
-              <label for="claims-filter">Filter claims:</label>
-              <input type="search" id="claims-filter" placeholder="Enter a word, phrase, etc." onChange={this.setFilter}/>
-            </div>
-            <ul className="articles">
-              {this.filteredClaims().map(function(claim, i) {
-                return (
-                  <li key={claim.id}>
-                    <article className="article">
-                      <header className="article-header">
-                        <div className={'stance stance-' + claim.get('truthiness')}>
-                          <span className="stance-value">{claim.truthinessText()}</span>
-                        </div>
-                      </header>
-                      <div className="article-content">
-                        <h4 className="article-title"><Link to="claim" params={{ slug: claim.get('slug') }}>{claim.get('headline')}</Link></h4>
-                        <p className="article-description">Originated: <time datetime={claim.get('createdAt')}>{moment(claim.get('createdAt')).format('MMMM Do YYYY')}</time></p>
+          <ul className="articles">
+            {this.filteredClaims().map(function(claim, i) {
+              return (
+                <li key={claim.id}>
+                  <article className="article article-preview">
+                    <header className="article-header">
+                      <div className={'stance stance-' + claim.get('truthiness')}>
+                        <span className="stance-value">{claim.truthinessText()}</span>
                       </div>
-                      {claim.get('nShares') ?
-                        <footer className="article-footer">
-                          <div className="shares">
-                            <span className="shares-value">{this.formatNumber(claim.get('nShares'))}</span>
-                            <span className="shares-label">shares</span>
-                          </div>
-                        </footer>
-                      : null}
-                    </article>
-                  </li>
-                );
-              }.bind(this))}
+                      <div className="article-meta">
+                        <span className="article-category">World News – </span><time className="" datetime=""></time>
+                        <span className="article-updated">Updated Nov 4</span>
+                        {claim.get('nShares') ?
+                        <span className="article-shares">Shares: {this.formatNumber(claim.get('nShares'))}</span>
+                        : null}
+                      </div>
+                      <h2 className="article-title"><Link to="claim" params={{ slug: claim.get('slug') }}>{claim.get('headline')}</Link></h2>
+                      <div className="article-byline">
+                        <span className="article-source">Originating Source: </span>
+                        <span className="article-originated"> Added <time datetime={claim.get('createdAt')}>{moment(claim.get('createdAt')).format('MMMM Do')}</time></span>
+                      </div>
+                    </header>
+                    <p className="article-content">{claim.get('description')}</p>
+                    <footer className="article-footer">
+
+                    </footer>
+                  </article>
+                </li>
+              );
+            }.bind(this))}
+          </ul>
+          <nav className="page-navigation">
+            <ul className="navigation navigation-page">
+              <li><a href="#" class="navigation-link">Submit a claim</a></li>
+              <li><a href="#" class="navigation-link">Sign up for our newsletter</a></li>
             </ul>
-          </div>
+          </nav>
         </div>
       </div>
     );

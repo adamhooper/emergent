@@ -1,25 +1,16 @@
 //
-// Articles
+// Local variables
+// ------------------------------
 
-.back-button {
-  margin-bottom: 15px;
-}
+$article-padding:            2em;
+
+//
+// Components
+// ------------------------------
 
 .articles-title {
   @extend %section-title;
   margin-bottom: 1em;
-}
-
-.articles-search {
-  margin-bottom: 2em;
-
-  > label {
-    margin-right: .5em;
-  }
-
-  > input[type="search"] {
-    font-weight: 500;
-  }
 }
 
 .articles {
@@ -27,77 +18,82 @@
   margin-bottom: 0;
   margin-top: 0;
   padding-left: 0;
-
-  > li {
-    margin-bottom: .75em;
-
-    &:last-child {
-      margin-bottom: 0;
-    }
-  }
 }
 
 
 //
-// Single article
+// Single component
+// ------------------------------
 
 .article {
-
-  &.is-revised {
-    padding-top: 3em;
-    position: relative;
-  }
-
-  // in a .trigger
-  .trigger & {
-    font-size: .9em;
-  }
-
-  // display in content block when in list
-  .articles & {
-    @extend %content-background;
-    @extend %clearfix;
-    clear: both;
-  }
-
 }
 
 .article-title {
-  font-size: 1.2em;
-  font-weight: 500;
+  font-family: $font-secondary;
+  font-size: font(xl);
   margin-bottom: .5em;
   margin-top: 0;
 
   > a {
-    color: palette(type, dark);
+    text-decoration: none;
   }
 }
 
-.article-date {
-  font-size: 1.4em;
-  margin-bottom: 0;
-  margin-top: 0;
+.article-meta,
+.article-byline {
+  font-size: font(sm);
+  line-height: 1.2;
+}
+
+.article-meta {
+  margin-bottom: 1.5em;
+}
+
+.article-category {
+  color: palette(base, dark);
+  font-family: $font-secondary;
   text-transform: uppercase;
 }
 
-.article-time {
+.article-updated {
+  font-weight: 500;
+}
+
+.article-shares {
+  float: right;
+}
+
+.article-byline {
   color: palette(base, dark);
-  margin-bottom: 0;
-  margin-top: 0;
-  text-transform: uppercase;
+  margin-bottom: 1em;
+}
+
+.article-source {
+}
+
+.article-originated {
 }
 
 .article-content {
-  padding: 1em;
+  margin-bottom: 0;
 }
 
 .article-description {
-  line-height: 1.4;
-  margin-bottom: .5em;
+}
 
-  &:last-child {
-    margin-bottom: 0;
-  }
+
+
+
+//
+// Component variations
+// ------------------------------
+
+.article-preview {
+  border-bottom: 1px solid palette(base, light);
+  border-left: 1px solid palette(base, light);
+  border-right: 1px solid palette(base, light);
+  padding: $article-padding $article-padding $article-padding ($article-padding + 7em);
+  position: relative;
 }
 
 

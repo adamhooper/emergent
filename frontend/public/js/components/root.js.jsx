@@ -29,10 +29,9 @@ module.exports = React.createClass({
           <div className="container">
             <p className="site-logo"><Link to="claims">Emergent</Link></p>
             <nav className="site-menu">
-              <ul className="menu menu-site">
-                <li><Link to="claims" className="menu-item">Stories</Link></li>
-                <li><Link to="about" className="menu-item">About</Link></li>
-                <li><a href="http://emergentinfo.tumblr.com/" className="menu-item">Blog</a></li>
+              <ul className="navigation navigation-site">
+                <li><a href="http://emergentinfo.tumblr.com/" className="navigation-link">Blog</a></li>
+                <li><Link to="about" className="navigation-link">About Emergent</Link></li>
               </ul>
             </nav>
           </div>

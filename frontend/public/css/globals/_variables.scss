@@ -1,32 +1,4 @@
 //
-// Font embed
-
-@include font-face(
-  'Gotham',
-  font-files('Gotham-Light.otf'),
-  $weight: 100
-);
-
-@include font-face(
-  'Gotham',
-  font-files('Gotham-Book.otf'),
-  $weight: 400
-);
-
-@include font-face(
-  'Gotham',
-  font-files('Gotham-Medium.otf'),
-  $weight: 500
-);
-
-@include font-face(
-  'Gotham',
-  font-files('Gotham-Bold.otf'),
-  $weight: 700
-);
-
-
-//
 // Susy grid system
 
 $susy: (
@@ -50,9 +22,17 @@ $container-retina:     1190px;
 //
 // Typography
 
-$font-serif:           'Georgia', 'Times New Roman', Times, serif;
-$font-sans-serif:      'franklin-gothic-urw', Helvetica, Arial, sans-serif;
-$font-logo:            'Gotham', Helvetica, Arial, sans-serif;
+$font-primary:         'Helvetica Neue', Helvetica, Arial, sans-serif;
+$font-secondary:       'news-gothic-std', Helvetica, Arial, sans-serif;
+$font-logo:            'franklin-gothic-urw', Helvetica, Arial, sans-serif;
+
+$font-sizes: (
+  xs:   .85em,
+  sm:   .95em,
+  md:     1em,
+  lg:  1.25em,
+  xl:   1.5em
+);
 
 
 //
@@ -62,24 +42,23 @@ $palette: (
   base: (
     lighter:    #ffffff,
     light:      #eaeaea,
-    base:       #c1c1c1,
-    dark:       #727272,
-    darker:     #252424
+    base:       #b2b2b2,
+    dark:       #7f7f7f,
+    darker:     #323232
   ),
   type: (
-    light:      #eaeaea,
-    dark:       #252424,
-    link:       #727272
+    light:      #ffffff,
+    dark:       #323232,
+    link:       #1473a3
+  ),
+  status: (
+    true:       #00bf71,
+    false:      #e70909,
+    unknown:    #656565
   ),
   category: (
     for:        #7ecc76,
     against:    #dd5b53,
-    observing:  #f9be58
-  ),
-  status: (
-    true:       #7ecc76,
-    false:      #dd5b53,
-    unknown:    #f9be58,
     observing:  #f9be58
   )
 );

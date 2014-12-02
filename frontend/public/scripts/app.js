@@ -39897,37 +39897,41 @@ module.exports = React.createClass({displayName: 'exports',
     return (
       React.DOM.div({className: "page"}, 
         React.DOM.div({className: "page-content"}, 
-          React.DOM.div({className: "container"}, 
-            React.DOM.div({className: "articles-search"}, 
-              React.DOM.label({for: "claims-filter"}, "Filter claims:"), 
-              React.DOM.input({type: "search", id: "claims-filter", placeholder: "Enter a word, phrase, etc.", onChange: this.setFilter})
-            ), 
-            React.DOM.ul({className: "articles"}, 
-              this.filteredClaims().map(function(claim, i) {
-                return (
-                  React.DOM.li({key: claim.id}, 
-                    React.DOM.article({className: "article"}, 
-                      React.DOM.header({className: "article-header"}, 
-                        React.DOM.div({className: 'stance stance-' + claim.get('truthiness')}, 
-                          React.DOM.span({className: "stance-value"}, claim.truthinessText())
-                        )
+          React.DOM.ul({className: "articles"}, 
+            this.filteredClaims().map(function(claim, i) {
+              return (
+                React.DOM.li({key: claim.id}, 
+                  React.DOM.article({className: "article article-preview"}, 
+                    React.DOM.header({className: "article-header"}, 
+                      React.DOM.div({className: 'stance stance-' + claim.get('truthiness')}, 
+                        React.DOM.span({className: "stance-value"}, claim.truthinessText())
                       ), 
-                      React.DOM.div({className: "article-content"}, 
-                        React.DOM.h4({className: "article-title"}, Link({to: "claim", params: { slug: claim.get('slug')}}, claim.get('headline'))), 
-                        React.DOM.p({className: "article-description"}, "Originated: ", React.DOM.time({datetime: claim.get('createdAt')}, moment(claim.get('createdAt')).format('MMMM Do YYYY')))
+                      React.DOM.div({className: "article-meta"}, 
+                        React.DOM.span({className: "article-category"}, "World News – "), React.DOM.time({className: "", datetime: ""}), 
+                        React.DOM.span({className: "article-updated"}, "Updated Nov 4"), 
+                        claim.get('nShares') ?
+                        React.DOM.span({className: "article-shares"}, "Shares: ", this.formatNumber(claim.get('nShares')))
+                        : null
                       ), 
-                      claim.get('nShares') ?
-                        React.DOM.footer({className: "article-footer"}, 
-                          React.DOM.div({className: "shares"}, 
-                            React.DOM.span({className: "shares-value"}, this.formatNumber(claim.get('nShares'))), 
-                            React.DOM.span({className: "shares-label"}, "shares")
-                          )
-                        )
-                      : null
+                      React.DOM.h2({className: "article-title"}, Link({to: "claim", params: { slug: claim.get('slug')}}, claim.get('headline'))), 
+                      React.DOM.div({className: "article-byline"}, 
+                        React.DOM.span({className: "article-source"}, "Originating Source: "), 
+                        React.DOM.span({className: "article-originated"}, " Added ", React.DOM.time({datetime: claim.get('createdAt')}, moment(claim.get('createdAt')).format('MMMM Do')))
+                      )
+                    ), 
+                    React.DOM.p({className: "article-content"}, claim.get('description')), 
+                    React.DOM.footer({className: "article-footer"}
+
                     )
                   )
-                );
-              }.bind(this))
+                )
+              );
+            }.bind(this))
+          ), 
+          React.DOM.nav({className: "page-navigation"}, 
+            React.DOM.ul({className: "navigation navigation-page"}, 
+              React.DOM.li(null, React.DOM.a({href: "#", class: "navigation-link"}, "Submit a claim")), 
+              React.DOM.li(null, React.DOM.a({href: "#", class: "navigation-link"}, "Sign up for our newsletter"))
             )
           )
         )
@@ -39968,10 +39972,9 @@ module.exports = React.createClass({displayName: 'exports',
           React.DOM.div({className: "container"}, 
             React.DOM.p({className: "site-logo"}, Link({to: "claims"}, "Emergent")), 
             React.DOM.nav({className: "site-menu"}, 
-              React.DOM.ul({className: "menu menu-site"}, 
-                React.DOM.li(null, Link({to: "claims", className: "menu-item"}, "Stories")), 
-                React.DOM.li(null, Link({to: "about", className: "menu-item"}, "About")), 
-                React.DOM.li(null, React.DOM.a({href: "http://emergentinfo.tumblr.com/", className: "menu-item"}, "Blog"))
+              React.DOM.ul({className: "navigation navigation-site"}, 
+                React.DOM.li(null, React.DOM.a({href: "http://emergentinfo.tumblr.com/", className: "navigation-link"}, "Blog")), 
+                React.DOM.li(null, Link({to: "about", className: "navigation-link"}, "About Emergent"))
               )
             )
           )
@@ -40057,7 +40060,7 @@ module.exports = Backbone.Model.extend({
   },
 
   truthinessText: function() {
-    return this.get('truthiness')=='true' || this.get('truthiness')=='false' ? this.get('truthiness').toUpperCase() : 'Unverified';
+    return this.get('truthiness')=='true' || this.get('truthiness')=='false' ? this.get('truthiness') : 'Unverified';
   },
 
   /* retrieve articles and timeslices if we just have a base object */

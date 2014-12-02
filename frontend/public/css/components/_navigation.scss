@@ -1,22 +1,14 @@
 //
 // Base styles
 
-.menu {
+.navigation {
   list-style-type: none;
   margin-bottom: 0;
   margin-top: 0;
   padding-left: 0;
-
-  > li {
-    float: left;
-
-    + li {
-      margin-left: 2em;
-    }
-  }
 }
 
-.menu-item {
+.navigation-link {
   display: block;
   text-decoration: none;
 }
@@ -25,13 +17,19 @@
 //
 // Site menu
 
-.menu-site {
+.navigation-site {
   float: right;
 
-  .menu-item {
+  > li {
+    float: left;
+  }
+
+  .navigation-link {
     color: palette(type, light);
     line-height: 38px; // equal to .site-logo height
     opacity: .75;
+    padding-left: 1em;
+    padding-right: 1em;
     transition: opacity .15s ease-in-out;
 
     &.active {

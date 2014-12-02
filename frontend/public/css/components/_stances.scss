@@ -1,62 +1,59 @@
 //
-// Stance
+// Local variables
+// ------------------------------
+
+$stance-width:               6em;
+
+//
+// Component
+// ------------------------------
 
 .stance {
-  display: inline-block;
-  padding: .5em .75em;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  display: block;
+  padding-bottom: .25em;
+  padding-top: .3em;
+  text-align: center;
+  width: $stance-width;
 
-  & + & {
-    margin-left: .5em;
+  // in article previews
+  .article-preview & {
+    left: 2em;
+    position: absolute;
+    top: 4.25em;
   }
 }
 
 .stance-value {
-  color: palette(base, lighter);
-  letter-spacing: 1px;
-  text-transform: uppercase;
+  font-size: font(xs);
+  font-weight: 700;
+  text-transform: capitalize;
 }
 
 
+
 //
-// Types of stance
+// Component variations
+// ------------------------------
 
 .stance-true,
-.stance-for {
+.stance-false {
+  color: palette(base, lighter);
+}
+
+.stance-true {
   background-color: palette(status, true);
+  border-color: palette(status, true);
 }
 
-.stance-false,
-.stance-against {
+.stance-false {
   background-color: palette(status, false);
+  border-color: palette(status, false);
 }
 
-.stance-unknown,
-.stance-observing {
-  background-color: palette(status, unknown);
-}
-
-
-//
-// Revised stance
-
-.stance-revised {
-  background-color: palette(base, lighter);
-
-  &.stance-for {
-    .stance-value {
-      color: palette(status, true);
-    }
-  }
-
-  &.stance-against {
-    .stance-value {
-      color: palette(status, false);
-    }
-  }
-
-  &.stance-observing {
-    .stance-value {
-      color: palette(status, unknown);
-    }
-  }
+.stance-unknown {
+  background-color: transparent;
+  border-color: palette(status, unknown);
+  color: palette(status, unknown);
 }
