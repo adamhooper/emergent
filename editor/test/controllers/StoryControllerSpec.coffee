@@ -1,67 +1,53 @@
 describe 'StoryController', ->
   Story = require('../../../data-store').models.Story
 
-  beforeEach ->
-    @sandbox = sinon.sandbox.create()
-
-  afterEach ->
-    @sandbox.restore()
-
-  mockStory = (options) -> Story.build(options)
+  mockStory = (options) ->
+    Story.build(_.extend({
+      headline: 'headline'
+      description: 'description'
+    }, options))
 
   describe '#index', ->
     req = ->
-      supertest(app)
-        .get('/stories')
-        .set('Accept', 'application/json')
+      ret = supertest(app).get('/stories').set('Accept', 'application/json')
+      Promise.promisify(ret.end, ret)()
 
-    beforeEach ->
-      @sandbox.stub(Story, 'findAll').returns(Promise.resolve([]))
-
-    it 'should return JSON with a JSONish request', (done) ->
+    it 'should return JSON with a JSONish request', ->
       req()
-        .expect('Content-Type', 'application/json; charset=utf-8')
-        .expect([])
-        .expect(200)
-        .end(done)
+        .tap (res) =>
+          expect(res.statusCode).to.eq(200)
+          expect(res.headers['content-type']).to.equal('application/json; charset=utf-8')
+          expect(res.body).to.deep.eq([])
 
     describe 'when there are Stories', ->
       beforeEach ->
-        Story.findAll.returns(Promise.resolve([
-          mockStory(slug: 'slug-a')
-          mockStory(slug: 'slug-b')
-        ]))
+        Promise.all([
+          Story.create(mockStory(slug: 'slug-a'), 'user-a@example.org')
+          Story.create(mockStory(slug: 'slug-b'), 'user-a@example.org')
+        ])
 
-      it 'should return the stories', (done) ->
+      it 'should return the stories', ->
         req()
-          .expect (res) ->
-            res.body.map((x) -> x.slug).should.deep.equal([ 'slug-a', 'slug-b' ])
-            undefined
-          .end(done)
+          .tap (res) ->
+            res.body.map((x) -> x.slug).sort().should.deep.equal([ 'slug-a', 'slug-b' ])
 
   describe '#find', ->
     req = (slug) ->
-      supertest(app)
-        .get("/stories/#{slug}")
-        .set('Accept', 'application/json')
+      ret = supertest(app).get("/stories/#{slug}").set('Accept', 'application/json')
+      Promise.promisify(ret.end, ret)()
 
     beforeEach ->
-      @sandbox.stub(Story, 'find').returns(Promise.resolve(mockStory(slug: 'slug-a')))
+      Story.create(mockStory(slug: 'slug-a'), 'user-a@example.org')
 
-    it 'should return the story by slug', (done) ->
+    it 'should return the story by slug', ->
       req('slug-a')
-        .expect(200)
-        .expect (res) ->
-          Story.find.should.have.been.calledWith(where: { slug: 'slug-a' })
-          res.body.slug.should.equal('slug-a')
-          undefined
-        .end(done)
+        .tap (res) ->
+          expect(res.statusCode).to.eq(200)
+          expect(res.body).to.have.property('slug', 'slug-a')
 
-    it 'should return a 404 for a missing story', (done) ->
-      Story.find.returns(Promise.resolve(null))
+    it 'should return a 404 for a missing story', ->
       req('invalid-slug')
-        .expect(404)
-        .end(done)
+        .tap (res) -> expect(res.statusCode).to.eq(404)
 
   describe '#create', ->
     req = (object) ->
@@ -69,65 +55,51 @@ describe 'StoryController', ->
       object.slug ?= 'slug-a'
       object.headline ?= 'headline'
 
-      supertest(app)
+      ret = supertest(app)
         .post('/stories')
         .set('Accept', 'application/json')
         .send(object)
 
-    beforeEach ->
-      @sandbox.stub(Story, 'create')
+      Promise.promisify(ret.end, ret)()
 
-    it 'should create the story', (done) ->
-      Story.create.returns(Promise.resolve(mockStory(slug: 'slug-a')))
-      req().end ->
-        Story.create.should.have.been.called
-        Story.create.lastCall.args[0].slug.should.eq('slug-a')
-        Story.create.lastCall.args[1].should.eq('user@example.org')
-        done()
+    it 'should create the story in the database', ->
+      req(slug: 'slug-a')
+        .then -> Story.find(where: { slug: 'slug-a' })
+        .tap (story) ->
+          expect(story).to.exist
+          expect(story).to.have.property('slug', 'slug-a')
+          expect(story).to.have.property('createdBy', 'user@example.org')
 
-    it 'should return a JSON response with the created story', (done) ->
-      Story.create.returns(Promise.resolve(mockStory(slug: 'slug-a')))
-      req()
-        .expect(200)
-        .expect('Content-Type', 'application/json; charset=utf-8')
-        .expect (res) ->
-          res.body.slug.should.equal('slug-a')
-          undefined
-        .end(done)
+    it 'should return a JSON response with the created story', ->
+      req(slug: 'slug-a')
+        .tap (res) ->
+          expect(res.statusCode).to.eq(200)
+          expect(res.headers).to.have.property('content-type', 'application/json; charset=utf-8')
+          expect(res.body).to.have.property('slug', 'slug-a')
 
-    it 'should return a 400 error when creating fails', (done) ->
-      Story.create.returns(Promise.reject(message: 'oh no'))
-      req(slug: '')
-        .expect(400)
-        .expect('Content-Type', 'application/json; charset=utf-8')
-        .end(done)
+    it 'should return a 400 error when creating fails', ->
+      Story.create(mockStory(slug: 'slug-a'), 'user1@example.org')
+        .then -> req(slug: 'slug-a')
+        .tap (res) ->
+          expect(res.statusCode).to.eq(400)
+          expect(res.headers).to.have.property('content-type', 'application/json; charset=utf-8')
 
   describe '#destroy', ->
     req = (slug) ->
-      supertest(app)
+      ret = supertest(app)
         .delete("/stories/#{slug}")
         .set('Accept', 'application/json')
+      Promise.promisify(ret.end, ret)()
 
-    reqPromise = (slug) ->
-      r = req(slug)
-      Promise.promisify(r.end, r)()
+    it 'should return OK even when the story does not exist', ->
+      req('blargh')
+        .tap (res) -> expect(res.statusCode).to.eq(200)
 
-    beforeEach ->
-      @sandbox.stub(Story, 'destroy').returns(Promise.resolve(undefined))
-
-    it 'should return OK', ->
-      reqPromise('foo')
-        .should.eventually.contain(status: 200)
-
-    it 'should destroy the story', ->
-      reqPromise('foo')
-        .then(-> Story.destroy.should.have.been.calledWith(slug: 'foo'))
-
-    it 'should return 500 error if the story cannot be destroyed', (done) ->
-      Story.destroy.returns(Promise.reject('foo'))
-      req('foo')
-        .expect(500)
-        .end(done)
+    it 'should destroy the story from the database', ->
+      Story.create(mockStory(slug: 'slug-a'), 'user-a@example.org')
+        .then -> req('slug-a')
+        .then -> Story.find(where: { slug: 'slug-a' })
+        .tap (s) -> expect(s).not.to.exist
 
   describe '#update', ->
     req = (object, slug) ->
@@ -136,52 +108,43 @@ describe 'StoryController', ->
       for k, v of object
         toSend[k] = v
       delete toSend.slug
-      supertest(app)
+      ret = supertest(app)
         .put("/stories/#{slug}")
         .set('Accept', 'application/json')
         .send(toSend)
-
-    reqPromise = (object, slug) ->
-      r = req(object, slug)
-      Promise.promisify(r.end, r)()
+      Promise.promisify(ret.end, ret)()
 
     beforeEach ->
-      @sandbox.stub(Story, 'find')
-      @sandbox.stub(Story, 'update')
-      Story.find.returns(Promise.resolve(mockStory(slug: 'slug-a', description: 'foo')))
-      Story.update.returns(Promise.resolve(mockStory(slug: 'slug-a', description: 'bar')))
+      Story.create(mockStory(slug: 'slug-a', description: 'foo'), 'user-a@example.org')
 
     it 'should return 404 when the object does not exist', ->
-      Story.find.returns(Promise.resolve(null))
-      reqPromise(slug: 'slug-b')
-        .then (x) ->
-          Story.find.should.have.been.calledWith(where: { slug: 'slug-b' })
-          x
-        .should.eventually.contain(status: 404)
+      req(slug: 'slug-b')
+        .tap (res) ->
+          expect(res.statusCode).to.eq(404)
 
     it 'should never update the slug', ->
-      reqPromise({ slug: 'slug-b' }, 'slug-a')
-        .then (res) ->
-          expect(res).to.have.property('status', 200)
-          expect(res.body).to.have.property('slug', 'slug-a')
-          expect(Story.update).to.have.been.called
-          expect(Story.update.lastCall.args[1]).not.to.have.property('slug')
+      req({ slug: 'slug-b' }, 'slug-a')
+        .tap (res) -> expect(res.body).to.have.property('slug', 'slug-a')
+        .then(-> Promise.all([
+          Story.find(where: { slug: 'slug-a' })
+          Story.find(where: { slug: 'slug-b' })
+        ]))
+        .spread (a, b) ->
+          expect(a).to.exist
+          expect(b).not.to.exist
 
     describe 'with a valid request', ->
-      beforeEach ->
-        @response = reqPromise(slug: 'slug-a', description: 'bar')
+      it 'should return 200 OK with the updated object', ->
+        req(slug: 'slug-a', description: 'bar')
+          .tap (res) ->
+            expect(res.statusCode).to.eq(200)
+            expect(res.body).to.have.property('slug', 'slug-a')
+            expect(res.body).to.have.property('description', 'bar')
 
-      it 'should return 200 OK', ->
-        @response.should.eventually.contain(status: 200)
-
-      it 'should update the object in question', (done) ->
-        Story.update.should.have.been.called
-        args = Story.update.lastCall.args
-        args[0].slug.should.eq('slug-a')
-        args[1].description.should.eq('bar')
-        args[2].should.eq('user@example.org')
-        done()
-
-      it 'should return the updated object', ->
-        @response.then((res) -> res.body)
-          .should.eventually.contain(description: 'bar')
+      it 'should update the object in question', ->
+        req(slug: 'slug-a', description: 'bar')
+          .then -> Story.find(where: { slug: 'slug-a' })
+          .tap (story) ->
+            expect(story).to.have.property('slug', 'slug-a')
+            expect(story).to.have.property('description', 'bar')
+            expect(story).to.have.property('updatedBy', 'user@example.org')
