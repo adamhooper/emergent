@@ -1,5 +1,5 @@
 Tables = [
-  [ 'Category', 'CategoryStory', 'Category', 'categoryid', 'Story', 'storyId' ]
+  [ 'Category', 'CategoryStory', 'Category', 'categoryId', 'Story', 'storyId' ]
   [ 'Tag', 'StoryTag', 'Story', 'storyId', 'Tag', 'tagId' ]
 ]
 

@@ -1,4 +1,7 @@
-Story = require('../../../data-store').models.Story
+models = require('../../../data-store').models
+Category = models.Category
+CategoryStory = models.CategoryStory
+Story = models.Story
 
 AttributesWithDefaults =
   headline: ''
@@ -22,16 +25,31 @@ jsonToAttributes = (json, isCreate) ->
 
   ret
 
-module.exports = self =
+module.exports =
   index: (req, res) ->
-    if req.method == 'POST'
-      # FIXME aren't blueprints supposed to handle this for us?
-      # This shouldn't be an if-statement
-      self.create(req, res)
-    else
-      Story.findAll()
-        .then (val) -> res.json(val)
-        .catch (err) -> res.status(500).json(err)
+    Promise.all([
+      Story.findAll({}, raw: true)
+      Category.findAll({}, raw: true)
+      CategoryStory.findAll({}, raw: true)
+    ])
+      .spread (stories, categories, categoryStories) ->
+        idToCategory = {}
+        (idToCategory[c.id] = c.name) for c in categories
+
+        idToStory = {}
+        for s in stories
+          s.categories = []
+          idToStory[s.id] = s
+
+        for cs in categoryStories
+          story = idToStory[cs.storyId]
+          categoryName = idToCategory[cs.categoryId]
+          if story? && categoryName?
+            story.categories.push(categoryName)
+
+        stories
+      .then (val) -> res.json(val)
+      .catch (err) -> res.status(500).json(err)
 
   find: (req, res) ->
     slug = req.param('slug') || ''

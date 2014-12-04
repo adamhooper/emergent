@@ -2,6 +2,8 @@ Sequelize = require('sequelize')
 
 module.exports =
   columns:
+    id: null
+
     storyId:
       type: Sequelize.UUID
       allowNull: false

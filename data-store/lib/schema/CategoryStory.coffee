@@ -2,12 +2,15 @@ Sequelize = require('sequelize')
 
 module.exports =
   columns:
+    id: null
+
     categoryId:
       type: Sequelize.UUID
       allowNull: false
       references: 'Category'
       referencesId: 'id'
       unique: 'categoryId_storyId'
+      primaryKey: true
 
     storyId:
       type: Sequelize.UUID
@@ -15,6 +18,7 @@ module.exports =
       references: 'Story'
       referencesId: 'id'
       unique: 'categoryId_storyId'
+      primaryKey: true
 
     createdAt:
       type: Sequelize.DATE

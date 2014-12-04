@@ -1,11 +1,14 @@
 describe 'StoryController', ->
-  Story = require('../../../data-store').models.Story
+  models = require('../../../data-store').models
+  Story = models.Story
+  Category = models.Category
+  CategoryStory = models.CategoryStory
 
   mockStory = (options) ->
-    Story.build(_.extend({
+    _.extend({
       headline: 'headline'
       description: 'description'
-    }, options))
+    }, options)
 
   describe '#index', ->
     req = ->
@@ -25,11 +28,31 @@ describe 'StoryController', ->
           Story.create(mockStory(slug: 'slug-a'), 'user-a@example.org')
           Story.create(mockStory(slug: 'slug-b'), 'user-a@example.org')
         ])
+          .spread (s1, s2) => @story1 = s1; @story2 = s2
 
       it 'should return the stories', ->
         req()
           .tap (res) ->
             res.body.map((x) -> x.slug).sort().should.deep.equal([ 'slug-a', 'slug-b' ])
+
+      it 'should include categories', ->
+        Promise.all([
+          Category.create({ name: 'foo' }, 'admin@example.org')
+          Category.create({ name: 'bar' }, 'admin@example.org')
+        ])
+          .spread (c1, c2) => @category1 = c1; @category2 = c2
+          .then => Promise.all([
+            CategoryStory.create({ categoryId: @category1.id, storyId: @story1.id }, 'editor@example.org')
+            CategoryStory.create({ categoryId: @category1.id, storyId: @story2.id }, 'editor@example.org')
+            CategoryStory.create({ categoryId: @category2.id, storyId: @story1.id }, 'editor@example.org')
+          ])
+          .then -> req()
+          .tap (res) ->
+            expect(res.body).to.have.property('length', 2)
+            stories = res.body.sort((a, b) -> a.slug - b.slug)
+            expect(stories[0].categories).to.exist
+            expect(stories[0].categories.sort()).to.deep.eq([ 'bar', 'foo' ])
+            expect(stories[1].categories).to.deep.eq([ 'foo' ])
 
   describe '#find', ->
     req = (slug) ->

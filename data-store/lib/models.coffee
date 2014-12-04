@@ -23,12 +23,17 @@ for codeFile in fs.readdirSync("#{__dirname}/schema")
   modelName = codeFile.split(/\./)[0]
   schema = require("#{__dirname}/schema/#{modelName}")
 
+  columns = if schema.columns.id == undefined
+    _.extend({}, IdColumn, schema.columns)
+  else
+    _.omit(schema.columns, 'id')
+
   nonColumns = {}
   nonColumns[k] = v for k, v of schema when k != 'columns'
 
   modelImpl = sequelize.define(
     modelName,
-    _.extend({}, IdColumn, schema.columns),
+    columns,
     _.extend({}, SequelizeModelOptions, nonColumns)
   )
 
