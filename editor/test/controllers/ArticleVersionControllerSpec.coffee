@@ -18,7 +18,6 @@ describe 'ArticleVersionController', ->
     Promise.promisify(ret.end, ret)()
 
   beforeEach ->
-    @sandbox = sinon.sandbox.create()
     @email = 'user@example.org'
     @url = null
     @urlVersion = null  # with an ArticleVersion
@@ -43,9 +42,6 @@ describe 'ArticleVersionController', ->
         comment: ''
       }, @email)).then((x) => @articleVersion = x)
       .catch(console.error)
-
-  afterEach ->
-    @sandbox.restore()
 
   describe '#index', ->
     indexReq = (articleId) -> req('get', "/articles/#{articleId}/versions")
@@ -154,17 +150,21 @@ describe 'ArticleVersionController', ->
           .then((x) => @urlVersion = x)
 
       it 'should not modify the UrlVersion', ->
-        @sandbox.stub(UrlVersion, 'update')
-
+        # This should have been two specs, but for some reason I'd rather not
+        # spend time on, one test breaks the other. Merged.
         updateReq(@article.id, @articleVersion.id, candidateVersion)
-          .tap (res) => 
-            expect(UrlVersion.update).not.to.have.been.called
-
-      it 'should return the original UrlVersion', ->
-        updateReq(@article.id, @articleVersion.id, candidateVersion)
-          .tap (res) =>
+          .then (res) =>
+            # it should return the old UrlVersion
             uv = res.body.urlVersion
 
+            expect(uv).to.have.property('urlId', @url.id)
+            expect(uv).to.have.property('source', 'source')
+            expect(uv).to.have.property('headline', 'headline1')
+            expect(uv).to.have.property('byline', 'byline1')
+            expect(uv).to.have.property('body', 'body1\n\nbody1\n\nbody1')
+          .then => UrlVersion.find(@urlVersion.id)
+          .then (uv) =>
+            # it should not modify the UrlVersion in the database
             expect(uv).to.have.property('urlId', @url.id)
             expect(uv).to.have.property('source', 'source')
             expect(uv).to.have.property('headline', 'headline1')
