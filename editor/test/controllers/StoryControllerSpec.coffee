@@ -61,6 +61,7 @@ describe 'StoryController', ->
 
     beforeEach ->
       Story.create(mockStory(slug: 'slug-a'), 'user-a@example.org')
+        .tap (s) => @story = s
 
     it 'should return the story by slug', ->
       req('slug-a')
@@ -71,6 +72,24 @@ describe 'StoryController', ->
     it 'should return a 404 for a missing story', ->
       req('invalid-slug')
         .tap (res) -> expect(res.statusCode).to.eq(404)
+
+    it 'should include an empty Array of categories when there are none', ->
+      req('slug-a')
+        .tap (res) ->
+          expect(res.body.categories).to.deep.eq([])
+
+    it 'should include an Array of category names', ->
+      Promise.all([
+        Category.create({ name: 'foo' }, 'admin@example.org')
+        Category.create({ name: 'bar' }, 'admin@example.org')
+      ])
+        .spread (c1, c2) => Promise.all([
+          CategoryStory.create({ categoryId: c1.id, storyId: @story.id }, 'admin@example.org')
+          CategoryStory.create({ categoryId: c2.id, storyId: @story.id }, 'admin@example.org')
+        ])
+        .then -> req('slug-a')
+        .tap (res) ->
+          expect(res.body.categories.sort()).to.deep.eq([ 'bar', 'foo' ])
 
   describe '#create', ->
     req = (object) ->
@@ -106,6 +125,43 @@ describe 'StoryController', ->
         .tap (res) ->
           expect(res.statusCode).to.eq(400)
           expect(res.headers).to.have.property('content-type', 'application/json; charset=utf-8')
+
+    describe 'with Categories', ->
+      beforeEach -> Promise.all([
+        Category.create({ name: 'foo' }, 'admin@example.org')
+        Category.create({ name: 'bar' }, 'admin@example.org')
+        Category.create({ name: 'baz' }, 'admin@example.org')
+      ]).spread (foo, bar, baz) => @categoryFoo = foo; @categoryBar = bar; @categoryBaz = baz
+
+      it 'should add and return the specified categories', ->
+        req(slug: 'slug-a', categories: [ 'foo', 'bar' ])
+          .tap (res) -> expect(res.body.categories?.sort()).to.deep.eq([ 'bar', 'foo' ])
+          .then -> Story.find(where: { slug: 'slug-a' })
+          .then (story) => Promise.all([
+            CategoryStory.find(where: { storyId: story.id, categoryId: @categoryFoo.id })
+            CategoryStory.find(where: { storyId: story.id, categoryId: @categoryBar.id })
+            CategoryStory.find(where: { storyId: story.id, categoryId: @categoryBaz.id })
+          ])
+          .spread (foo, bar, baz) ->
+            expect(foo).to.exist
+            expect(bar).to.exist
+            expect(baz).not.to.exist
+
+      it 'should nix nonexistent categories', ->
+        req(slug: 'slug-a', categories: [ 'foo', 'foo2' ])
+          .tap (res) -> expect(res.body.categories?.sort()).to.deep.eq([ 'foo' ])
+          .then -> Story.find(where: { slug: 'slug-a' })
+            .then (story) => Promise.all([
+              CategoryStory.find(where: { storyId: story.id, categoryId: @categoryFoo.id })
+              CategoryStory.find(where: { storyId: story.id, categoryId: @categoryBar.id })
+              CategoryStory.find(where: { storyId: story.id, categoryId: @categoryBaz.id })
+            ])
+            .spread (foo, bar, baz) ->
+              expect(foo).to.exist
+              expect(bar).not.to.exist
+              expect(baz).not.to.exist
+          .then -> Category.find(where: { name: 'foo2' })
+            .tap (category) -> expect(category).not.to.exist
 
   describe '#destroy', ->
     req = (slug) ->

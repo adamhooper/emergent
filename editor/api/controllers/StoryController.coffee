@@ -1,3 +1,5 @@
+_ = require('lodash')
+
 models = require('../../../data-store').models
 Category = models.Category
 CategoryStory = models.CategoryStory
@@ -53,7 +55,33 @@ module.exports =
 
   find: (req, res) ->
     slug = req.param('slug') || ''
-    Story.find(where: { slug: slug })
+    models.sequelize.query("""
+      SELECT
+        s."id",
+        s."slug",
+        s."headline",
+        s."description",
+        s."createdAt",
+        s."createdBy",
+        s."updatedAt",
+        s."updatedBy",
+        s."origin",
+        s."originUrl",
+        s."truthiness",
+        s."truthinessDate",
+        s."truthinessDescription",
+        s."truthinessUrl",
+        s."published",
+        (
+          SELECT COALESCE(ARRAY_AGG(c."name"), ARRAY[]::VARCHAR[])
+          FROM "Category" c
+          INNER JOIN "CategoryStory" cs ON c.id = cs."categoryId"
+          WHERE cs."storyId" = s."id"
+        ) AS "categories"
+      FROM "Story" s
+      WHERE s."slug" = ?
+    """, null, { raw: true }, [ slug ])
+      .then (arr) -> arr[0]
       .then (val) ->
         if val?
           res.json(val)
@@ -66,7 +94,18 @@ module.exports =
       res.status(400).json(message: 'You must send the JSON properties to create')
     else
       attributes = jsonToAttributes(req.body, true)
-      Story.create(attributes, req.user.email)
+      categories = _.toArray(req.body.categories) || []
+      Promise.all([
+        Story.create(attributes, req.user.email)
+        Category.findAll(where: { name: categories })
+      ])
+        .spread (story, categories) ->
+          attrsArray = for category in categories
+            storyId: story.id, categoryId: category.id
+          CategoryStory.bulkCreate(attrsArray, req.user.email)
+            .then -> [ story, categories ]
+        .spread (story, categories) ->
+          _.extend(story.toJSON(), categories: _.pluck(categories, 'name'))
         .then (val) -> res.json(val)
         .catch (err) -> res.status(400).json(err)
 
