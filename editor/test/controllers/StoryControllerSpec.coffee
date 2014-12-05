@@ -296,3 +296,10 @@ describe 'StoryController', ->
               expect(baz).to.exist
             .then -> Category.find(where: { name: 'foo' })
             .tap (category) -> expect(category).to.exist
+
+        it 'should remove all categories', ->
+          CategoryStory.create({ categoryId: @categoryFoo.id, storyId: @story.id }, 'admin@example.org')
+            .then -> req(slug: 'slug-a', categories: [])
+            .tap (res) -> expect(res.body.categories).to.deep.eq([])
+            .then => CategoryStory.find(where: { storyId: @story.id, categoryId: @categoryFoo.id })
+            .tap (foo) -> expect(foo).not.to.exist

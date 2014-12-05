@@ -136,9 +136,13 @@ module.exports =
             wantedCategoryNames = (c.name for c in wantedCategories)
             wantedCategoryStories = for wantedCategory in wantedCategories
               { storyId: story.id, categoryId: wantedCategory.id }
+
+            deleteWhere = { storyId: story.id }
+            if wantedCategoryIds.length
+              deleteWhere.categoryId = { not: wantedCategoryIds }
             Promise.all([
               Story.update(story, attributes, req.user.email)
-              CategoryStory.destroy(storyId: story.id, categoryId: { not: wantedCategoryIds })
+              CategoryStory.destroy(deleteWhere)
               Promise.map(wantedCategoryStories, (cs) -> CategoryStory.upsert(cs, req.user.email))
             ])
               .spread (story, __, categoryStories) ->
