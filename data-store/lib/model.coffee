@@ -2,6 +2,7 @@ Instance = require('./instance')
 Promise = require('sequelize').Promise
 _ = require('sequelize').Utils._
 
+# deprecated
 instanceWithTracking = (instance, email, creating, options) ->
   tracking = {}
   if creating
@@ -20,23 +21,28 @@ module.exports = class Model
   build: (attrs) ->
     new Instance(@_impl.build(attrs))
 
+  _trackingAttrs: (email, creating) ->
+    tracking = {}
+    if creating
+      tracking.createdAt = (options?.createdAt || new Date()) if 'createdAt' of @_impl.attributes
+      tracking.createdBy = email if 'createdBy' of @_impl.attributes
+    tracking.updatedAt = (options?.updatedAt || new Date()) if 'updatedAt' of @_impl.attributes
+    tracking.updatedBy = email if 'updatedBy' of @_impl.attributes
+    tracking
+
+  _formatCreateAttrs: (attrs, email) ->
+    _.chain(attrs)
+      .omit('id')
+      .extend(@_trackingAttrs(email, true))
+      .value()
+
   # Returns a Promise of an Instance
-  create: (attrs, email, options={}) ->
-    delete attrs.id
+  create: (attrs, email, options) ->
+    options = email if !options?
+    if !options?.raw
+      attrs = @_formatCreateAttrs(attrs, email)
 
-    options = email if _.isObject(email)
-
-    if !options.raw
-      delete attrs.createdAt
-      delete attrs.updatedAt
-      delete attrs.createdBy
-      delete attrs.updatedBy
-
-    instance = @build(attrs)
-    if !options.raw
-      instance = instanceWithTracking(instance, email, true, options)
-    instance._impl.save(null, options)
-      .then(-> instance)
+    @_impl.create(attrs).then((x) -> new Instance(x))
 
   # Returns a Promise of an Instance or `null`.
   find: (idOrOptions) ->
@@ -63,7 +69,13 @@ module.exports = class Model
     instance._impl.save()
       .then(-> instance)
 
-  # Returns a Promise
+  # Returns a Promise of null
+  bulkCreate: (attrsArray, email) ->
+    attrsArray = for attrs in attrsArray
+      @_formatCreateAttrs(attrs, email)
+    @_impl.bulkCreate(attrsArray)
+
+  # Returns a Promise of number of affected rows
   bulkUpdate: (attrs, where, email, options) ->
     attrs = _.extend({}, attrs)
     attrs.updatedAt = new Date() if 'updatedAt' of @_impl.attributes
