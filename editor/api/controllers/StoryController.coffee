@@ -121,11 +121,25 @@ module.exports =
       res.status(400).json(message: 'You must send the JSON properties to update')
     else
       attributes = jsonToAttributes(req.body, false)
-      Story.find(where: { slug: slug })
-        .then (story) ->
+      categories = _.toArray(req.body.categories) || []
+      Promise.all([
+        Story.find(where: { slug: slug })
+        Category.findAll(where: { name: categories })
+      ])
+        .spread (story, wantedCategories) ->
           if !story
             res.status(404).json(message: "Could not find a story with slug '#{slug}'")
           else
-            Story.update(story, attributes, req.user.email)
-              .then (updatedStory) -> res.json(updatedStory)
+            wantedCategoryIds = (c.id for c in wantedCategories)
+            wantedCategoryNames = (c.name for c in wantedCategories)
+            wantedCategoryStories = for wantedCategory in wantedCategories
+              { storyId: story.id, categoryId: wantedCategory.id }
+            Promise.all([
+              Story.update(story, attributes, req.user.email)
+              CategoryStory.destroy(storyId: story.id, categoryId: { not: wantedCategoryIds })
+              Promise.map(wantedCategoryStories, (cs) -> CategoryStory.upsert(cs, req.user.email))
+            ])
+              .spread (story, __, categoryStories) ->
+                json = _.extend(story.toJSON(), categories: wantedCategoryNames)
+                res.json(json)
         .catch (err) -> res.status(500).json(err)
