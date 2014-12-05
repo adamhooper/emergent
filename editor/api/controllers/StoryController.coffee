@@ -111,6 +111,8 @@ module.exports =
 
   destroy: (req, res) ->
     slug = req.param('slug') || ''
+    # The ON DELETE CASCADE on the foreign key automatically destroys
+    # CategoryStory and Article children.
     Story.destroy(slug: slug)
       .then -> res.json({})
       .catch (err) -> res.status(500).json(err)

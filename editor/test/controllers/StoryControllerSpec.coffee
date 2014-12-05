@@ -180,6 +180,23 @@ describe 'StoryController', ->
         .then -> Story.find(where: { slug: 'slug-a' })
         .tap (s) -> expect(s).not.to.exist
 
+    it 'should destroy CategoryStories as well', ->
+      Promise.all([
+        Story.create(mockStory(slug: 'slug-a'), 'user-a@example.org')
+        Category.create({ name: 'foo' }, 'admin@example.org')
+      ])
+        .spread (story, category) ->
+          CategoryStory.create({ categoryId: category.id, storyId: story.id }, 'user-a@example.org')
+        .tap ->
+          req('slug-a')
+        .then (categoryStory) -> Promise.all([
+          Category.find(categoryStory.categoryId)
+          CategoryStory.findAll(where: { storyId: categoryStory.storyId })
+        ])
+        .spread (category, categoryStories) ->
+          expect(category).to.exist
+          expect(categoryStories).to.have.property('length', 0)
+
   describe '#update', ->
     req = (object, slug) ->
       slug ?= object.slug
