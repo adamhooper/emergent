@@ -8,6 +8,8 @@ module.exports =
   editor:
     'get /': 'HomeController.home'
 
+    'get /categories': 'CategoryController.index'
+
     'get    /stories'      : 'StoryController.index'
     'post   /stories'      : 'StoryController.create'
     'get    /stories/:slug': 'StoryController.find'
