@@ -7,15 +7,22 @@ $susy: (
   global-box-sizing: border-box
 );
 
-$breakpoint-mobile:    0;
-$breakpoint-tablet:    64em;
-$breakpoint-desktop:   0; //72em;
-$breakpoint-retina:    96em;
+$breakpoint-mobile:         0;
+$breakpoint-mobile-large:   30em;
+$breakpoint-tablet:         48em;
+$breakpoint-desktop:        68em;
+// $breakpoint-retina:      96em;
 
-$container-mobile:     90%;
-$container-tablet:     960px;
-$container-desktop:    960px;
-$container-retina:     1190px;
+$gutters-mobile: 30px;
+$gutters-tablet: 40px;
+$gutters-desktop: 80px;
+
+$container-mobile:     100%;
+// $container-tablet:     720px + $gutters-tablet;
+$container-tablet:     100%;
+$container-desktop:    944px + $gutters-desktop;
+
+// $container-retina:     1190px;
 
 
 
@@ -24,7 +31,7 @@ $container-retina:     1190px;
 
 $font-primary:         'Helvetica Neue', Helvetica, Arial, sans-serif;
 $font-secondary:       'news-gothic-std', Helvetica, Arial, sans-serif;
-$font-logo:            'franklin-gothic-urw', Helvetica, Arial, sans-serif;
+$font-logo:            $font-secondary;
 
 $font-sizes: (
   xs:   .85em,

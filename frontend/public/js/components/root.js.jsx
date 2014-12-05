@@ -26,7 +26,7 @@ module.exports = React.createClass({
     return (
       <div>
         <header className="site-header">
-          <div className="container">
+          <div className="container page-gutters">
             <p className="site-logo"><Link to="claims">Emergent</Link></p>
             <nav className="site-menu">
               <ul className="navigation navigation-site">

@@ -10,15 +10,29 @@
   @include breakpoint($breakpoint-desktop) {
     @include container($container-desktop);
   }
+}
 
-  @include breakpoint($breakpoint-retina) {
-    @include container($container-retina);
+%page-gutters {
+  @include breakpoint($breakpoint-mobile) {
+    @include gutter($gutters-mobile inside);
+  }
+
+  @include breakpoint($breakpoint-tablet) {
+    @include gutter($gutters-tablet inside);
+  }
+
+  @include breakpoint($breakpoint-desktop) {
+    @include gutter($gutters-desktop inside);
   }
 }
 
 .container,
 .page-content {
   @extend %container;
+}
+
+.page-gutters {
+  @extend %page-gutters;
 }
 
 
@@ -38,7 +52,7 @@
 
 
 
-@include breakpoint($breakpoint-desktop) {
+@include breakpoint($breakpoint-tablet) {
 
   //
   // root.js.jsx
@@ -56,11 +70,11 @@
   // claims.js.jsx
 
   .articles {
-    @include span(9 of 12);
+    @include span(9 of 12 no-gutters);
   }
 
   .page-navigation {
-    @include span(last 3 of 12);
+    @include span(3 of 12 wide no-gutters);
   }
 
   //
