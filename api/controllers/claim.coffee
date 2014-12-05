@@ -1,3 +1,4 @@
+Promise = require('bluebird')
 _ = require('lodash')
 
 models = require('../../data-store').models
@@ -11,12 +12,36 @@ claimToJson = (claim) ->
     'origin'
     'originUrl'
     'nShares'
+    'categories'
     'truthiness'
     'truthinessDate'
     'truthinessDescription'
     'truthinessUrl'
     'createdAt'
   ])
+
+getCategories = (claimIds) ->
+  sqlClaimIds = claimIds.map((id) -> "('#{id}'::uuid)")
+  q = """
+    WITH
+    "ClaimIds" AS (
+      SELECT id FROM (VALUES#{sqlClaimIds}) AS t(id)
+    )
+    SELECT
+      cs."storyId" AS "claimId",
+      c.name
+    FROM "CategoryStory" cs
+    INNER JOIN "Category" c ON cs."categoryId" = c.id
+    WHERE cs."storyId" IN (SELECT id FROM "ClaimIds")
+    ORDER BY cs."storyId", c.name
+  """
+  models.sequelize.query(q, null, raw: true)
+    .then (rows) ->
+      ret = {}
+      (ret[claimId] = []) for claimId in claimIds
+      for row in rows
+        ret[row.claimId].push(row.name)
+      ret
 
 getShareCounts = (claimIds) ->
   sqlClaimIds = claimIds.map((id) -> "('#{id}'::uuid)")
@@ -62,9 +87,15 @@ module.exports =
     models.Story.findAll(where: { published: true })
       .tap (claims) ->
         if claims.length
-          getShareCounts(claims.map((c) -> c.id))
-            .tap (counts) ->
-              (c.nShares = counts[c.id]) for c in claims
+          claimIds = (c.id for c in claims)
+          Promise.all([
+            getShareCounts(claimIds)
+            getCategories(claimIds)
+          ])
+            .spread (counts, categories) ->
+              for claim in claims
+                claim.nShares = counts[claim.id]
+                claim.categories = categories[claim.id]
               null
         else
           null
@@ -81,7 +112,15 @@ module.exports =
           res.status(404)
           throw new Error('Claim not found')
       .tap (claim) ->
-        getShareCounts([claim.id]).then((count) -> claim.nShares = count)
+        # WARNING: .nShares and .categories aren't unit-tested here!
+        Promise.all([
+          getShareCounts([claim.id])
+          getCategories([claim.id])
+        ])
+          .spread (counts, categories) ->
+            claim.nShares = counts[claim.id]
+            claim.categories = categories[claim.id]
+            null
       .then(claimToJson)
       .then (json) ->
         res.header('cache-control', 'public, max-age=300')

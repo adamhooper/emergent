@@ -47,6 +47,25 @@ describe '/claims', ->
         expect(claim).not.to.have.property('createdBy')
         expect(claim).not.to.have.property('updatedBy')
 
+  it 'should return categories as Arrays of Strings', ->
+    Promise.all([
+      createClaim(slug: 'b-slug', createdAt: new Date(10000))
+      models.Category.create({ name: 'foo' }, 'test@example.org')
+      models.Category.create({ name: 'bar' }, 'test@example.org')
+      models.Category.create({ name: 'baz' }, 'test@example.org') # just here to confuse
+    ])
+      .spread (claim2, foo, bar, baz) =>
+        models.CategoryStory.bulkCreate([
+          { storyId: @claim1.id, categoryId: foo.id }
+          { storyId: @claim1.id, categoryId: bar.id }
+          { storyId: claim2.id, categoryId: bar.id }
+        ], 'test@example.org')
+      .then -> api.get('/claims')
+      .tap (res) ->
+        claims = res.body.claims
+        expect(claims?[0]?.categories).to.deep.eq([ 'bar', 'foo' ])
+        expect(claims?[1]?.categories).to.deep.eq([ 'bar' ])
+
   it 'should default to an empty nShares', ->
     api.get('/claims')
       .then((res) -> expect(res.body.claims[0]).to.have.property('nShares', 0))
