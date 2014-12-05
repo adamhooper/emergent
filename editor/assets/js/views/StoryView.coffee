@@ -1,6 +1,10 @@
+$ = require('jquery')
 _ = require('lodash')
 moment = require('moment')
 Marionette = require('backbone.marionette')
+
+require('jquery-ui')
+require('../vendor/tag-it-shim')($)
 
 module.exports = class StoryView extends Marionette.ItemView
   template: _.template('''
@@ -13,6 +17,7 @@ module.exports = class StoryView extends Marionette.ItemView
         <div class="col-md-4">
           <p class="headline not-editing"><strong>Claim:</strong> <%- headline %></p>
           <p class="description not-editing"><strong>Description:</strong> <%- description %></p>
+          <p class="categories not-editing"><strong>Categories</strong>: <%- categories.sort().join(', ') %></p>
           <p class="published not-editing">This claim is <strong><%- published ? 'public' : 'not public' %></strong></p>
           <div class="form-group editing">
             <label for="claim-headline">The claim, in tweet form:</label>
@@ -21,6 +26,10 @@ module.exports = class StoryView extends Marionette.ItemView
           <div class="form-group editing">
             <label for="claim-description">The claim, in two sentences:</label>
             <textarea class="form-control" id="claim-description" rows="5" name="description" placeholder="Two. Sentences."><%- description %></textarea>
+          </div>
+          <div class="form-group editing">
+            <label for="claim-categories">Categories:</label>
+            <input type="text" id="claim-categories" name="categories" placeholder="Category" value="<%- categories.join(',') %>">
           </div>
           <div class="checkbox editing">
             <label>
@@ -127,6 +136,7 @@ module.exports = class StoryView extends Marionette.ItemView
     'submit form': 'onSubmit'
 
   ui:
+    categories: '[name=categories]'
     form: 'form'
     headline: '[name=headline]'
     description: '[name=description]'
@@ -187,14 +197,27 @@ module.exports = class StoryView extends Marionette.ItemView
       truthinessDate: @_getTruthinessDate()
       truthinessDescription: @_getTruthinessDescription()
       truthinessUrl: @_getTruthinessUrl()
+      categories: @ui.categories.val().split(/\s*,\s*/g).map((s) -> s.trim()).filter((s) -> s)
 
     @model.save(attributes, {
       success: => @render()
     })
 
-  render: ->
-    super()
+  onRender: ->
     @showApplicableFields()
+    $.getJSON '/categories', (categories) =>
+      categoryNames = (c.name for c in categories)
+      categoryNamesSet = {}
+      (categoryNamesSet[n] = null) for n in categoryNames
+      @ui.categories.tagit
+        autocomplete:
+          source: categoryNames
+          delay: 0
+          minLength: 0
+        showAutocompleteOnFocus: true
+        allowSpaces: true
+        placeholderText: $('#claim-categories').attr('placeholder')
+        beforeTagAdded: (ev, ui) -> ui.tagLabel of categoryNamesSet
 
   serializeData: ->
     ret = @model.toJSON()

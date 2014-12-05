@@ -46,6 +46,7 @@
     "gulp-util": "^3.0.0",
     "gulp-watch": "~0.6.2",
     "jquery": "^2.1.1",
+    "jquery-ui": "^1.10.5",
     "karma": "~0.12.14",
     "karma-bro": "^0.8.0",
     "karma-coffee-preprocessor": "~0.2.1",
