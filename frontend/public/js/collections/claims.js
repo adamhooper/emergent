@@ -16,5 +16,9 @@ module.exports = Backbone.Collection.extend({
 
   comparator: function(c1, c2) {
     return c1.get('createdAt') < c2.get('createdAt') ? 1 : -1;
+  },
+
+  byCategory: function(category) {
+    return this.filter(function(claim) { return _.contains(claim.get('categories'), category); });
   }
 });
