@@ -66,12 +66,12 @@ module.exports = React.createClass({
             <nav className="site-menu-categories">
               <ul className="navigation navigation-categories">
                 <li><Link to="claims" className="navigation-link">Home</Link></li>
-                <li><Link to="claims" className="navigation-link">Health</Link></li>
-                <li><Link to="claims" className="navigation-link">Culture</Link></li>
-                <li><Link to="claims" className="navigation-link">Business</Link></li>
-                <li><Link to="claims" className="navigation-link">World News</Link></li>
-                <li><Link to="claims" className="navigation-link">Viral News</Link></li>
-                <li><Link to="claims" className="navigation-link">Controversial</Link></li>
+                <li><Link to="category" params={{ category: 'Health' }} className="navigation-link">Health</Link></li>
+                <li><Link to="category" params={{ category: 'Culture' }} className="navigation-link">Culture</Link></li>
+                <li><Link to="category" params={{ category: 'Business' }} className="navigation-link">Business</Link></li>
+                <li><Link to="category" params={{ category: 'World News' }} className="navigation-link">World News</Link></li>
+                <li><Link to="category" params={{ category: 'Viral' }} className="navigation-link">Viral News</Link></li>
+                <li><Link to="category" params={{ category: 'Controversial' }} className="navigation-link">Controversial</Link></li>
               </ul>
             </nav>
           </div>

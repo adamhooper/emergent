@@ -21,6 +21,7 @@ var app = {
             <Route name="about" path="about" handler={this.components.About}/>
             <Route name="claim" path=":slug" handler={this.components.Claim} claims={this.claims}/>
             <Route name="article" path=":slug/articles/:articleId" handler={this.components.Article} claims={this.claims}/>
+            <Route name="category" path="category/:category" handler={this.components.Claims} claims={this.claims}/>
           </Route>
         </Routes>
       , $('#react')[0]);

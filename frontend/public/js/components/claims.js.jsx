@@ -27,7 +27,13 @@ module.exports = React.createClass({
   },
 
   filteredClaims: function() {
-    return this.props.claims.filtered(this.state.filter);
+    // Should combine the two, switch between for now
+    var category = this.props.params.category;
+    if (typeof category !== "undefined") {
+      return this.props.claims.byCategory(category);
+    } else {
+      return this.props.claims.filtered(this.state.filter);
+    }
   },
 
   formatNumber: function(str) {

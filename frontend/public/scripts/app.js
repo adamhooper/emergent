@@ -39141,7 +39141,8 @@ var app = {
             DefaultRoute({name: "claims", handler: this.components.Claims, claims: this.claims}), 
             Route({name: "about", path: "about", handler: this.components.About}), 
             Route({name: "claim", path: ":slug", handler: this.components.Claim, claims: this.claims}), 
-            Route({name: "article", path: ":slug/articles/:articleId", handler: this.components.Article, claims: this.claims})
+            Route({name: "article", path: ":slug/articles/:articleId", handler: this.components.Article, claims: this.claims}), 
+            Route({name: "category", path: "category/:category", handler: this.components.Claims, claims: this.claims})
           )
         )
       , $('#react')[0]);
@@ -39906,7 +39907,13 @@ module.exports = React.createClass({displayName: 'exports',
   },
 
   filteredClaims: function() {
-    return this.props.claims.filtered(this.state.filter);
+    // Should combine the two, switch between for now
+    var category = this.props.params.category;
+    if (typeof category !== "undefined") {
+      return this.props.claims.byCategory(category);
+    } else {
+      return this.props.claims.filtered(this.state.filter);
+    }
   },
 
   formatNumber: function(str) {
@@ -39919,6 +39926,7 @@ module.exports = React.createClass({displayName: 'exports',
         React.DOM.div({className: "page-content"}, 
           React.DOM.ul({className: "articles"}, 
             this.filteredClaims().map(function(claim, i) {
+              console.log(claim.get('categories'));
               return (
                 React.DOM.li({key: claim.id}, 
                   React.DOM.article({className: "article article-preview"}, 
@@ -40029,12 +40037,12 @@ module.exports = React.createClass({displayName: 'exports',
             React.DOM.nav({className: "site-menu-categories"}, 
               React.DOM.ul({className: "navigation navigation-categories"}, 
                 React.DOM.li(null, Link({to: "claims", className: "navigation-link"}, "Home")), 
-                React.DOM.li(null, Link({to: "claims", className: "navigation-link"}, "Health")), 
-                React.DOM.li(null, Link({to: "claims", className: "navigation-link"}, "Culture")), 
-                React.DOM.li(null, Link({to: "claims", className: "navigation-link"}, "Business")), 
-                React.DOM.li(null, Link({to: "claims", className: "navigation-link"}, "World News")), 
-                React.DOM.li(null, Link({to: "claims", className: "navigation-link"}, "Viral News")), 
-                React.DOM.li(null, Link({to: "claims", className: "navigation-link"}, "Controversial"))
+                React.DOM.li(null, Link({to: "category", params: { category: 'Health'}, className: "navigation-link"}, "Health")), 
+                React.DOM.li(null, Link({to: "category", params: { category: 'Culture'}, className: "navigation-link"}, "Culture")), 
+                React.DOM.li(null, Link({to: "category", params: { category: 'Business'}, className: "navigation-link"}, "Business")), 
+                React.DOM.li(null, Link({to: "category", params: { category: 'World News'}, className: "navigation-link"}, "World News")), 
+                React.DOM.li(null, Link({to: "category", params: { category: 'Viral'}, className: "navigation-link"}, "Viral News")), 
+                React.DOM.li(null, Link({to: "category", params: { category: 'Controversial'}, className: "navigation-link"}, "Controversial"))
               )
             )
           )
