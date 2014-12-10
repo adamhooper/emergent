@@ -39892,8 +39892,37 @@ module.exports = React.createClass({displayName: 'exports',
 
   getInitialState: function() {
     return {
-      filter: ''
+      filter: '',
+      sort: 'Latest',
+      stance: 'All'
     }
+  },
+
+  getDefaultProps: function() {
+    return {
+      sorting: [
+        {
+          'name': 'Latest'
+        },
+        {
+          'name': 'Most Shared'
+        }
+      ],
+      stance: [
+        {
+          'name': 'All'
+        },
+        {
+          'name': 'True'
+        },
+        {
+          'name': 'False'
+        },
+        {
+          'name': 'Unverified'
+        }
+      ]
+    };
   },
 
   componentWillMount: function() {
@@ -39909,11 +39938,14 @@ module.exports = React.createClass({displayName: 'exports',
   filteredClaims: function() {
     // Should combine the two, switch between for now
     var category = this.props.params.category;
+    var claims;
     if (typeof category !== "undefined") {
-      return this.props.claims.byCategory(category);
+      claims = this.props.claims.byCategory(category);
     } else {
-      return this.props.claims.filtered(this.state.filter);
+      claims = this.props.claims.filtered(this.state.filter);
     }
+
+    return claims;
   },
 
   formatNumber: function(str) {
@@ -39924,37 +39956,56 @@ module.exports = React.createClass({displayName: 'exports',
     return (
       React.DOM.div({className: "page"}, 
         React.DOM.div({className: "page-content"}, 
-          React.DOM.ul({className: "articles"}, 
-            this.filteredClaims().map(function(claim, i) {
-              console.log(claim.get('categories'));
-              return (
-                React.DOM.li({key: claim.id}, 
-                  React.DOM.article({className: "article article-preview"}, 
-                    React.DOM.header({className: "article-header"}, 
-                      React.DOM.div({className: 'stance stance-' + claim.get('truthiness')}, 
-                        React.DOM.span({className: "stance-value"}, claim.truthinessText())
+          React.DOM.div({className: "articles-holder"}, 
+            React.DOM.nav({className: "articles-filtering"}, 
+              React.DOM.ul({className: "articles-filtering-sort"}, 
+                this.props.sorting.map(function(sorting, i) {
+                  var classes = sorting.name === this.state.sort ? 'active' : null;
+                  return (
+                    React.DOM.li({key: i, className: classes}, React.DOM.a({href: "#"}, sorting.name))
+                  );
+                }.bind(this))
+              ), 
+             React.DOM.ul({className: "articles-filtering-stance"}, 
+                this.props.stance.map(function(stance, i) {
+                  var classes = stance.name === this.state.stance ? 'active' : null;
+                  return (
+                    React.DOM.li({key: i, className: classes}, React.DOM.a({href: "#"}, stance.name))
+                  );
+                }.bind(this))
+              )
+            ), 
+            React.DOM.ul({className: "articles"}, 
+              this.filteredClaims().map(function(claim, i) {
+                return (
+                  React.DOM.li({key: claim.id}, 
+                    React.DOM.article({className: "article article-preview"}, 
+                      React.DOM.header({className: "article-header"}, 
+                        React.DOM.div({className: 'stance stance-' + claim.get('truthiness')}, 
+                          React.DOM.span({className: "stance-value"}, claim.truthinessText())
+                        ), 
+                        React.DOM.div({className: "article-meta"}, 
+                          React.DOM.span({className: "article-category"}, "World News – "), React.DOM.time({className: "", datetime: ""}), 
+                          React.DOM.span({className: "article-updated"}, "Updated Nov 4"), 
+                          claim.get('nShares') ?
+                          React.DOM.span({className: "article-shares"}, "Shares: ", this.formatNumber(claim.get('nShares')))
+                          : null
+                        ), 
+                        React.DOM.h2({className: "article-title"}, Link({to: "claim", params: { slug: claim.get('slug')}}, claim.get('headline'))), 
+                        React.DOM.div({className: "article-byline"}, 
+                          React.DOM.span({className: "article-source"}, "Originating Source: "), 
+                          React.DOM.span({className: "article-originated"}, " Added ", React.DOM.time({datetime: claim.get('createdAt')}, moment(claim.get('createdAt')).format('MMMM Do')))
+                        )
                       ), 
-                      React.DOM.div({className: "article-meta"}, 
-                        React.DOM.span({className: "article-category"}, "World News – "), React.DOM.time({className: "", datetime: ""}), 
-                        React.DOM.span({className: "article-updated"}, "Updated Nov 4"), 
-                        claim.get('nShares') ?
-                        React.DOM.span({className: "article-shares"}, "Shares: ", this.formatNumber(claim.get('nShares')))
-                        : null
-                      ), 
-                      React.DOM.h2({className: "article-title"}, Link({to: "claim", params: { slug: claim.get('slug')}}, claim.get('headline'))), 
-                      React.DOM.div({className: "article-byline"}, 
-                        React.DOM.span({className: "article-source"}, "Originating Source: "), 
-                        React.DOM.span({className: "article-originated"}, " Added ", React.DOM.time({datetime: claim.get('createdAt')}, moment(claim.get('createdAt')).format('MMMM Do')))
-                      )
-                    ), 
-                    React.DOM.p({className: "article-content"}, claim.get('description')), 
-                    React.DOM.footer({className: "article-footer"}
+                      React.DOM.p({className: "article-content"}, claim.get('description')), 
+                      React.DOM.footer({className: "article-footer"}
 
+                      )
                     )
                   )
-                )
-              );
-            }.bind(this))
+                );
+              }.bind(this))
+            )
           ), 
           React.DOM.nav({className: "page-navigation"}, 
             React.DOM.ul({className: "navigation navigation-page"}, 
@@ -40010,11 +40061,7 @@ module.exports = React.createClass({displayName: 'exports',
   },
 
   toggleNav: function() {
-    if (this.state.navToggle === true) {
-      this.setState({navToggle: false});
-    } else {
-      this.setState({navToggle: true});
-    }
+    this.setState({navToggle: !this.state.navToggle});
   },
 
   render: function() {

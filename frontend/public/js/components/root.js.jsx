@@ -39,11 +39,7 @@ module.exports = React.createClass({
   },
 
   toggleNav: function() {
-    if (this.state.navToggle === true) {
-      this.setState({navToggle: false});
-    } else {
-      this.setState({navToggle: true});
-    }
+    this.setState({navToggle: !this.state.navToggle});
   },
 
   render: function() {
