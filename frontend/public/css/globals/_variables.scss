@@ -13,6 +13,8 @@ $breakpoint-tablet:         48em;
 $breakpoint-desktop:        68em;
 // $breakpoint-retina:      96em;
 
+$breakpoint-mobile-only:    $breakpoint-mobile $breakpoint-tablet;
+
 $gutters-mobile: 30px;
 $gutters-tablet: 40px;
 $gutters-desktop: 80px;

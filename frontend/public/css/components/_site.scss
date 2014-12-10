@@ -2,13 +2,23 @@
   background-color: palette(base, light);
 }
 
-
 .site-header {
   background-color: palette(base, darker);
   @include background-image(linear-gradient(#000, rgba(#D89EF7, 0.15) 26%, rgba(#6A5175, 0.15) 52%, #000));
   color: palette(type, light);
-  padding-bottom: 1em;
-  padding-top: 3em;
+  position: relative;
+
+  @extend %clearfix;
+}
+
+.site-header-primary {
+  @extend %page-gutters;
+  height: 3.3em;
+
+  @include breakpoint($breakpoint-tablet) {
+    padding-top: 2.7em;
+    height: 6em;
+  }
 }
 
 .site-logo {
@@ -19,15 +29,178 @@
   line-height: 1;
   margin-bottom: 0;
 
+  padding-top: 0.35em;
+
+  @include breakpoint($breakpoint-tablet) {
+    padding-top: 0;
+  }
+
   a {
     color: palette(type, light);
     text-decoration: none;
   }
 }
 
-.site-footer {
-  background-color: palette(base, lighter);
-  clear: both;
-  padding-bottom: 2em;
-  padding-top: 2em;
+// .site-footer {
+//   background-color: palette(base, lighter);
+//   clear: both;
+//   padding-bottom: 2em;
+//   padding-top: 2em;
+// }
+
+// Categories header/nav
+.site-header-categories {
+  background-color: #fafafa;
+
+  overflow: hidden;
+  
+  html.touch & {
+    overflow-x: scroll;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+
+    @include breakpoint($breakpoint-tablet) {
+      overflow: hidden;
+    }
+  }
+
+  .navigation-link {
+    font-size: 0.733em;
+  }
+
+  > .container {
+    @extend %page-gutters;
+  }
+}
+
+// Secondary header
+.site-header-secondary {
+  background-color: #f2f2f2;
+  border-bottom: 1px solid #ebebeb;
+
+  > .container {
+    @extend %clearfix;
+    @extend %page-gutters;
+    position: relative;
+  }
+
+  .page-title {
+    font-family: $font-secondary;
+    font-weight: 400;
+    margin: 1.3em 0 0.5em;
+    line-height: 1;
+    font-size: 1.2em;
+  }
+
+  .page-title-holder {
+    float: left;
+  }
+
+  .search-holder {
+    float: right;
+    margin-top: 1.4em;
+    position: relative;
+  }
+}
+
+.site-menu-trending {
+  float: left;
+  transition: opacity .15s ease-in-out;
+  opacity: 1;
+
+  display: none;
+
+  @include breakpoint($breakpoint-tablet) {
+    display: block;
+  }
+
+  .label {
+    color: palette(base, dark);
+    font-size: 0.733em;
+    display: inline-block;
+    padding: 0 5px;
+  }
+}
+
+.articles-search {
+  float: left;
+  margin: 0.3em 0 0 1em;
+
+  .search-toggle,
+  .search-close {
+    display: block;
+    margin: 0;
+    padding: 0;
+    border: none;
+    background-color: transparent;
+    width: 16px;
+    height: 16px;
+    outline: none;
+    transition: opacity .15s ease-in-out;
+
+    .icon {
+      display: block;
+    }
+
+    &:hover {
+      opacity: .75;
+    }
+  }
+
+  .search-close {
+    width: 20px;
+    height: 20px;
+  }
+
+  .articles-search-holder {
+    position: absolute;
+    right: -5px;
+    bottom: -0.313em;
+    width: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: opacity .15s ease-in-out;
+
+    @include breakpoint($breakpoint-tablet) {
+      bottom: -0.05em;
+    }
+
+    .inner {
+      position: relative;
+    }
+
+    input {
+      background-color: #fafafa;
+      border: 1px solid #eeeeee;
+      line-height: 1;
+      font-size: 16px;
+      padding: 5px 25px 4px 10px;
+      outline: none;
+      width: 220px;
+      box-sizing: border-box;
+      border-radius: 0;
+      -webkit-appearance: none;
+    }
+
+    .search-close {
+      position: absolute;
+      right: 4px;
+      top: 50%;
+      margin-top: -10px;
+    }
+  }
+}
+
+// Active search
+.site-header-secondary {
+  &.search-toggle-active {
+    .site-menu-trending {
+      opacity: 0;
+    }
+    .articles-search-holder {
+      display: block;
+      opacity: 1;
+      width: auto;
+    }
+  }
 }

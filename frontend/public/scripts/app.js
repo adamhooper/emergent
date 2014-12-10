@@ -3215,8 +3215,6 @@ var process = module.exports = {};
 process.nextTick = (function () {
     var canSetImmediate = typeof window !== 'undefined'
     && window.setImmediate;
-    var canMutationObserver = typeof window !== 'undefined'
-    && window.MutationObserver;
     var canPost = typeof window !== 'undefined'
     && window.postMessage && window.addEventListener
     ;
@@ -3225,29 +3223,8 @@ process.nextTick = (function () {
         return function (f) { return window.setImmediate(f) };
     }
 
-    var queue = [];
-
-    if (canMutationObserver) {
-        var hiddenDiv = document.createElement("div");
-        var observer = new MutationObserver(function () {
-            var queueList = queue.slice();
-            queue.length = 0;
-            queueList.forEach(function (fn) {
-                fn();
-            });
-        });
-
-        observer.observe(hiddenDiv, { attributes: true });
-
-        return function nextTick(fn) {
-            if (!queue.length) {
-                hiddenDiv.setAttribute('yes', 'no');
-            }
-            queue.push(fn);
-        };
-    }
-
     if (canPost) {
+        var queue = [];
         window.addEventListener('message', function (ev) {
             var source = ev.source;
             if ((source === window || source === null) && ev.data === 'process-tick') {
@@ -3287,7 +3264,7 @@ process.emit = noop;
 
 process.binding = function (name) {
     throw new Error('process.binding is not supported');
-};
+}
 
 // TODO(shtylman)
 process.cwd = function () { return '/' };
@@ -39995,6 +39972,13 @@ var nUpdatesToIgnore = 2;
 module.exports = React.createClass({displayName: 'exports',
   mixins: [ Router.ActiveState ],
 
+  getInitialState: function() {
+    return {
+      searchToggle: false,
+      navToggle: false
+    }
+  },
+
   updateActiveState: function() {
     // react-router sends two updates on page load. We want zero, because
     // our first call to window.ga() happens when window.ga() actually
@@ -40008,16 +39992,76 @@ module.exports = React.createClass({displayName: 'exports',
     }
   },
 
+  openSearch: function() {
+    this.setState({searchToggle: true});
+    this.refs.searchTextInput.getDOMNode().focus();
+  },
+
+  closeSearch: function() {
+    this.setState({searchToggle: false});
+  },
+
+  toggleNav: function() {
+    if (this.state.navToggle === true) {
+      this.setState({navToggle: false});
+    } else {
+      this.setState({navToggle: true});
+    }
+  },
+
   render: function() {
     return (
       React.DOM.div(null, 
-        React.DOM.header({className: "site-header"}, 
-          React.DOM.div({className: "container page-gutters"}, 
+        React.DOM.header({className: this.state.navToggle ? 'site-header nav-toggle-active in' : 'site-header out'}, 
+          React.DOM.div({className: "site-header-primary container"}, 
             React.DOM.p({className: "site-logo"}, Link({to: "claims"}, "Emergent")), 
             React.DOM.nav({className: "site-menu"}, 
+              React.DOM.button({className: "site-menu-toggle", href: "#navigation", onClick: this.toggleNav}, React.DOM.span(null, "Open Navigation")), 
               React.DOM.ul({className: "navigation navigation-site"}, 
                 React.DOM.li(null, React.DOM.a({href: "http://emergentinfo.tumblr.com/", className: "navigation-link"}, "Blog")), 
                 React.DOM.li(null, Link({to: "about", className: "navigation-link"}, "About Emergent"))
+              )
+            )
+          )
+        ), 
+        React.DOM.header({className: "site-header-categories"}, 
+          React.DOM.div({className: "container"}, 
+            React.DOM.nav({className: "site-menu-categories"}, 
+              React.DOM.ul({className: "navigation navigation-categories"}, 
+                React.DOM.li(null, Link({to: "claims", className: "navigation-link"}, "Home")), 
+                React.DOM.li(null, Link({to: "claims", className: "navigation-link"}, "Health")), 
+                React.DOM.li(null, Link({to: "claims", className: "navigation-link"}, "Culture")), 
+                React.DOM.li(null, Link({to: "claims", className: "navigation-link"}, "Business")), 
+                React.DOM.li(null, Link({to: "claims", className: "navigation-link"}, "World News")), 
+                React.DOM.li(null, Link({to: "claims", className: "navigation-link"}, "Viral News")), 
+                React.DOM.li(null, Link({to: "claims", className: "navigation-link"}, "Controversial"))
+              )
+            )
+          )
+        ), 
+        React.DOM.header({className: this.state.searchToggle ? 'site-header-secondary search-toggle-active in' : 'site-header-secondary out'}, 
+          React.DOM.div({className: "container"}, 
+            React.DOM.div({className: "page-title-holder"}, 
+              React.DOM.h2({className: "page-title"}, "Home")
+            ), 
+            React.DOM.div({className: "search-holder"}, 
+              React.DOM.nav({className: "site-menu-trending"}, 
+                React.DOM.span({className: "label"}, "Trending:"), 
+                React.DOM.ul({className: "navigation navigation-trending"}, 
+                  React.DOM.li(null, Link({to: "claims", className: "navigation-link"}, "Ukraine")), 
+                  React.DOM.li(null, Link({to: "claims", className: "navigation-link"}, "Putin")), 
+                  React.DOM.li(null, Link({to: "claims", className: "navigation-link"}, "NATO")), 
+                  React.DOM.li(null, Link({to: "claims", className: "navigation-link"}, "Tsunami"))
+                )
+              ), 
+              React.DOM.div({className: "articles-search"}, 
+                React.DOM.button({className: "search-toggle", onClick: this.openSearch}, React.DOM.span({className: "icon icon-search"}, "Search")), 
+                React.DOM.div({className: "articles-search-holder"}, 
+                  React.DOM.div({className: "inner"}, 
+                    React.DOM.button({className: "search-close", onClick: this.closeSearch}, React.DOM.span({className: "icon icon-close"}, "Close")), 
+                    React.DOM.input({type: "search", id: "claims-filter", ref: "searchTextInput", placeholder: "Search", onChange: this.setFilter})
+                  )
+                )
               )
             )
           )

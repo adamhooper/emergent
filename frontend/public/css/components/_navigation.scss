@@ -16,9 +16,49 @@
 
 //
 // Site menu
+.site-menu-toggle {
+  width: 22px;
+  height: 16px;
+  display: block;
+  background: none;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  outline: none;
+  position: absolute;
+  right: $gutters-mobile / 2;
+  top: 50%;
+  margin-top: -8px;
+  border-top: 2px solid palette(base, lighter);
+  border-bottom: 2px solid palette(base, lighter);
+  transition: opacity .15s ease-in-out;
+  // padding-top: 6px;
+
+  @include breakpoint($breakpoint-tablet) {
+    display: none;
+  }
+
+  span {
+    text-indent: 100%;
+    overflow: hidden;
+    display: block;
+    width: 100%;
+    height: 2px;
+    background-color: palette(base, lighter);
+  }
+
+  &:hover {
+    opacity: .75;
+  }
+}
 
 .navigation-site {
   float: right;
+  display: none;
+
+  @include breakpoint($breakpoint-tablet) {
+    display: block;
+  }
 
   > li {
     float: left;
@@ -27,17 +67,111 @@
   .navigation-link {
     color: palette(type, light);
     line-height: 38px; // equal to .site-logo height
-    opacity: .75;
-    padding-left: 1em;
-    padding-right: 1em;
+    opacity: 1;
+    padding-left: 2em;
     transition: opacity .15s ease-in-out;
 
     &.active {
-      opacity: 1;
+      opacity: .75;
     }
 
     &:hover {
-      opacity: 1;
+      opacity: .75;
+    }
+  }
+}
+
+// Show navigation on toggle (mobile only)
+@include breakpoint($breakpoint-mobile-only) {
+  .navigation-site {
+    transition: max-height .15s ease-in-out;
+    max-height: 0;
+    display: block;
+    overflow-y: hidden;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: #000;
+    z-index: 5;
+    .navigation-link {
+      padding-left: 1em;
+    }
+  }
+  .site-header.nav-toggle-active {
+    .navigation-site {
+      max-height: 50px;
+    }
+  }
+}
+
+.navigation-categories {
+  white-space: nowrap;
+  // float: none;
+  width: 100%;
+  margin-left: -5px; // offset target padding
+
+  > li {
+    display: inline-block;
+    white-space: nowrap;
+    position: relative;
+    // float: none;
+
+    // Seperation block
+    &:before {
+      content: '';
+      width: 2px;
+      height: 2px;
+      display: inline-block;
+      margin: 0 15px;
+      background: #e0e0e0;
+    }
+
+    &:first-child:before {
+      display: none;
+    }
+  }
+
+  .navigation-link {
+    white-space: nowrap;
+    opacity: 1;
+    transition: opacity .15s ease-in-out;
+    display: inline-block;
+    color: #707070;
+    padding: 5px;
+
+    // &.active {
+    //   opacity: .75;
+    // }
+
+    &:hover {
+      opacity: .75;
+    }
+  }
+}
+
+.navigation-trending {
+  margin-right: -5px; // offset target padding
+  display: inline-block;
+
+  > li {
+    display: inline-block;
+    position: relative;
+  }
+
+  .navigation-link {
+    opacity: 1;
+    transition: opacity .15s ease-in-out;
+    display: inline-block;
+    padding: 0 5px;
+    font-size: 0.733em;
+
+    // &.active {
+    //   opacity: .75;
+    // }
+
+    &:hover {
+      opacity: .75;
     }
   }
 }
