@@ -911,7 +911,11 @@ ul.credits {
 
 .articles-filtering {
   background-color: #fafafa;
-  border-bottom: 1px solid #ebebeb; }
+  border-bottom: 1px solid #ebebeb;
+  display: none; }
+  @media (min-width: 48em) {
+    .articles-filtering {
+      display: block; } }
   .articles-filtering .navigation-filtering {
     float: left;
     border-right: 1px solid #ebebeb;
@@ -925,12 +929,14 @@ ul.credits {
       line-height: 1;
       font-size: 0.8em;
       padding: 18px 2px 16px;
-      margin: 0 24px 0 0; }
+      margin: 0 20px 0 0; }
+      .articles-filtering .navigation-filtering .navigation-link:hover {
+        border-bottom-color: #b2b2b2; }
       .articles-filtering .navigation-filtering .navigation-link.active {
         color: #323232;
         border-bottom-color: #323232; }
     .articles-filtering .navigation-filtering + .navigation-filtering {
-      padding-left: 24px; }
+      padding-left: 20px; }
 
 .filters {
   list-style-type: none;

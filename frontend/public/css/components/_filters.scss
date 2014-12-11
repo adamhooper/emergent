@@ -7,6 +7,12 @@
   @extend %clearfix;
   @extend %page-gutters;
 
+  display: none;
+
+  @include breakpoint($breakpoint-tablet) {
+    display: block;
+  }
+
   .navigation-filtering {
     float: left;
     border-right: 1px solid #ebebeb;
@@ -23,7 +29,11 @@
       line-height: 1;
       font-size: 0.8em;
       padding: 18px 2px 16px;
-      margin: 0 24px 0 0;
+      margin: 0 20px 0 0;
+
+      &:hover {
+        border-bottom-color: palette(base, base);
+      }
 
       &.active {
         color: palette(base, darker);
@@ -32,7 +42,7 @@
     }
 
     + .navigation-filtering {
-      padding-left: 24px;
+      padding-left: 20px;
     }
   }
 }
