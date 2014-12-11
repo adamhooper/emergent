@@ -78,19 +78,19 @@ module.exports = React.createClass({
         <div className="page-content">
           <div className="articles-holder">
             <nav className="articles-filtering">
-              <ul className="articles-filtering-sort">
+              <ul className="navigation navigation-filtering navigation-filtering-sort">
                 {this.props.sorting.map(function(sorting, i) {
-                  var classes = sorting.name === this.state.sort ? 'active' : null;
+                  var classes = sorting.name === this.state.sort ? 'active navigation-link' : 'navigation-link';
                   return (
-                    <li key={i} className={classes}><a href="#">{sorting.name}</a></li>
+                    <li key={i}><a href="#" className={classes}>{sorting.name}</a></li>
                   );
                 }.bind(this))}
               </ul>
-             <ul className="articles-filtering-stance">
+             <ul className="navigation navigation-filtering navigation-filtering-stance">
                 {this.props.stance.map(function(stance, i) {
-                  var classes = stance.name === this.state.stance ? 'active' : null;
+                  var classes = stance.name === this.state.stance ? 'active navigation-link' : 'navigation-link';
                   return (
-                    <li key={i} className={classes}><a href="#">{stance.name}</a></li>
+                    <li key={i}><a href="#" className={classes}>{stance.name}</a></li>
                   );
                 }.bind(this))}
               </ul>

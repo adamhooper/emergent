@@ -39958,19 +39958,19 @@ module.exports = React.createClass({displayName: 'exports',
         React.DOM.div({className: "page-content"}, 
           React.DOM.div({className: "articles-holder"}, 
             React.DOM.nav({className: "articles-filtering"}, 
-              React.DOM.ul({className: "articles-filtering-sort"}, 
+              React.DOM.ul({className: "navigation navigation-filtering navigation-filtering-sort"}, 
                 this.props.sorting.map(function(sorting, i) {
-                  var classes = sorting.name === this.state.sort ? 'active' : null;
+                  var classes = sorting.name === this.state.sort ? 'active navigation-link' : 'navigation-link';
                   return (
-                    React.DOM.li({key: i, className: classes}, React.DOM.a({href: "#"}, sorting.name))
+                    React.DOM.li({key: i}, React.DOM.a({href: "#", className: classes}, sorting.name))
                   );
                 }.bind(this))
               ), 
-             React.DOM.ul({className: "articles-filtering-stance"}, 
+             React.DOM.ul({className: "navigation navigation-filtering navigation-filtering-stance"}, 
                 this.props.stance.map(function(stance, i) {
-                  var classes = stance.name === this.state.stance ? 'active' : null;
+                  var classes = stance.name === this.state.stance ? 'active navigation-link' : 'navigation-link';
                   return (
-                    React.DOM.li({key: i, className: classes}, React.DOM.a({href: "#"}, stance.name))
+                    React.DOM.li({key: i}, React.DOM.a({href: "#", className: classes}, stance.name))
                   );
                 }.bind(this))
               )

@@ -1,4 +1,45 @@
+//
+// Articles Filters
+// ------------------------------
+.articles-filtering {
+  background-color: #fafafa;
+  border-bottom: 1px solid #ebebeb;
+  @extend %clearfix;
+  @extend %page-gutters;
 
+  .navigation-filtering {
+    float: left;
+    border-right: 1px solid #ebebeb;
+    margin-left: -2px;
+
+    li {
+      float: left;
+      margin-bottom: -1px;
+    }
+
+    .navigation-link {
+      color: palette(base, dark);
+      border-bottom: 1px solid transparent;
+      line-height: 1;
+      font-size: 0.8em;
+      padding: 18px 2px 16px;
+      margin: 0 24px 0 0;
+
+      &.active {
+        color: palette(base, darker);
+        border-bottom-color: palette(base, darker);
+      }
+    }
+
+    + .navigation-filtering {
+      padding-left: 24px;
+    }
+  }
+}
+
+//
+// Article Filters
+// ------------------------------
 .filters {
   list-style-type: none;
   margin-bottom: 2em;
