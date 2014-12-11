@@ -40093,7 +40093,7 @@ module.exports = React.createClass({displayName: 'exports',
                 React.DOM.li(null, Link({to: "category", params: { category: 'Health'}, className: "navigation-link"}, "Health")), 
                 React.DOM.li(null, Link({to: "category", params: { category: 'Culture'}, className: "navigation-link"}, "Culture")), 
                 React.DOM.li(null, Link({to: "category", params: { category: 'Business'}, className: "navigation-link"}, "Business")), 
-                React.DOM.li(null, Link({to: "category", params: { category: 'World News'}, className: "navigation-link"}, "World News")), 
+                React.DOM.li(null, Link({to: "category", params: { category: 'World'}, className: "navigation-link"}, "World News")), 
                 React.DOM.li(null, Link({to: "category", params: { category: 'Viral'}, className: "navigation-link"}, "Viral News")), 
                 React.DOM.li(null, Link({to: "category", params: { category: 'Controversial'}, className: "navigation-link"}, "Controversial"))
               )
