@@ -3,19 +3,14 @@
 // ------------------------------
 .articles-filtering {
   background-color: #fafafa;
-  border-bottom: 1px solid #ebebeb;
+  border-bottom: 1px solid palette(border, base);
   @extend %clearfix;
   @extend %page-gutters;
-
-  display: none;
-
-  @include breakpoint($breakpoint-tablet) {
-    display: block;
-  }
+  padding-right: 0;
 
   .navigation-filtering {
     float: left;
-    border-right: 1px solid #ebebeb;
+    border-right: 1px solid palette(border, base);
     margin-left: -2px;
 
     li {
@@ -27,9 +22,16 @@
       color: palette(base, dark);
       border-bottom: 1px solid transparent;
       line-height: 1;
-      font-size: 0.8em;
+      font-size: 0.733em;
       padding: 18px 2px 16px;
-      margin: 0 20px 0 0;
+      margin: 0 11px 0 0;
+
+      @include breakpoint($breakpoint-tablet) {
+        margin: 0 20px 0 0;
+        font-size: 0.8em;
+      }
+
+      transition: border .15s ease-in-out;
 
       &:hover {
         border-bottom-color: palette(base, base);
@@ -42,7 +44,18 @@
     }
 
     + .navigation-filtering {
-      padding-left: 20px;
+      padding-left: 11px;
+      margin-left: 0;
+
+      border-right: none;
+
+      @include breakpoint($breakpoint-mobile-large) {
+        border-right: 1px solid palette(border, base);
+      }
+
+      @include breakpoint($breakpoint-tablet) {
+        padding-left: 20px;
+      }
     }
   }
 }

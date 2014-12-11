@@ -40009,8 +40009,14 @@ module.exports = React.createClass({displayName: 'exports',
           ), 
           React.DOM.nav({className: "page-navigation"}, 
             React.DOM.ul({className: "navigation navigation-page"}, 
-              React.DOM.li(null, React.DOM.a({href: "#", class: "navigation-link"}, "Submit a claim")), 
-              React.DOM.li(null, React.DOM.a({href: "#", class: "navigation-link"}, "Sign up for our newsletter"))
+              React.DOM.li(null, 
+                React.DOM.a({href: "#", className: "navigation-link"}, "Submit a claim"), 
+                React.DOM.p(null, "Lorem ipsum dolor sit amet pro patria mori through our special tool.")
+              ), 
+              React.DOM.li(null, 
+                React.DOM.a({href: "#", className: "navigation-link"}, "Sign up for our newsletter"), 
+                React.DOM.p(null, "Lorem ipsum dolor sit amet pro patria mori through our special tool.")
+              )
             )
           )
         )

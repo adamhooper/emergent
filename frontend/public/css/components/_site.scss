@@ -76,7 +76,7 @@
 // Secondary header
 .site-header-secondary {
   background-color: #f2f2f2;
-  border-bottom: 1px solid #ebebeb;
+  border-bottom: 1px solid palette(border, base);
 
   > .container {
     @extend %clearfix;
@@ -184,7 +184,7 @@
 
     .search-close {
       position: absolute;
-      right: 4px;
+      right: 0;
       top: 50%;
       margin-top: -10px;
     }

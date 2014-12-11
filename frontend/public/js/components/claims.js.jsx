@@ -129,8 +129,14 @@ module.exports = React.createClass({
           </div>
           <nav className="page-navigation">
             <ul className="navigation navigation-page">
-              <li><a href="#" class="navigation-link">Submit a claim</a></li>
-              <li><a href="#" class="navigation-link">Sign up for our newsletter</a></li>
+              <li>
+                <a href="#" className="navigation-link">Submit a claim</a>
+                <p>Lorem ipsum dolor sit amet pro patria mori through our special tool.</p>
+              </li>
+              <li>
+                <a href="#" className="navigation-link">Sign up for our newsletter</a>
+                <p>Lorem ipsum dolor sit amet pro patria mori through our special tool.</p>
+              </li>
             </ul>
           </nav>
         </div>
