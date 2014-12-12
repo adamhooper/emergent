@@ -195,6 +195,42 @@ describe 'StoryController', ->
           .then -> Category.find(where: { name: 'foo2' })
             .tap (category) -> expect(category).not.to.exist
 
+    describe 'with Tags', ->
+      beforeEach -> Promise.all([
+        Tag.create({ name: 'foo' }, 'admin@example.org')
+        Tag.create({ name: 'bar' }, 'admin@example.org')
+        Tag.create({ name: 'baz' }, 'admin@example.org')
+      ]).spread (foo, bar, baz) => @tagFoo = foo; @tagBar = bar; @tagBaz = baz
+
+      it 'should add and return tags when they already exist', ->
+        req(slug: 'slug-a', tags: [ 'foo', 'bar' ])
+          .tap (res) -> expect(res.body.tags.sort()).to.deep.eq([ 'bar', 'foo' ])
+          .then -> Story.find(where: { slug: 'slug-a' })
+          .then (story) => Promise.all([
+            StoryTag.find(where: { storyId: story.id, tagId: @tagFoo.id })
+            StoryTag.find(where: { storyId: story.id, tagId: @tagBar.id })
+            StoryTag.find(where: { storyId: story.id, tagId: @tagBaz.id })
+          ])
+          .spread (foo, bar, baz) ->
+            expect(foo).to.exist
+            expect(bar).to.exist
+            expect(baz).not.to.exist
+
+      it 'should create new tags', ->
+        req(slug: 'slug-a', tags: [ 'foo', 'foo2' ])
+          .tap (res) -> expect(res.body.tags?.sort()).to.deep.eq([ 'foo', 'foo2' ])
+          .then -> Promise.all([
+            Story.find(where: { slug: 'slug-a' })
+            Tag.findAll(where: { name: 'foo' })
+            Tag.findAll(where: { name: 'foo2' })
+          ])
+          .spread (story, foo, foo2) ->
+            expect(foo.length).to.eq(1)
+            expect(foo2.length).to.eq(1)
+
+            StoryTag.find(where: { storyId: story.id, tagId: foo2[0].id })
+          .then (st) -> expect(st).to.exist
+
   describe '#destroy', ->
     req = (slug) ->
       ret = supertest(app)
@@ -229,7 +265,7 @@ describe 'StoryController', ->
           expect(category).to.exist
           expect(categoryStories).to.have.property('length', 0)
 
-    describe 'with storyTags', ->
+    describe 'with StoryTags', ->
       beforeEach ->
         Promise.all([
           Story.create(mockStory(slug: 'slug-a'), 'user-a@example.org')

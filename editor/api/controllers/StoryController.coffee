@@ -117,18 +117,30 @@ module.exports =
       res.status(400).json(message: 'You must send the JSON properties to create')
     else
       attributes = jsonToAttributes(req.body, true)
-      categories = _.toArray(req.body.categories) || []
+      reqCategories = _.toArray(req.body.categories) || []
+      reqTags = (_.toArray(req.body.tags) || []).map(String)
+
       Promise.all([
         Story.create(attributes, req.user.email)
-        Category.findAll(where: { name: categories })
+        Category.findAll(where: { name: reqCategories })
+        Promise.all(Tag.upsert({ name: tag }, req.user.email) for tag in reqTags)
       ])
-        .spread (story, categories) ->
-          attrsArray = for category in categories
+        .tap ([story, categories, tagUpserts]) ->
+          categoryAttrsArray = for category in categories
             storyId: story.id, categoryId: category.id
-          CategoryStory.bulkCreate(attrsArray, req.user.email)
-            .then -> [ story, categories ]
-        .spread (story, categories) ->
-          _.extend(story.toJSON(), categories: _.pluck(categories, 'name'))
+
+          tagAttrsArray = for [ tag, tagIsNew ] in tagUpserts
+            storyId: story.id, tagId: tag.id
+
+          Promise.all([
+            CategoryStory.bulkCreate(categoryAttrsArray, req.user.email)
+            StoryTag.bulkCreate(tagAttrsArray, req.user.email)
+          ])
+        .spread (story, categories, tagUpserts) ->
+          _.extend(story.toJSON(), {
+            categories: _.pluck(categories, 'name'),
+            tags: (tu[0].name for tu in tagUpserts)
+          })
         .then (val) -> res.json(val)
         .catch (err) -> res.status(400).json(err)
 
