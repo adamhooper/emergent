@@ -159,29 +159,45 @@ module.exports =
       res.status(400).json(message: 'You must send the JSON properties to update')
     else
       attributes = jsonToAttributes(req.body, false)
-      categories = _.toArray(req.body.categories) || []
+      reqCategories = _.toArray(req.body.categories) || []
+      reqTags = (_.toArray(req.body.tags) || []).map(String)
+
       Promise.all([
         Story.find(where: { slug: slug })
-        Category.findAll(where: { name: categories })
+        Category.findAll(where: { name: reqCategories })
+        Promise.all(Tag.upsert({ name: tag }, req.user.email) for tag in reqTags)
       ])
-        .spread (story, wantedCategories) ->
+        .spread (story, wantedCategories, tagUpserts) ->
           if !story
             res.status(404).json(message: "Could not find a story with slug '#{slug}'")
           else
             wantedCategoryIds = (c.id for c in wantedCategories)
             wantedCategoryNames = (c.name for c in wantedCategories)
-            wantedCategoryStories = for wantedCategory in wantedCategories
-              { storyId: story.id, categoryId: wantedCategory.id }
+            wantedCategoryStories = for id in wantedCategoryIds
+              { storyId: story.id, categoryId: id }
 
-            deleteWhere = { storyId: story.id }
+            wantedTagIds = (tu[0].id for tu in tagUpserts)
+            wantedTagNames = (tu[0].name for tu in tagUpserts)
+            wantedStoryTags = for id in wantedTagIds
+              { storyId: story.id, tagId: id }
+
+            deleteCategoryWhere = { storyId: story.id }
             if wantedCategoryIds.length
-              deleteWhere.categoryId = { not: wantedCategoryIds }
+              deleteCategoryWhere.categoryId = { not: wantedCategoryIds }
+
+            deleteTagWhere = { storyId: story.id }
+            if wantedTagIds.length
+              deleteTagWhere.tagId = { not: wantedTagIds }
+
             Promise.all([
               Story.update(story, attributes, req.user.email)
-              CategoryStory.destroy(deleteWhere)
+              CategoryStory.destroy(deleteCategoryWhere)
+              StoryTag.destroy(deleteTagWhere)
               Promise.map(wantedCategoryStories, (cs) -> CategoryStory.upsert(cs, req.user.email))
+              Promise.map(wantedStoryTags, (st) -> StoryTag.upsert(st, req.user.email))
             ])
-              .spread (story, __, categoryStories) ->
-                json = _.extend(story.toJSON(), categories: wantedCategoryNames)
+              .tap -> models.sequelize.query('DELETE FROM "Tag" t WHERE NOT EXISTS (SELECT 1 FROM "StoryTag" WHERE "tagId" = t.id)')
+              .spread (story, _1, _2, categoryStories, storyTags) ->
+                json = _.extend(story.toJSON(), categories: wantedCategoryNames, tags: wantedTagNames)
                 res.json(json)
         .catch (err) -> res.status(500).json(err)
