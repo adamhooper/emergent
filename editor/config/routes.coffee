@@ -20,6 +20,8 @@ module.exports =
     'post   /stories/:slug/articles'    : 'ArticleController.create'
     'delete /stories/:slug/articles/:id': 'ArticleController.destroy'
 
+    'get /tags': 'TagController.index'
+
     'get  /urls/:urlId/versions'              : 'UrlVersionController.index'
     'post /urls/:urlId/versions'              : 'UrlVersionController.create'
     'put  /urls/:urlId/versions/:urlVersionId': 'UrlVersionController.update'
