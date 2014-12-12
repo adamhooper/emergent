@@ -10,6 +10,7 @@ module.exports =
       references: 'Story'
       referencesId: 'id'
       unique: 'storyId_tagId'
+      primaryKey: true
 
     tagId:
       type: Sequelize.UUID
@@ -17,6 +18,7 @@ module.exports =
       references: 'Tag'
       referencesId: 'id'
       unique: 'storyId_tagId'
+      primaryKey: true
 
     createdAt:
       type: Sequelize.DATE

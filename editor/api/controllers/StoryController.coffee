@@ -4,6 +4,8 @@ models = require('../../../data-store').models
 Category = models.Category
 CategoryStory = models.CategoryStory
 Story = models.Story
+StoryTag = models.StoryTag
+Tag = models.Tag
 
 AttributesWithDefaults =
   headline: ''
@@ -33,14 +35,19 @@ module.exports =
       Story.findAll({}, raw: true)
       Category.findAll({}, raw: true)
       CategoryStory.findAll({}, raw: true)
+      Tag.findAll({}, raw: true)
+      StoryTag.findAll({}, raw: true)
     ])
-      .spread (stories, categories, categoryStories) ->
+      .spread (stories, categories, categoryStories, tags, storyTags) ->
         idToCategory = {}
         (idToCategory[c.id] = c.name) for c in categories
+        idToTag = {}
+        (idToTag[t.id] = t.name) for t in tags
 
         idToStory = {}
         for s in stories
           s.categories = []
+          s.tags = []
           idToStory[s.id] = s
 
         for cs in categoryStories
@@ -48,6 +55,16 @@ module.exports =
           categoryName = idToCategory[cs.categoryId]
           if story? && categoryName?
             story.categories.push(categoryName)
+
+        for st in storyTags
+          story = idToStory[st.storyId]
+          tagName = idToTag[st.tagId]
+          if story? && tagName?
+            story.tags.push(tagName)
+
+        for s in stories
+          s.categories.sort((a, b) -> a.localeCompare(b))
+          s.tags.sort((a, b) -> a.localeCompare(b))
 
         stories
       .then (val) -> res.json(val)
@@ -77,7 +94,13 @@ module.exports =
           FROM "Category" c
           INNER JOIN "CategoryStory" cs ON c.id = cs."categoryId"
           WHERE cs."storyId" = s."id"
-        ) AS "categories"
+        ) AS "categories",
+        (
+          SELECT COALESCE(ARRAY_AGG(t."name"), ARRAY[]::VARCHAR[])
+          FROM "Tag" t
+          INNER JOIN "StoryTag" st ON t.id = st."tagId"
+          WHERE st."storyId" = s."id"
+        ) AS "tags"
       FROM "Story" s
       WHERE s."slug" = ?
     """, null, { raw: true }, [ slug ])
@@ -114,6 +137,7 @@ module.exports =
     # The ON DELETE CASCADE on the foreign key automatically destroys
     # CategoryStory and Article children.
     Story.destroy(slug: slug)
+      .then -> models.sequelize.query('DELETE FROM "Tag" t WHERE NOT EXISTS (SELECT 1 FROM "StoryTag" WHERE "tagId" = t.id)')
       .then -> res.json({})
       .catch (err) -> res.status(500).json(err)
 

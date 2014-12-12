@@ -3,6 +3,8 @@ describe 'StoryController', ->
   Story = models.Story
   Category = models.Category
   CategoryStory = models.CategoryStory
+  StoryTag = models.StoryTag
+  Tag = models.Tag
 
   mockStory = (options) ->
     _.extend({
@@ -40,19 +42,36 @@ describe 'StoryController', ->
           Category.create({ name: 'foo' }, 'admin@example.org')
           Category.create({ name: 'bar' }, 'admin@example.org')
         ])
-          .spread (c1, c2) => @category1 = c1; @category2 = c2
-          .then => Promise.all([
-            CategoryStory.create({ categoryId: @category1.id, storyId: @story1.id }, 'editor@example.org')
-            CategoryStory.create({ categoryId: @category1.id, storyId: @story2.id }, 'editor@example.org')
-            CategoryStory.create({ categoryId: @category2.id, storyId: @story1.id }, 'editor@example.org')
+          .spread (c1, c2) => Promise.all([
+            CategoryStory.create({ categoryId: c1.id, storyId: @story1.id }, 'editor@example.org')
+            CategoryStory.create({ categoryId: c1.id, storyId: @story2.id }, 'editor@example.org')
+            CategoryStory.create({ categoryId: c2.id, storyId: @story1.id }, 'editor@example.org')
           ])
           .then -> req()
           .tap (res) ->
             expect(res.body).to.have.property('length', 2)
-            stories = res.body.sort((a, b) -> a.slug - b.slug)
+            stories = res.body.sort((a, b) -> a.slug.localeCompare(b.slug))
             expect(stories[0].categories).to.exist
-            expect(stories[0].categories.sort()).to.deep.eq([ 'bar', 'foo' ])
+            expect(stories[0].categories).to.deep.eq([ 'bar', 'foo' ])
             expect(stories[1].categories).to.deep.eq([ 'foo' ])
+
+      it 'should include tags', ->
+        Promise.all([
+          Tag.create({ name: 'foo' }, 'admin@example.org')
+          Tag.create({ name: 'bar' }, 'admin@example.org')
+        ])
+          .spread (t1, t2) => Promise.all([
+            StoryTag.create({ tagId: t1.id, storyId: @story1.id }, 'editor@example.org')
+            StoryTag.create({ tagId: t1.id, storyId: @story2.id }, 'editor@example.org')
+            StoryTag.create({ tagId: t2.id, storyId: @story1.id }, 'editor@example.org')
+          ])
+          .then -> req()
+          .tap (res) ->
+            expect(res.body).to.have.property('length', 2)
+            stories = res.body.sort((a, b) -> a.slug.localeCompare(b.slug))
+            expect(stories[0].tags).to.exist
+            expect(stories[0].tags).to.deep.eq([ 'bar', 'foo' ])
+            expect(stories[1].tags).to.deep.eq([ 'foo' ])
 
   describe '#find', ->
     req = (slug) ->
@@ -90,6 +109,19 @@ describe 'StoryController', ->
         .then -> req('slug-a')
         .tap (res) ->
           expect(res.body.categories.sort()).to.deep.eq([ 'bar', 'foo' ])
+
+    it 'should include an Array of tag names', ->
+      Promise.all([
+        Tag.create({ name: 'foo' }, 'admin@example.org')
+        Tag.create({ name: 'bar' }, 'admin@example.org')
+      ])
+        .spread (c1, c2) => Promise.all([
+          StoryTag.create({ tagId: c1.id, storyId: @story.id }, 'admin@example.org')
+          StoryTag.create({ tagId: c2.id, storyId: @story.id }, 'admin@example.org')
+        ])
+        .then -> req('slug-a')
+        .tap (res) ->
+          expect(res.body.tags.sort()).to.deep.eq([ 'bar', 'foo' ])
 
   describe '#create', ->
     req = (object) ->
@@ -196,6 +228,40 @@ describe 'StoryController', ->
         .spread (category, categoryStories) ->
           expect(category).to.exist
           expect(categoryStories).to.have.property('length', 0)
+
+    describe 'with storyTags', ->
+      beforeEach ->
+        Promise.all([
+          Story.create(mockStory(slug: 'slug-a'), 'user-a@example.org')
+          Story.create(mockStory(slug: 'other'), 'user-a@example.org')
+          Tag.create({ name: 'foo' }, 'editor@example.org')
+          Tag.create({ name: 'bar' }, 'editor@example.org')
+        ])
+          .spread (story, otherStory, tag1, tag2) =>
+            @story = story
+            @otherStory = otherStory
+            @tag1 = tag1
+            @tag2 = tag2
+            Promise.all([
+              StoryTag.create({ tagId: @tag1.id, storyId: @story.id }, 'editor@example.org')
+              StoryTag.create({ tagId: @tag1.id, storyId: @otherStory.id }, 'editor@example.org')
+              StoryTag.create({ tagId: @tag2.id, storyId: @story.id }, 'editor@example.org')
+            ])
+
+      it 'should delete the StoryTags', ->
+        req(@story.slug)
+          .then => StoryTag.findAll(where: { storyId: @story.id })
+          .then (r) => expect(r).to.have.property('length', 0)
+
+      it 'should delete no-longer-used Tags', ->
+        req(@story.slug)
+          .then => Promise.all([
+            Tag.find(@tag1.id)
+            Tag.find(@tag2.id)
+          ])
+          .spread (tag1, tag2) =>
+            expect(tag1).to.exist
+            expect(tag2).to.not.exist
 
   describe '#update', ->
     req = (object, slug) ->
