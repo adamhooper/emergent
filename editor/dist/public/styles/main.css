@@ -5989,6 +5989,56 @@ button.close {
 .story-list-layout li.story-list-item button.delete {
   float: right;
 }
+.story-list-layout li.story-list-item ul.categories,
+.story-list-layout li.story-list-item ul.tags {
+  padding-left: 0;
+  list-style: none;
+  display: inline;
+}
+.story-list-layout li.story-list-item ul.categories li,
+.story-list-layout li.story-list-item ul.tags li {
+  display: inline;
+  padding: .2em .6em .3em;
+  font-size: 75%;
+  font-weight: bold;
+  line-height: 1;
+  color: #ffffff;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: .25em;
+}
+.story-list-layout li.story-list-item ul.categories li[href]:hover,
+.story-list-layout li.story-list-item ul.tags li[href]:hover,
+.story-list-layout li.story-list-item ul.categories li[href]:focus,
+.story-list-layout li.story-list-item ul.tags li[href]:focus {
+  color: #ffffff;
+  text-decoration: none;
+  cursor: pointer;
+}
+.story-list-layout li.story-list-item ul.categories li:empty,
+.story-list-layout li.story-list-item ul.tags li:empty {
+  display: none;
+}
+.btn .story-list-layout li.story-list-item ul.categories li,
+.btn .story-list-layout li.story-list-item ul.tags li {
+  position: relative;
+  top: -1px;
+}
+.story-list-layout li.story-list-item ul.categories li {
+  background-color: #428bca;
+}
+.story-list-layout li.story-list-item ul.categories li[href]:hover,
+.story-list-layout li.story-list-item ul.categories li[href]:focus {
+  background-color: #3071a9;
+}
+.story-list-layout li.story-list-item ul.tags li {
+  background-color: #5cb85c;
+}
+.story-list-layout li.story-list-item ul.tags li[href]:hover,
+.story-list-layout li.story-list-item ul.tags li[href]:focus {
+  background-color: #449d44;
+}
 .story-list-layout input[name=slug] {
   font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
 }

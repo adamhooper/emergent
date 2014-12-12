@@ -40,6 +40,17 @@
     button.delete {
       float: right;
     }
+
+    ul.categories, ul.tags {
+      .list-unstyled();
+      display: inline;
+      li {
+        .label();
+      }
+    }
+
+    ul.categories li { .label-primary(); }
+    ul.tags li { .label-success(); }
   }
 
   input[name=slug] {
