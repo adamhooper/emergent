@@ -18,6 +18,7 @@ describe 'views/StoryView', ->
       truthinessDescription: ''
       truthinessUrl: null
       categories: []
+      tags: []
     @view = new StoryView(model: @model)
     @view.render()
 

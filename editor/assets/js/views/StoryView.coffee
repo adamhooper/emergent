@@ -18,6 +18,7 @@ module.exports = class StoryView extends Marionette.ItemView
           <p class="headline not-editing"><strong>Claim:</strong> <%- headline %></p>
           <p class="description not-editing"><strong>Description:</strong> <%- description %></p>
           <p class="categories not-editing"><strong>Categories</strong>: <%- categories.sort().join(', ') %></p>
+          <p class="tags not-editing"><strong>Tags</strong>: <%- tags.sort().join(', ') %></p>
           <p class="published not-editing">This claim is <strong><%- published ? 'public' : 'not public' %></strong></p>
           <div class="form-group editing">
             <label for="claim-headline">The claim, in tweet form:</label>
@@ -29,7 +30,11 @@ module.exports = class StoryView extends Marionette.ItemView
           </div>
           <div class="form-group editing">
             <label for="claim-categories">Categories:</label>
-            <input type="text" id="claim-categories" name="categories" placeholder="Category" value="<%- categories.join(',') %>">
+            <input type="text" id="claim-categories" name="categories" placeholder="Category" value="<%- categories.sort().join(',') %>">
+          </div>
+          <div class="form-group editing">
+            <label for="claim-tags">Tags:</label>
+            <input type="text" id="claim-tags" name="tags" placeholder="Tag" value="<%- tags.sort().join(',') %>">
           </div>
           <div class="checkbox editing">
             <label>
@@ -137,6 +142,7 @@ module.exports = class StoryView extends Marionette.ItemView
 
   ui:
     categories: '[name=categories]'
+    tags: '[name=tags]'
     form: 'form'
     headline: '[name=headline]'
     description: '[name=description]'
@@ -198,6 +204,7 @@ module.exports = class StoryView extends Marionette.ItemView
       truthinessDescription: @_getTruthinessDescription()
       truthinessUrl: @_getTruthinessUrl()
       categories: @ui.categories.val().split(/\s*,\s*/g).map((s) -> s.trim()).filter((s) -> s)
+      tags: @ui.tags.val().split(/\s*,\s*/g).map((s) -> s.trim()).filter((s) -> s)
 
     @model.save(attributes, {
       success: => @render()
@@ -205,19 +212,28 @@ module.exports = class StoryView extends Marionette.ItemView
 
   onRender: ->
     @showApplicableFields()
-    $.getJSON '/categories', (categories) =>
-      categoryNames = (c.name for c in categories)
-      categoryNamesSet = {}
-      (categoryNamesSet[n] = null) for n in categoryNames
-      @ui.categories.tagit
-        autocomplete:
-          source: categoryNames
-          delay: 0
-          minLength: 0
-        showAutocompleteOnFocus: true
-        allowSpaces: true
-        placeholderText: $('#claim-categories').attr('placeholder')
-        beforeTagAdded: (ev, ui) -> ui.tagLabel of categoryNamesSet
+
+    [ 'categories', 'tags' ].map (thingsName) =>
+      $.getJSON "/#{thingsName}", (things) =>
+        names = (thing.name for thing in things)
+        names.sort()
+        namesSet = {}
+        (namesSet[n] = null) for n in names
+
+        tagitAttrs =
+          autocomplete:
+            source: names
+            delay: 0
+            minLength: 0
+          showAutocompleteOnFocus: true
+          allowSpaces: true
+          placeholderText: @ui[thingsName].attr('placeholder')
+
+        if thingsName == 'categories'
+          # Restrict categories so you can't add any new ones
+          tagitAttrs.beforeTagAdded = (ev, ui) -> ui.tagLabel of namesSet
+
+        @ui[thingsName].tagit(tagitAttrs)
 
   serializeData: ->
     ret = @model.toJSON()
