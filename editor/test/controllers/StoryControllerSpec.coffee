@@ -39,8 +39,8 @@ describe 'StoryController', ->
 
       it 'should include categories', ->
         Promise.all([
-          Category.create({ name: 'foo' }, 'admin@example.org')
-          Category.create({ name: 'bar' }, 'admin@example.org')
+          Category.create({ name: 'foo', slug: 'foo' }, 'admin@example.org')
+          Category.create({ name: 'bar', slug: 'bar' }, 'admin@example.org')
         ])
           .spread (c1, c2) => Promise.all([
             CategoryStory.create({ categoryId: c1.id, storyId: @story1.id }, 'editor@example.org')
@@ -99,8 +99,8 @@ describe 'StoryController', ->
 
     it 'should include an Array of category names', ->
       Promise.all([
-        Category.create({ name: 'foo' }, 'admin@example.org')
-        Category.create({ name: 'bar' }, 'admin@example.org')
+        Category.create({ name: 'foo', slug: 'foo' }, 'admin@example.org')
+        Category.create({ name: 'bar', slug: 'bar' }, 'admin@example.org')
       ])
         .spread (c1, c2) => Promise.all([
           CategoryStory.create({ categoryId: c1.id, storyId: @story.id }, 'admin@example.org')
@@ -160,9 +160,9 @@ describe 'StoryController', ->
 
     describe 'with Categories', ->
       beforeEach -> Promise.all([
-        Category.create({ name: 'foo' }, 'admin@example.org')
-        Category.create({ name: 'bar' }, 'admin@example.org')
-        Category.create({ name: 'baz' }, 'admin@example.org')
+        Category.create({ name: 'foo', slug: 'foo' }, 'admin@example.org')
+        Category.create({ name: 'bar', slug: 'bar' }, 'admin@example.org')
+        Category.create({ name: 'baz', slug: 'baz' }, 'admin@example.org')
       ]).spread (foo, bar, baz) => @categoryFoo = foo; @categoryBar = bar; @categoryBaz = baz
 
       it 'should add and return the specified categories', ->
@@ -251,7 +251,7 @@ describe 'StoryController', ->
     it 'should destroy CategoryStories as well', ->
       Promise.all([
         Story.create(mockStory(slug: 'slug-a'), 'user-a@example.org')
-        Category.create({ name: 'foo' }, 'admin@example.org')
+        Category.create({ name: 'foo', slug: 'foo' }, 'admin@example.org')
       ])
         .spread (story, category) ->
           CategoryStory.create({ categoryId: category.id, storyId: story.id }, 'user-a@example.org')
@@ -349,9 +349,9 @@ describe 'StoryController', ->
 
     describe 'with Categories', ->
       beforeEach -> Promise.all([
-        Category.create({ name: 'foo' }, 'admin@example.org')
-        Category.create({ name: 'bar' }, 'admin@example.org')
-        Category.create({ name: 'baz' }, 'admin@example.org')
+        Category.create({ name: 'foo', slug: 'foo' }, 'admin@example.org')
+        Category.create({ name: 'bar', slug: 'bar' }, 'admin@example.org')
+        Category.create({ name: 'baz', slug: 'baz' }, 'admin@example.org')
       ]).spread (foo, bar, baz) => @categoryFoo = foo; @categoryBar = bar; @categoryBaz = baz
 
       it 'should add and return the specified categories', ->
