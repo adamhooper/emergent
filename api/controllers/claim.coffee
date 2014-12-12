@@ -12,28 +12,44 @@ claimToJson = (claim) ->
     'origin'
     'originUrl'
     'nShares'
-    'categories'
     'truthiness'
     'truthinessDate'
     'truthinessDescription'
     'truthinessUrl'
     'createdAt'
+    'categories'
+    'tags'
   ])
 
 getCategories = (claimIds) ->
-  sqlClaimIds = claimIds.map((id) -> "('#{id}'::uuid)")
+  sqlClaimIds = claimIds.map((id) -> "'#{id}'::uuid").join(',')
   q = """
-    WITH
-    "ClaimIds" AS (
-      SELECT id FROM (VALUES#{sqlClaimIds}) AS t(id)
-    )
     SELECT
       cs."storyId" AS "claimId",
       c.name
     FROM "CategoryStory" cs
     INNER JOIN "Category" c ON cs."categoryId" = c.id
-    WHERE cs."storyId" IN (SELECT id FROM "ClaimIds")
+    WHERE cs."storyId" IN (#{sqlClaimIds})
     ORDER BY cs."storyId", c.name
+  """
+  models.sequelize.query(q, null, raw: true)
+    .then (rows) ->
+      ret = {}
+      (ret[claimId] = []) for claimId in claimIds
+      for row in rows
+        ret[row.claimId].push(row.name)
+      ret
+
+getTags = (claimIds) ->
+  sqlClaimIds = claimIds.map((id) -> "'#{id}'::uuid").join(',')
+  q = """
+    SELECT
+      st."storyId" AS "claimId",
+      t.name
+    FROM "StoryTag" st
+    INNER JOIN "Tag" t ON st."tagId" = t.id
+    WHERE st."storyId" IN (#{sqlClaimIds})
+    ORDER BY st."storyId", t.name
   """
   models.sequelize.query(q, null, raw: true)
     .then (rows) ->
@@ -91,11 +107,13 @@ module.exports =
           Promise.all([
             getShareCounts(claimIds)
             getCategories(claimIds)
+            getTags(claimIds)
           ])
-            .spread (counts, categories) ->
+            .spread (counts, categories, tags) ->
               for claim in claims
                 claim.nShares = counts[claim.id]
                 claim.categories = categories[claim.id]
+                claim.tags = tags[claim.id]
               null
         else
           null
@@ -116,10 +134,12 @@ module.exports =
         Promise.all([
           getShareCounts([claim.id])
           getCategories([claim.id])
+          getTags([claim.id])
         ])
-          .spread (counts, categories) ->
+          .spread (counts, categories, tags) ->
             claim.nShares = counts[claim.id]
             claim.categories = categories[claim.id]
+            claim.tags = tags[claim.id]
             null
       .then(claimToJson)
       .then (json) ->

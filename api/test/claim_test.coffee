@@ -47,12 +47,12 @@ describe '/claims', ->
         expect(claim).not.to.have.property('createdBy')
         expect(claim).not.to.have.property('updatedBy')
 
-  it 'should return categories as Arrays of Strings', ->
+  it 'should return Categories as Arrays of Strings', ->
     Promise.all([
       createClaim(slug: 'b-slug', createdAt: new Date(10000))
-      models.Category.create({ name: 'foo' }, 'test@example.org')
-      models.Category.create({ name: 'bar' }, 'test@example.org')
-      models.Category.create({ name: 'baz' }, 'test@example.org') # just here to confuse
+      models.Category.create({ name: 'foo', slug: 'foo' }, 'test@example.org')
+      models.Category.create({ name: 'bar', slug: 'bar' }, 'test@example.org')
+      models.Category.create({ name: 'baz', slug: 'baz' }, 'test@example.org') # just here to confuse
     ])
       .spread (claim2, foo, bar, baz) =>
         models.CategoryStory.bulkCreate([
@@ -65,6 +65,25 @@ describe '/claims', ->
         claims = res.body.claims
         expect(claims?[0]?.categories).to.deep.eq([ 'bar', 'foo' ])
         expect(claims?[1]?.categories).to.deep.eq([ 'bar' ])
+
+  it 'should return Tags as Arrays of Strings', ->
+    Promise.all([
+      createClaim(slug: 'b-slug', createdAt: new Date(10000))
+      models.Tag.create({ name: 'foo' }, 'test@example.org')
+      models.Tag.create({ name: 'bar' }, 'test@example.org')
+      models.Tag.create({ name: 'baz' }, 'test@example.org') # just here to confuse
+    ])
+      .spread (claim2, foo, bar, baz) =>
+        models.StoryTag.bulkCreate([
+          { storyId: @claim1.id, tagId: foo.id }
+          { storyId: @claim1.id, tagId: bar.id }
+          { storyId: claim2.id, tagId: bar.id }
+        ], 'test@example.org')
+      .then -> api.get('/claims')
+      .tap (res) ->
+        claims = res.body.claims
+        expect(claims?[0]?.tags).to.deep.eq([ 'bar', 'foo' ])
+        expect(claims?[1]?.tags).to.deep.eq([ 'bar' ])
 
   it 'should default to an empty nShares', ->
     api.get('/claims')
