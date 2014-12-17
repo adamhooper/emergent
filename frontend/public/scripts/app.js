@@ -39998,7 +39998,7 @@ module.exports = React.createClass({displayName: 'exports',
                         ), 
                         React.DOM.h2({className: "article-title"}, Link({to: "claim", params: { slug: claim.get('slug')}}, claim.get('headline'))), 
                         React.DOM.div({className: "article-byline"}, 
-                          React.DOM.span({className: "article-source"}, "Originating Source: ", React.DOM.a({href: "#"}, "The Guardian")), 
+                          React.DOM.span({className: "article-source"}, "Originating Source: ", React.DOM.span({className: "indicator indicator-true"}, " "), React.DOM.a({href: "#"}, "The Guardian")), 
                           React.DOM.span({className: "article-originated"}, "Added ", React.DOM.time({datetime: claim.get('createdAt')}, moment(claim.get('createdAt')).format('MMM D')))
                         )
                       ), 

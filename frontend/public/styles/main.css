@@ -838,6 +838,9 @@ ul.credits {
 .article-source a {
   font-weight: 600;
   text-decoration: none; }
+.article-source .indicator {
+  margin-right: 5px;
+  margin-left: 8px; }
 
 .article-originated {
   display: inline-block;

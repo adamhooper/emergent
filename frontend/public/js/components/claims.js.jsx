@@ -118,7 +118,7 @@ module.exports = React.createClass({
                         </div>
                         <h2 className="article-title"><Link to="claim" params={{ slug: claim.get('slug') }}>{claim.get('headline')}</Link></h2>
                         <div className="article-byline">
-                          <span className="article-source">Originating Source: <a href="#">The Guardian</a></span>
+                          <span className="article-source">Originating Source: <span className="indicator indicator-true"> </span><a href="#">The Guardian</a></span>
                           <span className="article-originated">Added <time datetime={claim.get('createdAt')}>{moment(claim.get('createdAt')).format('MMM D')}</time></span>
                         </div>
                       </header>
