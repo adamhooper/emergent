@@ -106,11 +106,43 @@ $article-padding:            2em;
 
 .article-footer {
   @extend %clearfix;
+  .article-tags,
+  .article-tracked {
+    margin-top: 1em;
+    font-size: font(xs);
+    font-weight: weight(medium);
+
+    .label {
+      color: palette(base, dark);
+    }
+  }
+
   .article-tags {
-    @include span(5 of 12);
+    @include span(7 of 12);
+    position: relative;
+    padding-left: 55px;
+
+    .label {
+      position: absolute;
+      left: 0;
+    }
+
+    a {
+      text-decoration: none;
+      display: inline-block;
+      margin-right: 10px;
+    }
   }
   .article-tracked {
-    @include span(last 5 of 12);
+    @include span(last 4 of 12);
+    text-align: right;
+  }
+  .tracked-group {
+    display: inline-block;
+    margin-left: 7px;
+    .indicator {
+      margin-left: 5px;
+    }
   }
 }
 

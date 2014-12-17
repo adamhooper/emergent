@@ -2,33 +2,22 @@
 // Local variables
 // ------------------------------
 
-$stance-width:               6em;
+$indicator-width:               6px;
 
 //
 // Component
 // ------------------------------
 
-.stance {
+.indicator {
   border: 1px solid transparent;
-  border-radius: 3px;
-  display: block;
-  padding-bottom: .25em;
-  padding-top: .3em;
-  text-align: center;
-  width: $stance-width;
-
-  // in article previews
-  .article-preview & {
-    left: 2.6em;
-    position: absolute;
-    top: 4em;
-  }
-}
-
-.stance-value {
-  font-size: font(xs);
-  font-weight: 700;
-  text-transform: capitalize;
+  border-radius: $indicator-width / 2;
+  display: inline-block;
+  // padding-bottom: .25em;
+  // padding-top: .3em;
+  width: $indicator-width;
+  height: $indicator-width;
+  vertical-align: middle;
+  margin-bottom: 0.2em;
 }
 
 
@@ -37,22 +26,22 @@ $stance-width:               6em;
 // Component variations
 // ------------------------------
 
-.stance-true,
-.stance-false {
+.indicator-true,
+.indicator-false {
   color: palette(base, lighter);
 }
 
-.stance-true {
+.indicator-true {
   background-color: palette(status, true);
   border-color: palette(status, true);
 }
 
-.stance-false {
+.indicator-false {
   background-color: palette(status, false);
   border-color: palette(status, false);
 }
 
-.stance-unknown {
+.indicator-unknown {
   background-color: transparent;
   border-color: palette(status, unknown);
   color: palette(status, unknown);

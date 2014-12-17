@@ -179,7 +179,10 @@
 .navigation-page {
   > li {
     padding: 20px;
-    border-bottom: 1px solid palette(border, base);
+    border-bottom: 1px solid palette(base, light);
+    @include breakpoint($breakpoint-desktop) {
+      border-right: 1px solid palette(base, light);
+    }
   }
 
   p {

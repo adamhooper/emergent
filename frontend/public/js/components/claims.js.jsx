@@ -97,8 +97,6 @@ module.exports = React.createClass({
             </nav>
             <ul className="articles">
               {this.filteredClaims().map(function(claim, i) {
-                console.log(claim);
-                console.log(claim.get('tags'));
                 return (
                   <li key={claim.id}>
                     <article className="article article-preview">
@@ -111,7 +109,7 @@ module.exports = React.createClass({
                             return (
                               <span className="article-category">{category} – </span>
                             );
-                          }.bind(this))}
+                          })}
                           <time className="" datetime=""></time>
                           <span className="article-updated">Updated Nov 4</span>
                           {claim.get('nShares') ?
@@ -121,15 +119,27 @@ module.exports = React.createClass({
                         <h2 className="article-title"><Link to="claim" params={{ slug: claim.get('slug') }}>{claim.get('headline')}</Link></h2>
                         <div className="article-byline">
                           <span className="article-source">Originating Source: <a href="#">The Guardian</a></span>
-                          <span className="article-originated"> Added <time datetime={claim.get('createdAt')}>{moment(claim.get('createdAt')).format('MMM D')}</time></span>
+                          <span className="article-originated">Added <time datetime={claim.get('createdAt')}>{moment(claim.get('createdAt')).format('MMM D')}</time></span>
                         </div>
                       </header>
                       <p className="article-content">{claim.get('description')}</p>
                       <footer className="article-footer">
                         {claim.get('tags').length > 0 ?
-                        <div className="article-tags">Tags</div>
+                          <div className="article-tags">
+                            <span className="label">Tagged:</span>
+                            {claim.get('tags').map(function(tag, i) {
+                              return (
+                                <a href="#">{tag}</a>
+                              );
+                            }.bind(this))}
+                          </div>
                         : null}
-                        <div className="article-tracked">Tracked</div>
+                        <div className="article-tracked">
+                          <span className="label">Tracked:</span>
+                          <span className="tracked-group">5<span className="indicator indicator-true"></span></span>
+                          <span className="tracked-group">10<span className="indicator indicator-false"></span></span>
+                          <span className="tracked-group">5<span className="indicator indicator-unknown"></span></span>
+                        </div>
                       </footer>
                     </article>
                   </li>

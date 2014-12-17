@@ -39977,8 +39977,6 @@ module.exports = React.createClass({displayName: 'exports',
             ), 
             React.DOM.ul({className: "articles"}, 
               this.filteredClaims().map(function(claim, i) {
-                console.log(claim);
-                console.log(claim.get('tags'));
                 return (
                   React.DOM.li({key: claim.id}, 
                     React.DOM.article({className: "article article-preview"}, 
@@ -39991,7 +39989,7 @@ module.exports = React.createClass({displayName: 'exports',
                             return (
                               React.DOM.span({className: "article-category"}, category, " – ")
                             );
-                          }.bind(this)), 
+                          }), 
                           React.DOM.time({className: "", datetime: ""}), 
                           React.DOM.span({className: "article-updated"}, "Updated Nov 4"), 
                           claim.get('nShares') ?
@@ -40001,15 +39999,27 @@ module.exports = React.createClass({displayName: 'exports',
                         React.DOM.h2({className: "article-title"}, Link({to: "claim", params: { slug: claim.get('slug')}}, claim.get('headline'))), 
                         React.DOM.div({className: "article-byline"}, 
                           React.DOM.span({className: "article-source"}, "Originating Source: ", React.DOM.a({href: "#"}, "The Guardian")), 
-                          React.DOM.span({className: "article-originated"}, " Added ", React.DOM.time({datetime: claim.get('createdAt')}, moment(claim.get('createdAt')).format('MMM D')))
+                          React.DOM.span({className: "article-originated"}, "Added ", React.DOM.time({datetime: claim.get('createdAt')}, moment(claim.get('createdAt')).format('MMM D')))
                         )
                       ), 
                       React.DOM.p({className: "article-content"}, claim.get('description')), 
                       React.DOM.footer({className: "article-footer"}, 
                         claim.get('tags').length > 0 ?
-                        React.DOM.div({className: "article-tags"}, "Tags")
+                          React.DOM.div({className: "article-tags"}, 
+                            React.DOM.span({className: "label"}, "Tagged:"), 
+                            claim.get('tags').map(function(tag, i) {
+                              return (
+                                React.DOM.a({href: "#"}, tag)
+                              );
+                            }.bind(this))
+                          )
                         : null, 
-                        React.DOM.div({className: "article-tracked"}, "Tracked")
+                        React.DOM.div({className: "article-tracked"}, 
+                          React.DOM.span({className: "label"}, "Tracked:"), 
+                          React.DOM.span({className: "tracked-group"}, "5", React.DOM.span({className: "indicator indicator-true"})), 
+                          React.DOM.span({className: "tracked-group"}, "10", React.DOM.span({className: "indicator indicator-false"})), 
+                          React.DOM.span({className: "tracked-group"}, "5", React.DOM.span({className: "indicator indicator-unknown"}))
+                        )
                       )
                     )
                   )
