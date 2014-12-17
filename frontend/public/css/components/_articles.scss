@@ -110,11 +110,17 @@ $article-padding:            2em;
 
 .article-footer {
   @extend %clearfix;
+  @include breakpoint($breakpoint-mobile-only) {
+    margin-top: 1em;
+  }
   .article-tags,
   .article-tracked {
-    margin-top: 1em;
     font-size: font(xs);
     font-weight: weight(medium);
+
+    @include breakpoint($breakpoint-tablet) {
+      margin-top: 1em;
+    }
 
     .label {
       color: palette(base, dark);
@@ -122,9 +128,13 @@ $article-padding:            2em;
   }
 
   .article-tags {
-    @include span(7 of 12);
+    
     position: relative;
     padding-left: 55px;
+
+    @include breakpoint($breakpoint-tablet) {
+      @include span(7 of 12);
+    }
 
     .label {
       position: absolute;
@@ -138,8 +148,10 @@ $article-padding:            2em;
     }
   }
   .article-tracked {
-    @include span(last 4 of 12);
-    text-align: right;
+    @include breakpoint($breakpoint-tablet) {
+      text-align: right;
+      @include span(last 4 of 12);
+    }
   }
   .tracked-group {
     display: inline-block;
@@ -159,8 +171,12 @@ $article-padding:            2em;
 
 .article-preview {
   border-bottom: 1px solid palette(base, light);
-  padding: $article-padding $article-padding $article-padding ($article-padding + 8.2em);
+  padding: $article-padding $article-padding $article-padding $article-padding;
   position: relative;
+
+  @include breakpoint($breakpoint-tablet) {
+    padding: $article-padding $article-padding $article-padding ($article-padding + 8.2em);
+  }
 }
 
 

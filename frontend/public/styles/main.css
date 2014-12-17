@@ -850,20 +850,28 @@ ul.credits {
   margin-bottom: 0;
   font-size: 0.95em; }
 
+@media (min-width: 0) and (max-width: 48em) {
+  .article-footer {
+    margin-top: 1em; } }
 .article-footer .article-tags,
 .article-footer .article-tracked {
-  margin-top: 1em;
   font-size: 0.8em;
   font-weight: 500; }
+  @media (min-width: 48em) {
+    .article-footer .article-tags,
+    .article-footer .article-tracked {
+      margin-top: 1em; } }
   .article-footer .article-tags .label,
   .article-footer .article-tracked .label {
     color: #7f7f7f; }
 .article-footer .article-tags {
-  width: 57.44681%;
-  float: left;
-  margin-right: 2.12766%;
   position: relative;
   padding-left: 55px; }
+  @media (min-width: 48em) {
+    .article-footer .article-tags {
+      width: 57.44681%;
+      float: left;
+      margin-right: 2.12766%; } }
   .article-footer .article-tags .label {
     position: absolute;
     left: 0; }
@@ -871,11 +879,12 @@ ul.credits {
     text-decoration: none;
     display: inline-block;
     margin-right: 10px; }
-.article-footer .article-tracked {
-  width: 31.91489%;
-  float: right;
-  margin-right: 0;
-  text-align: right; }
+@media (min-width: 48em) {
+  .article-footer .article-tracked {
+    text-align: right;
+    width: 31.91489%;
+    float: right;
+    margin-right: 0; } }
 .article-footer .tracked-group {
   display: inline-block;
   margin-left: 7px; }
@@ -884,8 +893,11 @@ ul.credits {
 
 .article-preview {
   border-bottom: 1px solid #eaeaea;
-  padding: 2em 2em 2em 10.2em;
+  padding: 2em 2em 2em 2em;
   position: relative; }
+  @media (min-width: 48em) {
+    .article-preview {
+      padding: 2em 2em 2em 10.2em; } }
 
 .article-source-title {
   color: #7f7f7f;
@@ -1432,9 +1444,13 @@ ul.credits {
   text-align: center;
   width: 6em; }
   .article-preview .stance {
-    left: 2.6em;
-    position: absolute;
-    top: 4em; }
+    margin-bottom: 1em; }
+    @media (min-width: 48em) {
+      .article-preview .stance {
+        left: 2.6em;
+        position: absolute;
+        top: 4em;
+        margin-bottom: 0; } }
 
 .stance-value {
   font-size: 0.8em;

@@ -19,9 +19,13 @@ $stance-width:               6em;
 
   // in article previews
   .article-preview & {
-    left: 2.6em;
-    position: absolute;
-    top: 4em;
+    margin-bottom: 1em;
+    @include breakpoint($breakpoint-tablet) {
+      left: 2.6em;
+      position: absolute;
+      top: 4em;
+      margin-bottom: 0;
+    }
   }
 }
 
