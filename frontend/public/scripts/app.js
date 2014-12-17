@@ -39977,6 +39977,8 @@ module.exports = React.createClass({displayName: 'exports',
             ), 
             React.DOM.ul({className: "articles"}, 
               this.filteredClaims().map(function(claim, i) {
+                console.log(claim);
+                console.log(claim.get('tags'));
                 return (
                   React.DOM.li({key: claim.id}, 
                     React.DOM.article({className: "article article-preview"}, 
@@ -39985,21 +39987,29 @@ module.exports = React.createClass({displayName: 'exports',
                           React.DOM.span({className: "stance-value"}, claim.truthinessText())
                         ), 
                         React.DOM.div({className: "article-meta"}, 
-                          React.DOM.span({className: "article-category"}, "World News – "), React.DOM.time({className: "", datetime: ""}), 
+                          claim.get('categories').map(function(category, i) {
+                            return (
+                              React.DOM.span({className: "article-category"}, category, " – ")
+                            );
+                          }.bind(this)), 
+                          React.DOM.time({className: "", datetime: ""}), 
                           React.DOM.span({className: "article-updated"}, "Updated Nov 4"), 
                           claim.get('nShares') ?
-                          React.DOM.span({className: "article-shares"}, "Shares: ", this.formatNumber(claim.get('nShares')))
+                          React.DOM.span({className: "article-shares"}, React.DOM.span({className: "label"}, "Shares:"), " ", this.formatNumber(claim.get('nShares')))
                           : null
                         ), 
                         React.DOM.h2({className: "article-title"}, Link({to: "claim", params: { slug: claim.get('slug')}}, claim.get('headline'))), 
                         React.DOM.div({className: "article-byline"}, 
-                          React.DOM.span({className: "article-source"}, "Originating Source: "), 
-                          React.DOM.span({className: "article-originated"}, " Added ", React.DOM.time({datetime: claim.get('createdAt')}, moment(claim.get('createdAt')).format('MMMM Do')))
+                          React.DOM.span({className: "article-source"}, "Originating Source: ", React.DOM.a({href: "#"}, "The Guardian")), 
+                          React.DOM.span({className: "article-originated"}, " Added ", React.DOM.time({datetime: claim.get('createdAt')}, moment(claim.get('createdAt')).format('MMM D')))
                         )
                       ), 
                       React.DOM.p({className: "article-content"}, claim.get('description')), 
-                      React.DOM.footer({className: "article-footer"}
-
+                      React.DOM.footer({className: "article-footer"}, 
+                        claim.get('tags').length > 0 ?
+                        React.DOM.div({className: "article-tags"}, "Tags")
+                        : null, 
+                        React.DOM.div({className: "article-tracked"}, "Tracked")
                       )
                     )
                   )

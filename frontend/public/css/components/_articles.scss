@@ -51,12 +51,12 @@ $article-padding:            2em;
 
 .article-meta,
 .article-byline {
-  font-size: font(sm);
+  font-size: font(xs);
   line-height: 1.2;
 }
 
 .article-meta {
-  margin-bottom: 1.5em;
+  margin-bottom: 1em;
 }
 
 .article-category {
@@ -66,29 +66,52 @@ $article-padding:            2em;
 }
 
 .article-updated {
-  font-weight: 500;
+  font-weight: weight(medium);
 }
 
 .article-shares {
   float: right;
+  font-weight: weight(medium);
+
+  .label {
+    color: palette(base, dark);
+  }
 }
 
 .article-byline {
   color: palette(base, dark);
   margin-bottom: 1em;
+  font-weight: weight(medium);
 }
 
 .article-source {
+  a {
+    font-weight: weight(bold);
+    text-decoration: none;
+  }
 }
 
 .article-originated {
+  display: inline-block;
+  margin-left: 10px;
 }
 
 .article-content {
   margin-bottom: 0;
+  font-size: font(sm);
 }
 
 .article-description {
+}
+
+.article-footer {
+  @extend %clearfix;
+  .article-tags {
+    @include span(5 of 12);
+  }
+  .article-tracked {
+    @include span(last 5 of 12);
+  }
 }
 
 

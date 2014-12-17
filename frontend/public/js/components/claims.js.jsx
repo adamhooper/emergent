@@ -97,6 +97,8 @@ module.exports = React.createClass({
             </nav>
             <ul className="articles">
               {this.filteredClaims().map(function(claim, i) {
+                console.log(claim);
+                console.log(claim.get('tags'));
                 return (
                   <li key={claim.id}>
                     <article className="article article-preview">
@@ -105,21 +107,29 @@ module.exports = React.createClass({
                           <span className="stance-value">{claim.truthinessText()}</span>
                         </div>
                         <div className="article-meta">
-                          <span className="article-category">World News – </span><time className="" datetime=""></time>
+                          {claim.get('categories').map(function(category, i) {
+                            return (
+                              <span className="article-category">{category} – </span>
+                            );
+                          }.bind(this))}
+                          <time className="" datetime=""></time>
                           <span className="article-updated">Updated Nov 4</span>
                           {claim.get('nShares') ?
-                          <span className="article-shares">Shares: {this.formatNumber(claim.get('nShares'))}</span>
+                          <span className="article-shares"><span className="label">Shares:</span> {this.formatNumber(claim.get('nShares'))}</span>
                           : null}
                         </div>
                         <h2 className="article-title"><Link to="claim" params={{ slug: claim.get('slug') }}>{claim.get('headline')}</Link></h2>
                         <div className="article-byline">
-                          <span className="article-source">Originating Source: </span>
-                          <span className="article-originated"> Added <time datetime={claim.get('createdAt')}>{moment(claim.get('createdAt')).format('MMMM Do')}</time></span>
+                          <span className="article-source">Originating Source: <a href="#">The Guardian</a></span>
+                          <span className="article-originated"> Added <time datetime={claim.get('createdAt')}>{moment(claim.get('createdAt')).format('MMM D')}</time></span>
                         </div>
                       </header>
                       <p className="article-content">{claim.get('description')}</p>
                       <footer className="article-footer">
-
+                        {claim.get('tags').length > 0 ?
+                        <div className="article-tags">Tags</div>
+                        : null}
+                        <div className="article-tracked">Tracked</div>
                       </footer>
                     </article>
                   </li>

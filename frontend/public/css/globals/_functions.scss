@@ -6,3 +6,7 @@
 @function font($size: 'md') {
   @return map-get($font-sizes, $size);
 }
+
+@function weight($weight: 'regular') {
+  @return map-get($font-weights, $weight);
+}
