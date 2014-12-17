@@ -17,7 +17,7 @@
 .shares-label {
   @extend %label;
   display: block;
-  font-size: .9em;
+  font-size: font(sm);
 
   // inside a category filter
   .card-category & {
@@ -27,7 +27,7 @@
 
 .shares-value {
   display: block;
-  font-size: 1.6em;
+  font-size: font(xl);
   font-weight: 500;
   line-height: 1;
 }

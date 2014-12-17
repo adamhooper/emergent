@@ -65,7 +65,7 @@
   }
 
   .navigation-link {
-    font-size: 0.733em;
+    font-size: font(xxs);
   }
 
   > .container {
@@ -89,7 +89,7 @@
     font-weight: 400;
     margin: 1.3em 0 0.5em;
     line-height: 1;
-    font-size: 1.2em;
+    font-size: font(lg);
   }
 
   .page-title-holder {
@@ -116,7 +116,7 @@
 
   .label {
     color: palette(base, dark);
-    font-size: 0.733em;
+    font-size: font(xxs);
     display: inline-block;
     padding: 0 5px;
   }
@@ -173,7 +173,7 @@
       background-color: #fafafa;
       border: 1px solid #eeeeee;
       line-height: 1;
-      font-size: 16px;
+      font-size: 16px; // prevent iOS zoom
       padding: 5px 25px 4px 10px;
       outline: none;
       width: 220px;

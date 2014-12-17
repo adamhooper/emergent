@@ -100,7 +100,7 @@ $article-padding:            2em;
 
 .article-preview {
   border-bottom: 1px solid palette(base, light);
-  padding: $article-padding $article-padding $article-padding ($article-padding + 7em);
+  padding: $article-padding $article-padding $article-padding ($article-padding + 8.2em);
   position: relative;
 }
 
@@ -110,7 +110,7 @@ $article-padding:            2em;
 
 .article-source-title {
   color: palette(base, dark);
-  font-size: 1.1em;
+  font-size: font(md);
   margin-bottom: 1em;
 }
 
@@ -140,7 +140,7 @@ $article-padding:            2em;
 // Changes
 
 .changes {
-  font-size: 1.1em;
+  font-size: font(md);
   font-weight: 500;
   list-style-type: none;
   margin-bottom: 0;

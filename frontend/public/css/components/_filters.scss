@@ -22,13 +22,13 @@
       color: palette(base, dark);
       border-bottom: 1px solid transparent;
       line-height: 1;
-      font-size: 0.733em;
+      font-size: font(xxs);
       padding: 18px 2px 16px;
       margin: 0 11px 0 0;
 
       @include breakpoint($breakpoint-tablet) {
         margin: 0 20px 0 0;
-        font-size: 0.8em;
+        font-size: font(xs);
       }
 
       transition: border .15s ease-in-out;

@@ -164,7 +164,7 @@
     transition: opacity .15s ease-in-out;
     display: inline-block;
     padding: 0 5px;
-    font-size: 0.733em;
+    font-size: font(xxs);
 
     &.active {
       opacity: .75;
@@ -185,11 +185,11 @@
   p {
     margin-bottom: 0;
     margin-top: 0.5em;
-    font-size: 0.8em;
+    font-size: font(xs);
   }
 
   .navigation-link {
-    font-size: 0.867em;
+    font-size: font(xs);
     text-decoration: underline;
   }
 }

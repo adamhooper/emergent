@@ -506,7 +506,7 @@ th {
   display: table; }
 
 .articles-title, .section-title {
-  font-size: 1.5em;
+  font-size: 1.4em;
   margin-top: 0; }
 
 .sr-only {
@@ -802,7 +802,7 @@ ul.credits {
 
 .article-title {
   font-family: "news-gothic-std", Helvetica, Arial, sans-serif;
-  font-size: 1.5em;
+  font-size: 1.4em;
   margin-bottom: .5em;
   margin-top: 0; }
   .article-title > a {
@@ -836,12 +836,12 @@ ul.credits {
 
 .article-preview {
   border-bottom: 1px solid #eaeaea;
-  padding: 2em 2em 2em 9em;
+  padding: 2em 2em 2em 10.2em;
   position: relative; }
 
 .article-source-title {
   color: #7f7f7f;
-  font-size: 1.1em;
+  font-size: 1em;
   margin-bottom: 1em; }
 
 .article-source {
@@ -852,7 +852,7 @@ ul.credits {
   padding: 1em; }
 
 .changes {
-  font-size: 1.1em;
+  font-size: 1em;
   font-weight: 500;
   list-style-type: none;
   margin-bottom: 0;
@@ -873,7 +873,7 @@ ul.credits {
 
 .card-title {
   display: inline-block;
-  font-size: 1.6em;
+  font-size: 1.4em;
   font-weight: 500;
   letter-spacing: 1px;
   margin-bottom: 0;
@@ -925,7 +925,7 @@ ul.credits {
       color: #7f7f7f;
       border-bottom: 1px solid transparent;
       line-height: 1;
-      font-size: 0.733em;
+      font-size: 0.773em;
       padding: 18px 2px 16px;
       margin: 0 11px 0 0;
       transition: border .15s ease-in-out; }
@@ -1145,7 +1145,7 @@ ul.credits {
     transition: opacity .15s ease-in-out;
     display: inline-block;
     padding: 0 5px;
-    font-size: 0.733em; }
+    font-size: 0.773em; }
     .navigation-trending .navigation-link.active {
       opacity: .75; }
     .navigation-trending .navigation-link:hover {
@@ -1159,7 +1159,7 @@ ul.credits {
   margin-top: 0.5em;
   font-size: 0.8em; }
 .navigation-page .navigation-link {
-  font-size: 0.867em;
+  font-size: 0.8em;
   text-decoration: underline; }
 
 .page {
@@ -1230,7 +1230,7 @@ ul.credits {
       html.touch .site-header-categories {
         overflow: hidden; } }
   .site-header-categories .navigation-link {
-    font-size: 0.733em; }
+    font-size: 0.773em; }
 
 .site-header-secondary {
   background-color: #f2f2f2;
@@ -1260,7 +1260,7 @@ ul.credits {
       display: block; } }
   .site-menu-trending .label {
     color: #7f7f7f;
-    font-size: 0.733em;
+    font-size: 0.773em;
     display: inline-block;
     padding: 0 5px; }
 
@@ -1339,13 +1339,13 @@ ul.credits {
 
 .shares-label {
   display: block;
-  font-size: .9em; }
+  font-size: 0.95em; }
   .card-category .shares-label {
     color: #ffffff; }
 
 .shares-value {
   display: block;
-  font-size: 1.6em;
+  font-size: 1.4em;
   font-weight: 500;
   line-height: 1; }
 
@@ -1365,7 +1365,7 @@ ul.credits {
   margin-left: .2em; }
 
 .sources {
-  font-size: .9em;
+  font-size: 0.95em;
   margin-bottom: 0; }
 
 .sources-value {
@@ -1381,12 +1381,12 @@ ul.credits {
   text-align: center;
   width: 6em; }
   .article-preview .stance {
-    left: 2em;
+    left: 2.6em;
     position: absolute;
     top: 4.25em; }
 
 .stance-value {
-  font-size: 0.85em;
+  font-size: 0.8em;
   font-weight: 700;
   text-transform: capitalize; }
 
@@ -1413,7 +1413,7 @@ ul.credits {
     margin-top: .75em; }
 
 .status-label {
-  font-size: .9em;
+  font-size: 0.95em;
   font-weight: 500; }
 
 .status-value {
