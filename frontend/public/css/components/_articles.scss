@@ -171,7 +171,7 @@ $article-padding:            2em;
 
 .article-preview {
   border-bottom: 1px solid palette(base, light);
-  padding: $article-padding $article-padding $article-padding $article-padding;
+  padding: $article-padding / 2;
   position: relative;
 
   @include breakpoint($breakpoint-tablet) {
