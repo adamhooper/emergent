@@ -153,7 +153,7 @@ module.exports = React.createClass({
         <div className="page-header">
           <div className="container">
 
-            <div className="section">
+            <div className="section section-with-sidebar">
               <header className="section-header">
                 <h1 className="page-title">{claim.get('headline')}</h1>
                 <p>{claim.get('description')}</p>
@@ -196,94 +196,101 @@ module.exports = React.createClass({
                 : null }
               </div>
             </div>
-
-            <section className="cards cards-section">
-              <div className={'card-categories card-categories-' + _.filter(claim.sharesByStance(), function(c) { return c; }).length}>
-                { claim.articlesByStance('for').length > 0 ?
-                  <div onClick={this.setFilter.bind(this, 'for')} className={'card card-category card-category-for' + (this.state.filter === 'for' ? ' is-selected' : '')}>
-                    <div className="card-header">
-                      <p className="card-title">For{claim.get('truthiness') === 'true' ? <span className="icon icon-confirmed">Confirmed</span> : null}</p>
-                      <div className="card-meta">
-                        <p className="sources">{claim.articlesByStance('for').length} sources</p>
-                        <div className="shares">
-                          <span className="shares-value">{mostShared === 'for' ? <span className="icon icon-most-shared"/> : null}{shares.for ? this.formatNumber(shares.for) : 0}</span>
-                          <span className="shares-label">shares</span>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="card-content">
-                      <p className="article-source-title">Top Source</p>
-                      {_.first(claim.articlesByStance('for'), 1).map(function(article) {
-                        return (
-                          <article className="article article-source" key={article.id}>
-                            <h4 className="article-title">{article.source} - <time dateTime={article.createdAt}>{moment(article.createdAt).format('MMMM Do YYYY')}</time></h4>
-                            <p className="article-description"><Link to="article" params={{ slug: claim.get('slug'), articleId: article.id }}>{this.truncateString(article.headline)}</Link></p>
-                            <p><strong>{this.formatNumber(article.shares) + ' shares'}</strong></p>
-                          </article>
-                        )
-                      }, this)}
-                    </div>
-                  </div>
-                  : null
-                }
-                { claim.articlesByStance('against').length > 0 ?
-                  <div onClick={this.setFilter.bind(this, 'against')} className={'card card-category card-category-against' + (this.state.filter === 'against' ? ' is-selected' : '')}>
-                    <div className="card-header">
-                      <p className="card-title">Against{claim.get('truthiness') === 'false' ? <span className="icon icon-confirmed">Confirmed</span> : null}</p>
-                      <div className="card-meta">
-                        <p className="sources">{claim.articlesByStance('against').length} sources</p>
-                        <div className="shares">
-                          <span className="shares-value">{mostShared === 'against' ? <span className="icon icon-most-shared"/> : null}{shares.against ? this.formatNumber(shares.against) : 0}</span>
-                          <span className="shares-label">shares</span>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="card-content">
-                      <p className="article-source-title">Top Source</p>
-                      {_.first(claim.articlesByStance('against'), 1).map(function(article) {
-                        return (
-                          <article className="article article-source" key={article.id}>
-                            <h4 className="article-title">{article.source} - <time dateTime={article.createdAt}>{moment(article.createdAt).format('MMMM Do YYYY')}</time></h4>
-                            <p className="article-description"><Link to="article" params={{ slug: claim.get('slug'), articleId: article.id }}>{this.truncateString(article.headline)}</Link></p>
-                            <p><strong>{this.formatNumber(article.shares) + ' shares'}</strong></p>
-                          </article>
-                        )
-                      }, this)}
-                    </div>
-                  </div>
-                  : null
-                }
-                { claim.articlesByStance('observing').length > 0 ?
-                  <div onClick={this.setFilter.bind(this, 'observing')} className={'card card-category card-category-observing' + (this.state.filter === 'observing' ? ' is-selected' : '')}>
-                    <div className="card-header">
-                      <p className="card-title">Observing</p>
-                      <div className="card-meta">
-                        <p className="sources">{claim.articlesByStance('observing').length} sources</p>
-                        <div className="shares">
-                          <span className="shares-value">{mostShared === 'observing' ? <span className="icon icon-most-shared"/> : null}{shares.observing ? this.formatNumber(shares.observing) : 0}</span>
-                          <span className="shares-label">shares</span>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="card-content">
-                      <p className="article-source-title">Top Source</p>
-                      {_.first(claim.articlesByStance('observing'), 1).map(function(article) {
-                        return (
-                          <article className="article article-source" key={article.id}>
-                            <h4 className="article-title">{article.source} - <time dateTime={article.createdAt}>{moment(article.createdAt).format('MMMM Do YYYY')}</time></h4>
-                            <p className="article-description"><Link to="article" params={{ slug: claim.get('slug'), articleId: article.id }}>{this.truncateString(article.headline)}</Link></p>
-                            <p><strong>{this.formatNumber(article.shares) + ' shares'}</strong></p>
-                          </article>
-                        )
-                      }, this)}
-                    </div>
-                  </div>
-                  : null
-                }
-              </div>
-            </section>
+            <nav className="page-navigation">
+              <ul className="navigation navigation-page">
+                <li>
+                  <a href="#" className="navigation-link">Dispute this claim</a>
+                </li>
+              </ul>
+            </nav>
           </div>
         </div>
+
+        <section className="cards cards-section">
+          <div className={'card-categories card-categories-' + _.filter(claim.sharesByStance(), function(c) { return c; }).length}>
+            { claim.articlesByStance('for').length > 0 ?
+              <div onClick={this.setFilter.bind(this, 'for')} className={'card card-category card-category-for' + (this.state.filter === 'for' ? ' is-selected' : '')}>
+                <div className="card-header">
+                  <p className="card-title">For{claim.get('truthiness') === 'true' ? <span className="icon icon-confirmed">Confirmed</span> : null}</p>
+                  <div className="card-meta">
+                    <p className="sources">{claim.articlesByStance('for').length} sources</p>
+                    <div className="shares">
+                      <span className="shares-value">{mostShared === 'for' ? <span className="icon icon-most-shared"/> : null}{shares.for ? this.formatNumber(shares.for) : 0}</span>
+                      <span className="shares-label">shares</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="card-content">
+                  <p className="article-source-title">Top Source</p>
+                  {_.first(claim.articlesByStance('for'), 1).map(function(article) {
+                    return (
+                      <article className="article article-source" key={article.id}>
+                        <h4 className="article-title">{article.source} - <time dateTime={article.createdAt}>{moment(article.createdAt).format('MMMM Do YYYY')}</time></h4>
+                        <p className="article-description"><Link to="article" params={{ slug: claim.get('slug'), articleId: article.id }}>{this.truncateString(article.headline)}</Link></p>
+                        <p><strong>{this.formatNumber(article.shares) + ' shares'}</strong></p>
+                      </article>
+                    )
+                  }, this)}
+                </div>
+              </div>
+              : null
+            }
+            { claim.articlesByStance('against').length > 0 ?
+              <div onClick={this.setFilter.bind(this, 'against')} className={'card card-category card-category-against' + (this.state.filter === 'against' ? ' is-selected' : '')}>
+                <div className="card-header">
+                  <p className="card-title">Against{claim.get('truthiness') === 'false' ? <span className="icon icon-confirmed">Confirmed</span> : null}</p>
+                  <div className="card-meta">
+                    <p className="sources">{claim.articlesByStance('against').length} sources</p>
+                    <div className="shares">
+                      <span className="shares-value">{mostShared === 'against' ? <span className="icon icon-most-shared"/> : null}{shares.against ? this.formatNumber(shares.against) : 0}</span>
+                      <span className="shares-label">shares</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="card-content">
+                  <p className="article-source-title">Top Source</p>
+                  {_.first(claim.articlesByStance('against'), 1).map(function(article) {
+                    return (
+                      <article className="article article-source" key={article.id}>
+                        <h4 className="article-title">{article.source} - <time dateTime={article.createdAt}>{moment(article.createdAt).format('MMMM Do YYYY')}</time></h4>
+                        <p className="article-description"><Link to="article" params={{ slug: claim.get('slug'), articleId: article.id }}>{this.truncateString(article.headline)}</Link></p>
+                        <p><strong>{this.formatNumber(article.shares) + ' shares'}</strong></p>
+                      </article>
+                    )
+                  }, this)}
+                </div>
+              </div>
+              : null
+            }
+            { claim.articlesByStance('observing').length > 0 ?
+              <div onClick={this.setFilter.bind(this, 'observing')} className={'card card-category card-category-observing' + (this.state.filter === 'observing' ? ' is-selected' : '')}>
+                <div className="card-header">
+                  <p className="card-title">Observing</p>
+                  <div className="card-meta">
+                    <p className="sources">{claim.articlesByStance('observing').length} sources</p>
+                    <div className="shares">
+                      <span className="shares-value">{mostShared === 'observing' ? <span className="icon icon-most-shared"/> : null}{shares.observing ? this.formatNumber(shares.observing) : 0}</span>
+                      <span className="shares-label">shares</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="card-content">
+                  <p className="article-source-title">Top Source</p>
+                  {_.first(claim.articlesByStance('observing'), 1).map(function(article) {
+                    return (
+                      <article className="article article-source" key={article.id}>
+                        <h4 className="article-title">{article.source} - <time dateTime={article.createdAt}>{moment(article.createdAt).format('MMMM Do YYYY')}</time></h4>
+                        <p className="article-description"><Link to="article" params={{ slug: claim.get('slug'), articleId: article.id }}>{this.truncateString(article.headline)}</Link></p>
+                        <p><strong>{this.formatNumber(article.shares) + ' shares'}</strong></p>
+                      </article>
+                    )
+                  }, this)}
+                </div>
+              </div>
+              : null
+            }
+          </div>
+        </section>
 
         {this.state.populated ?
           <div className="page-content">

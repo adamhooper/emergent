@@ -27,7 +27,8 @@
 }
 
 .container,
-.page-content {
+.page-content,
+.page-claim {
   @extend %container;
 }
 
@@ -43,6 +44,14 @@
 
   .card-meta {
     @include span(last 3 of 4);
+  }
+}
+
+.section-with-sidebar {
+  .section-header {
+    @extend %page-gutters;
+    margin-top: 2em;
+    margin-bottom: 2em;
   }
 }
 
@@ -63,9 +72,10 @@
 
 
   //
-  // claims.js.jsx
+  // claims.js.jsx & claim.js.jsx
 
-  .articles-holder {
+  .articles-holder,
+  .section-with-sidebar {
     @include span(9 of 12 no-gutters);
   }
 
@@ -89,14 +99,6 @@
 
   .page-article,
   .page-claim {
-
-    .section-header {
-      @include span(9 of 12);
-    }
-
-    .page-meta {
-      @include span(last 3 of 12);
-    }
 
     .page-content,
     .page-chart,

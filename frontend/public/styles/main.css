@@ -521,48 +521,54 @@ th {
 
 @media (min-width: 0) {
   .container,
-  .page-content {
+  .page-content,
+  .page-claim {
     max-width: 100%;
     margin-left: auto;
     margin-right: auto; }
     .container:after,
-    .page-content:after {
+    .page-content:after,
+    .page-claim:after {
       content: " ";
       display: block;
       clear: both; } }
 @media (min-width: 48em) {
   .container,
-  .page-content {
+  .page-content,
+  .page-claim {
     max-width: 100%;
     margin-left: auto;
     margin-right: auto; }
     .container:after,
-    .page-content:after {
+    .page-content:after,
+    .page-claim:after {
       content: " ";
       display: block;
       clear: both; } }
 @media (min-width: 68em) {
   .container,
-  .page-content {
+  .page-content,
+  .page-claim {
     max-width: 1024px;
     margin-left: auto;
     margin-right: auto; }
     .container:after,
-    .page-content:after {
+    .page-content:after,
+    .page-claim:after {
       content: " ";
       display: block;
       clear: both; } }
 
 @media (min-width: 0) {
-  .articles-filtering, .site-header-primary, .site-header-categories > .container, .site-header-secondary > .container {
+  .section-with-sidebar .section-header, .articles-filtering, .site-header-primary, .site-header-categories > .container, .site-header-secondary > .container {
     padding-left: 15px;
     padding-right: 15px; } }
 @media (min-width: 48em) {
-  .articles-filtering, .site-header-primary, .site-header-categories > .container, .site-header-secondary > .container {
+  .section-with-sidebar .section-header, .articles-filtering, .site-header-primary, .site-header-categories > .container, .site-header-secondary > .container {
     padding-left: 20px;
     padding-right: 20px; } }
 @media (min-width: 68em) {
-  .articles-filtering, .site-header-primary, .site-header-categories > .container, .site-header-secondary > .container {
+  .section-with-sidebar .section-header, .articles-filtering, .site-header-primary, .site-header-categories > .container, .site-header-secondary > .container {
     padding-left: 40px;
     padding-right: 40px; } }
 
@@ -577,6 +583,10 @@ th {
   float: right;
   margin-right: 0; }
 
+.section-with-sidebar .section-header {
+  margin-top: 2em;
+  margin-bottom: 2em; }
+
 @media (min-width: 48em) {
   .site-logo {
     width: 23.40426%;
@@ -588,7 +598,8 @@ th {
     float: right;
     margin-right: 0; }
 
-  .articles-holder {
+  .articles-holder,
+  .section-with-sidebar {
     width: 74.46809%;
     float: left; }
 
@@ -606,16 +617,6 @@ th {
     float: right;
     margin-right: 0; }
 
-  .page-article .section-header,
-  .page-claim .section-header {
-    width: 74.46809%;
-    float: left;
-    margin-right: 2.12766%; }
-  .page-article .page-meta,
-  .page-claim .page-meta {
-    width: 23.40426%;
-    float: right;
-    margin-right: 0; }
   .page-article .page-content,
   .page-article .page-chart,
   .page-article .page-articles,
@@ -786,13 +787,6 @@ ul.credits {
 
 .articles-title {
   margin-bottom: 1em; }
-
-@media (min-width: 48em) {
-  .articles-holder {
-    border-right: 1px solid #eaeaea; } }
-@media (min-width: 68em) {
-  .articles-holder {
-    border-left: 1px solid #eaeaea; } }
 
 .articles {
   list-style-type: none;
@@ -1231,9 +1225,7 @@ ul.credits {
 .page-header {
   background-color: #ffffff;
   border-bottom: 1px solid rgba(0, 0, 0, 0.15);
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.75);
-  padding-bottom: 2em;
-  padding-top: 2em; }
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.75); }
 
 .page-title {
   margin-top: 0; }
@@ -1245,9 +1237,6 @@ ul.credits {
   border-top: 1px solid #b2b2b2;
   margin-top: 1em;
   padding-top: 1em; }
-
-.site {
-  background-color: #eaeaea; }
 
 .site-header {
   background-color: #323232;
@@ -1387,11 +1376,15 @@ ul.credits {
   opacity: 1;
   width: auto; }
 
-.section {
-  margin-bottom: 2em; }
-
 .section-title {
   margin-bottom: .75em; }
+
+@media (min-width: 48em) {
+  .section-with-sidebar {
+    border-right: 1px solid #eaeaea; } }
+@media (min-width: 68em) {
+  .section-with-sidebar {
+    border-left: 1px solid #eaeaea; } }
 
 .articles .shares {
   text-align: center; }

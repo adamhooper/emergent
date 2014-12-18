@@ -13,16 +13,6 @@ $article-padding:            2em;
   margin-bottom: 1em;
 }
 
-.articles-holder {
-  @include breakpoint($breakpoint-tablet) {
-    border-right: 1px solid palette(base, light);
-  }
-
-  @include breakpoint($breakpoint-desktop) {
-    border-left: 1px solid palette(base, light);
-  }
-}
-
 .articles {
   list-style-type: none;
   margin-bottom: 0;
