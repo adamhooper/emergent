@@ -39686,9 +39686,11 @@ module.exports = React.createClass({displayName: 'exports',
       React.DOM.div({className: "page page-claim"}, 
         React.DOM.div({className: "page-header"}, 
           React.DOM.div({className: "container"}, 
-
             React.DOM.div({className: "section section-with-sidebar"}, 
-              React.DOM.header({className: "section-header"}, 
+              React.DOM.header({className: "section-header with-stance"}, 
+                React.DOM.div({className: 'stance stance-' + claim.get('truthiness')}, 
+                  React.DOM.span({className: "stance-value"}, claim.truthinessText())
+                ), 
                 React.DOM.h1({className: "page-title"}, claim.get('headline')), 
                 React.DOM.p(null, claim.get('description')), 
                 claim.get('origin') ? React.DOM.p({className: "tracking"}, React.DOM.strong(null, "Originated: "), moment(originDate).format('MMM D, YYYY H:mm') + ' (' + moment(originDate).fromNow() + ')', " ", claim.get('originUrl') ? React.DOM.a({href: claim.get('originUrl'), target: "_blank"}, "View Article") : null, React.DOM.br(null), claim.get('origin')) : null, 
@@ -39733,8 +39735,8 @@ module.exports = React.createClass({displayName: 'exports',
             React.DOM.nav({className: "page-navigation"}, 
               React.DOM.ul({className: "navigation navigation-page"}, 
                 React.DOM.li(null, 
-                React.DOM.a({href: "#", className: "navigation-link"}, "Dispute this claim")
-              )
+                  React.DOM.a({href: "#", className: "navigation-link"}, "Dispute this claim")
+                )
               )
             )
           )
@@ -39963,7 +39965,7 @@ module.exports = React.createClass({displayName: 'exports',
     return (
       React.DOM.div({className: "page"}, 
         React.DOM.div({className: "page-content"}, 
-          React.DOM.div({className: "articles-holder"}, 
+          React.DOM.div({className: "articles-holder section-with-sidebar"}, 
             React.DOM.nav({className: "articles-filtering"}, 
               React.DOM.ul({className: "navigation navigation-filtering navigation-filtering-sort"}, 
                 this.props.sorting.map(function(sorting, i) {
@@ -39986,7 +39988,7 @@ module.exports = React.createClass({displayName: 'exports',
               this.filteredClaims().map(function(claim, i) {
                 return (
                   React.DOM.li({key: claim.id}, 
-                    React.DOM.article({className: "article article-preview"}, 
+                    React.DOM.article({className: "article article-preview with-stance"}, 
                       React.DOM.header({className: "article-header"}, 
                         React.DOM.div({className: 'stance stance-' + claim.get('truthiness')}, 
                           React.DOM.span({className: "stance-value"}, claim.truthinessText())

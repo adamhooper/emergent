@@ -152,9 +152,11 @@ module.exports = React.createClass({
       <div className="page page-claim">
         <div className="page-header">
           <div className="container">
-
             <div className="section section-with-sidebar">
-              <header className="section-header">
+              <header className="section-header with-stance">
+                <div className={'stance stance-' + claim.get('truthiness')}>
+                  <span className="stance-value">{claim.truthinessText()}</span>
+                </div>
                 <h1 className="page-title">{claim.get('headline')}</h1>
                 <p>{claim.get('description')}</p>
                 {claim.get('origin') ? <p className="tracking"><strong>Originated: </strong>{moment(originDate).format('MMM D, YYYY H:mm') + ' (' + moment(originDate).fromNow() + ')'} {claim.get('originUrl') ? <a href={claim.get('originUrl')} target="_blank">View Article</a> : null}<br />{claim.get('origin')}</p> : null}

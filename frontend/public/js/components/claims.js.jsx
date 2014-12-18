@@ -76,7 +76,7 @@ module.exports = React.createClass({
     return (
       <div className="page">
         <div className="page-content">
-          <div className="articles-holder">
+          <div className="articles-holder section-with-sidebar">
             <nav className="articles-filtering">
               <ul className="navigation navigation-filtering navigation-filtering-sort">
                 {this.props.sorting.map(function(sorting, i) {
@@ -99,7 +99,7 @@ module.exports = React.createClass({
               {this.filteredClaims().map(function(claim, i) {
                 return (
                   <li key={claim.id}>
-                    <article className="article article-preview">
+                    <article className="article article-preview with-stance">
                       <header className="article-header">
                         <div className={'stance stance-' + claim.get('truthiness')}>
                           <span className="stance-value">{claim.truthinessText()}</span>

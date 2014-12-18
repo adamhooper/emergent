@@ -18,7 +18,7 @@ $stance-width:               6em;
   width: $stance-width;
 
   // in article previews
-  .article-preview & {
+  .with-stance & {
     margin-bottom: 1em;
     @include breakpoint($breakpoint-tablet) {
       left: 2.6em;

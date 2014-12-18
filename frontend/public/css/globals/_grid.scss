@@ -52,6 +52,14 @@
     @extend %page-gutters;
     margin-top: 2em;
     margin-bottom: 2em;
+
+    &.with-stance {
+      position: relative;
+      padding-left: 10.2em;
+      .stance {
+        top: 0.3em;
+      }
+    }
   }
 }
 
