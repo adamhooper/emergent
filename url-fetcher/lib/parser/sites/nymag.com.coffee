@@ -1,17 +1,18 @@
 module.exports =
+  version: 2
   domains: [ 'nymag.com' ]
   parse: (url, $, h) ->
-    $headline = $('h1[itemprop=headline]')
+    $headline = $('h1[itemprop=headline], h2.primary.first-page')
     if $headline.length == 0
-      $headline = $('h1')
+      $headline = $('meta[property="og:title"]').attr('content')
 
     byline = $('meta[name=author]').attr('content')
     if byline
       byline = [ byline ]
     else
-      byline = $('[rel=author]')
+      byline = $('[rel=author], ul.byline a')
 
-    $article = $('div.entryText, div[itemprop=articleBody]').eq(0)
+    $article = $('div.entryText, div[itemprop=articleBody], div#story').eq(0)
 
     source: 'NYMag'
     headline: $headline
