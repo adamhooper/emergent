@@ -39210,7 +39210,7 @@ module.exports = React.createClass({displayName: 'exports',
   render: function() {
     return (
       /* JSX for about page */
-      React.DOM.div({className: "page-content"}, 
+      React.DOM.div({className: "page-content page-about"}, 
         React.DOM.div({className: "container"}, 
           React.DOM.h1({className: "page-title"}, "About Emergent"), 
           React.DOM.p(null, 
@@ -39696,40 +39696,6 @@ module.exports = React.createClass({displayName: 'exports',
                 claim.get('origin') ? React.DOM.p({className: "tracking"}, React.DOM.strong(null, "Originated: "), moment(originDate).format('MMM D, YYYY H:mm') + ' (' + moment(originDate).fromNow() + ')', " ", claim.get('originUrl') ? React.DOM.a({href: claim.get('originUrl'), target: "_blank"}, "View Article") : null, React.DOM.br(null), claim.get('origin')) : null, 
                 React.DOM.p({className: "tracking"}, React.DOM.strong(null, "Started Tracking:"), " ", moment(startedTracking).format('MMM D, YYYY H:mm') + ' (' + moment(startedTracking).fromNow() + ')'), 
                 claim.get('truthiness') != 'unknown' ? React.DOM.p({className: "tracking tracking-" + claim.get('truthiness')}, React.DOM.strong(null, "Resolved: "), moment(truthinessDate).format('MMM D, YYYY H:mm') + ' (' + moment(truthinessDate).fromNow() + ')', " ", claim.get('truthinessUrl') ? React.DOM.a({href: claim.get('truthinessUrl'), target: "_blank"}, "View Article") : null, React.DOM.br(null), claim.get('truthinessDescription')) : null
-              ), 
-              React.DOM.div({className: "page-meta"}, 
-
-                React.DOM.div({className: 'status status-' + claim.get('truthiness')}, 
-                  React.DOM.span({className: "status-label"}, "Claim Status"), 
-                  React.DOM.span({className: "status-value"}, claim.truthinessText())
-                ), 
-                React.DOM.div({className: 'status status-' + (mostShared ? mostShared : '')}, 
-                  React.DOM.span({className: "status-label"}, "Most Shared Claim"), 
-                  React.DOM.span({className: "status-value"}, mostShared ? mostShared : '')
-                ), 
-
-                 this.state.populated ?
-                React.DOM.div({className: "meta"}, 
-                  React.DOM.div({className: "shares"}, 
-                    React.DOM.span({className: "shares-value"}, claim.articlesByStance().length), 
-                    React.DOM.span({className: "shares-label"}, "sources")
-                  ), 
-                  React.DOM.div({className: "shares"}, 
-                    React.DOM.span({className: "shares-value"}, this.formatNumber(claim.get('nShares'))), 
-                    React.DOM.span({className: "shares-label"}, "shares")
-                  ), 
-                  React.DOM.ul({className: "social"}, 
-                  _.map(claim.sharesByProvider(), function(shares, provider) {
-                      return (
-                        React.DOM.li(null, 
-                          React.DOM.span({className: 'icon icon-' + provider}, provider), 
-                          React.DOM.span({className: "social-value"}, Math.round(shares / totalShares * 100), "%")
-                        )
-                      );
-                    }, this)
-                  )
-                )
-                : null
               )
             ), 
             React.DOM.nav({className: "page-navigation"}, 
@@ -39740,6 +39706,41 @@ module.exports = React.createClass({displayName: 'exports',
               )
             )
           )
+        ), 
+
+        React.DOM.div({className: "page-meta"}, 
+
+          React.DOM.div({className: 'status status-' + claim.get('truthiness')}, 
+            React.DOM.span({className: "status-label"}, "Claim Status"), 
+            React.DOM.span({className: "status-value"}, claim.truthinessText())
+          ), 
+          React.DOM.div({className: 'status status-' + (mostShared ? mostShared : '')}, 
+            React.DOM.span({className: "status-label"}, "Most Shared Claim"), 
+            React.DOM.span({className: "status-value"}, mostShared ? mostShared : '')
+          ), 
+
+           this.state.populated ?
+          React.DOM.div({className: "meta"}, 
+            React.DOM.div({className: "shares"}, 
+              React.DOM.span({className: "shares-value"}, claim.articlesByStance().length), 
+              React.DOM.span({className: "shares-label"}, "sources")
+            ), 
+            React.DOM.div({className: "shares"}, 
+              React.DOM.span({className: "shares-value"}, this.formatNumber(claim.get('nShares'))), 
+              React.DOM.span({className: "shares-label"}, "shares")
+            ), 
+            React.DOM.ul({className: "social"}, 
+            _.map(claim.sharesByProvider(), function(shares, provider) {
+                return (
+                  React.DOM.li(null, 
+                    React.DOM.span({className: 'icon icon-' + provider}, provider), 
+                    React.DOM.span({className: "social-value"}, Math.round(shares / totalShares * 100), "%")
+                  )
+                );
+              }, this)
+            )
+          )
+          : null
         ), 
 
         React.DOM.section({className: "cards cards-section"}, 

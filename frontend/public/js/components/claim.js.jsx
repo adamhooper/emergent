@@ -163,40 +163,6 @@ module.exports = React.createClass({
                 <p className="tracking"><strong>Started Tracking:</strong> {moment(startedTracking).format('MMM D, YYYY H:mm') + ' (' + moment(startedTracking).fromNow() + ')'}</p>
                 {claim.get('truthiness') != 'unknown' ? <p className={"tracking tracking-" + claim.get('truthiness')}><strong>Resolved: </strong>{moment(truthinessDate).format('MMM D, YYYY H:mm') + ' (' + moment(truthinessDate).fromNow() + ')'} {claim.get('truthinessUrl') ? <a href={claim.get('truthinessUrl')} target="_blank">View Article</a> : null}<br />{claim.get('truthinessDescription')}</p> : null}
               </header>
-              <div className="page-meta">
-
-                <div className={'status status-' + claim.get('truthiness')}>
-                  <span className="status-label">Claim Status</span>
-                  <span className="status-value">{claim.truthinessText()}</span>
-                </div>
-                <div className={'status status-' + (mostShared ? mostShared : '')}>
-                  <span className="status-label">Most Shared Claim</span>
-                  <span className="status-value">{mostShared ? mostShared : ''}</span>
-                </div>
-
-                { this.state.populated ?
-                <div className="meta">
-                  <div className="shares">
-                    <span className="shares-value">{claim.articlesByStance().length}</span>
-                    <span className="shares-label">sources</span>
-                  </div>
-                  <div className="shares">
-                    <span className="shares-value">{this.formatNumber(claim.get('nShares'))}</span>
-                    <span className="shares-label">shares</span>
-                  </div>
-                  <ul className="social">
-                  {_.map(claim.sharesByProvider(), function(shares, provider) {
-                      return (
-                        <li>
-                          <span className={'icon icon-' + provider}>{provider}</span>
-                          <span className="social-value">{Math.round(shares / totalShares * 100)}%</span>
-                        </li>
-                      );
-                    }, this)}
-                  </ul>
-                </div>
-                : null }
-              </div>
             </div>
             <nav className="page-navigation">
               <ul className="navigation navigation-page">
@@ -206,6 +172,41 @@ module.exports = React.createClass({
               </ul>
             </nav>
           </div>
+        </div>
+
+        <div className="page-meta">
+
+          <div className={'status status-' + claim.get('truthiness')}>
+            <span className="status-label">Claim Status</span>
+            <span className="status-value">{claim.truthinessText()}</span>
+          </div>
+          <div className={'status status-' + (mostShared ? mostShared : '')}>
+            <span className="status-label">Most Shared Claim</span>
+            <span className="status-value">{mostShared ? mostShared : ''}</span>
+          </div>
+
+          { this.state.populated ?
+          <div className="meta">
+            <div className="shares">
+              <span className="shares-value">{claim.articlesByStance().length}</span>
+              <span className="shares-label">sources</span>
+            </div>
+            <div className="shares">
+              <span className="shares-value">{this.formatNumber(claim.get('nShares'))}</span>
+              <span className="shares-label">shares</span>
+            </div>
+            <ul className="social">
+            {_.map(claim.sharesByProvider(), function(shares, provider) {
+                return (
+                  <li>
+                    <span className={'icon icon-' + provider}>{provider}</span>
+                    <span className="social-value">{Math.round(shares / totalShares * 100)}%</span>
+                  </li>
+                );
+              }, this)}
+            </ul>
+          </div>
+          : null }
         </div>
 
         <section className="cards cards-section">
