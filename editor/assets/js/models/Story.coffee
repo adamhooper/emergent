@@ -13,6 +13,8 @@ module.exports = class Story extends Backbone.Model
     published: false
     truthiness: 'unknown'
     truthinessDate: null
+    categories: []
+    tags: []
 
   initialize: (attributes, options) ->
     @_isNew = options?.isNew || false
