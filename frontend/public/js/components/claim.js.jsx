@@ -219,7 +219,7 @@ module.exports = React.createClass({
                         return (
                           <article className="article article-source" key={article.id}>
                             <h4 className="article-title">{article.source} - <time dateTime={article.createdAt}>{moment(article.createdAt).format('MMMM Do YYYY')}</time></h4>
-                            <p className="article-description"><Link to="article" params={{ slug: claim.get('slug'), articleId: article.id }}>{this.truncateString(article.headline)}</Link></p>
+                            <p className="article-description">{this.truncateString(article.headline)} <a href={article.url} target="_blank">View Article</a></p>
                             <p><strong>{this.formatNumber(article.shares) + ' shares'}</strong></p>
                           </article>
                         )

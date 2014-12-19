@@ -39753,7 +39753,7 @@ module.exports = React.createClass({displayName: 'exports',
                         return (
                           React.DOM.article({className: "article article-source", key: article.id}, 
                             React.DOM.h4({className: "article-title"}, article.source, " - ", React.DOM.time({dateTime: article.createdAt}, moment(article.createdAt).format('MMMM Do YYYY'))), 
-                            React.DOM.p({className: "article-description"}, Link({to: "article", params: { slug: claim.get('slug'), articleId: article.id}}, this.truncateString(article.headline))), 
+                            React.DOM.p({className: "article-description"}, this.truncateString(article.headline), " ", React.DOM.a({href: article.url, target: "_blank"}, "View Article")), 
                             React.DOM.p(null, React.DOM.strong(null, this.formatNumber(article.shares) + ' shares'))
                           )
                         )
