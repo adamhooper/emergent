@@ -244,12 +244,9 @@ $article-padding:            2em;
   .articles {
      > li {
       border-bottom: 1px solid palette(border, base);
-      padding-top: 2em;
-      &:first-child {
-        padding-top: 0;
-      }
-      &:last-child {
-        border-bottom: none;
+
+      @include breakpoint($breakpoint-mobile-only) {
+        padding-top: 2em;
       }
     }
   }

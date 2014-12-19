@@ -934,12 +934,10 @@ ul.credits {
           left: 0;
           top: 0; } }
   .page-articles .articles > li {
-    border-bottom: 1px solid #ebebeb;
-    padding-top: 2em; }
-    .page-articles .articles > li:first-child {
-      padding-top: 0; }
-    .page-articles .articles > li:last-child {
-      border-bottom: none; }
+    border-bottom: 1px solid #ebebeb; }
+    @media (min-width: 0) and (max-width: 48em) {
+      .page-articles .articles > li {
+        padding-top: 2em; } }
 
 .page-claim-body {
   padding-top: 2em;
