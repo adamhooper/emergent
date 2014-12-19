@@ -19,9 +19,13 @@
 
 // TODO: don't do this
 .page-meta {
-  .meta {
-    border-top: 1px solid palette(base);
-    margin-top: 1em;
-    padding-top: 1em;
+  background-color: #fcfcfc;
+  border-top: 1px solid palette(border, base);
+  border-bottom: 1px solid palette(border, base);
+  padding-top: 1.5em;
+  padding-bottom: 1.5em;
+
+  > .container {
+    @extend %page-gutters;
   }
 }
