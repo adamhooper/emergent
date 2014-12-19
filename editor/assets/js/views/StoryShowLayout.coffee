@@ -40,14 +40,23 @@ module.exports = class StoryShowLayout extends Marionette.LayoutView
     @articleList.on 'show', (view) =>
       if view?
         @listenTo(view, 'focus', (model) => @focusArticle(model))
+        @listenTo(view.collection, 'destroy', (model) => @_onArticleRemoved(model))
     @articleList.on('destroy', ((view) => @stopListening(view) if view?))
 
+  _onArticleRemoved: (article) ->
+    @focusArticle(null) if article == @focusedArticle
+
   focusArticle: (article) ->
-    versions = new ArticleVersions([], articleId: article.id)
-    versions.fetch
-      success: -> versions.add({}) # a placeholder
-    @articleVersionList.show(new ArticleVersionListView(collection: versions))
-    @$el.addClass('article-focused')
+    @focusedArticle = article
+    if article
+      versions = new ArticleVersions([], articleId: article.id)
+      versions.fetch
+        success: -> versions.add({}) # a placeholder
+      @articleVersionList.show(new ArticleVersionListView(collection: versions))
+      @$el.addClass('article-focused')
+    else
+      @articleVersionList.show(new ArticleVersionListPlaceholderView)
+      @$el.removeClass('article-focused')
 
 StoryShowLayout.forStoryInRegion = (story, region) ->
   layout = new StoryShowLayout

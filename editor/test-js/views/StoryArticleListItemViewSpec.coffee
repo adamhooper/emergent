@@ -62,15 +62,27 @@ describe 'views/StoryArticleListItemView', ->
       @model.set(id: 1, url: 'http://example.org/1')
       @view.render()
 
-    it 'should just contain an a', ->
+    it 'should just contain <a> and <button>s', ->
       els = @view.$el.children()
-      expect(els.filter('a')).to.exist
-      expect(els.filter(':not(a)')).not.to.exist
+      expect(els.filter('a,button')).to.exist
+      expect(els.filter(':not(a,button)')).not.to.exist
 
     it 'should contain the url', ->
       expect(@view.$el).to.contain('http://example.org/1')
 
     it 'should trigger click on click', ->
       @view.on('click', spy = sinon.spy())
-      @view.$('a').click()
+      @view.$('a.select').click()
       expect(spy).to.have.been.calledWith(@model)
+
+    it 'should delete on click', ->
+      @sandbox.stub(window, 'confirm').returns(true)
+      @model.destroy = sinon.spy()
+      @view.$('button.delete').click()
+      expect(@model.destroy).to.have.been.called
+
+    it 'should not delete on click if not confirmed', ->
+      @sandbox.stub(window, 'confirm').returns(false)
+      @model.destroy = sinon.spy()
+      @view.$('button.delete').click()
+      expect(@model.destroy).not.to.have.been.called

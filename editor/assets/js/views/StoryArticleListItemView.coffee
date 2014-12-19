@@ -7,7 +7,9 @@ module.exports = class StoryArticleListItemCollapsedView extends Marionette.Item
 
   template: _.template('''
     <% if (!isNew) { %>
-      <a href="#"><%- url %></a>
+      <button class="delete" href="#" title="delete"><i class="glyphicon glyphicon-remove"></i></button>
+      <a class="open" href="<%- url %>" target="_blank" title="open (in new tab)"><i class="glyphicon glyphicon-link"></i></a>
+      <a class="select" href="#"><%- url %></a>
     <% } else { %>
       <form method="post" action="#">
         <div class="input-group">
@@ -25,7 +27,8 @@ module.exports = class StoryArticleListItemCollapsedView extends Marionette.Item
 
   events:
     'submit form': 'onSubmit'
-    'click a': 'onClick'
+    'click a.select': 'onClick'
+    'click button.delete': 'onDelete'
 
   serializeData: ->
     json = @model.toJSON()
@@ -36,6 +39,11 @@ module.exports = class StoryArticleListItemCollapsedView extends Marionette.Item
   onClick: (e) ->
     e.preventDefault()
     @trigger('click', @model)
+
+  onDelete: (e) ->
+    if window.confirm("You're about to remove this URL from the story: #{@model.get('url')}")
+      e.preventDefault()
+      @model.destroy()
 
   onSubmit: (e) ->
     e.preventDefault()

@@ -6095,13 +6095,170 @@ button.close {
 .story-show-layout ul.story-articles > li {
   box-sizing: border-box;
   height: 2.5em;
-}
-.story-show-layout ul.story-articles > li a {
-  display: block;
   line-height: 2.5em;
+}
+.story-show-layout ul.story-articles > li a.select {
+  display: block;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+.story-show-layout ul.story-articles > li a.open {
+  display: inline-block;
+  margin-bottom: 0;
+  text-align: center;
+  vertical-align: middle;
+  background-image: none;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  padding: 6px 12px;
+  font-size: 14px;
+  line-height: 1.42857143;
+  border-radius: 4px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  color: #428bca;
+  font-weight: normal;
+  cursor: pointer;
+  border-radius: 0;
+  float: right;
+}
+.story-show-layout ul.story-articles > li a.open:focus,
+.story-show-layout ul.story-articles > li a.open:active:focus,
+.story-show-layout ul.story-articles > li a.open.active:focus {
+  outline: thin dotted;
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+.story-show-layout ul.story-articles > li a.open:hover,
+.story-show-layout ul.story-articles > li a.open:focus {
+  color: #333333;
+  text-decoration: none;
+}
+.story-show-layout ul.story-articles > li a.open:active,
+.story-show-layout ul.story-articles > li a.open.active {
+  outline: 0;
+  background-image: none;
+  -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+.story-show-layout ul.story-articles > li a.open.disabled,
+.story-show-layout ul.story-articles > li a.open[disabled],
+fieldset[disabled] .story-show-layout ul.story-articles > li a.open {
+  cursor: not-allowed;
+  pointer-events: none;
+  opacity: 0.65;
+  filter: alpha(opacity=65);
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+.story-show-layout ul.story-articles > li a.open,
+.story-show-layout ul.story-articles > li a.open:active,
+.story-show-layout ul.story-articles > li a.open[disabled],
+fieldset[disabled] .story-show-layout ul.story-articles > li a.open {
+  background-color: transparent;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+.story-show-layout ul.story-articles > li a.open,
+.story-show-layout ul.story-articles > li a.open:hover,
+.story-show-layout ul.story-articles > li a.open:focus,
+.story-show-layout ul.story-articles > li a.open:active {
+  border-color: transparent;
+}
+.story-show-layout ul.story-articles > li a.open:hover,
+.story-show-layout ul.story-articles > li a.open:focus {
+  color: #2a6496;
+  text-decoration: underline;
+  background-color: transparent;
+}
+.story-show-layout ul.story-articles > li a.open[disabled]:hover,
+fieldset[disabled] .story-show-layout ul.story-articles > li a.open:hover,
+.story-show-layout ul.story-articles > li a.open[disabled]:focus,
+fieldset[disabled] .story-show-layout ul.story-articles > li a.open:focus {
+  color: #999999;
+  text-decoration: none;
+}
+.story-show-layout ul.story-articles > li button.delete {
+  display: inline-block;
+  margin-bottom: 0;
+  text-align: center;
+  vertical-align: middle;
+  background-image: none;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  padding: 6px 12px;
+  font-size: 14px;
+  line-height: 1.42857143;
+  border-radius: 4px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  color: #428bca;
+  font-weight: normal;
+  cursor: pointer;
+  border-radius: 0;
+  float: right;
+  color: #d9534f;
+}
+.story-show-layout ul.story-articles > li button.delete:focus,
+.story-show-layout ul.story-articles > li button.delete:active:focus,
+.story-show-layout ul.story-articles > li button.delete.active:focus {
+  outline: thin dotted;
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+.story-show-layout ul.story-articles > li button.delete:hover,
+.story-show-layout ul.story-articles > li button.delete:focus {
+  color: #333333;
+  text-decoration: none;
+}
+.story-show-layout ul.story-articles > li button.delete:active,
+.story-show-layout ul.story-articles > li button.delete.active {
+  outline: 0;
+  background-image: none;
+  -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+.story-show-layout ul.story-articles > li button.delete.disabled,
+.story-show-layout ul.story-articles > li button.delete[disabled],
+fieldset[disabled] .story-show-layout ul.story-articles > li button.delete {
+  cursor: not-allowed;
+  pointer-events: none;
+  opacity: 0.65;
+  filter: alpha(opacity=65);
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+.story-show-layout ul.story-articles > li button.delete,
+.story-show-layout ul.story-articles > li button.delete:active,
+.story-show-layout ul.story-articles > li button.delete[disabled],
+fieldset[disabled] .story-show-layout ul.story-articles > li button.delete {
+  background-color: transparent;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+.story-show-layout ul.story-articles > li button.delete,
+.story-show-layout ul.story-articles > li button.delete:hover,
+.story-show-layout ul.story-articles > li button.delete:focus,
+.story-show-layout ul.story-articles > li button.delete:active {
+  border-color: transparent;
+}
+.story-show-layout ul.story-articles > li button.delete:hover,
+.story-show-layout ul.story-articles > li button.delete:focus {
+  color: #2a6496;
+  text-decoration: underline;
+  background-color: transparent;
+}
+.story-show-layout ul.story-articles > li button.delete[disabled]:hover,
+fieldset[disabled] .story-show-layout ul.story-articles > li button.delete:hover,
+.story-show-layout ul.story-articles > li button.delete[disabled]:focus,
+fieldset[disabled] .story-show-layout ul.story-articles > li button.delete:focus {
+  color: #999999;
+  text-decoration: none;
 }
 .story-show-layout ul.story-articles > li.focus {
   font-weight: bold;
@@ -6267,13 +6424,170 @@ button.close {
 .unseen-article-list-layout .articles ul.articles > li {
   box-sizing: border-box;
   height: 2.5em;
-}
-.unseen-article-list-layout .articles ul.articles > li a {
-  display: block;
   line-height: 2.5em;
+}
+.unseen-article-list-layout .articles ul.articles > li a.select {
+  display: block;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+.unseen-article-list-layout .articles ul.articles > li a.open {
+  display: inline-block;
+  margin-bottom: 0;
+  text-align: center;
+  vertical-align: middle;
+  background-image: none;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  padding: 6px 12px;
+  font-size: 14px;
+  line-height: 1.42857143;
+  border-radius: 4px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  color: #428bca;
+  font-weight: normal;
+  cursor: pointer;
+  border-radius: 0;
+  float: right;
+}
+.unseen-article-list-layout .articles ul.articles > li a.open:focus,
+.unseen-article-list-layout .articles ul.articles > li a.open:active:focus,
+.unseen-article-list-layout .articles ul.articles > li a.open.active:focus {
+  outline: thin dotted;
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+.unseen-article-list-layout .articles ul.articles > li a.open:hover,
+.unseen-article-list-layout .articles ul.articles > li a.open:focus {
+  color: #333333;
+  text-decoration: none;
+}
+.unseen-article-list-layout .articles ul.articles > li a.open:active,
+.unseen-article-list-layout .articles ul.articles > li a.open.active {
+  outline: 0;
+  background-image: none;
+  -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+.unseen-article-list-layout .articles ul.articles > li a.open.disabled,
+.unseen-article-list-layout .articles ul.articles > li a.open[disabled],
+fieldset[disabled] .unseen-article-list-layout .articles ul.articles > li a.open {
+  cursor: not-allowed;
+  pointer-events: none;
+  opacity: 0.65;
+  filter: alpha(opacity=65);
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+.unseen-article-list-layout .articles ul.articles > li a.open,
+.unseen-article-list-layout .articles ul.articles > li a.open:active,
+.unseen-article-list-layout .articles ul.articles > li a.open[disabled],
+fieldset[disabled] .unseen-article-list-layout .articles ul.articles > li a.open {
+  background-color: transparent;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+.unseen-article-list-layout .articles ul.articles > li a.open,
+.unseen-article-list-layout .articles ul.articles > li a.open:hover,
+.unseen-article-list-layout .articles ul.articles > li a.open:focus,
+.unseen-article-list-layout .articles ul.articles > li a.open:active {
+  border-color: transparent;
+}
+.unseen-article-list-layout .articles ul.articles > li a.open:hover,
+.unseen-article-list-layout .articles ul.articles > li a.open:focus {
+  color: #2a6496;
+  text-decoration: underline;
+  background-color: transparent;
+}
+.unseen-article-list-layout .articles ul.articles > li a.open[disabled]:hover,
+fieldset[disabled] .unseen-article-list-layout .articles ul.articles > li a.open:hover,
+.unseen-article-list-layout .articles ul.articles > li a.open[disabled]:focus,
+fieldset[disabled] .unseen-article-list-layout .articles ul.articles > li a.open:focus {
+  color: #999999;
+  text-decoration: none;
+}
+.unseen-article-list-layout .articles ul.articles > li button.delete {
+  display: inline-block;
+  margin-bottom: 0;
+  text-align: center;
+  vertical-align: middle;
+  background-image: none;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  padding: 6px 12px;
+  font-size: 14px;
+  line-height: 1.42857143;
+  border-radius: 4px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  color: #428bca;
+  font-weight: normal;
+  cursor: pointer;
+  border-radius: 0;
+  float: right;
+  color: #d9534f;
+}
+.unseen-article-list-layout .articles ul.articles > li button.delete:focus,
+.unseen-article-list-layout .articles ul.articles > li button.delete:active:focus,
+.unseen-article-list-layout .articles ul.articles > li button.delete.active:focus {
+  outline: thin dotted;
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+.unseen-article-list-layout .articles ul.articles > li button.delete:hover,
+.unseen-article-list-layout .articles ul.articles > li button.delete:focus {
+  color: #333333;
+  text-decoration: none;
+}
+.unseen-article-list-layout .articles ul.articles > li button.delete:active,
+.unseen-article-list-layout .articles ul.articles > li button.delete.active {
+  outline: 0;
+  background-image: none;
+  -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+.unseen-article-list-layout .articles ul.articles > li button.delete.disabled,
+.unseen-article-list-layout .articles ul.articles > li button.delete[disabled],
+fieldset[disabled] .unseen-article-list-layout .articles ul.articles > li button.delete {
+  cursor: not-allowed;
+  pointer-events: none;
+  opacity: 0.65;
+  filter: alpha(opacity=65);
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+.unseen-article-list-layout .articles ul.articles > li button.delete,
+.unseen-article-list-layout .articles ul.articles > li button.delete:active,
+.unseen-article-list-layout .articles ul.articles > li button.delete[disabled],
+fieldset[disabled] .unseen-article-list-layout .articles ul.articles > li button.delete {
+  background-color: transparent;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+.unseen-article-list-layout .articles ul.articles > li button.delete,
+.unseen-article-list-layout .articles ul.articles > li button.delete:hover,
+.unseen-article-list-layout .articles ul.articles > li button.delete:focus,
+.unseen-article-list-layout .articles ul.articles > li button.delete:active {
+  border-color: transparent;
+}
+.unseen-article-list-layout .articles ul.articles > li button.delete:hover,
+.unseen-article-list-layout .articles ul.articles > li button.delete:focus {
+  color: #2a6496;
+  text-decoration: underline;
+  background-color: transparent;
+}
+.unseen-article-list-layout .articles ul.articles > li button.delete[disabled]:hover,
+fieldset[disabled] .unseen-article-list-layout .articles ul.articles > li button.delete:hover,
+.unseen-article-list-layout .articles ul.articles > li button.delete[disabled]:focus,
+fieldset[disabled] .unseen-article-list-layout .articles ul.articles > li button.delete:focus {
+  color: #999999;
+  text-decoration: none;
 }
 .unseen-article-list-layout .articles ul.articles > li.focus {
   font-weight: bold;

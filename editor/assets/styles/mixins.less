@@ -5,13 +5,26 @@
   &>li {
     box-sizing: border-box;
     height: 2.5em;
+    line-height: 2.5em;
 
-    a {
+    a.select {
       display: block;
-      line-height: 2.5em;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+    }
+
+    a.open {
+      .btn();
+      .btn-link();
+      float: right;
+    }
+
+    button.delete {
+      .btn();
+      .btn-link();
+      float: right;
+      color: @brand-danger;
     }
 
     &.focus {
