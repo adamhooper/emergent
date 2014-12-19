@@ -39714,22 +39714,10 @@ module.exports = React.createClass({displayName: 'exports',
             
             React.DOM.div({className: "meta"}, 
               React.DOM.div({className: "shares"}, 
-                React.DOM.span({className: "shares-value"}, claim.articlesByStance().length), 
-                React.DOM.span({className: "shares-label"}, "sources")
+                React.DOM.span({className: "shares-label"}, "Sourced Tracked:"), " ", React.DOM.span({className: "shares-value"}, claim.articlesByStance().length)
               ), 
               React.DOM.div({className: "shares"}, 
-                React.DOM.span({className: "shares-value"}, this.formatNumber(claim.get('nShares'))), 
-                React.DOM.span({className: "shares-label"}, "shares")
-              ), 
-              React.DOM.ul({className: "social"}, 
-              _.map(claim.sharesByProvider(), function(shares, provider) {
-                  return (
-                    React.DOM.li(null, 
-                      React.DOM.span({className: 'icon icon-' + provider}, provider), 
-                      React.DOM.span({className: "social-value"}, Math.round(shares / totalShares * 100), "%")
-                    )
-                  );
-                }, this)
+                React.DOM.span({className: "shares-label"}, "Total Shares:"), " ", React.DOM.span({className: "shares-value"}, this.formatNumber(claim.get('nShares')))
               )
             ), 
 
@@ -39742,8 +39730,7 @@ module.exports = React.createClass({displayName: 'exports',
                       React.DOM.div({className: "card-meta"}, 
                         React.DOM.p({className: "sources"}, claim.articlesByStance('for').length, " sources"), 
                         React.DOM.div({className: "shares"}, 
-                          React.DOM.span({className: "shares-value"}, mostShared === 'for' ? React.DOM.span({className: "icon icon-most-shared"}) : null, shares.for ? this.formatNumber(shares.for) : 0), 
-                          React.DOM.span({className: "shares-label"}, "shares")
+                          React.DOM.span({className: "shares-value"}, mostShared === 'for' ? React.DOM.span({className: "icon icon-most-shared"}) : null, shares.for ? this.formatNumber(shares.for) : 0), " ", React.DOM.span({className: "shares-label"}, "shares")
                         )
                       )
                     ), 
@@ -39769,8 +39756,7 @@ module.exports = React.createClass({displayName: 'exports',
                       React.DOM.div({className: "card-meta"}, 
                         React.DOM.p({className: "sources"}, claim.articlesByStance('against').length, " sources"), 
                         React.DOM.div({className: "shares"}, 
-                          React.DOM.span({className: "shares-value"}, mostShared === 'against' ? React.DOM.span({className: "icon icon-most-shared"}) : null, shares.against ? this.formatNumber(shares.against) : 0), 
-                          React.DOM.span({className: "shares-label"}, "shares")
+                          React.DOM.span({className: "shares-value"}, mostShared === 'against' ? React.DOM.span({className: "icon icon-most-shared"}) : null, shares.against ? this.formatNumber(shares.against) : 0), " ", React.DOM.span({className: "shares-label"}, "shares")
                         )
                       )
                     ), 
@@ -39780,7 +39766,7 @@ module.exports = React.createClass({displayName: 'exports',
                         return (
                           React.DOM.article({className: "article article-source", key: article.id}, 
                             React.DOM.h4({className: "article-title"}, article.source, " - ", React.DOM.time({dateTime: article.createdAt}, moment(article.createdAt).format('MMMM Do YYYY'))), 
-                            React.DOM.p({className: "article-description"}, Link({to: "article", params: { slug: claim.get('slug'), articleId: article.id}}, this.truncateString(article.headline))), 
+                            React.DOM.p({className: "article-description"}, this.truncateString(article.headline), " ", React.DOM.a({href: article.url, target: "_blank"}, "View Article")), 
                             React.DOM.p(null, React.DOM.strong(null, this.formatNumber(article.shares) + ' shares'))
                           )
                         )
@@ -39796,8 +39782,7 @@ module.exports = React.createClass({displayName: 'exports',
                       React.DOM.div({className: "card-meta"}, 
                         React.DOM.p({className: "sources"}, claim.articlesByStance('observing').length, " sources"), 
                         React.DOM.div({className: "shares"}, 
-                          React.DOM.span({className: "shares-value"}, mostShared === 'observing' ? React.DOM.span({className: "icon icon-most-shared"}) : null, shares.observing ? this.formatNumber(shares.observing) : 0), 
-                          React.DOM.span({className: "shares-label"}, "shares")
+                          React.DOM.span({className: "shares-value"}, mostShared === 'observing' ? React.DOM.span({className: "icon icon-most-shared"}) : null, shares.observing ? this.formatNumber(shares.observing) : 0), " ", React.DOM.span({className: "shares-label"}, "shares")
                         )
                       )
                     ), 
@@ -39807,7 +39792,7 @@ module.exports = React.createClass({displayName: 'exports',
                         return (
                           React.DOM.article({className: "article article-source", key: article.id}, 
                             React.DOM.h4({className: "article-title"}, article.source, " - ", React.DOM.time({dateTime: article.createdAt}, moment(article.createdAt).format('MMMM Do YYYY'))), 
-                            React.DOM.p({className: "article-description"}, Link({to: "article", params: { slug: claim.get('slug'), articleId: article.id}}, this.truncateString(article.headline))), 
+                            React.DOM.p({className: "article-description"}, this.truncateString(article.headline), " ", React.DOM.a({href: article.url, target: "_blank"}, "View Article")), 
                             React.DOM.p(null, React.DOM.strong(null, this.formatNumber(article.shares) + ' shares'))
                           )
                         )
@@ -39828,18 +39813,20 @@ module.exports = React.createClass({displayName: 'exports',
           this.state.populated ?
             React.DOM.div({className: "page-content"}, 
               React.DOM.div({className: "container"}, 
-                React.DOM.nav(null, 
-                  React.DOM.ul({className: "filters"}, 
-                    React.DOM.li(null, React.DOM.button({onClick: this.setFilter.bind(this, null), className: 'filter filter-category filter-category-all' + (!this.state.filter ? ' is-selected' : '')}, "All Shares")), 
-                     claim.articlesByStance('for').length > 0 ? React.DOM.li(null, React.DOM.button({onClick: this.setFilter.bind(this, 'for'), className: 'filter filter-category filter-category-for' + (this.state.filter === 'for' ? ' is-selected' : '')}, "For")) : null, 
-                     claim.articlesByStance('against').length > 0 ? React.DOM.li(null, React.DOM.button({onClick: this.setFilter.bind(this, 'against'), className: 'filter filter-category filter-category-against' + (this.state.filter === 'against' ? ' is-selected' : '')}, "Against")) : null, 
-                     claim.articlesByStance('observing').length > 0 ? React.DOM.li(null, React.DOM.button({onClick: this.setFilter.bind(this, 'observing'), className: 'filter filter-category filter-category-observing' + (this.state.filter === 'observing' ? ' is-selected' : '')}, "Observing")) : null
-                  )
-                ), 
-                React.DOM.section({className: "section"}, 
-                  React.DOM.h3({className: "section-title"}, "Shares Over Time"), 
-                  React.DOM.div({className: "section-content"}, 
-                    Barchart({width: this.state.barChartWidth - 120, height: 200, ref: "chart", marginBottom: 20, marginTop: callout ? 75: 10, marginLeft: 100, marginRight: 20, ylabels: ylabels, labels: labels, series: data, colors: colors, fontSize: 12, gap: 0.6, callout: callout, color: "#252424"})
+                React.DOM.section({className: "shares-over-time"}, 
+                  React.DOM.nav(null, 
+                    React.DOM.ul({className: "filters"}, 
+                      React.DOM.li(null, React.DOM.button({onClick: this.setFilter.bind(this, null), className: 'filter filter-category filter-category-all' + (!this.state.filter ? ' is-selected' : '')}, "All Shares")), 
+                       claim.articlesByStance('for').length > 0 ? React.DOM.li(null, React.DOM.button({onClick: this.setFilter.bind(this, 'for'), className: 'filter filter-category filter-category-for' + (this.state.filter === 'for' ? ' is-selected' : '')}, "For")) : null, 
+                       claim.articlesByStance('against').length > 0 ? React.DOM.li(null, React.DOM.button({onClick: this.setFilter.bind(this, 'against'), className: 'filter filter-category filter-category-against' + (this.state.filter === 'against' ? ' is-selected' : '')}, "Against")) : null, 
+                       claim.articlesByStance('observing').length > 0 ? React.DOM.li(null, React.DOM.button({onClick: this.setFilter.bind(this, 'observing'), className: 'filter filter-category filter-category-observing' + (this.state.filter === 'observing' ? ' is-selected' : '')}, "Observing")) : null
+                    )
+                  ), 
+                  React.DOM.div({className: "section"}, 
+                    React.DOM.h3({className: "section-title"}, "Shares Over Time"), 
+                    React.DOM.div({className: "section-content"}, 
+                      Barchart({width: this.state.barChartWidth - 120, height: 200, ref: "chart", marginBottom: 20, marginTop: callout ? 75: 10, marginLeft: 100, marginRight: 20, ylabels: ylabels, labels: labels, series: data, colors: colors, fontSize: 12, gap: 0.6, callout: callout, color: "#252424"})
+                    )
                   )
                 ), 
                 React.DOM.section({className: "page-articles"}, 
@@ -39848,26 +39835,22 @@ module.exports = React.createClass({displayName: 'exports',
                     _.first(claim.articlesByStance(this.state.filter), 10).map(function(article) {
                       return (
                         React.DOM.li({key: article.id}, 
-                          React.DOM.article({className: "article"}, 
+                          React.DOM.article({className: "article with-stance"}, 
                             React.DOM.header({className: "article-header"}, 
-                              React.DOM.div({className: 'stance stance-' + article.stance}, 
+                              React.DOM.div({className: 'stance stance-small stance-' + article.stance}, 
                                 React.DOM.span({className: "stance-value"}, article.stance)
                               ), 
                               article.revised ?
-                                React.DOM.div({className: 'stance stance-revised stance-' + article.revised}, 
+                                React.DOM.div({className: 'stance stance-small stance-revised stance-' + article.revised}, 
                                   React.DOM.span({className: "stance-value"}, 'Revised to ' + article.revised)
                                 )
                               : ''
                             ), 
                             React.DOM.div({className: "article-content"}, 
-                              React.DOM.h4({className: "article-title"}, Link({to: "article", params: { slug: claim.get('slug'), articleId: article.id}}, article.source), " - ", React.DOM.time({dateTime: article.createdAt}, moment(article.createdAt).format('MMMM Do YYYY'))), 
+                              React.DOM.h4({className: "article-list-title"}, React.DOM.a({href: article.url}, article.source), " - ", React.DOM.time({dateTime: article.createdAt}, moment(article.createdAt).format('MMM D, YYYY')), "   ",  
+                                React.DOM.span({className: "shares-label"}, "Shares:"), " ", React.DOM.span({className: "shares-value"}, this.formatNumber(article.shares))
+                                ), 
                               React.DOM.p({className: "article-description"}, article.headline)
-                            ), 
-                            React.DOM.footer({className: "article-footer"}, 
-                              React.DOM.div({className: "shares"}, 
-                                React.DOM.span({className: "shares-value"}, this.formatNumber(article.shares)), 
-                                React.DOM.span({className: "shares-label"}, "shares")
-                              )
                             )
                           )
                         )

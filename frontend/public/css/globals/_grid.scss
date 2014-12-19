@@ -54,9 +54,11 @@
 
     &.with-stance {
       position: relative;
-      padding-left: 10.2em;
-      .stance {
-        top: 0.3em;
+      @include breakpoint($breakpoint-tablet) {
+        padding-left: 10.2em;
+        .stance {
+          top: 0.3em;
+        }
       }
     }
   }

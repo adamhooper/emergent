@@ -21,3 +21,11 @@
     border-left: 1px solid palette(base, light);
   }
 }
+
+.shares-over-time {
+  display: none;
+
+  @include breakpoint($breakpoint-desktop) {
+    display: block;
+  }
+}

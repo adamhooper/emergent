@@ -42,21 +42,26 @@ $stance-width:               6em;
 // ------------------------------
 
 .stance-true,
-.stance-false {
+.stance-false,
+.stance-for,
+.stance-against {
   color: palette(base, lighter);
 }
 
-.stance-true {
+.stance-true,
+.stance-for {
   background-color: palette(status, true);
   border-color: palette(status, true);
 }
 
-.stance-false {
+.stance-false,
+.stance-against {
   background-color: palette(status, false);
   border-color: palette(status, false);
 }
 
-.stance-unknown {
+.stance-unknown,
+.stance-observing {
   background-color: transparent;
   border-color: palette(status, unknown);
   color: palette(status, unknown);
