@@ -41,7 +41,7 @@ describe '/articles/:id/stances-over-time', ->
       description: 'A Description'
       origin: 'An Origin'
       originUrl: 'http://example.org'
-      published: true
+      publishedAt: new Date(1)
       truthiness: 'true'
       truthinessDescription: 'truthiness described'
       truthinessDate: new Date(1000)

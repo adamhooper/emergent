@@ -19,7 +19,15 @@ module.exports = class StoryView extends Marionette.ItemView
           <p class="description not-editing"><strong>Description:</strong> <%- description %></p>
           <p class="categories not-editing"><strong>Categories</strong>: <%- categories.sort().join(', ') %></p>
           <p class="tags not-editing"><strong>Tags</strong>: <%- tags.sort().join(', ') %></p>
-          <p class="published not-editing">This claim is <strong><%- published ? 'public' : 'not public' %></strong></p>
+          <p class="published-at not-editing">
+            <% if (publishedAt === null) { %>
+              This claim <strong>is not published</strong>
+            <% } else if (publishedAt < new Date()) { %>
+              This claim <strong>was published</strong> <time datetime="<%- publishedAt.toISOString() %>"><%- publishedAtString %></time>
+            <% } else { %>
+              This claim <strong>will be published</strong> <time datetime="<%- publishedAt.toISOString() %>"><%- publishedAtString %></time>
+            <% } %>
+          </p>
           <div class="form-group editing">
             <label for="claim-headline">The claim, in tweet form:</label>
             <textarea class="form-control" id="claim-headline" rows="2" name="headline" placeholder="A man bit a dog"><%- headline %></textarea>
@@ -36,10 +44,10 @@ module.exports = class StoryView extends Marionette.ItemView
             <label for="claim-tags">Tags:</label>
             <input type="text" id="claim-tags" name="tags" placeholder="Tag" value="<%- tags.sort().join(',') %>">
           </div>
-          <div class="checkbox editing">
-            <label>
-              <input name="published" type="checkbox" <%= published ? 'checked' : '' %>> Published</input>
-            </label>
+          <div class="form-group published-at editing">
+            <label for="claim-published-at">Published:</label>
+            <input type="datetime-local" class="form-control" id="claim-published-at" name="publishedAt" value="<%- publishedAtLocal %>">
+            <p class="help-block">Leave date blank to keep story unpublished</p>
           </div>
         </div>
 
@@ -149,7 +157,7 @@ module.exports = class StoryView extends Marionette.ItemView
     origin: '[name=origin]'
     originUrl: '[name=originUrl]'
     originUrlWrapper: '.origin-url'
-    published: '[name=published]'
+    publishedAt: '[name=publishedAt]'
     truthiness: '[name=truthiness]'
     truthinessDate: '[name=truthinessDate]'
     truthinessDescription: '[name=truthinessDescription]'
@@ -167,6 +175,13 @@ module.exports = class StoryView extends Marionette.ItemView
     @ui.truthinessUrlWrapper.toggleClass('not-applicable', truthinessNotApplicable)
 
   _getTruthiness: -> @ui.truthiness.filter(':checked').val() || 'unknown'
+
+  _getPublishedAt: ->
+    val = @ui.publishedAt.val()
+    if val
+      moment(val).toDate()
+    else
+      null
 
   _getTruthinessDate: ->
     if @_getTruthiness() != 'unknown' && (val = @ui.truthinessDate.val())
@@ -198,7 +213,7 @@ module.exports = class StoryView extends Marionette.ItemView
       description: @ui.description.val()
       origin: @ui.origin.val()
       originUrl: @ui.origin.val() && @ui.originUrl.val() || null
-      published: @ui.published.prop('checked')
+      publishedAt: @_getPublishedAt()
       truthiness: @_getTruthiness()
       truthinessDate: @_getTruthinessDate()
       truthinessDescription: @_getTruthinessDescription()
@@ -239,10 +254,19 @@ module.exports = class StoryView extends Marionette.ItemView
     ret = @model.toJSON()
 
     if (d = ret.truthinessDate)
-      ret.truthinessDateLocal = moment(d).format('YYYY-MM-DDTHH:mm:ss')
+      ret.truthinessDate = new Date(ret.truthinessDate)
+      ret.truthinessDateLocal = moment(d).format('YYYY-MM-DDTHH:mm')
       ret.truthinessDateString = moment(d).format('YYYY-MM-DD h:mma')
     else
       ret.truthinessDateLocal = ''
       ret.truthinessDateString = ''
+
+    if (d = ret.publishedAt)
+      ret.publishedAt = new Date(ret.publishedAt)
+      ret.publishedAtLocal = moment(d).format('YYYY-MM-DDTHH:mm')
+      ret.publishedAtString = moment(d).format('YYYY-MM-DD h:mma')
+    else
+      ret.publishedAtLocal = ''
+      ret.publishedAtString = ''
 
     ret

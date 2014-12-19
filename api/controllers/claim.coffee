@@ -16,9 +16,10 @@ claimToJson = (claim) ->
     'truthinessDate'
     'truthinessDescription'
     'truthinessUrl'
-    'createdAt'
+    'publishedAt'
     'categories'
     'tags'
+    'createdAt'
   ])
 
 getCategories = (claimIds) ->
@@ -100,7 +101,7 @@ getShareCount = (claimId) ->
 
 module.exports =
   'get /claims': (req, res, next) ->
-    models.Story.findAll(where: { published: true })
+    models.Story.findAll(where: { publishedAt: { lte: new Date() } }, order: [[ 'publishedAt', 'DESC' ]])
       .tap (claims) ->
         if claims.length
           claimIds = (c.id for c in claims)

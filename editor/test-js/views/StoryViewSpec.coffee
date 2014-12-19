@@ -12,7 +12,7 @@ describe 'views/StoryView', ->
       description: 'Description'
       origin: ''
       originUrl: null
-      published: false
+      publishedAt: new Date(1234)
       truthiness: null
       truthinessDate: null
       truthinessDescription: ''

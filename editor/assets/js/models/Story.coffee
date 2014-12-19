@@ -13,6 +13,7 @@ module.exports = class Story extends Backbone.Model
     published: false
     truthiness: 'unknown'
     truthinessDate: null
+    publishedAt: null
     categories: []
     tags: []
 

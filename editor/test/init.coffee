@@ -16,9 +16,11 @@ before (done) ->
 
   migrator.migrate().complete(done)
 
-beforeEach (done) ->
+beforeEach ->
   # Top-level object tables. CASCADE will wipe the others.
-  Tables = [ 'Story', 'Url', 'Category', 'Tag' ]
-  Promise.map(Tables, (tableName) ->
-    global.models.sequelize.query("""DELETE FROM "#{tableName}" """)
-  ).nodeify(done)
+  #
+  # Delete them sequentially: if we do it all at once, we sometimes deadlock.
+  p = Promise.resolve(null)
+  [ 'Story', 'Url', 'Category', 'Tag' ].forEach (tableName) ->
+    p = p.tap(-> global.models.sequelize.query("""DELETE FROM "#{tableName}" """))
+  p

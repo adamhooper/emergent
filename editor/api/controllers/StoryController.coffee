@@ -12,7 +12,7 @@ AttributesWithDefaults =
   description: ''
   origin: ''
   originUrl: null
-  published: false
+  publishedAt: null
   truthiness: 'unknown'
   truthinessDate: null
   truthinessDescription: ''
@@ -32,7 +32,7 @@ jsonToAttributes = (json, isCreate) ->
 module.exports =
   index: (req, res) ->
     Promise.all([
-      Story.findAll({}, raw: true)
+      Story.findAll({ order: [[ 'publishedAt', 'DESC' ]] }, raw: true)
       Category.findAll({}, raw: true)
       CategoryStory.findAll({}, raw: true)
       Tag.findAll({}, raw: true)
@@ -88,7 +88,7 @@ module.exports =
         s."truthinessDate",
         s."truthinessDescription",
         s."truthinessUrl",
-        s."published",
+        s."publishedAt",
         (
           SELECT COALESCE(ARRAY_AGG(c."name"), ARRAY[]::VARCHAR[])
           FROM "Category" c

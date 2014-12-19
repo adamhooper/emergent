@@ -1,3 +1,4 @@
+Promise = require('bluebird')
 _ = require('lodash')
 
 DefaultAttrs =
@@ -6,7 +7,7 @@ DefaultAttrs =
   description: 'A Description'
   origin: 'An Origin'
   originUrl: 'http://example.org'
-  published: true
+  publishedAt: new Date(2500)
   truthiness: 'true'
   truthinessDescription: 'truthiness described'
   truthinessDate: new Date(1000)
@@ -28,7 +29,7 @@ describe '/claims', ->
 
   it 'should return the properties we want', ->
     api.get('/claims')
-      .then (res) ->
+      .tap (res) ->
         body = res.body
         claims = body.claims
         expect(claims).to.have.length(1)
@@ -42,10 +43,40 @@ describe '/claims', ->
         expect(claim.truthinessDate).to.eq(new Date(1000).toISOString())
         expect(claim.truthinessDescription).to.eq('truthiness described')
         expect(claim.truthinessUrl).to.eq('http://example2.org')
+        expect(claim.publishedAt).to.eq(new Date(2500).toISOString())
         expect(claim.createdAt).to.eq(new Date(2000).toISOString())
         expect(claim).not.to.have.property('updatedAt')
         expect(claim).not.to.have.property('createdBy')
         expect(claim).not.to.have.property('updatedBy')
+
+  it 'should not return unpublished claims', ->
+    createClaim(slug: 'x', publishedAt: null)
+      .then -> api.get('/claims')
+      .tap (res) ->
+        expect(res.body.claims).to.have.length(1)
+
+  it 'should not return published-in-the-future claims', ->
+    createClaim(slug: 'x', publishedAt: new Date(new Date().getTime() + 100000))
+      .then -> api.get('/claims')
+      .tap (res) ->
+        expect(res.body.claims).to.have.length(1)
+
+  it 'should return published-extremely-recently claims', ->
+    createClaim(slug: 'x', publishedAt: new Date())
+      .then -> api.get('/claims')
+      .tap (res) ->
+        expect(res.body.claims).to.have.length(2)
+
+  it 'should order claims by publishedAt', ->
+    Promise.all([
+      createClaim(slug: 'a', publishedAt: new Date(4000))
+      createClaim(slug: 'b', publishedAt: new Date(6000))
+      createClaim(slug: 'c', publishedAt: new Date(5000))
+    ])
+      .then -> api.get('/claims')
+      .tap (res) ->
+        expect(res.body.claims).to.have.length(4)
+        expect(res.body.claims.map((x) -> x.slug)).to.deep.eq([ 'b', 'c', 'a', 'a-slug' ])
 
   it 'should return Categories as Arrays of Strings', ->
     Promise.all([
@@ -90,7 +121,7 @@ describe '/claims', ->
       .then((res) -> expect(res.body.claims[0]).to.have.property('nShares', 0))
 
   it 'should hide unpublished claims', ->
-    createClaim(slug: 'slug-2', published: false)
+    createClaim(slug: 'slug-2', publishedAt: null)
       .then -> api.get('/claims')
       .then (res) ->
         expect(res.body.claims).to.have.length(1)
