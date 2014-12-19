@@ -83,10 +83,10 @@ $article-padding:            2em;
 }
 
 .article-source {
-  // a {
-  //   font-weight: weight(bold);
-  //   text-decoration: none;
-  // }
+  a {
+    font-weight: weight(bold);
+    text-decoration: none;
+  }
   .indicator {
     margin-right: 5px;
     margin-left: 8px;

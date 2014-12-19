@@ -841,6 +841,9 @@ ul.credits {
   margin-bottom: 1em;
   font-weight: 500; }
 
+.article-source a {
+  font-weight: 600;
+  text-decoration: none; }
 .article-source .indicator {
   margin-right: 5px;
   margin-left: 8px; }
