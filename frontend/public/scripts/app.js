@@ -40024,7 +40024,7 @@ module.exports = React.createClass({displayName: 'exports',
                 React.DOM.p(null, "Lorem ipsum dolor sit amet pro patria mori through our special tool.")
               ), 
               React.DOM.li(null, 
-                React.DOM.a({href: "#", className: "navigation-link"}, "Sign up for our newsletter"), 
+                React.DOM.a({href: "http://eepurl.com/3mb9T", className: "navigation-link"}, "Sign up for our newsletter"), 
                 React.DOM.p(null, "Lorem ipsum dolor sit amet pro patria mori through our special tool.")
               )
             )

@@ -154,7 +154,7 @@ module.exports = React.createClass({
                 <p>Lorem ipsum dolor sit amet pro patria mori through our special tool.</p>
               </li>
               <li>
-                <a href="#" className="navigation-link">Sign up for our newsletter</a>
+                <a href="http://eepurl.com/3mb9T" className="navigation-link">Sign up for our newsletter</a>
                 <p>Lorem ipsum dolor sit amet pro patria mori through our special tool.</p>
               </li>
             </ul>
