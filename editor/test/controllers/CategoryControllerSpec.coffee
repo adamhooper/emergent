@@ -15,9 +15,10 @@ describe 'CategoryController', ->
           expect(res.body).to.deep.eq([])
 
     it 'should return sorted categories', ->
-      Category.bulkCreate([{ name: 'foo' }, { name: 'bar' }, { name: 'baz' } ], 'user@example.org')
+      Category.bulkCreate([{ slug: 'a', name: 'foo' }, { slug: 'b', name: 'bar' }, { slug: 'c', name: 'baz' } ], 'user@example.org')
         .then -> req()
         .tap (res) ->
           categories = res.body
           expect(categories).to.have.property('length', 3)
           expect(c.name for c in categories).to.deep.eq([ 'bar', 'baz', 'foo' ])
+          expect(c.slug for c in categories).to.deep.eq([ 'b', 'c', 'a' ])
