@@ -55,7 +55,7 @@ module.exports = class FetchHandler
           @log("FetchHandler.handle created new UrlVersion for #{url}")
           Promise.map(
             models.Article.findAll(where: { urlId: id }),
-            (a) -> models.ArticleVersion.create(articleId: a.id, urlVersionId: uvid)
+            (a) -> models.ArticleVersion.upsert(articleId: a.id, urlVersionId: uvid)
           )
         else
           @log("FetchHandler.handle determined #{url} did not change")

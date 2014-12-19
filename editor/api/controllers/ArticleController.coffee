@@ -1,8 +1,35 @@
 Promise = require('bluebird')
+_ = require('lodash')
 
 Story = global.models.Story
 Article = global.models.Article
+ArticleVersion = global.models.ArticleVersion
 Url = global.models.Url
+UrlVersion = global.models.UrlVersion
+
+# Returns a Url object from the database.
+#
+# Tells job-queue about this URL if it's new.
+upsertUrl = (url, email) ->
+  Url.upsert({ url: url }, email)
+    .tap ([ urlObject, isNew ]) ->
+      if isNew
+        queueJob = Promise.promisify(global.urlJobQueue.queue, global.urlJobQueue)
+        queueJob(urlObject.toJSON())
+    .then ([ urlObject ]) -> urlObject
+
+# Returns Article, a JSON object that _inclues_ url: url.url and urlId: url.id
+upsertArticle = (storyId, url, email) ->
+  Article.upsert({ storyId: storyId, urlId: url.id }, email)
+    .then ([ article ]) -> _.extend({}, article.toJSON(), url: url.url, urlId: url.id)
+
+# Creates ArticleVersions for existing UrlVersions
+#
+# This has to be an upsert. For new Urls, there's a race: if the url fetcher
+# sees this Article it's going to try to build ArticleVersions for it, too.
+upsertArticleVersions = (article, email) ->
+  urlVersions = UrlVersion.findAll(where: { urlId: article.urlId })
+  Promise.map(urlVersions, (uv) -> ArticleVersion.upsert({ urlVersionId: uv.id, articleId: article.id }, email))
 
 # Finds the story based on the request parameters.
 #
@@ -60,21 +87,10 @@ module.exports = self =
   create: (req, res) ->
     validUrl req, res, (url) ->
       findStoryThen req, res, (story) ->
-        Url.upsert({ url: url }, req.user.email)
-          .spread (urlObject, isNew) ->
-            if isNew
-              queueJob = Promise.promisify(global.urlJobQueue.queue, global.urlJobQueue)
-              queueJob(urlObject.toJSON())
-                .then(-> urlObject)
-            else
-              urlObject
-          .then (urlObject) ->
-            Article.upsert({ storyId: story.id, urlId: urlObject.id }, req.user.email)
-              .spread (article) ->
-                json = article.toJSON()
-                json.url = url
-                json
-          .then((json) -> res.json(json))
+        upsertUrl(url, req.user.email)
+          .then((urlId) -> upsertArticle(story.id, urlId, req.user.email))
+          .tap((json) -> upsertArticleVersions(json, req.user.email))
+          .then((json) -> res.status(201).json(json))
           .catch (err) ->
             if /^Validation/.test(err?.url?[0]?.message || '')
               res.status(400).json(err)

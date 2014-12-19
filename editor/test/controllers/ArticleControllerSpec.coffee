@@ -3,6 +3,8 @@ Promise = require('bluebird')
 Article = global.models.Article
 Story = global.models.Story
 Url = global.models.Url
+UrlVersion = global.models.UrlVersion
+ArticleVersion = global.models.ArticleVersion
 
 describe 'ArticleController', ->
   beforeEach ->
@@ -85,10 +87,10 @@ describe 'ArticleController', ->
 
     it 'should return a JSON response with the Article', (done) ->
       req(url: 'http://example.org')
-        .expect(200)
+        .expect(201)
         .expect('Content-Type', 'application/json; charset=utf-8')
         .expect (res) ->
-          res.body.url.should.equal('http://example.org')
+          expect(res.body).to.have.property('url', 'http://example.org')
           undefined
         .end(done)
 
@@ -111,7 +113,7 @@ describe 'ArticleController', ->
       Url.create(url: 'http://example.org')
         .then((u) -> url = u)
         .then(-> reqPromise(url: 'http://example.org'))
-        .tap((r) -> expect(r.status).to.eq(200))
+        .tap((r) -> expect(r.status).to.eq(201))
         .tap((r) -> expect(r).to.have.deep.property('res.body.url', 'http://example.org'))
         .then(-> Url.findAll())
         .then((urls) -> expect(urls).to.have.property('length', 1))
@@ -126,7 +128,7 @@ describe 'ArticleController', ->
         .then(=> Article.create({ storyId: @story1.id, urlId: url.id }, 'user@example.org'))
         .then((a) -> article = a)
         .then(-> reqPromise(url: 'http://example.org'))
-        .tap((r) -> expect(r.status).to.eq(200))
+        .tap((r) -> expect(r.status).to.eq(201))
         .tap((r) -> expect(r).to.have.deep.property('res.body.id', article.id))
         .then(-> Article.findAll())
         .then((articles) -> expect(articles).to.have.property('length', 1))
@@ -140,6 +142,49 @@ describe 'ArticleController', ->
       req(url: 'htt://example.org')
         .expect(400)
         .end(done)
+
+    describe 'when there is an existing Article for the URL on another Story', ->
+      beforeEach ->
+        Promise.all([
+          Story.create({ slug: 'slug-b', headline: 'headline b', description: 'description b' }, 'user@example.org')
+          Url.create({ url: 'http://example.org' }, 'user@example.org')
+        ])
+          .spread (s, u) =>
+            Promise.all([
+              Article.create({ storyId: s.id, urlId: u.id }, 'user@example.org')
+              UrlVersion.create({ urlId: u.id, source: 'source', byline: 'byline', headline: 'headline', body: 'body' }, 'user@example.org')
+            ])
+              .then ([a, uv]) =>
+                @existingArticle = a
+                @existingUrlVersion = uv
+                ArticleVersion.create({ urlVersionId: uv.id, articleId: a.id }, 'user@example.org')
+                  .then (av) -> @existingArticleVersion = av
+          .catch (e) -> console.warn(e)
+
+      it 'should succeed', ->
+        reqPromise(url: 'http://example.org')
+          .tap (res) -> expect(res.statusCode).to.eq(201)
+
+      it 'should not create another UrlVersion', ->
+        reqPromise(url: 'http://example.org')
+          .then -> UrlVersion.findAll()
+          .tap (arr) =>
+            expect(arr.length).to.eq(1)
+            expect(arr[0].id).to.eq(@existingUrlVersion.id)
+
+      it 'should create another ArticleVersion', ->
+        reqPromise(url: 'http://example.org')
+          .then -> ArticleVersion.findAll()
+          .tap (arr) =>
+            expect(arr.length).to.eq(2)
+            newVersions = arr.filter((av) -> av.id != @existingArticleVersion.id)
+            expect(newVersions.length).to.eq(1)
+            expect(newVersions[0].urlVersionId).to.eq(@existingUrlVersion.id)
+            expect(newVersions[0].articleId).not.to.eq(@existingArticle.id)
+
+      it 'should add nothing to the urlJobQueue', ->
+        reqPromise(url: 'http://example.org')
+          .tap -> expect(global.urlJobQueue.queue).not.to.have.been.called
 
   describe '#destroy', ->
     req = (slug, id) ->

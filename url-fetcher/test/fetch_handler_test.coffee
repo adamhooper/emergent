@@ -10,7 +10,7 @@ describe 'FetchHandler', ->
     @sandbox.stub(models.UrlVersion, 'find').returns(Promise.resolve(null))
     @sandbox.stub(models.UrlVersion, 'create')
     @sandbox.stub(models.Article, 'findAll').returns(Promise.resolve([]))
-    @sandbox.stub(models.ArticleVersion, 'create').returns(Promise.resolve({}))
+    @sandbox.stub(models.ArticleVersion, 'upsert').returns(Promise.resolve({}))
     @sandbox.stub(models.UrlGet, 'max').returns(Promise.resolve(null))
 
     @parsedObject =
@@ -136,7 +136,7 @@ describe 'FetchHandler', ->
 
       it 'should not insert a new ArticleVersion', (done) ->
         @go ->
-          expect(models.ArticleVersion.create).not.to.have.been.called
+          expect(models.ArticleVersion.upsert).not.to.have.been.called
           done()
 
     describe 'when a different UrlVersion exists', ->
@@ -172,10 +172,10 @@ describe 'FetchHandler', ->
         ]))
         @go =>
           expect(models.Article.findAll).to.have.been.calledWith(where: { urlId: @id })
-          expect(models.ArticleVersion.create).to.have.been.calledWith
+          expect(models.ArticleVersion.upsert).to.have.been.calledWith
             urlVersionId: '42ffe765-3b77-4f15-be97-a7cb9e6bd98f'
             articleId: 'ac89cbaf-ff6d-4f68-bd97-3d91661cc03a'
-          expect(models.ArticleVersion.create).to.have.been.calledWith
+          expect(models.ArticleVersion.upsert).to.have.been.calledWith
             urlVersionId: '42ffe765-3b77-4f15-be97-a7cb9e6bd98f'
             articleId: 'ac89cbaf-ff6d-4f68-bd97-3d91661cc03b'
           done()
@@ -207,10 +207,10 @@ describe 'FetchHandler', ->
         ]))
         @go =>
           expect(models.Article.findAll).to.have.been.calledWith(where: { urlId: @id })
-          expect(models.ArticleVersion.create).to.have.been.calledWith
+          expect(models.ArticleVersion.upsert).to.have.been.calledWith
             urlVersionId: '42ffe765-3b77-4f15-be97-a7cb9e6bd98f'
             articleId: 'ac89cbaf-ff6d-4f68-bd97-3d91661cc03a'
-          expect(models.ArticleVersion.create).to.have.been.calledWith
+          expect(models.ArticleVersion.upsert).to.have.been.calledWith
             urlVersionId: '42ffe765-3b77-4f15-be97-a7cb9e6bd98f'
             articleId: 'ac89cbaf-ff6d-4f68-bd97-3d91661cc03b'
           done()
