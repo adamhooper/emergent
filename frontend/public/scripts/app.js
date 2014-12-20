@@ -39983,8 +39983,8 @@ module.exports = React.createClass({displayName: 'exports',
 
   filteredClaims: function() {
     // Should combine the two, switch between for now
-    var category = this.props.params.category;
-    var tag = this.props.params.tag;
+    var category = unescape(this.props.params.category);
+    var tag = unescape(this.props.params.tag);
     var claims = this.props.claims.models;
 
     if (this.props.search) {
@@ -40174,12 +40174,10 @@ module.exports = React.createClass({displayName: 'exports',
             React.DOM.nav({className: "site-menu-categories"}, 
               React.DOM.ul({className: "navigation navigation-categories"}, 
                 React.DOM.li(null, Link({to: "claims", className: "navigation-link"}, "Home")), 
-                React.DOM.li(null, Link({to: "category", params: { category: 'Health'}, className: "navigation-link"}, "Health")), 
                 React.DOM.li(null, Link({to: "category", params: { category: 'Culture'}, className: "navigation-link"}, "Culture")), 
-                React.DOM.li(null, Link({to: "category", params: { category: 'Business'}, className: "navigation-link"}, "Business")), 
+                React.DOM.li(null, Link({to: "category", params: { category: 'Business%2FTech'}, className: "navigation-link"}, "Business")), 
                 React.DOM.li(null, Link({to: "category", params: { category: 'World'}, className: "navigation-link"}, "World News")), 
-                React.DOM.li(null, Link({to: "category", params: { category: 'Viral'}, className: "navigation-link"}, "Viral News")), 
-                React.DOM.li(null, Link({to: "category", params: { category: 'Controversial'}, className: "navigation-link"}, "Controversial"))
+                React.DOM.li(null, Link({to: "category", params: { category: 'Viral'}, className: "navigation-link"}, "Viral News"))
               )
             )
           )

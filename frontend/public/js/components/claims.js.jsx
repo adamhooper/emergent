@@ -64,8 +64,8 @@ module.exports = React.createClass({
 
   filteredClaims: function() {
     // Should combine the two, switch between for now
-    var category = this.props.params.category;
-    var tag = this.props.params.tag;
+    var category = unescape(this.props.params.category);
+    var tag = unescape(this.props.params.tag);
     var claims = this.props.claims.models;
 
     if (this.props.search) {
