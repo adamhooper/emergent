@@ -12,8 +12,15 @@ module.exports = React.createClass({
   getInitialState: function() {
     return {
       searchToggle: false,
-      navToggle: false
+      navToggle: false,
+      search: null
     }
+  },
+
+  setSearch: function(e) {
+    this.setState({
+      search: e.target.value
+    });
   },
 
   updateActiveState: function() {
@@ -81,10 +88,9 @@ module.exports = React.createClass({
               <nav className="site-menu-trending">
                 <span className="label">Trending:</span>
                 <ul className="navigation navigation-trending">
-                  <li><Link to="claims" className="navigation-link">Ukraine</Link></li>
-                  <li><Link to="claims" className="navigation-link">Putin</Link></li>
-                  <li><Link to="claims" className="navigation-link">NATO</Link></li>
-                  <li><Link to="claims" className="navigation-link">Tsunami</Link></li>
+                  {_.map(this.props.claims.trendingTags(), function(tag, i) {
+                    return <li key={i}><Link to="tag" params={{ tag: tag }} className="navigation-link">{tag}</Link></li>
+                  })}
                 </ul>
               </nav>
               <div className="articles-search">
@@ -92,14 +98,14 @@ module.exports = React.createClass({
                 <div className="articles-search-holder">
                   <div className="inner">
                     <button className="search-close" onClick={this.closeSearch}><span className="icon icon-close">Close</span></button>
-                    <input type="search" id="claims-filter" ref="searchTextInput" placeholder="Search" onChange={this.setFilter}/>
+                    <input type="search" id="claims-filter" ref="searchTextInput" value={this.state.search} placeholder="Search" onChange={this.setSearch}/>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </header>
-        <this.props.activeRouteHandler />
+        <this.props.activeRouteHandler search={this.state.searchToggle && this.state.search} claims={this.props.claims}/>
       </div>
     );
   }

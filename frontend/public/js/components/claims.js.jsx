@@ -9,37 +9,42 @@ var moment = require('moment');
 module.exports = React.createClass({
 
   mixins: [BackboneCollection],
-
+ 
   getInitialState: function() {
     return {
       filter: '',
-      sort: 'Latest',
-      stance: 'All'
+      sort: null,
+      stance: null
     }
   },
 
   getDefaultProps: function() {
     return {
-      sorting: [
+      sortings: [
         {
           'name': 'Latest'
         },
         {
-          'name': 'Most Shared'
+          'name': 'Most Shared',
+          'value': 'nShares'
         }
       ],
-      stance: [
+      stances: [
         {
-          'name': 'All'
+          'name': 'All',
+          'value': null
         },
         {
-          'name': 'True'
+          'name': 'True',
+          'value': 'true'
         },
         {
-          'name': 'False'
+          'name': 'False',
+          'value': 'false'
         },
         {
-          'name': 'Unverified'
+          'name': 'Unverified',
+          'value': 'unknown'
         }
       ]
     };
@@ -49,22 +54,35 @@ module.exports = React.createClass({
     this.subscribeTo(this.props.claims);
   },
 
-  setFilter: function(e) {
-    this.setState({
-      filter: e.target.value
-    });
+  setStanceFilter: function(stance) {
+    this.setState({ stance: stance });
+  },
+
+  setSort: function(sort) {
+    this.setState({ sort: sort });
   },
 
   filteredClaims: function() {
     // Should combine the two, switch between for now
     var category = this.props.params.category;
-    var claims;
-    if (typeof category !== "undefined") {
-      claims = this.props.claims.byCategory(category);
-    } else {
-      claims = this.props.claims.filtered(this.state.filter);
+    var tag = this.props.params.tag;
+    var claims = this.props.claims.models;
+
+    if (this.props.search) {
+      claims = this.props.claims.filtered(claims, this.props.search);
+    } else if (category) {
+      claims = this.props.claims.byCategory(claims, category);
+    } else if (tag) {
+      claims = this.props.claims.byTag(claims, tag);
     }
 
+    if (this.state.stance) {
+      claims = this.props.claims.byStance(claims, this.state.stance);
+    }
+
+    if (this.state.sort) {
+      claims = _.sortBy(claims, function(claim) { return claim.get(this.state.sort); }, this).reverse();
+    }
     return claims;
   },
 
@@ -79,18 +97,18 @@ module.exports = React.createClass({
           <div className="articles-holder section-with-sidebar">
             <nav className="articles-filtering">
               <ul className="navigation navigation-filtering navigation-filtering-sort">
-                {this.props.sorting.map(function(sorting, i) {
-                  var classes = sorting.name === this.state.sort ? 'active navigation-link' : 'navigation-link';
+                {this.props.sortings.map(function(sorting, i) {
+                  var classes = sorting.value == this.state.sort ? 'active navigation-link' : 'navigation-link';
                   return (
-                    <li key={i}><a href="#" className={classes}>{sorting.name}</a></li>
+                    <li key={i}><a onClick={this.setSort.bind(this, sorting.value)} className={classes}>{sorting.name}</a></li>
                   );
                 }.bind(this))}
               </ul>
              <ul className="navigation navigation-filtering navigation-filtering-stance">
-                {this.props.stance.map(function(stance, i) {
-                  var classes = stance.name === this.state.stance ? 'active navigation-link' : 'navigation-link';
+                {this.props.stances.map(function(stance, i) {
+                  var classes = stance.value == this.state.stance ? 'active navigation-link' : 'navigation-link';
                   return (
-                    <li key={i}><a href="#" className={classes}>{stance.name}</a></li>
+                    <li key={i}><a onClick={this.setStanceFilter.bind(this, stance.value )} className={classes}>{stance.name}</a></li>
                   );
                 }.bind(this))}
               </ul>

@@ -3215,6 +3215,8 @@ var process = module.exports = {};
 process.nextTick = (function () {
     var canSetImmediate = typeof window !== 'undefined'
     && window.setImmediate;
+    var canMutationObserver = typeof window !== 'undefined'
+    && window.MutationObserver;
     var canPost = typeof window !== 'undefined'
     && window.postMessage && window.addEventListener
     ;
@@ -3223,8 +3225,29 @@ process.nextTick = (function () {
         return function (f) { return window.setImmediate(f) };
     }
 
+    var queue = [];
+
+    if (canMutationObserver) {
+        var hiddenDiv = document.createElement("div");
+        var observer = new MutationObserver(function () {
+            var queueList = queue.slice();
+            queue.length = 0;
+            queueList.forEach(function (fn) {
+                fn();
+            });
+        });
+
+        observer.observe(hiddenDiv, { attributes: true });
+
+        return function nextTick(fn) {
+            if (!queue.length) {
+                hiddenDiv.setAttribute('yes', 'no');
+            }
+            queue.push(fn);
+        };
+    }
+
     if (canPost) {
-        var queue = [];
         window.addEventListener('message', function (ev) {
             var source = ev.source;
             if ((source === window || source === null) && ev.data === 'process-tick') {
@@ -3264,7 +3287,7 @@ process.emit = noop;
 
 process.binding = function (name) {
     throw new Error('process.binding is not supported');
-}
+};
 
 // TODO(shtylman)
 process.cwd = function () { return '/' };
@@ -39137,12 +39160,13 @@ var app = {
       this.claims.sort();
       React.renderComponent(
         Routes({location: "history"}, 
-          Route({path: "/", handler: Root}, 
-            DefaultRoute({name: "claims", handler: this.components.Claims, claims: this.claims}), 
+          Route({path: "/", handler: Root, claims: this.claims}, 
+            DefaultRoute({name: "claims", handler: this.components.Claims}), 
             Route({name: "about", path: "about", handler: this.components.About}), 
-            Route({name: "claim", path: ":slug", handler: this.components.Claim, claims: this.claims}), 
-            Route({name: "article", path: ":slug/articles/:articleId", handler: this.components.Article, claims: this.claims}), 
-            Route({name: "category", path: "category/:category", handler: this.components.Claims, claims: this.claims})
+            Route({name: "claim", path: ":slug", handler: this.components.Claim}), 
+            Route({name: "article", path: ":slug/articles/:articleId", handler: this.components.Article}), 
+            Route({name: "category", path: "category/:category", handler: this.components.Claims}), 
+            Route({name: "tag", path: "tag/:tag", handler: this.components.Claims})
           )
         )
       , $('#react')[0]);
@@ -39188,16 +39212,41 @@ module.exports = Backbone.Collection.extend({
     return response.claims;
   },
 
-  filtered: function(regex) {
-    return this.filter(function(claim) { return claim.searchableText().match(new RegExp(regex, 'gi')); });
+  filtered: function(collection, regex) {
+    return _.filter(collection, function(claim) { return claim.searchableText().match(new RegExp(regex, 'gi')); });
   },
 
   comparator: function(c1, c2) {
     return c1.get('createdAt') < c2.get('createdAt') ? 1 : -1;
   },
 
-  byCategory: function(category) {
-    return this.filter(function(claim) { return _.contains(claim.get('categories'), category); });
+  byCategory: function(collection, category) {
+    return _.filter(collection, function(claim) { return _.contains(claim.get('categories'), category); });
+  },
+
+  byTag: function(collection, tag) {
+    return _.filter(collection, function(claim) { return _.contains(claim.get('tags'), tag); });
+  },
+
+  byStance: function(collection, stance) {
+    return _.filter(collection, function(claim) { return claim.get('truthiness')==stance; });
+  },
+
+  tagsByFrequency: function() {
+    return this.reduce(function(tags, claim) {
+      _.each(claim.get('tags'), function(tag) { tags[tag] = isNaN(tags[tag]) ? 1 : tags[tag] + 1; });
+      return tags;
+    }, {});
+  },
+
+  // very simple logic for now
+  trendingTags: function() {
+    var tags = this.tagsByFrequency();
+    return _.sortBy(_.filter(_.keys(tags), function(tag) {
+      return tags[tag]>1;
+    }), function(tag) {
+      return -tags[tag];
+    });
   }
 });
 
@@ -39879,37 +39928,42 @@ var moment = require('moment');
 module.exports = React.createClass({displayName: 'exports',
 
   mixins: [BackboneCollection],
-
+ 
   getInitialState: function() {
     return {
       filter: '',
-      sort: 'Latest',
-      stance: 'All'
+      sort: null,
+      stance: null
     }
   },
 
   getDefaultProps: function() {
     return {
-      sorting: [
+      sortings: [
         {
           'name': 'Latest'
         },
         {
-          'name': 'Most Shared'
+          'name': 'Most Shared',
+          'value': 'nShares'
         }
       ],
-      stance: [
+      stances: [
         {
-          'name': 'All'
+          'name': 'All',
+          'value': null
         },
         {
-          'name': 'True'
+          'name': 'True',
+          'value': 'true'
         },
         {
-          'name': 'False'
+          'name': 'False',
+          'value': 'false'
         },
         {
-          'name': 'Unverified'
+          'name': 'Unverified',
+          'value': 'unknown'
         }
       ]
     };
@@ -39919,22 +39973,35 @@ module.exports = React.createClass({displayName: 'exports',
     this.subscribeTo(this.props.claims);
   },
 
-  setFilter: function(e) {
-    this.setState({
-      filter: e.target.value
-    });
+  setStanceFilter: function(stance) {
+    this.setState({ stance: stance });
+  },
+
+  setSort: function(sort) {
+    this.setState({ sort: sort });
   },
 
   filteredClaims: function() {
     // Should combine the two, switch between for now
     var category = this.props.params.category;
-    var claims;
-    if (typeof category !== "undefined") {
-      claims = this.props.claims.byCategory(category);
-    } else {
-      claims = this.props.claims.filtered(this.state.filter);
+    var tag = this.props.params.tag;
+    var claims = this.props.claims.models;
+
+    if (this.props.search) {
+      claims = this.props.claims.filtered(claims, this.props.search);
+    } else if (category) {
+      claims = this.props.claims.byCategory(claims, category);
+    } else if (tag) {
+      claims = this.props.claims.byTag(claims, tag);
     }
 
+    if (this.state.stance) {
+      claims = this.props.claims.byStance(claims, this.state.stance);
+    }
+
+    if (this.state.sort) {
+      claims = _.sortBy(claims, function(claim) { return claim.get(this.state.sort); }, this).reverse();
+    }
     return claims;
   },
 
@@ -39949,18 +40016,18 @@ module.exports = React.createClass({displayName: 'exports',
           React.DOM.div({className: "articles-holder section-with-sidebar"}, 
             React.DOM.nav({className: "articles-filtering"}, 
               React.DOM.ul({className: "navigation navigation-filtering navigation-filtering-sort"}, 
-                this.props.sorting.map(function(sorting, i) {
-                  var classes = sorting.name === this.state.sort ? 'active navigation-link' : 'navigation-link';
+                this.props.sortings.map(function(sorting, i) {
+                  var classes = sorting.value == this.state.sort ? 'active navigation-link' : 'navigation-link';
                   return (
-                    React.DOM.li({key: i}, React.DOM.a({href: "#", className: classes}, sorting.name))
+                    React.DOM.li({key: i}, React.DOM.a({onClick: this.setSort.bind(this, sorting.value), className: classes}, sorting.name))
                   );
                 }.bind(this))
               ), 
              React.DOM.ul({className: "navigation navigation-filtering navigation-filtering-stance"}, 
-                this.props.stance.map(function(stance, i) {
-                  var classes = stance.name === this.state.stance ? 'active navigation-link' : 'navigation-link';
+                this.props.stances.map(function(stance, i) {
+                  var classes = stance.value == this.state.stance ? 'active navigation-link' : 'navigation-link';
                   return (
-                    React.DOM.li({key: i}, React.DOM.a({href: "#", className: classes}, stance.name))
+                    React.DOM.li({key: i}, React.DOM.a({onClick: this.setStanceFilter.bind(this, stance.value), className: classes}, stance.name))
                   );
                 }.bind(this))
               )
@@ -40050,8 +40117,15 @@ module.exports = React.createClass({displayName: 'exports',
   getInitialState: function() {
     return {
       searchToggle: false,
-      navToggle: false
+      navToggle: false,
+      search: null
     }
+  },
+
+  setSearch: function(e) {
+    this.setState({
+      search: e.target.value
+    });
   },
 
   updateActiveState: function() {
@@ -40119,10 +40193,9 @@ module.exports = React.createClass({displayName: 'exports',
               React.DOM.nav({className: "site-menu-trending"}, 
                 React.DOM.span({className: "label"}, "Trending:"), 
                 React.DOM.ul({className: "navigation navigation-trending"}, 
-                  React.DOM.li(null, Link({to: "claims", className: "navigation-link"}, "Ukraine")), 
-                  React.DOM.li(null, Link({to: "claims", className: "navigation-link"}, "Putin")), 
-                  React.DOM.li(null, Link({to: "claims", className: "navigation-link"}, "NATO")), 
-                  React.DOM.li(null, Link({to: "claims", className: "navigation-link"}, "Tsunami"))
+                  _.map(this.props.claims.trendingTags(), function(tag, i) {
+                    return React.DOM.li({key: i}, Link({to: "tag", params: { tag: tag}, className: "navigation-link"}, tag))
+                  })
                 )
               ), 
               React.DOM.div({className: "articles-search"}, 
@@ -40130,14 +40203,14 @@ module.exports = React.createClass({displayName: 'exports',
                 React.DOM.div({className: "articles-search-holder"}, 
                   React.DOM.div({className: "inner"}, 
                     React.DOM.button({className: "search-close", onClick: this.closeSearch}, React.DOM.span({className: "icon icon-close"}, "Close")), 
-                    React.DOM.input({type: "search", id: "claims-filter", ref: "searchTextInput", placeholder: "Search", onChange: this.setFilter})
+                    React.DOM.input({type: "search", id: "claims-filter", ref: "searchTextInput", value: this.state.search, placeholder: "Search", onChange: this.setSearch})
                   )
                 )
               )
             )
           )
         ), 
-        this.props.activeRouteHandler(null)
+        this.props.activeRouteHandler({search: this.state.searchToggle && this.state.search, claims: this.props.claims})
       )
     );
   }
