@@ -3,3 +3,9 @@ ul.credits {
   margin: 0;
   padding: 0;
 }
+
+.page-about > .container {
+  @extend %page-gutters;
+  padding-top: 2em;
+  padding-bottom: 2em;
+}

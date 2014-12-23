@@ -1,23 +1,42 @@
-.site {
-  background-color: palette(base, light);
-}
-
+// .site {
+//   background-color: palette(base, light);
+// }
 
 .site-header {
   background-color: palette(base, darker);
+  background-image: linear-gradient(#000, rgba(#D89EF7, .025) 20%, rgba(#6A5175, .05) 35%, #000);
   color: palette(type, light);
-  padding-bottom: 2em;
-  padding-top: 2em;
+  position: relative;
+}
+
+.site-header-primary {
+  @extend %page-gutters;
+  height: 3.3em;
+  padding-top: 1.1em;
+
+  @include breakpoint($breakpoint-tablet) {
+    padding-top: 2.7em;
+    height: 6em;
+  }
 }
 
 .site-logo {
-  font-family: $font-logo;
-  font-size: 2em;
-  font-weight: 500;
-  letter-spacing: 3px;
+  background: image-url('emergent.png') no-repeat;
+  background-size: contain;
+  height: 21px;
   line-height: 1;
   margin-bottom: 0;
-  text-transform: uppercase;
+  padding-top: 0.35em;
+  text-indent: -9999px;
+  width: 99px;
+
+  @include image-2x('emergent@2x.png');
+
+  @include breakpoint($breakpoint-tablet) {
+    height: 28px;
+    padding-top: 0;
+    width: 122px;
+  }
 
   a {
     color: palette(type, light);
@@ -25,11 +44,166 @@
   }
 }
 
-.site-footer {
-  background-color: palette(base, lighter);
-  border-top: 1px solid rgba(0, 0, 0, .15);
-  box-shadow: 0 -1px 0 rgba(255, 255, 255, .75);
-  clear: both;
-  padding-bottom: 2em;
-  padding-top: 2em;
+// .site-footer {
+//   background-color: palette(base, lighter);
+//   clear: both;
+//   padding-bottom: 2em;
+//   padding-top: 2em;
+// }
+
+// Categories header/nav
+.site-header-categories {
+  background-color: #fafafa;
+
+  overflow: hidden;
+
+  html.touch & {
+    overflow-x: scroll;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+
+    @include breakpoint($breakpoint-tablet) {
+      overflow: hidden;
+    }
+  }
+
+  .navigation-link {
+    font-size: font(xs);
+  }
+
+  > .container {
+    @extend %page-gutters;
+  }
+}
+
+// Secondary header
+.site-header-secondary {
+  background: #f2f2f2 image-url('pattern.svg') top left repeat;
+  border-bottom: 1px solid palette(border, base);
+
+  > .container {
+    @extend %clearfix;
+    @extend %page-gutters;
+    position: relative;
+  }
+
+  .page-title {
+    font-family: $font-secondary;
+    font-weight: 400;
+    margin: 1em 0 .6em;
+    line-height: 1;
+    font-size: 1.3em;
+  }
+
+  .page-title-holder {
+    float: left;
+  }
+
+  .search-holder {
+    float: right;
+    margin-top: 1.4em;
+    position: relative;
+  }
+}
+
+.site-menu-trending {
+  float: left;
+  transition: opacity .15s ease-in-out;
+  opacity: 1;
+
+  display: none;
+
+  @include breakpoint($breakpoint-tablet) {
+    display: block;
+  }
+
+  .label {
+    color: palette(base, dark);
+    font-size: font(xs);
+    display: inline-block;
+    padding: 0 .75em;
+  }
+}
+
+.articles-search {
+  float: left;
+  margin: 0.3em 0 0 1em;
+
+  .search-toggle,
+  .search-close {
+    display: block;
+    margin: 0;
+    padding: 0;
+    border: none;
+    background-color: transparent;
+    width: 16px;
+    height: 16px;
+    outline: none;
+    transition: opacity .15s ease-in-out;
+
+    .icon {
+      display: block;
+    }
+
+    &:hover {
+      opacity: .75;
+    }
+  }
+
+  .search-close {
+    width: 20px;
+    height: 20px;
+  }
+
+  .articles-search-holder {
+    position: absolute;
+    right: -5px;
+    bottom: -0.313em;
+    width: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: opacity .15s ease-in-out;
+
+    @include breakpoint($breakpoint-tablet) {
+      bottom: -0.05em;
+    }
+
+    .inner {
+      position: relative;
+    }
+
+    input {
+      background-color: #fafafa;
+      border: 1px solid #eeeeee;
+      line-height: 1;
+      font-size: 16px; // prevent iOS zoom
+      padding: 5px 25px 4px 10px;
+      outline: none;
+      width: 220px;
+      box-sizing: border-box;
+      border-radius: 0;
+      -webkit-appearance: none;
+    }
+
+    .search-close {
+      position: absolute;
+      right: 0;
+      top: 50%;
+      margin-top: -10px;
+    }
+  }
+}
+
+// Active search
+.site-header-secondary {
+  &.search-toggle-active {
+    .site-menu-trending {
+      opacity: 0;
+    }
+    .articles-search-holder {
+      display: block;
+      opacity: 1;
+      width: auto;
+    }
+  }
 }

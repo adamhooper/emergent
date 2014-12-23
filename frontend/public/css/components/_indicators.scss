@@ -1,0 +1,48 @@
+//
+// Local variables
+// ------------------------------
+
+$indicator-width:               6px;
+
+//
+// Component
+// ------------------------------
+
+.indicator {
+  border: 1px solid transparent;
+  border-radius: $indicator-width / 2;
+  display: inline-block;
+  // padding-bottom: .25em;
+  // padding-top: .3em;
+  width: $indicator-width;
+  height: $indicator-width;
+  vertical-align: middle;
+  margin-bottom: 0.2em;
+}
+
+
+
+//
+// Component variations
+// ------------------------------
+
+.indicator-true,
+.indicator-false {
+  color: palette(base, lighter);
+}
+
+.indicator-true {
+  background-color: palette(status, true);
+  border-color: palette(status, true);
+}
+
+.indicator-false {
+  background-color: palette(status, false);
+  border-color: palette(status, false);
+}
+
+.indicator-unknown {
+  background-color: transparent;
+  border-color: palette(status, unknown);
+  color: palette(status, unknown);
+}

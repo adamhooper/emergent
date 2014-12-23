@@ -1,26 +1,35 @@
+.page {
+  background-color: palette(base, lighter);
+}
 
 .page-header {
-  background-color: palette(base, lighter);
-  border-bottom: 1px solid rgba(0, 0, 0, .15);
-  box-shadow: 0 1px 0 rgba(255, 255, 255, .75);
-  padding-bottom: 2em;
-  padding-top: 2em;
+  // background-color: palette(base, lighter);
+  // border-bottom: 1px solid rgba(0, 0, 0, .15);
+  // box-shadow: 0 1px 0 rgba(255, 255, 255, .75);
 }
 
 .page-title {
   margin-top: 0;
+
+  @include breakpoint($breakpoint-mobile-only) {
+    clear: both;
+  }
 }
 
 .page-content {
   padding-bottom: 2em;
-  padding-top: 2em;
+  // padding-top: 2em;
 }
 
 // TODO: don't do this
 .page-meta {
-  .meta {
-    border-top: 1px solid palette(base);
-    margin-top: 1em;
-    padding-top: 1em;
+  background-color: #fcfcfc;
+  border-top: 1px solid palette(border, base);
+  border-bottom: 1px solid palette(border, base);
+  padding-top: 1.5em;
+  padding-bottom: 1.5em;
+
+  > .container {
+    @extend %page-gutters;
   }
 }

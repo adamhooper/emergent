@@ -16,11 +16,13 @@ var app = {
       this.claims.sort();
       React.renderComponent(
         <Routes location="history">
-          <Route path="/" handler={Root}>
-            <DefaultRoute name="claims" handler={this.components.Claims} claims={this.claims}/>
+          <Route path="/" handler={Root} claims={this.claims}>
+            <DefaultRoute name="claims" handler={this.components.Claims}/>
             <Route name="about" path="about" handler={this.components.About}/>
-            <Route name="claim" path=":slug" handler={this.components.Claim} claims={this.claims}/>
-            <Route name="article" path=":slug/articles/:articleId" handler={this.components.Article} claims={this.claims}/>
+            <Route name="claim" path=":slug" handler={this.components.Claim}/>
+            <Route name="article" path=":slug/articles/:articleId" handler={this.components.Article}/>
+            <Route name="category" path="category/:category" handler={this.components.Claims}/>
+            <Route name="tag" path="tag/:tag" handler={this.components.Claims}/>
           </Route>
         </Routes>
       , $('#react')[0]);

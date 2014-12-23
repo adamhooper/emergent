@@ -2,3 +2,11 @@
 @function palette($colour, $tone: 'base') {
   @return map-get(map-get($palette, $colour), $tone);
 }
+
+@function font($size: 'md') {
+  @return map-get($font-sizes, $size);
+}
+
+@function weight($weight: 'regular') {
+  @return map-get($font-weights, $weight);
+}

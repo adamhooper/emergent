@@ -1,32 +1,4 @@
 //
-// Font embed
-
-@include font-face(
-  'Gotham',
-  font-files('Gotham-Light.otf'),
-  $weight: 100
-);
-
-@include font-face(
-  'Gotham',
-  font-files('Gotham-Book.otf'),
-  $weight: 400
-);
-
-@include font-face(
-  'Gotham',
-  font-files('Gotham-Medium.otf'),
-  $weight: 500
-);
-
-@include font-face(
-  'Gotham',
-  font-files('Gotham-Bold.otf'),
-  $weight: 700
-);
-
-
-//
 // Susy grid system
 
 $susy: (
@@ -35,24 +7,48 @@ $susy: (
   global-box-sizing: border-box
 );
 
-$breakpoint-mobile:    0;
-$breakpoint-tablet:    64em;
-$breakpoint-desktop:   0; //72em;
-$breakpoint-retina:    96em;
+$breakpoint-mobile:         0;
+$breakpoint-mobile-large:   30em;
+$breakpoint-tablet:         48em;
+$breakpoint-desktop:        68em;
+// $breakpoint-retina:      96em;
 
-$container-mobile:     90%;
-$container-tablet:     960px;
-$container-desktop:    960px;
-$container-retina:     1190px;
+$breakpoint-mobile-only:    $breakpoint-mobile $breakpoint-tablet;
+
+$gutters-mobile: 30px;
+$gutters-tablet: 40px;
+$gutters-desktop: 80px;
+
+$container-mobile:     100%;
+// $container-tablet:     720px + $gutters-tablet;
+$container-tablet:     100%;
+$container-desktop:    944px + $gutters-desktop;
+
+// $container-retina:     1190px;
 
 
 
 //
 // Typography
 
-$font-serif:           'Georgia', 'Times New Roman', Times, serif;
-$font-sans-serif:      'franklin-gothic-urw', Helvetica, Arial, sans-serif;
-$font-logo:            'Gotham', Helvetica, Arial, sans-serif;
+$font-primary:         'Helvetica Neue', Helvetica, Arial, sans-serif;
+$font-secondary:       'franklin-gothic-urw', Helvetica, Arial, sans-serif;
+$font-logo:            $font-secondary;
+
+$font-sizes: (
+  xxs:  .7em,
+  xs:   .800em,
+  sm:   .95em,
+  md:     1em,
+  lg:  1.2em,
+  xl:   1.6em
+);
+
+$font-weights: (
+  regular:  400,
+  medium:   500,
+  bold:   600
+);
 
 
 //
@@ -62,24 +58,26 @@ $palette: (
   base: (
     lighter:    #ffffff,
     light:      #eaeaea,
-    base:       #c1c1c1,
-    dark:       #727272,
-    darker:     #252424
+    base:       #b2b2b2,
+    dark:       #7f7f7f,
+    darker:     #323232
   ),
   type: (
-    light:      #eaeaea,
-    dark:       #252424,
-    link:       #727272
-  ),
-  category: (
-    for:        #7ecc76,
-    against:    #dd5b53,
-    observing:  #f9be58
+    light:      #ffffff,
+    dark:       #323232,
+    link:       #1473a3
   ),
   status: (
-    true:       #7ecc76,
-    false:      #dd5b53,
-    unknown:    #f9be58,
-    observing:  #f9be58
+    true:       #00bf71,
+    false:      #e70909,
+    unknown:    #656565
+  ),
+  category: (
+    for:        #00bf71,
+    against:    #e70909,
+    observing:  #656565
+  ),
+  border: (
+    base:       #ebebeb
   )
 );

@@ -17,8 +17,8 @@
 }
 
 .menu-item {
+  display: block;
   text-decoration: none;
-  text-transform: uppercase;
 }
 
 
@@ -30,7 +30,7 @@
 
   .menu-item {
     color: palette(type, light);
-    line-height: 32px; // equal to .site-logo height
+    line-height: 38px; // equal to .site-logo height
     opacity: .75;
     transition: opacity .15s ease-in-out;
 

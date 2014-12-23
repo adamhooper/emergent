@@ -1,25 +1,16 @@
 //
-// Articles
+// Local variables
+// ------------------------------
 
-.back-button {
-  margin-bottom: 15px;
-}
+$article-padding:            2em;
+
+//
+// Components
+// ------------------------------
 
 .articles-title {
   @extend %section-title;
   margin-bottom: 1em;
-}
-
-.articles-search {
-  margin-bottom: 2em;
-
-  > label {
-    margin-right: .5em;
-  }
-
-  > input[type="search"] {
-    font-weight: 500;
-  }
 }
 
 .articles {
@@ -27,76 +18,177 @@
   margin-bottom: 0;
   margin-top: 0;
   padding-left: 0;
+}
 
-  > li {
-    margin-bottom: .75em;
 
-    &:last-child {
-      margin-bottom: 0;
+//
+// Single component
+// ------------------------------
+
+.article {
+}
+
+.article-title {
+  font-family: $font-secondary;
+  font-size: font(xl);
+  font-weight: 300;
+  margin-bottom: .5em;
+  margin-top: 0;
+
+  > a {
+    text-decoration: none;
+  }
+
+  @include breakpoint($breakpoint-mobile-only) {
+    clear: both;
+  }
+}
+
+.article-list-title {
+  margin-bottom: 0.5em;
+  a {
+    text-decoration: none;
+    font-weight: weight(bold);
+  }
+}
+
+.article-meta,
+.article-byline {
+  font-size: font(xs);
+  line-height: 1.2;
+}
+
+.article-meta {
+  margin-bottom: .75em;
+  color: palette(base, dark);
+
+  @include breakpoint($breakpoint-mobile-only) {
+    float: right;
+  }
+}
+
+.article-category {
+  color: palette(base, dark);
+  font-family: $font-secondary;
+  text-transform: uppercase;
+}
+
+.article-updated {
+  font-weight: weight(medium);
+}
+
+.article-shares {
+  color: palette(base, darker);
+  float: right;
+  font-weight: weight(medium);
+
+  .label {
+    color: palette(base, dark);
+  }
+}
+
+.article-byline {
+  color: palette(base, dark);
+  margin-bottom: 1em;
+  font-weight: weight(medium);
+}
+
+.article-source {
+  a {
+    font-weight: weight(bold);
+    text-decoration: none;
+  }
+  .indicator {
+    margin-right: 5px;
+    margin-left: 8px;
+  }
+}
+
+.article-originated {
+  display: inline-block;
+}
+
+.article-content {
+  font-size: font(sm);
+  margin-bottom: 0;
+
+  @include breakpoint($breakpoint-mobile-only) {
+    clear: both;
+    line-height: 1.4;
+  }
+}
+
+.article-description {
+}
+
+.article-footer {
+  @extend %clearfix;
+  @include breakpoint($breakpoint-mobile-only) {
+    margin-top: 1em;
+  }
+  .article-tags,
+  .article-tracked {
+    font-size: font(xs);
+    font-weight: weight(medium);
+
+    @include breakpoint($breakpoint-tablet) {
+      margin-top: 1em;
+    }
+
+    .label {
+      color: palette(base, dark);
+    }
+  }
+
+  .article-tags {
+
+    position: relative;
+    padding-left: 55px;
+
+    @include breakpoint($breakpoint-tablet) {
+      @include span(7 of 12);
+    }
+
+    .label {
+      position: absolute;
+      left: 0;
+    }
+
+    a {
+      text-decoration: none;
+      display: inline-block;
+      margin-right: 10px;
+    }
+  }
+  .article-tracked {
+    @include breakpoint($breakpoint-tablet) {
+      text-align: right;
+      @include span(last 4 of 12);
+    }
+  }
+  .tracked-group {
+    display: inline-block;
+    margin-left: 7px;
+    .indicator {
+      margin-left: 5px;
     }
   }
 }
 
 
+
+
 //
-// Single article
+// Component variations
+// ------------------------------
 
-.article {
+.article-preview {
+  border-bottom: 1px solid palette(base, light);
+  padding: $article-padding / 2;
+  position: relative;
 
-  &.is-revised {
-    padding-top: 3em;
-    position: relative;
-  }
-
-  // in a .trigger
-  .trigger & {
-    font-size: .9em;
-  }
-
-  // display in content block when in list
-  .articles & {
-    @extend %content-background;
-    @extend %clearfix;
-    clear: both;
-  }
-
-}
-
-.article-title {
-  font-size: 1.2em;
-  font-weight: 500;
-  margin-bottom: .5em;
-  margin-top: 0;
-
-  > a {
-    color: palette(type, dark);
-  }
-}
-
-.article-date {
-  font-size: 1.4em;
-  margin-bottom: 0;
-  margin-top: 0;
-  text-transform: uppercase;
-}
-
-.article-time {
-  color: palette(base, dark);
-  margin-bottom: 0;
-  margin-top: 0;
-  text-transform: uppercase;
-}
-
-.article-content {
-  padding: 1em;
-}
-
-.article-description {
-  line-height: 1.4;
-  margin-bottom: .5em;
-
-  &:last-child {
-    margin-bottom: 0;
+  @include breakpoint($breakpoint-tablet) {
+    padding: 1.5em $article-padding 1.5em ($article-padding + 8.2em);
   }
 }
 
@@ -106,7 +198,7 @@
 
 .article-source-title {
   color: palette(base, dark);
-  font-size: 1.1em;
+  font-size: font(md);
   margin-bottom: 1em;
 }
 
@@ -136,10 +228,41 @@
 // Changes
 
 .changes {
-  font-size: 1.1em;
+  font-size: font(md);
   font-weight: 500;
   list-style-type: none;
   margin-bottom: 0;
   margin-top: 0;
   padding-left: 0;
+}
+
+
+// Articles list
+.page-articles {
+  padding-top: 2em;
+  padding-bottom: 2em;
+
+  .article {
+    &.with-stance {
+      position: relative;
+
+      @include breakpoint($breakpoint-tablet) {
+        padding-left: 8em;
+        .stance {
+          left: 0;
+          top: 0;
+        }
+      }
+    }
+  }
+
+  .articles {
+     > li {
+      border-bottom: 1px solid palette(border, base);
+
+      @include breakpoint($breakpoint-mobile-only) {
+        padding-top: 2em;
+      }
+    }
+  }
 }

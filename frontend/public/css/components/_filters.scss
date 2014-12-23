@@ -1,80 +1,110 @@
+//
+// Articles Filters
+// ------------------------------
+.articles-filtering {
+  background-color: #fafafa;
+  border-bottom: 1px solid palette(border, base);
+  padding-right: 0;
+  @extend %clearfix;
+  @extend %page-gutters;
 
+  .navigation-filtering {
+    float: left;
+    border-right: 1px solid palette(border, base);
+    margin-left: -2px;
+
+    li {
+      float: left;
+      margin-bottom: -1px;
+    }
+
+    .navigation-link {
+      color: palette(base, dark);
+      border-bottom: 1px solid transparent;
+      line-height: 1;
+      font-size: font(xxs);
+      padding: 18px 2px 16px;
+      margin: 0 11px 0 0;
+
+      @include breakpoint($breakpoint-tablet) {
+        margin: 0 20px 0 0;
+        font-size: font(xs);
+      }
+
+      transition: border .15s ease-in-out;
+
+      &:hover {
+        border-bottom-color: palette(base, base);
+      }
+
+      &.active {
+        color: palette(base, darker);
+        border-bottom-color: palette(base, darker);
+      }
+    }
+
+    + .navigation-filtering {
+      padding-left: 11px;
+      margin-left: 0;
+
+      border-right: none;
+
+      @include breakpoint($breakpoint-mobile-large) {
+        border-right: 1px solid palette(border, base);
+      }
+
+      @include breakpoint($breakpoint-tablet) {
+        padding-left: 20px;
+      }
+    }
+  }
+}
+
+//
+// Article Filters
+// ------------------------------
 .filters {
+  background-color: #fafafa;
+  border-bottom: 1px solid palette(border, base);
+  border-left: 1px solid palette(border, base);
+  border-right: 1px solid palette(border, base);
   list-style-type: none;
   margin-bottom: 2em;
   margin-top: 0;
-  padding-left: 0;
+  padding-left: 1em;
 
   > li {
     display: inline-block;
 
     + li {
-      margin-left: .5em;
+      margin-left: 1.5em;
     }
+  }
+
+  @include breakpoint($breakpoint-tablet) {
+    margin-left: 40px;
+    margin-right: 40px;
+
   }
 }
 
 .filter {
-  background-color: palette(base, lighter);
-  border-style: solid;
-  border-width: 2px;
+  background-color: transparent;
+  border: 0;
   display: inline-block;
-  font-weight: 500;
-  letter-spacing: 1px;
-  opacity: .65;
-  padding: .5em 1em;
-  text-transform: uppercase;
-  transition: opacity .2s ease;
+  font-size: font(xs);
+  padding: 1em 0;
   width: 100%;
 
   &:focus {
     outline: 0;
   }
 
-  &:hover,
-  &.is-selected {
-    opacity: 1;
+  &:hover {
+    box-shadow: 0 1px 0 palette(base);
   }
-}
-
-
-.filter-category {
-  color: palette(base, lighter);
-  font-weight: 400;
-}
-
-.filter-category-all {
-  background-color: palette(base);
-  border-color: palette(base);
 
   &.is-selected {
-    border-color: darken(palette(base), 10%);
-  }
-}
-
-.filter-category-for {
-  background-color: palette(category, for);
-  border-color: palette(category, for);
-
-  &.is-selected {
-    border-color: darken(palette(category, for), 10%);
-  }
-}
-
-.filter-category-against {
-  background-color: palette(category, against);
-  border-color: palette(category, against);
-
-  &.is-selected {
-    border-color: darken(palette(category, against), 10%);
-  }
-}
-
-.filter-category-observing {
-  background-color: palette(category, observing);
-  border-color: palette(category, observing);
-
-  &.is-selected {
-    border-color: darken(palette(category, observing), 10%);
+    box-shadow: 0 1px 0 palette(base, darker);
   }
 }

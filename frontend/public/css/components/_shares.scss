@@ -10,14 +10,13 @@
 
     + .shares {
       margin-left: 2em;
+      margin-bottom: 1em;
     }
   }
 }
 
 .shares-label {
   @extend %label;
-  display: block;
-  font-size: .9em;
 
   // inside a category filter
   .card-category & {
@@ -26,8 +25,6 @@
 }
 
 .shares-value {
-  display: block;
-  font-size: 1.6em;
-  font-weight: 500;
+  font-weight: weight(medium);
   line-height: 1;
 }

@@ -44,5 +44,26 @@
 
 .icon-google {
   background-image: image-url('google.svg');
+}
 
+.icon-search {
+  background-image: image-url('search.svg');
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: 16px 16px;
+  display: inline-block;
+  height: 16px;
+  width: 16px;
+  overflow: hidden;
+}
+
+.icon-close {
+  background-image: image-url('close.svg');
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: 11px 11px;
+  display: inline-block;
+  height: 11px;
+  width: 11px;
+  overflow: hidden;
 }

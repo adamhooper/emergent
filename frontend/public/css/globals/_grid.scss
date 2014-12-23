@@ -10,15 +10,25 @@
   @include breakpoint($breakpoint-desktop) {
     @include container($container-desktop);
   }
+}
 
-  @include breakpoint($breakpoint-retina) {
-    @include container($container-retina);
+%page-gutters {
+  @include breakpoint($breakpoint-mobile) {
+    @include gutter($gutters-mobile inside);
+  }
+
+  @include breakpoint($breakpoint-tablet) {
+    @include gutter($gutters-tablet inside);
+  }
+
+  @include breakpoint($breakpoint-desktop) {
+    @include gutter($gutters-desktop inside);
   }
 }
 
-.container {
+.container,
+.page-content {
   @extend %container;
-  width: 960px;
 }
 
 
@@ -36,12 +46,30 @@
   }
 }
 
+.section-with-sidebar {
+  .section-header {
+    @extend %page-gutters;
+    margin-top: 2em;
+    margin-bottom: 2em;
+
+    &.with-stance {
+      position: relative;
+      @include breakpoint($breakpoint-tablet) {
+        padding-left: 10.2em;
+        .stance {
+          top: 0.3em;
+        }
+      }
+    }
+  }
+}
 
 
-@include breakpoint($breakpoint-desktop) {
+
+@include breakpoint($breakpoint-tablet) {
 
   //
-  // Site
+  // root.js.jsx
 
   .site-logo {
     @include span(3 of 12);
@@ -51,6 +79,18 @@
     @include span(last 9 of 12);
   }
 
+
+  //
+  // claims.js.jsx & claim.js.jsx
+
+  .articles-holder,
+  .section-with-sidebar {
+    @include span(9 of 12 no-gutters);
+  }
+
+  .page-navigation {
+    @include span(3 of 12 wide no-gutters);
+  }
 
   //
   // Footer
@@ -69,14 +109,6 @@
   .page-article,
   .page-claim {
 
-    .section-header {
-      @include span(9 of 12);
-    }
-
-    .page-meta {
-      @include span(last 3 of 12);
-    }
-
     .page-content,
     .page-chart,
     .page-articles {
@@ -92,36 +124,6 @@
   .page-about {
     .page-content {
       @include span(10 of 12);
-    }
-  }
-
-
-  .article {
-    .article-header {
-      @include full;
-    }
-
-    .article-content {
-      @include span(10 of 12);
-    }
-
-    .article-footer {
-      @include span(last 2 of 12);
-    }
-  }
-
-
-  .article-revision {
-    .article-header {
-      @include span(2.5 of 12);
-    }
-
-    .article-content {
-      @include span(7.5 of 12);
-    }
-
-    .article-footer {
-      @include span(last 2 of 12);
     }
   }
 

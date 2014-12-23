@@ -8,3 +8,15 @@
   position: absolute;
   width: 1px;
 }
+
+.hidden-mobile {
+  @include breakpoint($breakpoint-mobile-only) {
+    display: none !important;
+  }
+}
+
+.hidden-desktop {
+  @include breakpoint($breakpoint-tablet) {
+    display: none !important;
+  }
+}

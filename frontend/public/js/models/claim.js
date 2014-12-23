@@ -11,7 +11,7 @@ module.exports = Backbone.Model.extend({
   },
 
   truthinessText: function() {
-    return this.get('truthiness')=='true' || this.get('truthiness')=='false' ? this.get('truthiness').toUpperCase() : 'Unverified';
+    return this.get('truthiness')=='true' || this.get('truthiness')=='false' ? this.get('truthiness') : 'Unverified';
   },
 
   /* retrieve articles and timeslices if we just have a base object */

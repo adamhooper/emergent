@@ -6,7 +6,7 @@ module.exports = React.createClass({
   render: function() {
     return (
       /* JSX for about page */
-      <div className="page-content">
+      <div className="page-content page-about">
         <div className="container">
           <h1 className="page-title">About Emergent</h1>
           <p>
