@@ -1297,23 +1297,30 @@ button.navigation-link {
   position: relative; }
 
 .site-header-primary {
-  height: 3.3em; }
+  height: 3.3em;
+  padding-top: 1.1em; }
   @media (min-width: 48em) {
     .site-header-primary {
       padding-top: 2.7em;
       height: 6em; } }
 
 .site-logo {
-  font-family: "franklin-gothic-urw", Helvetica, Arial, sans-serif;
-  font-size: 2em;
-  font-weight: 400;
-  letter-spacing: 1px;
+  background: url('/images/emergent.png') no-repeat;
+  background-size: contain;
+  height: 21px;
   line-height: 1;
   margin-bottom: 0;
-  padding-top: 0.35em; }
+  padding-top: 0.35em;
+  text-indent: -9999px;
+  width: 99px; }
+  @media (min--moz-device-pixel-ratio: 1.3), (-o-min-device-pixel-ratio: 2.6 / 2), (-webkit-min-device-pixel-ratio: 1.3), (min-device-pixel-ratio: 1.3), (min-resolution: 1.3dppx) {
+    .site-logo {
+      background-image: url('/images/emergent@2x.png'); } }
   @media (min-width: 48em) {
     .site-logo {
-      padding-top: 0; } }
+      height: 28px;
+      padding-top: 0;
+      width: 122px; } }
   .site-logo a {
     color: #ffffff;
     text-decoration: none; }
@@ -1332,7 +1339,7 @@ button.navigation-link {
     font-size: 0.8em; }
 
 .site-header-secondary {
-  background-color: #f2f2f2;
+  background: #f2f2f2 url('/images/pattern.svg') top left repeat;
   border-bottom: 1px solid #ebebeb; }
   .site-header-secondary > .container {
     position: relative; }
