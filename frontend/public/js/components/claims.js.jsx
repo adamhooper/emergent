@@ -9,7 +9,7 @@ var moment = require('moment');
 module.exports = React.createClass({
 
   mixins: [BackboneCollection],
- 
+
   getInitialState: function() {
     return {
       filter: '',
@@ -99,7 +99,7 @@ module.exports = React.createClass({
                 {this.props.sortings.map(function(sorting, i) {
                   var classes = sorting.value == this.state.sort ? 'active navigation-link' : 'navigation-link';
                   return (
-                    <li key={i}><a onClick={this.setSort.bind(this, sorting.value)} className={classes}>{sorting.name}</a></li>
+                    <li key={i}><button onClick={this.setSort.bind(this, sorting.value)} className={classes}>{sorting.name}</button></li>
                   );
                 }.bind(this))}
               </ul>
@@ -107,7 +107,7 @@ module.exports = React.createClass({
                 {this.props.stances.map(function(stance, i) {
                   var classes = stance.value == this.state.stance ? 'active navigation-link' : 'navigation-link';
                   return (
-                    <li key={i}><a onClick={this.setStanceFilter.bind(this, stance.value )} className={classes}>{stance.name}</a></li>
+                    <li key={i}><button onClick={this.setStanceFilter.bind(this, stance.value )} className={classes}>{stance.name}</button></li>
                   );
                 }.bind(this))}
               </ul>
@@ -124,19 +124,17 @@ module.exports = React.createClass({
                         <div className="article-meta">
                           {claim.get('categories').map(function(category, i) {
                             return (
-                              <span className="article-category">{category} – </span>
+                              (i > 0) ? <span className="article-category"> - {category}</span> : <span className="article-category">{category}</span>
                             );
                           })}
-                          <time className="" datetime=""></time>
-                          <span className="article-updated">Updated Nov 4</span>
                           {claim.get('nShares') ?
-                          <span className="article-shares"><span className="label">Shares:</span> {this.formatNumber(claim.get('nShares'))}</span>
+                          <span className="article-shares hidden-mobile"><span className="label">Shares:</span> {this.formatNumber(claim.get('nShares'))}</span>
                           : null}
                         </div>
                         <h2 className="article-title"><Link to="claim" params={{ slug: claim.get('slug') }}>{claim.get('headline')}</Link></h2>
                         <div className="article-byline">
-                          <span className="article-source">Originating Source: <span className="indicator indicator-true"> </span><a href="#">The Guardian</a></span>
                           <span className="article-originated">Added <time datetime={claim.get('createdAt')}>{moment(claim.get('createdAt')).format('MMM D')}</time></span>
+                          <span className="article-shares hidden-desktop"><span className="label">Shares:</span> {this.formatNumber(claim.get('nShares'))}</span>
                         </div>
                       </header>
                       <p className="article-content">{claim.get('description')}</p>
@@ -166,10 +164,6 @@ module.exports = React.createClass({
           </div>
           <nav className="page-navigation">
             <ul className="navigation navigation-page">
-              <li>
-                <a href="#" className="navigation-link">Submit a claim</a>
-                <p>Lorem ipsum dolor sit amet pro patria mori through our special tool.</p>
-              </li>
               <li>
                 <a href="http://eepurl.com/3mb9T" className="navigation-link">Sign up for our newsletter</a>
                 <p>Lorem ipsum dolor sit amet pro patria mori through our special tool.</p>

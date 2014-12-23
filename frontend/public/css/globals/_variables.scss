@@ -32,7 +32,7 @@ $container-desktop:    944px + $gutters-desktop;
 // Typography
 
 $font-primary:         'Helvetica Neue', Helvetica, Arial, sans-serif;
-$font-secondary:       'news-gothic-std', Helvetica, Arial, sans-serif;
+$font-secondary:       'franklin-gothic-urw', Helvetica, Arial, sans-serif;
 $font-logo:            $font-secondary;
 
 $font-sizes: (
@@ -41,7 +41,7 @@ $font-sizes: (
   sm:   .95em,
   md:     1em,
   lg:  1.2em,
-  xl:   1.4em
+  xl:   1.6em
 );
 
 $font-weights: (
@@ -73,9 +73,9 @@ $palette: (
     unknown:    #656565
   ),
   category: (
-    for:        #7ecc76,
-    against:    #dd5b53,
-    observing:  #f9be58
+    for:        #00bf71,
+    against:    #e70909,
+    observing:  #656565
   ),
   border: (
     base:       #ebebeb

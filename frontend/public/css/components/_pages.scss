@@ -10,6 +10,10 @@
 
 .page-title {
   margin-top: 0;
+
+  @include breakpoint($breakpoint-mobile-only) {
+    clear: both;
+  }
 }
 
 .page-content {

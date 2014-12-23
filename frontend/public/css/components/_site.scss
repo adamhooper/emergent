@@ -4,11 +4,9 @@
 
 .site-header {
   background-color: palette(base, darker);
-  @include background-image(linear-gradient(#000, rgba(#D89EF7, 0.15) 26%, rgba(#6A5175, 0.15) 52%, #000));
+  background-image: linear-gradient(#000, rgba(#D89EF7, .025) 20%, rgba(#6A5175, .05) 35%, #000);
   color: palette(type, light);
   position: relative;
-
-  @extend %clearfix;
 }
 
 .site-header-primary {
@@ -53,7 +51,7 @@
   background-color: #fafafa;
 
   overflow: hidden;
-  
+
   html.touch & {
     overflow-x: scroll;
     overflow-y: hidden;
@@ -65,7 +63,7 @@
   }
 
   .navigation-link {
-    font-size: font(xxs);
+    font-size: font(xs);
   }
 
   > .container {
@@ -87,9 +85,9 @@
   .page-title {
     font-family: $font-secondary;
     font-weight: 400;
-    margin: 1.3em 0 0.5em;
+    margin: 1em 0 .6em;
     line-height: 1;
-    font-size: font(lg);
+    font-size: 1.3em;
   }
 
   .page-title-holder {
@@ -116,9 +114,9 @@
 
   .label {
     color: palette(base, dark);
-    font-size: font(xxs);
+    font-size: font(xs);
     display: inline-block;
-    padding: 0 5px;
+    padding: 0 .75em;
   }
 }
 

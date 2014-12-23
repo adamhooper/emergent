@@ -88,9 +88,9 @@ module.exports = React.createClass({
     var claim = this.state.claim;
     var shares = claim.sharesByStance();
     var colors = [
-      '#7ecc76',
-      '#dd5b53',
-      '#f9be58'
+      '#00bf71',
+      '#e70909',
+      '#656565'
     ];
     var totalShares = _.reduce(shares, function(sum, num) { return sum + num; }, 0);
 
@@ -164,20 +164,13 @@ module.exports = React.createClass({
                 {claim.get('truthiness') != 'unknown' ? <p className={"tracking tracking-" + claim.get('truthiness')}><strong>Resolved: </strong>{moment(truthinessDate).format('MMM D, YYYY H:mm') + ' (' + moment(truthinessDate).fromNow() + ')'} {claim.get('truthinessUrl') ? <a href={claim.get('truthinessUrl')} target="_blank">View Article</a> : null}<br />{claim.get('truthinessDescription')}</p> : null}
               </header>
             </div>
-            <nav className="page-navigation">
-              <ul className="navigation navigation-page">
-                <li>
-                  <a href="#" className="navigation-link">Dispute this claim</a>
-                </li>
-              </ul>
-            </nav>
           </div>
         </div>
 
         { this.state.populated ?
         <div className="page-meta">
           <div className="container">
-            
+
             <div className="meta">
               <div className="shares">
                 <span className="shares-label">Sourced Tracked:</span> <span className="shares-value">{claim.articlesByStance().length}</span>
@@ -269,10 +262,22 @@ module.exports = React.createClass({
                 }
               </div>
             </section>
-            
+
           </div>
         </div>
         : null }
+
+        <div className="container">
+          <nav>
+            <ul className="filters">
+              <li><button onClick={this.setFilter.bind(this, null)} className={'filter filter-category filter-category-all' + (!this.state.filter ? ' is-selected' : '')}>All Shares</button></li>
+              { claim.articlesByStance('for').length > 0 ? <li><button onClick={this.setFilter.bind(this, 'for')} className={'filter filter-category filter-category-for' + (this.state.filter === 'for' ? ' is-selected' : '')}>For <span className="indicator indicator-true"></span></button></li> : null }
+              { claim.articlesByStance('against').length > 0 ? <li><button onClick={this.setFilter.bind(this, 'against')} className={'filter filter-category filter-category-against' + (this.state.filter === 'against' ? ' is-selected' : '')}>Against <span className="indicator indicator-false"></span></button></li> : null }
+              { claim.articlesByStance('observing').length > 0 ? <li><button onClick={this.setFilter.bind(this, 'observing')} className={'filter filter-category filter-category-observing' + (this.state.filter === 'observing' ? ' is-selected' : '')}>Observing <span className="indicator indicator-unknown"></span></button></li> : null }
+            </ul>
+          </nav>
+        </div>
+
 
         <div className="container page-claim-body">
 
@@ -280,14 +285,6 @@ module.exports = React.createClass({
             <div className="page-content">
               <div className="container">
                 <section className="shares-over-time">
-                  <nav>
-                    <ul className="filters">
-                      <li><button onClick={this.setFilter.bind(this, null)} className={'filter filter-category filter-category-all' + (!this.state.filter ? ' is-selected' : '')}>All Shares</button></li>
-                      { claim.articlesByStance('for').length > 0 ? <li><button onClick={this.setFilter.bind(this, 'for')} className={'filter filter-category filter-category-for' + (this.state.filter === 'for' ? ' is-selected' : '')}>For</button></li> : null }
-                      { claim.articlesByStance('against').length > 0 ? <li><button onClick={this.setFilter.bind(this, 'against')} className={'filter filter-category filter-category-against' + (this.state.filter === 'against' ? ' is-selected' : '')}>Against</button></li> : null }
-                      { claim.articlesByStance('observing').length > 0 ? <li><button onClick={this.setFilter.bind(this, 'observing')} className={'filter filter-category filter-category-observing' + (this.state.filter === 'observing' ? ' is-selected' : '')}>Observing</button></li> : null }
-                    </ul>
-                  </nav>
                   <div className="section">
                     <h3 className="section-title">Shares Over Time</h3>
                     <div className="section-content">
@@ -313,7 +310,7 @@ module.exports = React.createClass({
                               : ''}
                             </header>
                             <div className="article-content">
-                              <h4 className="article-list-title"><a href={article.url}>{article.source}</a> - <time dateTime={article.createdAt}>{moment(article.createdAt).format('MMM D, YYYY')}</time>&nbsp;&nbsp;&nbsp; 
+                              <h4 className="article-list-title"><a href={article.url}>{article.source}</a> - <time dateTime={article.createdAt}>{moment(article.createdAt).format('MMM D, YYYY')}</time>&nbsp;&nbsp;&nbsp;
                                 <span className="shares-label">Shares:</span> <span className="shares-value">{this.formatNumber(article.shares)}</span>
                                 </h4>
                               <p className="article-description">{article.headline}</p>

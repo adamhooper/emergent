@@ -2,7 +2,7 @@
 // Local variables
 // ------------------------------
 
-$stance-width:               6em;
+$stance-width:             5.5em;
 
 //
 // Component
@@ -11,11 +11,11 @@ $stance-width:               6em;
 .stance {
   border: 1px solid transparent;
   border-radius: 3px;
-  display: block;
-  padding-bottom: .25em;
-  padding-top: .3em;
+  display: inline-block;
+  float: left;
+  line-height: 1;
+  padding: .2em .2em .3em;
   text-align: center;
-  width: $stance-width;
 
   // in article previews
   .with-stance & {
@@ -23,15 +23,23 @@ $stance-width:               6em;
     @include breakpoint($breakpoint-tablet) {
       left: 2.6em;
       position: absolute;
-      top: 4em;
+      top: 3.1em;
       margin-bottom: 0;
     }
+  }
+
+  @include breakpoint($breakpoint-tablet) {
+    display: block;
+    float: none;
+    padding: .4em;
+    width: $stance-width;
   }
 }
 
 .stance-value {
   font-size: font(xs);
   font-weight: 700;
+  letter-spacing: .025em;
   text-transform: capitalize;
 }
 
@@ -46,6 +54,7 @@ $stance-width:               6em;
 .stance-for,
 .stance-against {
   color: palette(base, lighter);
+  text-shadow: 0 1px 0 rgba(0, 0, 0, .2);
 }
 
 .stance-true,
@@ -63,6 +72,6 @@ $stance-width:               6em;
 .stance-unknown,
 .stance-observing {
   background-color: transparent;
-  border-color: palette(status, unknown);
+  border-color: #919191;
   color: palette(status, unknown);
 }

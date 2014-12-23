@@ -1,5 +1,10 @@
 module.exports = function(grunt) {
   grunt.initConfig({
+    autoprefixr: {
+      options: {
+        browsers: ['last 2 versions', 'ie 9']
+      }
+    },
     browserify: {
       options: {
         transform: [ require('grunt-react').browserify ]
@@ -47,6 +52,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-sass');
   grunt.loadNpmTasks('grunt-browserify');
   grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-autoprefixer');
 
   grunt.registerTask('default', ['browserify', 'uglify', 'watch']);
   grunt.registerTask('dist', ['browserify', 'uglify', 'sass']);

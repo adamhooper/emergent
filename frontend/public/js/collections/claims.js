@@ -40,10 +40,10 @@ module.exports = Backbone.Collection.extend({
   // very simple logic for now
   trendingTags: function() {
     var tags = this.tagsByFrequency();
-    return _.sortBy(_.filter(_.keys(tags), function(tag) {
+    return _.first(_.sortBy(_.filter(_.keys(tags), function(tag) {
       return tags[tag]>1;
     }), function(tag) {
       return -tags[tag];
-    });
+    }), 5);
   }
 });

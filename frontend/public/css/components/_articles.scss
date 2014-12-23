@@ -31,11 +31,16 @@ $article-padding:            2em;
 .article-title {
   font-family: $font-secondary;
   font-size: font(xl);
+  font-weight: 300;
   margin-bottom: .5em;
   margin-top: 0;
 
   > a {
     text-decoration: none;
+  }
+
+  @include breakpoint($breakpoint-mobile-only) {
+    clear: both;
   }
 }
 
@@ -54,7 +59,12 @@ $article-padding:            2em;
 }
 
 .article-meta {
-  margin-bottom: 1em;
+  margin-bottom: .75em;
+  color: palette(base, dark);
+
+  @include breakpoint($breakpoint-mobile-only) {
+    float: right;
+  }
 }
 
 .article-category {
@@ -68,6 +78,7 @@ $article-padding:            2em;
 }
 
 .article-shares {
+  color: palette(base, darker);
   float: right;
   font-weight: weight(medium);
 
@@ -95,12 +106,16 @@ $article-padding:            2em;
 
 .article-originated {
   display: inline-block;
-  margin-left: 10px;
 }
 
 .article-content {
-  margin-bottom: 0;
   font-size: font(sm);
+  margin-bottom: 0;
+
+  @include breakpoint($breakpoint-mobile-only) {
+    clear: both;
+    line-height: 1.4;
+  }
 }
 
 .article-description {
@@ -126,7 +141,7 @@ $article-padding:            2em;
   }
 
   .article-tags {
-    
+
     position: relative;
     padding-left: 55px;
 
@@ -173,7 +188,7 @@ $article-padding:            2em;
   position: relative;
 
   @include breakpoint($breakpoint-tablet) {
-    padding: $article-padding $article-padding $article-padding ($article-padding + 8.2em);
+    padding: 1.5em $article-padding 1.5em ($article-padding + 8.2em);
   }
 }
 
