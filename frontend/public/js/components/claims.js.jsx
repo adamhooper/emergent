@@ -166,7 +166,7 @@ module.exports = React.createClass({
             <ul className="navigation navigation-page">
               <li>
                 <a href="http://eepurl.com/3mb9T" className="navigation-link">Sign up for our newsletter</a>
-                <p>Lorem ipsum dolor sit amet pro patria mori through our special tool.</p>
+                <p>Our weekly newsletter is the best way to get updates on the rumors we're tracking. We never sell or share your info.</p>
               </li>
             </ul>
           </nav>
