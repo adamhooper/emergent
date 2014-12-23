@@ -39983,10 +39983,9 @@ module.exports = React.createClass({displayName: 'exports',
 
   filteredClaims: function() {
     // Should combine the two, switch between for now
-    var category = unescape(this.props.params.category);
-    var tag = unescape(this.props.params.tag);
+    var category = this.props.params.category ? unescape(this.props.params.category) : null;
+    var tag = this.props.params.tag ? unescape(this.props.params.tag) : null;
     var claims = this.props.claims.models;
-
     if (this.props.search) {
       claims = this.props.claims.filtered(claims, this.props.search);
     } else if (category) {
