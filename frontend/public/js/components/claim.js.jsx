@@ -312,7 +312,7 @@ module.exports = React.createClass({
                               : ''}
                             </header>
                             <div className="article-content">
-                              <h4 className="article-list-title"><a href={article.url}>{article.source}</a> - <time dateTime={article.createdAt}>{moment(article.createdAt).format('MMM D, YYYY')}</time>&nbsp;&nbsp;&nbsp;
+                              <h4 className="article-list-title"><a href={article.url}>{article.source}</a> - <time dateTime={article.createdAt}>{moment(article.createdAt).format('MMM D, YYYY')}</time>
                                 <span className="shares-label">Shares:</span> <span className="shares-value">{this.formatNumber(article.shares)}</span>
                                 </h4>
                               <p className="article-description">{article.headline}</p>
