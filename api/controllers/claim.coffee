@@ -62,7 +62,7 @@ getTags = (claimIds) ->
       ret
 
 getStanceCounts = (claimIds) ->
-  sqlClaimIds = claimIds.map((id) -> "('#{id}'::uuid)")
+  sqlClaimIds = claimIds.map((id) -> "('#{id}'::uuid)").join(',')
   q = """
     WITH
     "ClaimIds" AS (
@@ -102,7 +102,7 @@ getStanceCounts = (claimIds) ->
       ret
 
 getShareCounts = (claimIds) ->
-  sqlClaimIds = claimIds.map((id) -> "('#{id}'::uuid)")
+  sqlClaimIds = claimIds.map((id) -> "('#{id}'::uuid)").join(',')
   q = """
     WITH
     "ClaimIds" AS (
