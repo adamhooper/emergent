@@ -19,6 +19,7 @@ claimToJson = (claim) ->
     'publishedAt'
     'categories'
     'tags'
+    'stances'
     'createdAt'
   ])
 
@@ -60,6 +61,46 @@ getTags = (claimIds) ->
         ret[row.claimId].push(row.name)
       ret
 
+getStanceCounts = (claimIds) ->
+  sqlClaimIds = claimIds.map((id) -> "('#{id}'::uuid)")
+  q = """
+    WITH
+    "ClaimIds" AS (
+      SELECT id
+      FROM (VALUES#{sqlClaimIds}) AS t(id)
+    ),
+    "ArticleIds" AS (
+      SELECT id
+      FROM "Article"
+      WHERE "storyId" IN (SELECT id FROM "ClaimIds")
+    ),
+    "RankedArticleVersions" AS (
+      SELECT
+        id,
+        "articleId",
+        stance,
+        RANK() OVER (PARTITION BY "articleId" ORDER BY "createdAt" DESC) AS rank
+      FROM "ArticleVersion"
+      WHERE "articleId" IN (SELECT id FROM "ArticleIds")
+    )
+    SELECT
+      a."storyId" as "claimId",
+      av.stance,
+      COUNT(*) AS "n"
+    FROM "RankedArticleVersions" av
+    INNER JOIN "Article" a ON av."articleId" = a.id
+    WHERE av.rank = 1
+    GROUP BY "claimId", stance
+  """
+  models.sequelize.query(q, null, raw: true)
+    .then (rows) ->
+      ret = {}
+      # Set defaults
+      (ret[claimId] = {}) for claimId in claimIds
+      for row in rows
+        ret[claimId][row.stance] = +row.n
+      ret
+
 getShareCounts = (claimIds) ->
   sqlClaimIds = claimIds.map((id) -> "('#{id}'::uuid)")
   q = """
@@ -79,7 +120,9 @@ getShareCounts = (claimIds) ->
       WHERE "urlId" IN (SELECT id FROM "UrlIds")
       GROUP BY "urlId", service
     )
-    SELECT a."storyId" AS "claimId", SUM(m."nShares") AS "nShares"
+    SELECT
+      a."storyId" AS "claimId",
+      SUM(m."nShares") AS "nShares"
     FROM "Article" a
     INNER JOIN "UrlMaxes" m
             ON a."urlId" = m."urlId"
@@ -107,12 +150,14 @@ module.exports =
           claimIds = (c.id for c in claims)
           Promise.all([
             getShareCounts(claimIds)
+            getStanceCounts(claimIds)
             getCategories(claimIds)
             getTags(claimIds)
           ])
-            .spread (counts, categories, tags) ->
+            .spread (counts, stances, categories, tags) ->
               for claim in claims
                 claim.nShares = counts[claim.id]
+                claim.stances = stances[claim.id]
                 claim.categories = categories[claim.id]
                 claim.tags = tags[claim.id]
               null
