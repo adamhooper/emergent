@@ -4,19 +4,19 @@
   "dependencies": {
     "coffee-script": {
       "version": "1.8.0",
-      "from": "coffee-script@",
+      "from": "https://registry.npmjs.org/coffee-script/-/coffee-script-1.8.0.tgz",
       "resolved": "https://registry.npmjs.org/coffee-script/-/coffee-script-1.8.0.tgz",
       "dependencies": {
         "mkdirp": {
           "version": "0.3.5",
-          "from": "mkdirp@~0.3.5",
+          "from": "https://registry.npmjs.org/mkdirp/-/mkdirp-0.3.5.tgz",
           "resolved": "https://registry.npmjs.org/mkdirp/-/mkdirp-0.3.5.tgz"
         }
       }
     },
     "redis": {
       "version": "0.12.1",
-      "from": "redis@",
+      "from": "https://registry.npmjs.org/redis/-/redis-0.12.1.tgz",
       "resolved": "https://registry.npmjs.org/redis/-/redis-0.12.1.tgz"
     }
   }
