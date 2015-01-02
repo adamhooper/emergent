@@ -42,6 +42,7 @@ module.exports = class UrlReparser
   _urlGetToUrlVersion: (urlGet, url) ->
     data = @_parse(url, urlGet.body)
     _.extend(data, {
+      createdAt: urlGet.createdAt
       urlGetId: urlGet.id
       urlId: urlGet.urlId
       sha1: models.UrlVersion.calculateSha1Hex(data)
@@ -49,11 +50,11 @@ module.exports = class UrlReparser
 
   _createUrlVersion: (urlVersion, createdAt, transaction) ->
     @_log("UrlVersion.create urlId #{urlVersion.urlId}, urlGetId #{urlVersion.urlGetId}, sha1 #{urlVersion.sha1}, date #{createdAt.toISOString()}")
-    models.UrlVersion.create(urlVersion, null, createdAt: createdAt, transaction: transaction)
+    models.UrlVersion.create(urlVersion, null, transaction: transaction)
       .then((x) -> x.id)
       .then (urlVersionId) ->
         models.Article.findAll({ where: { urlId: urlVersion.urlId } }, transaction: transaction)
-          .map((article) -> models.ArticleVersion.create({ urlVersionId: urlVersionId, articleId: article.id }, null, transaction: transaction))
+          .map((article) -> models.ArticleVersion.create({ urlVersionId: urlVersionId, articleId: article.id, createdAt: createdAt }, null, transaction: transaction))
 
   _updateUrlVersionParserVersion: (urlVersion, parserVersion, transaction) ->
     @_log("UrlVersion.update (urlId #{urlVersion.urlId}, urlGetId #{urlVersion.urlGetId}, sha1 #{urlVersion.sha1}, just setting parserVersion #{parserVersion}")

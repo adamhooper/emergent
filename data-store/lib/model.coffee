@@ -2,16 +2,6 @@ Instance = require('./instance')
 Promise = require('sequelize').Promise
 _ = require('sequelize').Utils._
 
-# deprecated
-instanceWithTracking = (instance, email, creating, options) ->
-  tracking = {}
-  if creating
-    tracking.createdAt = (options?.createdAt || new Date()) if 'createdAt' of instance
-    tracking.createdBy = email if 'createdBy' of instance
-  tracking.updatedAt = (options?.updatedAt || new Date()) if 'updatedAt' of instance
-  tracking.updatedBy = email if 'updatedBy' of instance
-  instance.copy(tracking)
-
 module.exports = class Model
   constructor: (@_impl) ->
     for k, v of @_impl.options.classMethods
@@ -24,16 +14,22 @@ module.exports = class Model
   _trackingAttrs: (email, creating) ->
     tracking = {}
     if creating
-      tracking.createdAt = (options?.createdAt || new Date()) if 'createdAt' of @_impl.attributes
+      tracking.createdAt = new Date() if 'createdAt' of @_impl.attributes
       tracking.createdBy = email if 'createdBy' of @_impl.attributes
-    tracking.updatedAt = (options?.updatedAt || new Date()) if 'updatedAt' of @_impl.attributes
+    tracking.updatedAt = new Date() if 'updatedAt' of @_impl.attributes
     tracking.updatedBy = email if 'updatedBy' of @_impl.attributes
     tracking
 
   _formatCreateAttrs: (attrs, email) ->
     _.chain(attrs)
       .omit('id')
-      .extend(@_trackingAttrs(email, true))
+      .defaults(@_trackingAttrs(email, true))
+      .value()
+
+  _formatUpdateAttrs: (attrs, email) ->
+    _.chain(attrs)
+      .omit('id')
+      .defaults(@_trackingAttrs(email, false))
       .value()
 
   # Returns a Promise of an Instance
@@ -64,8 +60,8 @@ module.exports = class Model
 
   # Returns a Promise of the Instance
   update: (instance, attrs, email) ->
+    attrs = @_formatUpdateAttrs(attrs, email)
     instance = instance.copy(attrs)
-    instance = instanceWithTracking(instance, email, false)
     instance._impl.save()
       .then(-> instance)
 

@@ -17,8 +17,8 @@ describe 'url_reparser', ->
       source: urlVersion.source
       urlGetId: urlGet.id
       urlId: urlId
+      createdAt: urlGet.createdAt
     expect(f.args[n][1]).to.be.null
-    expect(f.args[n][2]).to.have.property('createdAt', urlGet.createdAt)
     expect(f.args[n][2]).to.have.property('transaction', transaction)
 
   beforeEach ->
@@ -121,9 +121,22 @@ describe 'url_reparser', ->
         expectCreate(0, @urlId, @g1, @v1, @transaction)
         expect(models.Article.findAll).to.have.been.calledWith({ where: { urlId: @urlId } })
         expect(models.Article.findAll.args[0][1]).to.have.property('transaction', @transaction)
+        expect(models.UrlVersion.create).to.have.been.calledWith({
+          body: "body 1",
+          byline: "byline 1",
+          headline: "headline 1",
+          millisecondsSincePreviousUrlGet: null,
+          parserVersion: 2,
+          sha1: "e249e976f454c143ee4421f420dcfe59593f67ba",
+          source: "source 1",
+          urlGetId: "44dc0d7a-4d03-4a00-9a61-caa78ceccfb6",
+          urlId: "f5c681b9-4869-476f-a324-6bd78b8c7100"
+          createdAt: new Date(1000)
+        }, null)
         expect(models.ArticleVersion.create).to.have.been.calledWith({
           articleId: '4237707a-a1d8-4161-a078-c5043cfdfb9f'
           urlVersionId: 'dbd36bcd-4aec-460f-aba9-7a65ae736dfe'
+          createdAt: new Date(1000)
         }, null)
         expect(models.ArticleVersion.create.args[0][2]).to.have.property('transaction', @transaction)
         done()
