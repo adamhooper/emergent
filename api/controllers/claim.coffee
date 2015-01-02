@@ -98,7 +98,7 @@ getStanceCounts = (claimIds) ->
       # Set defaults
       (ret[claimId] = {}) for claimId in claimIds
       for row in rows
-        ret[claimId][row.stance] = +row.n
+        ret[row.claimId][row.stance] = +row.n
       ret
 
 getShareCounts = (claimIds) ->
