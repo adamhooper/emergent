@@ -4,12 +4,9 @@ DIR="$(dirname "$0")"
 
 if $(git diff --quiet); then
   echo "Updating and shrinkwrapping packages..."
-  (cd api && npm shrinkwrap) || exit 1
-  (cd data-store && npm shrinkwrap) || exit 1
-  (cd editor && npm shrinkwrap) || exit 1
-  (cd job-queue && npm shrinkwrap) || exit 1
-  (cd frontend && npm shrinkwrap) || exit 1
-  (cd url-fetcher && npm shrinkwrap) || exit 1
+  for dir in api data-store editor job-queue frontend url-fetcher; do
+    (cd "$dir" && npm install && npm prune && npm shrinkwrap) || exit 1
+  done
   git add */npm-shrinkwrap.json || exit 1
   git commit -m 'Update and shrinkwrap packages for deploy' # if it fails, nothing has changed
 
