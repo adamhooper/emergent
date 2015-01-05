@@ -17,9 +17,9 @@
 
 	/*!
 	 * Autolinker.js
-	 * 0.15.0
+	 * 0.15.2
 	 *
-	 * Copyright(c) 2014 Gregory Jacobs <greg@greg-jacobs.com>
+	 * Copyright(c) 2015 Gregory Jacobs <greg@greg-jacobs.com>
 	 * MIT Licensed. http://www.opensource.org/licenses/mit-license.php
 	 *
 	 * https://github.com/gregjacobs/Autolinker.js
@@ -211,7 +211,7 @@
 		 * 
 		 * Ignoring &amp; as it could be part of a query string -- handling it separately.
 		 */
-		htmlCharacterEntitiesRegex: /(&nbsp;|&#160;|&lt;|&#60;|&gt;|&#62;)/gi,
+		htmlCharacterEntitiesRegex: /(&nbsp;|&#160;|&lt;|&#60;|&gt;|&#62;|&quot;|&#34;|&#39;)/gi,
 
 		/**
 		 * @private
@@ -858,7 +858,7 @@
 		htmlRegex : (function() {
 			var tagNameRegex = /[0-9a-zA-Z][0-9a-zA-Z:]*/,
 			    attrNameRegex = /[^\s\0"'>\/=\x01-\x1F\x7F]+/,   // the unicode range accounts for excluding control chars, and the delete char
-			    attrValueRegex = /(?:".*?"|'.*?'|[^'"=<>`\s]+)/, // double quoted, single quoted, or unquoted attribute values
+			    attrValueRegex = /(?:"[^"]*?"|'[^']*?'|[^'"=<>`\s]+)/, // double quoted, single quoted, or unquoted attribute values
 			    nameEqualsValueRegex = attrNameRegex.source + '(?:\\s*=\\s*' + attrValueRegex.source + ')?';  // optional '=[value]'
 
 			return new RegExp( [
@@ -5212,8 +5212,6 @@ var process = module.exports = {};
 process.nextTick = (function () {
     var canSetImmediate = typeof window !== 'undefined'
     && window.setImmediate;
-    var canMutationObserver = typeof window !== 'undefined'
-    && window.MutationObserver;
     var canPost = typeof window !== 'undefined'
     && window.postMessage && window.addEventListener
     ;
@@ -5222,29 +5220,8 @@ process.nextTick = (function () {
         return function (f) { return window.setImmediate(f) };
     }
 
-    var queue = [];
-
-    if (canMutationObserver) {
-        var hiddenDiv = document.createElement("div");
-        var observer = new MutationObserver(function () {
-            var queueList = queue.slice();
-            queue.length = 0;
-            queueList.forEach(function (fn) {
-                fn();
-            });
-        });
-
-        observer.observe(hiddenDiv, { attributes: true });
-
-        return function nextTick(fn) {
-            if (!queue.length) {
-                hiddenDiv.setAttribute('yes', 'no');
-            }
-            queue.push(fn);
-        };
-    }
-
     if (canPost) {
+        var queue = [];
         window.addEventListener('message', function (ev) {
             var source = ev.source;
             if ((source === window || source === null) && ev.data === 'process-tick') {
@@ -5284,7 +5261,7 @@ process.emit = noop;
 
 process.binding = function (name) {
     throw new Error('process.binding is not supported');
-};
+}
 
 // TODO(shtylman)
 process.cwd = function () { return '/' };
@@ -41882,14 +41859,16 @@ module.exports = React.createClass({displayName: 'exports',
                         React.DOM.li({key: article.id}, 
                           React.DOM.article({className: "article with-stance"}, 
                             React.DOM.header({className: "article-header"}, 
-                              React.DOM.div({className: 'stance stance-small stance-' + article.stance}, 
-                                React.DOM.span({className: "stance-value"}, article.stance)
-                              ), 
+
                               article.revised ?
                                 React.DOM.div({className: 'stance stance-small stance-revised stance-' + article.revised}, 
                                   React.DOM.span({className: "stance-value"}, 'Revised to ' + article.revised)
                                 )
-                              : ''
+                              : 
+                                React.DOM.div({className: 'stance stance-small stance-' + article.stance}, 
+                                  React.DOM.span({className: "stance-value"}, article.stance)
+                                )
+                              
                             ), 
                             React.DOM.div({className: "article-content"}, 
                               React.DOM.h4({className: "article-list-title"}, React.DOM.a({href: article.url}, article.source), " - ", React.DOM.time({dateTime: article.createdAt}, moment(article.createdAt).format('MMM D, YYYY')), 

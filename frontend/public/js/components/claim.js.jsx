@@ -302,14 +302,16 @@ module.exports = React.createClass({
                         <li key={article.id}>
                           <article className="article with-stance">
                             <header className="article-header">
-                              <div className={'stance stance-small stance-' + article.stance}>
-                                <span className="stance-value">{article.stance}</span>
-                              </div>
+
                               {article.revised ?
                                 <div className={'stance stance-small stance-revised stance-' + article.revised}>
                                   <span className="stance-value">{'Revised to ' + article.revised}</span>
                                 </div>
-                              : ''}
+                              : 
+                                <div className={'stance stance-small stance-' + article.stance}>
+                                  <span className="stance-value">{article.stance}</span>
+                                </div>
+                              }
                             </header>
                             <div className="article-content">
                               <h4 className="article-list-title"><a href={article.url}>{article.source}</a> - <time dateTime={article.createdAt}>{moment(article.createdAt).format('MMM D, YYYY')}</time>
