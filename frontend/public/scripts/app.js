@@ -41981,6 +41981,8 @@ module.exports = React.createClass({displayName: 'exports',
     // Should combine the two, switch between for now
     var category = this.props.params.category ? unescape(this.props.params.category) : null;
     var tag = this.props.params.tag ? unescape(this.props.params.tag) : null;
+    if (category=='US') { category = 'U.S.'; } // ugh
+
     var claims = this.props.claims.models;
     if (this.props.search) {
       claims = this.props.claims.filtered(claims, this.props.search);
@@ -42066,9 +42068,9 @@ module.exports = React.createClass({displayName: 'exports',
                         : null, 
                         React.DOM.div({className: "article-tracked"}, 
                           React.DOM.span({className: "label"}, "Tracked:"), 
-                          React.DOM.span({className: "tracked-group"}, "5", React.DOM.span({className: "indicator indicator-true"})), 
-                          React.DOM.span({className: "tracked-group"}, "10", React.DOM.span({className: "indicator indicator-false"})), 
-                          React.DOM.span({className: "tracked-group"}, "5", React.DOM.span({className: "indicator indicator-unknown"}))
+                          claim.get('stances')['for'] ? React.DOM.span({className: "tracked-group"}, claim.get('stances')['for'], React.DOM.span({className: "indicator indicator-true"})) : null, 
+                          claim.get('stances')['against'] ? React.DOM.span({className: "tracked-group"}, claim.get('stances')['against'], React.DOM.span({className: "indicator indicator-false"})) : null, 
+                          claim.get('stances')['observing'] ? React.DOM.span({className: "tracked-group"}, claim.get('stances')['observing'], React.DOM.span({className: "indicator indicator-unknown"})) : null
                         )
                       )
                     )
@@ -42166,6 +42168,7 @@ module.exports = React.createClass({displayName: 'exports',
                 React.DOM.li(null, Link({to: "category", params: { category: 'Culture'}, className: "navigation-link"}, "Culture")), 
                 React.DOM.li(null, Link({to: "category", params: { category: 'Business%2FTech'}, className: "navigation-link"}, "Business")), 
                 React.DOM.li(null, Link({to: "category", params: { category: 'World'}, className: "navigation-link"}, "World News")), 
+                React.DOM.li(null, Link({to: "category", params: { category: 'US'}, className: "navigation-link"}, "U.S. News")), 
                 React.DOM.li(null, Link({to: "category", params: { category: 'Viral'}, className: "navigation-link"}, "Viral News"))
               )
             )

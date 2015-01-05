@@ -72,6 +72,7 @@ module.exports = React.createClass({
                 <li><Link to="category" params={{ category: 'Culture' }} className="navigation-link">Culture</Link></li>
                 <li><Link to="category" params={{ category: 'Business%2FTech' }} className="navigation-link">Business</Link></li>
                 <li><Link to="category" params={{ category: 'World' }} className="navigation-link">World News</Link></li>
+                <li><Link to="category" params={{ category: 'US' }} className="navigation-link">U.S. News</Link></li>
                 <li><Link to="category" params={{ category: 'Viral' }} className="navigation-link">Viral News</Link></li>
               </ul>
             </nav>

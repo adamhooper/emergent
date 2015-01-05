@@ -66,6 +66,8 @@ module.exports = React.createClass({
     // Should combine the two, switch between for now
     var category = this.props.params.category ? unescape(this.props.params.category) : null;
     var tag = this.props.params.tag ? unescape(this.props.params.tag) : null;
+    if (category=='US') { category = 'U.S.'; } // ugh
+
     var claims = this.props.claims.models;
     if (this.props.search) {
       claims = this.props.claims.filtered(claims, this.props.search);
@@ -151,9 +153,9 @@ module.exports = React.createClass({
                         : null}
                         <div className="article-tracked">
                           <span className="label">Tracked:</span>
-                          <span className="tracked-group">5<span className="indicator indicator-true"></span></span>
-                          <span className="tracked-group">10<span className="indicator indicator-false"></span></span>
-                          <span className="tracked-group">5<span className="indicator indicator-unknown"></span></span>
+                          {claim.get('stances')['for'] ? <span className="tracked-group">{claim.get('stances')['for']}<span className="indicator indicator-true"></span></span> : null}
+                          {claim.get('stances')['against'] ? <span className="tracked-group">{claim.get('stances')['against']}<span className="indicator indicator-false"></span></span> : null}
+                          {claim.get('stances')['observing'] ? <span className="tracked-group">{claim.get('stances')['observing']}<span className="indicator indicator-unknown"></span></span> : null}
                         </div>
                       </footer>
                     </article>
