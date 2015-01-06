@@ -41706,8 +41706,6 @@ module.exports = React.createClass({displayName: 'exports',
       originDate = claim.originDate(),
       truthinessDate = claim.get('truthinessDate');
 
-      console.log(claim);
-
     return (
 
       React.DOM.div({className: "page page-claim"}, 
@@ -41719,7 +41717,7 @@ module.exports = React.createClass({displayName: 'exports',
                   React.DOM.span({className: "stance-value"}, claim.truthinessText())
                 ), 
                 React.DOM.h1({className: "page-title"}, claim.get('headline')), 
-                React.DOM.p({dangerouslySetInnerHTML: {__html: linker.link(claim.get('description'))}}), 
+                React.DOM.p({className: "article-content", dangerouslySetInnerHTML: {__html: linker.link(claim.get('description'))}}), 
                 claim.get('tags').length > 0 ?
                 React.DOM.div({className: "article-tags"}, 
                   React.DOM.span({className: "label"}, "Tagged:"), 
@@ -41730,8 +41728,8 @@ module.exports = React.createClass({displayName: 'exports',
                   }.bind(this))
                 )
                 : null, 
-                claim.get('truthiness') != 'unknown' ? React.DOM.p({className: "tracking"}, React.DOM.span({className: "tracking-header"}, "Resolved:    ", claim.get('truthinessUrl') ? React.DOM.a({href: claim.get('truthinessUrl'), target: "_blank"}, "View Article") : null, "   Added ", moment(truthinessDate).format('MMM D')), React.DOM.br(null), claim.get('truthinessDescription')) : null, 
-                claim.get('origin') ? React.DOM.p({className: "tracking"}, React.DOM.span({className: "tracking-header"}, "Originating Source:   ", claim.get('originUrl') ? React.DOM.a({href: claim.get('originUrl'), target: "_blank"}, "View Article") : null, "   Added ", moment(originDate).format('MMM D')), React.DOM.br(null), React.DOM.span({dangerouslySetInnerHTML: {__html: linker.link(claim.get('origin'))}})) : null
+                claim.get('truthiness') != 'unknown' ? React.DOM.p({className: "tracking"}, React.DOM.span({className: "tracking-header"}, "Resolved:    ", claim.get('truthinessUrl') ? React.DOM.a({href: claim.get('truthinessUrl'), target: "_blank"}, "View Article") : null, "   Added ", moment(truthinessDate).format('MMM D')), React.DOM.br(null), React.DOM.span({className: "tracking-body"}, claim.get('truthinessDescription'))) : null, 
+                claim.get('origin') ? React.DOM.p({className: "tracking"}, React.DOM.span({className: "tracking-header"}, "Originating Source:   ", claim.get('originUrl') ? React.DOM.a({href: claim.get('originUrl'), target: "_blank"}, "View Article") : null, "   Added ", moment(originDate).format('MMM D')), React.DOM.br(null), React.DOM.span({className: "tracking-body", dangerouslySetInnerHTML: {__html: linker.link(claim.get('origin'))}})) : null
               )
             )
           )

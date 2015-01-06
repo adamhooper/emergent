@@ -1613,6 +1613,9 @@ button.navigation-link {
     font-weight: 600;
     text-decoration: none; }
 
+.tracking-body {
+  font-size: 0.95em; }
+
 .tracking-unknown {
   border-left-color: #656565; }
 
