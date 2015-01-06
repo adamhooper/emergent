@@ -2,11 +2,22 @@
 // Base styles
 
 .tracking {
-  border-left: .25em solid palette(base);
-  margin-bottom: .25em;
-  padding-bottom: .25em;
-  padding-left: .75em;
-  padding-top: .25em;
+  border-top: 1px solid palette(border, base);
+  margin-top: 1em;
+  padding-top: 1em;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.tracking-header {
+  font-size: font(xs);
+  font-weight: weight(medium);
+  color: palette(base, dark);
+
+  a {
+    font-weight: weight(bold);
+    text-decoration: none;
+  }
 }
 
 //

@@ -149,6 +149,8 @@ module.exports = React.createClass({
       originDate = claim.originDate(),
       truthinessDate = claim.get('truthinessDate');
 
+      console.log(claim);
+
     return (
 
       <div className="page page-claim">
@@ -161,9 +163,18 @@ module.exports = React.createClass({
                 </div>
                 <h1 className="page-title">{claim.get('headline')}</h1>
                 <p dangerouslySetInnerHTML={{__html: linker.link(claim.get('description'))}}/>
-                {claim.get('origin') ? <p className="tracking"><strong>Originated: </strong>{moment(originDate).format('MMM D, YYYY H:mm') + ' (' + moment(originDate).fromNow() + ')'} {claim.get('originUrl') ? <a href={claim.get('originUrl')} target="_blank">View Article</a> : null}<br /><span dangerouslySetInnerHTML={{__html: linker.link(claim.get('origin'))}}/></p> : null}
-                <p className="tracking"><strong>Started Tracking:</strong> {moment(startedTracking).format('MMM D, YYYY H:mm') + ' (' + moment(startedTracking).fromNow() + ')'}</p>
-                {claim.get('truthiness') != 'unknown' ? <p className={"tracking tracking-" + claim.get('truthiness')}><strong>Resolved: </strong>{moment(truthinessDate).format('MMM D, YYYY H:mm') + ' (' + moment(truthinessDate).fromNow() + ')'} {claim.get('truthinessUrl') ? <a href={claim.get('truthinessUrl')} target="_blank">View Article</a> : null}<br />{claim.get('truthinessDescription')}</p> : null}
+                {claim.get('tags').length > 0 ?
+                <div className="article-tags">
+                  <span className="label">Tagged:</span>
+                  {claim.get('tags').map(function(tag, i) {
+                    return (
+                      <Link to="tag" params={{ tag: tag }}>{tag}</Link>
+                    );
+                  }.bind(this))}
+                </div>
+                : null}
+                {claim.get('truthiness') != 'unknown' ? <p className="tracking"><span className="tracking-header">Resolved:&nbsp;&nbsp;  {claim.get('truthinessUrl') ? <a href={claim.get('truthinessUrl')} target="_blank">View Article</a> : null} &nbsp;&nbsp;Added {moment(truthinessDate).format('MMM D')}</span><br />{claim.get('truthinessDescription')}</p> : null}
+                {claim.get('origin') ? <p className="tracking"><span className="tracking-header">Originating Source:&nbsp;&nbsp; {claim.get('originUrl') ? <a href={claim.get('originUrl')} target="_blank">View Article</a> : null} &nbsp;&nbsp;Added {moment(originDate).format('MMM D')}</span><br /><span dangerouslySetInnerHTML={{__html: linker.link(claim.get('origin'))}}/></p> : null}
               </header>
             </div>
           </div>
@@ -307,7 +318,7 @@ module.exports = React.createClass({
                                 <div className={'stance stance-small stance-revised stance-' + article.revised}>
                                   <span className="stance-value">{'Revised to ' + article.revised}</span>
                                 </div>
-                              : 
+                              :
                                 <div className={'stance stance-small stance-' + article.stance}>
                                   <span className="stance-value">{article.stance}</span>
                                 </div>

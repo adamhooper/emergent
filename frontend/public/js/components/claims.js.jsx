@@ -146,7 +146,7 @@ module.exports = React.createClass({
                             <span className="label">Tagged:</span>
                             {claim.get('tags').map(function(tag, i) {
                               return (
-                                <a href="#">{tag}</a>
+                                <Link to="tag" params={{ tag: tag }}>{tag}</Link>
                               );
                             }.bind(this))}
                           </div>
