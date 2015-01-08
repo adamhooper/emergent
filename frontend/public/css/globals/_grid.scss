@@ -35,16 +35,16 @@
 //
 // Filter categories
 
-.card-all,
-.card-category {
-  .card-title {
-    @include span(1 of 4);
-  }
-
-  .card-meta {
-    @include span(last 3 of 4);
-  }
-}
+// .card-all,
+// .card-category {
+//   .card-title {
+//     @include span(1 of 4);
+//   }
+//
+//   .card-meta {
+//     @include span(last 3 of 4);
+//   }
+// }
 
 .section-with-sidebar {
   .section-header {
@@ -141,22 +141,22 @@
     }
   }
 
-  .card-category {
-    .card-categories-1 & {
-      @include span(nest 12 of 12);
-    }
-
-    .card-categories-2 & {
-      @include span(nest 6 of 12);
-    }
-
-    .card-categories-3 & {
-      @include span(nest 4 of 12);
-    }
-
-    &:last-child {
-      @include last;
-    }
-  }
+  // .card-category {
+  //   .card-categories-1 & {
+  //     @include span(nest 12 of 12 no-gutters);
+  //   }
+  //
+  //   .card-categories-2 & {
+  //     @include span(nest 6 of 12 no-gutters);
+  //   }
+  //
+  //   .card-categories-3 & {
+  //     @include span(nest 4 of 12 no-gutters);
+  //   }
+  //
+  //   &:last-child {
+  //     // @include last;
+  //   }
+  // }
 
 }

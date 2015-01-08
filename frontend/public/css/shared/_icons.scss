@@ -3,10 +3,12 @@
 }
 
 .icon-confirmed {
+  background-color: red;
   background-image: image-url('confirmed.svg');
-  display: block;
-  height: 30px;
-  width: 30px;
+  display: inline-block;
+  height: 14px;
+  width: 14px;
+  vertical-align: top;
 }
 
 .icon-most-shared {

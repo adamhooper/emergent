@@ -175,6 +175,15 @@ module.exports = React.createClass({
                 {claim.get('origin') ? <p className="tracking"><span className="tracking-header">Originating Source:&nbsp;&nbsp; {claim.get('originUrl') ? <a href={claim.get('originUrl')} target="_blank">View Article</a> : null} &nbsp;&nbsp;Added {moment(originDate).format('MMM D')}</span><br /><span className="tracking-body" dangerouslySetInnerHTML={{__html: linker.link(claim.get('origin'))}}/></p> : null}
               </header>
             </div>
+            <nav className="page-navigation">
+              <ul className="navigation navigation-page">
+                <li className="navigation-social">
+                  <span className="navigation-label">Share this claim:</span>
+                  <a href="#" className="navigation-link">Share on Twitter</a>
+                  <a href="#" className="navigation-link">Share on Facebook</a>
+                </li>
+              </ul>
+            </nav>
           </div>
         </div>
 
@@ -183,8 +192,9 @@ module.exports = React.createClass({
           <div className="container">
 
             <div className="meta">
+              <h3 className="meta-title">Sources</h3>
               <div className="shares">
-                <span className="shares-label">Sourced Tracked:</span> <span className="shares-value">{claim.articlesByStance().length}</span>
+                <span className="shares-label">Sources Tracked:</span> <span className="shares-value">{claim.articlesByStance().length}</span>
               </div>
               <div className="shares">
                 <span className="shares-label">Total Shares:</span> <span className="shares-value">{this.formatNumber(claim.get('nShares'))}</span>
@@ -197,24 +207,13 @@ module.exports = React.createClass({
                   <div onClick={this.setFilter.bind(this, 'for')} className={'card card-category card-category-for' + (this.state.filter === 'for' ? ' is-selected' : '')}>
                     <div className="card-header">
                       <p className="card-title">For{claim.get('truthiness') === 'true' ? <span className="icon icon-confirmed">Confirmed</span> : null}</p>
-                      <div className="card-meta">
-                        <p className="sources">{claim.articlesByStance('for').length} sources</p>
-                        <div className="shares">
-                          <span className="shares-value">{mostShared === 'for' ? <span className="icon icon-most-shared"/> : null}{shares.for ? this.formatNumber(shares.for) : 0}</span> <span className="shares-label">shares</span>
-                        </div>
-                      </div>
                     </div>
                     <div className="card-content">
-                      <p className="article-source-title">Top Source</p>
-                      {_.first(claim.articlesByStance('for'), 1).map(function(article) {
-                        return (
-                          <article className="article article-source" key={article.id}>
-                            <h4 className="article-title">{article.source} - <time dateTime={article.createdAt}>{moment(article.createdAt).format('MMMM Do YYYY')}</time></h4>
-                            <p className="article-description">{this.truncateString(article.headline)} <a href={article.url} target="_blank">View Article</a></p>
-                            <p><strong>{this.formatNumber(article.shares) + ' shares'}</strong></p>
-                          </article>
-                        )
-                      }, this)}
+                      <p className="sources">{claim.articlesByStance('for').length} <span className="indicator indicator-true"></span></p>
+                      <div className="shares">
+                        <span className="shares-label">Shares</span>
+                        <span className="shares-value">{shares.for ? this.formatNumber(shares.for) : 0}</span>
+                      </div>
                     </div>
                   </div>
                   : null
@@ -223,24 +222,13 @@ module.exports = React.createClass({
                   <div onClick={this.setFilter.bind(this, 'against')} className={'card card-category card-category-against' + (this.state.filter === 'against' ? ' is-selected' : '')}>
                     <div className="card-header">
                       <p className="card-title">Against{claim.get('truthiness') === 'false' ? <span className="icon icon-confirmed">Confirmed</span> : null}</p>
-                      <div className="card-meta">
-                        <p className="sources">{claim.articlesByStance('against').length} sources</p>
-                        <div className="shares">
-                          <span className="shares-value">{mostShared === 'against' ? <span className="icon icon-most-shared"/> : null}{shares.against ? this.formatNumber(shares.against) : 0}</span> <span className="shares-label">shares</span>
-                        </div>
-                      </div>
                     </div>
                     <div className="card-content">
-                      <p className="article-source-title">Top Source</p>
-                      {_.first(claim.articlesByStance('against'), 1).map(function(article) {
-                        return (
-                          <article className="article article-source" key={article.id}>
-                            <h4 className="article-title">{article.source} - <time dateTime={article.createdAt}>{moment(article.createdAt).format('MMMM Do YYYY')}</time></h4>
-                            <p className="article-description">{this.truncateString(article.headline)} <a href={article.url} target="_blank">View Article</a></p>
-                            <p><strong>{this.formatNumber(article.shares) + ' shares'}</strong></p>
-                          </article>
-                        )
-                      }, this)}
+                      <p className="sources">{claim.articlesByStance('against').length} <span className="indicator indicator-false"></span></p>
+                      <div className="shares">
+                        <span className="shares-label">Shares</span>
+                        <span className="shares-value">{shares.against ? this.formatNumber(shares.against) : 0}</span>
+                      </div>
                     </div>
                   </div>
                   : null
@@ -249,24 +237,13 @@ module.exports = React.createClass({
                   <div onClick={this.setFilter.bind(this, 'observing')} className={'card card-category card-category-observing' + (this.state.filter === 'observing' ? ' is-selected' : '')}>
                     <div className="card-header">
                       <p className="card-title">Observing</p>
-                      <div className="card-meta">
-                        <p className="sources">{claim.articlesByStance('observing').length} sources</p>
-                        <div className="shares">
-                          <span className="shares-value">{mostShared === 'observing' ? <span className="icon icon-most-shared"/> : null}{shares.observing ? this.formatNumber(shares.observing) : 0}</span> <span className="shares-label">shares</span>
-                        </div>
-                      </div>
                     </div>
                     <div className="card-content">
-                      <p className="article-source-title">Top Source</p>
-                      {_.first(claim.articlesByStance('observing'), 1).map(function(article) {
-                        return (
-                          <article className="article article-source" key={article.id}>
-                            <h4 className="article-title">{article.source} - <time dateTime={article.createdAt}>{moment(article.createdAt).format('MMMM Do YYYY')}</time></h4>
-                            <p className="article-description">{this.truncateString(article.headline)} <a href={article.url} target="_blank">View Article</a></p>
-                            <p><strong>{this.formatNumber(article.shares) + ' shares'}</strong></p>
-                          </article>
-                        )
-                      }, this)}
+                      <p className="sources">{claim.articlesByStance('observing').length} <span className="indicator indicator-unknown"></span></p>
+                      <div className="shares">
+                        <span className="shares-label">Shares</span>
+                        <span className="shares-value">{shares.observing ? this.formatNumber(shares.observing) : 0}</span>
+                      </div>
                     </div>
                   </div>
                   : null

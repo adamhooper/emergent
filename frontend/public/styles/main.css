@@ -574,17 +574,6 @@ th {
     padding-left: 40px;
     padding-right: 40px; } }
 
-.card-all .card-title,
-.card-category .card-title {
-  width: 20%;
-  float: left;
-  margin-right: 6.66667%; }
-.card-all .card-meta,
-.card-category .card-meta {
-  width: 73.33333%;
-  float: right;
-  margin-right: 0; }
-
 .section-with-sidebar .section-header {
   margin-top: 2em;
   margin-bottom: 2em; }
@@ -650,23 +639,6 @@ th {
   .card-all .card-meta {
     width: 74.46809%;
     float: right;
-    margin-right: 0; }
-
-  .card-categories-1 .card-category {
-    width: 100%;
-    float: left;
-    margin-left: 0;
-    margin-right: 0; }
-  .card-categories-2 .card-category {
-    width: 48.93617%;
-    float: left;
-    margin-right: 2.12766%; }
-  .card-categories-3 .card-category {
-    width: 31.91489%;
-    float: left;
-    margin-right: 2.12766%; }
-  .card-category:last-child {
-    float: right;
     margin-right: 0; } }
 * {
   box-sizing: border-box; }
@@ -721,10 +693,12 @@ button:active, button:focus {
   text-indent: -9999px; }
 
 .icon-confirmed {
+  background-color: red;
   background-image: url('/images/confirmed.svg');
-  display: block;
-  height: 30px;
-  width: 30px; }
+  display: inline-block;
+  height: 14px;
+  width: 14px;
+  vertical-align: top; }
 
 .icon-most-shared {
   background-image: url('/images/shared.png');
@@ -976,12 +950,33 @@ ul.credits {
 .article-list-title time {
   margin-right: 10px; }
 
+.card-categories {
+  display: table;
+  border: 1px solid #ebebeb;
+  border-radius: 5px;
+  width: 100%;
+  max-width: 445px; }
+
+.card-category {
+  display: table-cell;
+  vertical-align: top;
+  border-right: 1px solid #ebebeb; }
+  .card-category:last-child {
+    border-right: none; }
+  .card-categories-1 .card-category {
+    width: 100%; }
+  .card-categories-2 .card-category {
+    width: 50%; }
+  .card-categories-3 .card-category {
+    width: 33.3%; }
+
 .card {
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
   position: relative;
   margin-bottom: 1em; }
   .card:last-child {
     margin-bottom: 0; }
+  .card .sources {
+    font-size: 1em; }
   @media (min-width: 48em) {
     .card {
       margin-bottom: 0; } }
@@ -991,47 +986,24 @@ ul.credits {
   padding: 1em; }
 
 .card-header {
-  border-style: solid;
-  border-width: 1px; }
+  padding-bottom: 0;
+  line-height: 1; }
 
 .card-title {
   display: inline-block;
-  font-size: 1.6em;
   font-weight: 500;
-  letter-spacing: 1px;
   margin-bottom: 0;
   margin-top: 0;
-  text-transform: uppercase; }
+  color: #7f7f7f; }
   .card-title .icon {
-    margin-top: .25em; }
+    margin-top: 0;
+    margin-left: .5em; }
 
 .card-meta {
   text-align: right; }
 
 .card-content {
-  border-bottom: 1px solid #b2b2b2;
-  border-left: 1px solid #b2b2b2;
-  border-right: 1px solid #b2b2b2;
-  color: #323232;
-  height: 240px;
   width: 100%; }
-
-.card-category-for,
-.card-category-against,
-.card-category-observing {
-  color: #ffffff; }
-
-.card-category-for .card-header {
-  background-color: #00bf71;
-  border-color: #008c53; }
-
-.card-category-against .card-header {
-  background-color: #e70909;
-  border-color: #b60707; }
-
-.card-category-observing .card-header {
-  background-color: #656565;
-  border-color: #4c4c4c; }
 
 .articles-filtering {
   background-color: #fafafa;
@@ -1139,6 +1111,12 @@ ul.credits {
 .navigation-link {
   display: block;
   text-decoration: none; }
+
+.navigation-label {
+  display: block;
+  color: #7f7f7f;
+  font-size: 0.8em;
+  font-weight: 500; }
 
 button.navigation-link {
   border: 0;
@@ -1276,11 +1254,15 @@ button.navigation-link {
   font-weight: 700;
   text-decoration: underline; }
 
+.navigation-social .navigation-label {
+  margin-bottom: 0.5em; }
+
 .page {
   background-color: #ffffff; }
 
 .page-title {
-  margin-top: 0; }
+  margin-top: 0;
+  margin-bottom: 0.5em; }
   @media (min-width: 0) and (max-width: 48em) {
     .page-title {
       clear: both; } }
@@ -1294,6 +1276,11 @@ button.navigation-link {
   border-bottom: 1px solid #ebebeb;
   padding-top: 1.5em;
   padding-bottom: 1.5em; }
+  .page-meta .meta-title {
+    margin-top: 0;
+    font-family: "franklin-gothic-urw", Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    margin-bottom: 0.5em; }
 
 .site-header {
   background-color: #323232;
@@ -1453,14 +1440,20 @@ button.navigation-link {
 
 .articles .shares {
   text-align: center; }
+.meta .shares {
+  font-size: 0.8em; }
 .page-meta .shares {
   display: inline-block; }
   .page-meta .shares + .shares {
     margin-left: 2em;
     margin-bottom: 1em; }
+.card-category .shares {
+  margin-top: 0.5em; }
 
 .card-category .shares-label {
-  color: #ffffff; }
+  display: block;
+  font-size: 0.8em;
+  color: #7f7f7f; }
 
 .shares-value {
   font-weight: 500;

@@ -5,6 +5,10 @@
   }
 
   // inside page meta
+  .meta & {
+    font-size: font(xs);
+  }
+
   .page-meta & {
     display: inline-block;
 
@@ -13,6 +17,10 @@
       margin-bottom: 1em;
     }
   }
+
+  .card-category & {
+      margin-top: 0.5em;
+  }
 }
 
 .shares-label {
@@ -20,7 +28,9 @@
 
   // inside a category filter
   .card-category & {
-    color: palette(base, lighter);
+    display: block;
+    font-size: font(xs);
+    color: palette(base, dark);
   }
 }
 

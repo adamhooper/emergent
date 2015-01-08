@@ -7,20 +7,51 @@
   //@extend %clearfix;
 }
 
-.card-categories {}
+.card-categories {
+  display: table;
+  border: 1px solid palette(border, base);
+  border-radius: 5px;
+  width: 100%;
+  max-width: 445px;
+}
+
+.card-category {
+  display: table-cell;
+  vertical-align: top;
+  border-right: 1px solid palette(border, base);
+
+  &:last-child {
+    border-right: none;
+  }
+
+  .card-categories-1 & {
+    width: 100%;
+  }
+
+  .card-categories-2 & {
+    width: 50%;
+  }
+
+  .card-categories-3 & {
+    width: 33.3%;
+  }
+}
 
 
 //
 // Single filter
 
 .card {
-  box-shadow: 0 1px 2px rgba(0, 0, 0, .1);
   position: relative;
   margin-bottom: 1em;
   &:last-child {
     margin-bottom: 0;
   }
-  
+
+  .sources {
+    font-size: font(md);
+  }
+
   @include breakpoint($breakpoint-tablet) {
     margin-bottom: 0;
   }
@@ -32,22 +63,24 @@
 }
 
 .card-header {
+  padding-bottom: 0;
+  line-height: 1;
+}
+
+.card-header {
   @extend %clearfix;
-  border-style: solid;
-  border-width: 1px;
 }
 
 .card-title {
   display: inline-block;
-  font-size: font(xl);
-  font-weight: 500;
-  letter-spacing: 1px;
+  font-weight: weight(medium);
   margin-bottom: 0;
   margin-top: 0;
-  text-transform: uppercase;
+  color: #7f7f7f;
 
   .icon {
-    margin-top: .25em;
+    margin-top: 0;
+    margin-left: .5em;
   }
 }
 
@@ -56,41 +89,5 @@
 }
 
 .card-content {
-  border-bottom: 1px solid palette(base);
-  border-left: 1px solid palette(base);
-  border-right: 1px solid palette(base);
-  color: palette(base, darker);
-  height: 240px;
   width: 100%;
-}
-
-
-//
-// Filter categories
-
-.card-category-for,
-.card-category-against,
-.card-category-observing {
-  color: palette(base, lighter);
-}
-
-.card-category-for {
-  .card-header {
-    background-color: palette(category, for);
-    border-color: darken(palette(category, for), 10%);
-  }
-}
-
-.card-category-against {
-  .card-header {
-    background-color: palette(category, against);
-    border-color: darken(palette(category, against), 10%);
-  }
-}
-
-.card-category-observing {
-  .card-header {
-    background-color: palette(category, observing);
-    border-color: darken(palette(category, observing), 10%);
-  }
 }

@@ -11,7 +11,13 @@
 .navigation-link {
   display: block;
   text-decoration: none;
+}
 
+.navigation-label {
+  display: block;
+  color: palette(base, dark);
+  font-size: font(xs);
+  font-weight: weight(medium);
 }
 
   button.navigation-link {
@@ -203,5 +209,11 @@
     font-size: font(xs);
     font-weight: 700;
     text-decoration: underline;
+  }
+}
+
+.navigation-social {
+  .navigation-label {
+    margin-bottom: 0.5em;
   }
 }

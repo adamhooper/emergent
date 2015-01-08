@@ -10,6 +10,7 @@
 
 .page-title {
   margin-top: 0;
+  margin-bottom: 0.5em;
 
   @include breakpoint($breakpoint-mobile-only) {
     clear: both;
@@ -28,6 +29,13 @@
   border-bottom: 1px solid palette(border, base);
   padding-top: 1.5em;
   padding-bottom: 1.5em;
+
+  .meta-title {
+    margin-top: 0;
+    font-family: $font-secondary;
+    font-weight: weight(regular);
+    margin-bottom: 0.5em;
+  }
 
   > .container {
     @extend %page-gutters;
