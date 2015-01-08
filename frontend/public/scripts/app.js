@@ -41565,6 +41565,17 @@ var _ = require('underscore');
 var moment = require('moment');
 var Autolinker = require('autolinker');
 
+moment.locale('en', {
+  calendar : {
+    lastDay : '[Yesterday]',
+    sameDay : '[Today]',
+    nextDay : '[Tomorrow]',
+    lastWeek : '[Last Week]',
+    nextWeek : 'dddd [at] LT',
+    sameElse : 'MMM D'
+  }
+});
+
 module.exports = React.createClass({displayName: 'exports',
 
   mixins: [BackboneCollection],
@@ -41844,21 +41855,23 @@ module.exports = React.createClass({displayName: 'exports',
                   React.DOM.section({className: "page-timeline"}, 
                     React.DOM.ul({className: "articles"}, 
                       _.first(claim.articlesByStance(this.state.filter), 10).map(function(article) {
+
                         return (
                           React.DOM.li({key: article.id}, 
+                            React.DOM.span(null, moment(article.createdAt).calendar()), 
                             React.DOM.article({className: "article with-stance"}, 
-                              React.DOM.header({className: "article-header"}, 
+                              React.DOM.header({className: "article-header"}
 
-                                article.revised ?
-                                  React.DOM.div({className: 'stance stance-small stance-revised stance-' + article.revised}, 
-                                    React.DOM.span({className: "stance-value"}, 'Revised to ' + article.revised)
-                                  )
+                                /*}{article.revised ?
+                                  <div className={'stance stance-small stance-revised stance-' + article.revised}>
+                                    <span className="stance-value">{'Revised to ' + article.revised}</span>
+                                  </div>
                                 :
                                   null
-                                
+                                }*/
                               ), 
                               React.DOM.div({className: "article-content"}, 
-                                React.DOM.h4({className: "article-list-title"}, React.DOM.span({className: 'indicator indicator-' + article.stance}), " ", React.DOM.a({href: article.url}, article.source), " - ", React.DOM.time({dateTime: article.createdAt}, moment(article.createdAt).format('MMM D, YYYY')), 
+                                React.DOM.h4({className: "article-list-title"}, React.DOM.span({className: 'indicator indicator-' + article.stance}), " ", React.DOM.a({href: article.url}, article.source), " - ", React.DOM.time({dateTime: article.createdAt}, moment(article.createdAt).format('MMM D')), 
                                   React.DOM.span({className: "shares-label"}, "Shares:"), " ", React.DOM.span({className: "shares-value"}, this.formatNumber(article.shares))
                                   ), 
                                 React.DOM.p({className: "article-description"}, article.headline)
