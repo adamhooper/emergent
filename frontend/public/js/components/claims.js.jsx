@@ -73,8 +73,8 @@ module.exports = React.createClass({
     if (category=='US') { category = 'U.S.'; } // ugh
 
     var claims = this.props.claims.models;
-    if (this.props.search) {
-      claims = this.props.claims.filtered(claims, this.props.search);
+    if (this.state.search) {
+      claims = this.props.claims.filtered(claims, this.state.search);
     } else if (category) {
       claims = this.props.claims.byCategory(claims, category);
     } else if (tag) {
@@ -95,9 +95,14 @@ module.exports = React.createClass({
     return new String(str).replace(/(\d)(?=(\d{3})+$)/g, '$1,');
   },
 
+  handleSearch: function(e) {
+    this.setState({ search: e.target.value });
+  },
+
   render: function() {
     return (
       <div className="page">
+        <app.components.Header claims={this.props.claims} search={this.state.search} searchToggle={this.props.query.search} onChange={this.handleSearch} category={unescape(this.props.params.category)}/>
         <div className="page-content">
           <div className="articles-holder section-with-sidebar">
             <nav className="articles-filtering">
@@ -128,11 +133,7 @@ module.exports = React.createClass({
                           <span className="stance-value">{claim.truthinessText()}</span>
                         </div>
                         <div className="article-meta">
-                          {claim.get('categories').map(function(category, i) {
-                            return (
-                              (i > 0) ? <span className="article-category"> - {category}</span> : <span className="article-category">{category}</span>
-                            );
-                          })}
+                          <span className="article-category">{claim.get('categories') && claim.get('categories').join(' - ')}</span>
                           {claim.get('nShares') ?
                           <span className="article-shares hidden-mobile"><span className="label">Shares:</span> {this.formatNumber(claim.get('nShares'))}</span>
                           : null}
