@@ -8,6 +8,13 @@
   //     margin-bottom: 1em;
   //   }
   // }
+
+  .page-meta .container,
+  .sources-filtering .container {
+    @include breakpoint($breakpoint-tablet) {
+      padding-left: 10.2em;
+    }
+  }
 }
 
 .page-claim-body {

@@ -1,16 +1,23 @@
 //
 // Articles Filters
 // ------------------------------
-.articles-filtering {
-  background-color: #fafafa;
+.articles-filtering,
+.sources-filtering {
   border-bottom: 1px solid palette(border, base);
   padding-right: 0;
   @extend %clearfix;
-  @extend %page-gutters;
+
+  &.articles-filtering {
+    background-color: #fafafa;
+    @extend %page-gutters;
+  }
+
+  &.sources-filtering {
+    background-color: #fdfdfd;
+  }
 
   .navigation-filtering {
     float: left;
-    border-right: 1px solid palette(border, base);
     margin-left: -2px;
 
     li {
@@ -47,7 +54,7 @@
       padding-left: 11px;
       margin-left: 0;
 
-      border-right: none;
+      border-left: 1px solid palette(border, base);
 
       @include breakpoint($breakpoint-mobile-large) {
         border-right: 1px solid palette(border, base);
@@ -84,7 +91,6 @@
   @include breakpoint($breakpoint-tablet) {
     margin-left: 40px;
     margin-right: 40px;
-
   }
 }
 

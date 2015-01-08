@@ -255,16 +255,16 @@ module.exports = React.createClass({
         </div>
         : null }
 
-        <div className="container">
-          <nav>
-            <ul className="filters">
-              <li><button onClick={this.setFilter.bind(this, null)} className={'filter filter-category filter-category-all' + (!this.state.filter ? ' is-selected' : '')}>All Shares</button></li>
-              { claim.articlesByStance('for').length > 0 ? <li><button onClick={this.setFilter.bind(this, 'for')} className={'filter filter-category filter-category-for' + (this.state.filter === 'for' ? ' is-selected' : '')}>For <span className="indicator indicator-true"></span></button></li> : null }
-              { claim.articlesByStance('against').length > 0 ? <li><button onClick={this.setFilter.bind(this, 'against')} className={'filter filter-category filter-category-against' + (this.state.filter === 'against' ? ' is-selected' : '')}>Against <span className="indicator indicator-false"></span></button></li> : null }
-              { claim.articlesByStance('observing').length > 0 ? <li><button onClick={this.setFilter.bind(this, 'observing')} className={'filter filter-category filter-category-observing' + (this.state.filter === 'observing' ? ' is-selected' : '')}>Observing <span className="indicator indicator-unknown"></span></button></li> : null }
+        <nav className="sources-filtering">
+          <div className="container">
+            <ul className="navigation navigation-filtering">
+              <li><button onClick={this.setFilter.bind(this, null)} className={'navigation-link' + (!this.state.filter ? ' active' : '')}>All</button></li>
+              { claim.articlesByStance('for').length > 0 ? <li><button onClick={this.setFilter.bind(this, 'for')} className={'navigation-link' + (this.state.filter === 'for' ? ' active' : '')}><span className="indicator indicator-true"></span> For</button></li> : null }
+              { claim.articlesByStance('against').length > 0 ? <li><button onClick={this.setFilter.bind(this, 'against')} className={'navigation-link' + (this.state.filter === 'against' ? ' active' : '')}><span className="indicator indicator-false"></span> Against</button></li> : null }
+              { claim.articlesByStance('observing').length > 0 ? <li><button onClick={this.setFilter.bind(this, 'observing')} className={'navigation-link' + (this.state.filter === 'observing' ? ' active' : '')}><span className="indicator indicator-unknown"></span> Observing</button></li> : null }
             </ul>
-          </nav>
-        </div>
+          </div>
+        </nav>
 
 
         <div className="container page-claim-body">

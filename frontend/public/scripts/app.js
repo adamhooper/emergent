@@ -41812,13 +41812,13 @@ module.exports = React.createClass({displayName: 'exports',
         )
         : null, 
 
-        React.DOM.div({className: "container"}, 
-          React.DOM.nav(null, 
-            React.DOM.ul({className: "filters"}, 
-              React.DOM.li(null, React.DOM.button({onClick: this.setFilter.bind(this, null), className: 'filter filter-category filter-category-all' + (!this.state.filter ? ' is-selected' : '')}, "All Shares")), 
-               claim.articlesByStance('for').length > 0 ? React.DOM.li(null, React.DOM.button({onClick: this.setFilter.bind(this, 'for'), className: 'filter filter-category filter-category-for' + (this.state.filter === 'for' ? ' is-selected' : '')}, "For ", React.DOM.span({className: "indicator indicator-true"}))) : null, 
-               claim.articlesByStance('against').length > 0 ? React.DOM.li(null, React.DOM.button({onClick: this.setFilter.bind(this, 'against'), className: 'filter filter-category filter-category-against' + (this.state.filter === 'against' ? ' is-selected' : '')}, "Against ", React.DOM.span({className: "indicator indicator-false"}))) : null, 
-               claim.articlesByStance('observing').length > 0 ? React.DOM.li(null, React.DOM.button({onClick: this.setFilter.bind(this, 'observing'), className: 'filter filter-category filter-category-observing' + (this.state.filter === 'observing' ? ' is-selected' : '')}, "Observing ", React.DOM.span({className: "indicator indicator-unknown"}))) : null
+        React.DOM.nav({className: "sources-filtering"}, 
+          React.DOM.div({className: "container"}, 
+            React.DOM.ul({className: "navigation navigation-filtering"}, 
+              React.DOM.li(null, React.DOM.button({onClick: this.setFilter.bind(this, null), className: 'navigation-link' + (!this.state.filter ? ' active' : '')}, "All")), 
+               claim.articlesByStance('for').length > 0 ? React.DOM.li(null, React.DOM.button({onClick: this.setFilter.bind(this, 'for'), className: 'navigation-link' + (this.state.filter === 'for' ? ' active' : '')}, React.DOM.span({className: "indicator indicator-true"}), " For")) : null, 
+               claim.articlesByStance('against').length > 0 ? React.DOM.li(null, React.DOM.button({onClick: this.setFilter.bind(this, 'against'), className: 'navigation-link' + (this.state.filter === 'against' ? ' active' : '')}, React.DOM.span({className: "indicator indicator-false"}), " Against")) : null, 
+               claim.articlesByStance('observing').length > 0 ? React.DOM.li(null, React.DOM.button({onClick: this.setFilter.bind(this, 'observing'), className: 'navigation-link' + (this.state.filter === 'observing' ? ' active' : '')}, React.DOM.span({className: "indicator indicator-unknown"}), " Observing")) : null
             )
           )
         ), 
