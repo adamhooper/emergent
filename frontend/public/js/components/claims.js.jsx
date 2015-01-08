@@ -45,6 +45,10 @@ module.exports = React.createClass({
         {
           'name': 'Unverified',
           'value': 'unknown'
+        },
+        {
+          'name': 'Controversial',
+          'value': 'controversial'
         }
       ]
     };
