@@ -41557,7 +41557,7 @@ var Autolinker = require('autolinker');
 
 module.exports = React.createClass({displayName: 'exports',
 
-  mixins: [BackboneCollection, Router.Navigation ],
+  mixins: [BackboneCollection],
 
   getInitialState: function() {
     return {
@@ -41624,16 +41624,16 @@ module.exports = React.createClass({displayName: 'exports',
     }
   },
 
+  heading: function() {
+    return this.state.claim && this.state.claim.get('categories') && this.state.claim.get('categories').join(' - ');
+  },
+
   formatNumber: function(str) {
     return new String(str).replace(/(\d)(?=(\d{3})+$)/g, '$1,');
   },
 
   truncateString: function(str) {
     return str.length > 70 ? str.substring(0, str.lastIndexOf(' ', 70)) + '...' : str;
-  },
-
-  handleSearch: function(e) {
-    this.transitionTo('claims', {}, { search: true });
   },
 
   render: function() {
@@ -41703,7 +41703,7 @@ module.exports = React.createClass({displayName: 'exports',
     return (
 
       React.DOM.div(null, 
-        app.components.Header({claims: this.props.claims, search: "", onChange: this.handleSearch, category: claim.get('categories') && claim.get('categories').join(' - ')}), 
+        app.components.Header({claims: this.props.claims, search: "", category: this.heading()}), 
         React.DOM.div({className: "page page-claim"}, 
           React.DOM.div({className: "page-header"}, 
             React.DOM.div({className: "container"}, 
@@ -41903,10 +41903,14 @@ module.exports = React.createClass({displayName: 'exports',
 
   getInitialState: function() {
     return {
-      filter: '',
       sort: null,
-      stance: null
+      stance: null,
+      search: this.props.query.search
     }
+  },
+
+  componentWillReceiveProps: function(props) {
+    this.setState({ search: props.query.search });
   },
 
   getDefaultProps: function() {
@@ -41982,18 +41986,27 @@ module.exports = React.createClass({displayName: 'exports',
     return claims;
   },
 
-  formatNumber: function(str) {
-    return new String(str).replace(/(\d)(?=(\d{3})+$)/g, '$1,');
+  heading: function() {
+    if (this.state.search) {
+      return 'Search results: ' + unescape(this.state.search);
+    }
+    if (this.props.params.category) {
+      return unescape(this.props.params.category);
+    }
+    if (this.props.params.tag) {
+      return unescape(this.props.params.tag);
+    }
+    return 'Home';
   },
 
-  handleSearch: function(e) {
-    this.setState({ search: e.target.value });
+  formatNumber: function(str) {
+    return new String(str).replace(/(\d)(?=(\d{3})+$)/g, '$1,');
   },
 
   render: function() {
     return (
       React.DOM.div({className: "page"}, 
-        app.components.Header({claims: this.props.claims, search: this.state.search, searchToggle: this.props.query.search, onChange: this.handleSearch, category: unescape(this.props.params.category)}), 
+        app.components.Header({claims: this.props.claims, search: this.state.search || '', category: this.heading()}), 
         React.DOM.div({className: "page-content"}, 
           React.DOM.div({className: "articles-holder section-with-sidebar"}, 
             React.DOM.nav({className: "articles-filtering"}, 
@@ -42083,22 +42096,53 @@ var Link = Router.Link;
 
 module.exports = React.createClass({displayName: 'exports',
 
+  mixins: [ Router.Navigation ],
+
   getInitialState: function() {
     return {
-      searchToggle: this.props.searchToggle
+      search: this.props.search,
+      searchToggle: !!this.props.search
     }
   },
 
+  componentWillReceiveProps: function(props) {
+    console.log(props);
+    this.setState({
+      search: props.search,
+      searchToggle: !!props.search
+    });
+  },
+
+  setSearch: function(e) {
+    this.setState({ search: e.target.value });
+  },
+
   openSearch: function() {
-    this.setState({searchToggle: true});
+    this.setState({ searchToggle: true });
     this.refs.searchTextInput.getDOMNode().focus();
   },
 
   closeSearch: function() {
-    this.setState({searchToggle: false});
+    this.setState({
+      searchToggle: false,
+      search: ''
+    }, function() {
+      this.handleSearch();
+    });
+  },
+
+  handleSearch: function() {
+    this.transitionTo('claims', {}, this.state.search ? { search: this.state.search } : {});
+  },
+
+  onKeyUp: function(e) {
+    if (e.key === 'Enter') {
+      this.handleSearch();
+    }
   },
 
   render: function() {
+    console.log('state', this.state);
     return (
       React.DOM.div(null, 
         React.DOM.header({className: "site-header-categories"}, 
@@ -42118,7 +42162,7 @@ module.exports = React.createClass({displayName: 'exports',
         React.DOM.header({className: this.state.searchToggle ? 'site-header-secondary search-toggle-active in' : 'site-header-secondary out'}, 
           React.DOM.div({className: "container"}, 
             React.DOM.div({className: "page-title-holder"}, 
-              React.DOM.h2({className: "page-title"}, this.props.category || 'Home')
+              React.DOM.h2({className: "page-title"}, this.props.category)
             ), 
             React.DOM.div({className: "search-holder"}, 
               React.DOM.nav({className: "site-menu-trending"}, 
@@ -42134,7 +42178,7 @@ module.exports = React.createClass({displayName: 'exports',
                 React.DOM.div({className: "articles-search-holder"}, 
                   React.DOM.div({className: "inner"}, 
                     React.DOM.button({className: "search-close", onClick: this.closeSearch}, React.DOM.span({className: "icon icon-close"}, "Close")), 
-                    React.DOM.input({type: "search", id: "claims-filter", ref: "searchTextInput", value: this.props.search, placeholder: "Search", onChange: this.props.onChange})
+                    React.DOM.input({type: "search", id: "claims-filter", ref: "searchTextInput", value: this.state.search, placeholder: "Search", onKeyUp: this.onKeyUp, onChange: this.setSearch})
                   )
                 )
               )

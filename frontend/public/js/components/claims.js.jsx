@@ -12,10 +12,14 @@ module.exports = React.createClass({
 
   getInitialState: function() {
     return {
-      filter: '',
       sort: null,
-      stance: null
+      stance: null,
+      search: this.props.query.search
     }
+  },
+
+  componentWillReceiveProps: function(props) {
+    this.setState({ search: props.query.search });
   },
 
   getDefaultProps: function() {
@@ -91,18 +95,27 @@ module.exports = React.createClass({
     return claims;
   },
 
-  formatNumber: function(str) {
-    return new String(str).replace(/(\d)(?=(\d{3})+$)/g, '$1,');
+  heading: function() {
+    if (this.state.search) {
+      return 'Search results: ' + unescape(this.state.search);
+    }
+    if (this.props.params.category) {
+      return unescape(this.props.params.category);
+    }
+    if (this.props.params.tag) {
+      return unescape(this.props.params.tag);
+    }
+    return 'Home';
   },
 
-  handleSearch: function(e) {
-    this.setState({ search: e.target.value });
+  formatNumber: function(str) {
+    return new String(str).replace(/(\d)(?=(\d{3})+$)/g, '$1,');
   },
 
   render: function() {
     return (
       <div className="page">
-        <app.components.Header claims={this.props.claims} search={this.state.search} searchToggle={this.props.query.search} onChange={this.handleSearch} category={unescape(this.props.params.category)}/>
+        <app.components.Header claims={this.props.claims} search={this.state.search || ''} category={this.heading()}/>
         <div className="page-content">
           <div className="articles-holder section-with-sidebar">
             <nav className="articles-filtering">

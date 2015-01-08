@@ -11,7 +11,7 @@ var Autolinker = require('autolinker');
 
 module.exports = React.createClass({
 
-  mixins: [BackboneCollection, Router.Navigation ],
+  mixins: [BackboneCollection],
 
   getInitialState: function() {
     return {
@@ -78,16 +78,16 @@ module.exports = React.createClass({
     }
   },
 
+  heading: function() {
+    return this.state.claim && this.state.claim.get('categories') && this.state.claim.get('categories').join(' - ');
+  },
+
   formatNumber: function(str) {
     return new String(str).replace(/(\d)(?=(\d{3})+$)/g, '$1,');
   },
 
   truncateString: function(str) {
     return str.length > 70 ? str.substring(0, str.lastIndexOf(' ', 70)) + '...' : str;
-  },
-
-  handleSearch: function(e) {
-    this.transitionTo('claims', {}, { search: true });
   },
 
   render: function() {
@@ -157,7 +157,7 @@ module.exports = React.createClass({
     return (
 
       <div>
-        <app.components.Header claims={this.props.claims} search="" onChange={this.handleSearch} category={claim.get('categories') && claim.get('categories').join(' - ')}/>
+        <app.components.Header claims={this.props.claims} search="" category={this.heading()}/>
         <div className="page page-claim">
           <div className="page-header">
             <div className="container">

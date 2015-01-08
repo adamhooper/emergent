@@ -6,22 +6,53 @@ var Link = Router.Link;
 
 module.exports = React.createClass({
 
+  mixins: [ Router.Navigation ],
+
   getInitialState: function() {
     return {
-      searchToggle: this.props.searchToggle
+      search: this.props.search,
+      searchToggle: !!this.props.search
     }
   },
 
+  componentWillReceiveProps: function(props) {
+    console.log(props);
+    this.setState({
+      search: props.search,
+      searchToggle: !!props.search
+    });
+  },
+
+  setSearch: function(e) {
+    this.setState({ search: e.target.value });
+  },
+
   openSearch: function() {
-    this.setState({searchToggle: true});
+    this.setState({ searchToggle: true });
     this.refs.searchTextInput.getDOMNode().focus();
   },
 
   closeSearch: function() {
-    this.setState({searchToggle: false});
+    this.setState({
+      searchToggle: false,
+      search: ''
+    }, function() {
+      this.handleSearch();
+    });
+  },
+
+  handleSearch: function() {
+    this.transitionTo('claims', {}, this.state.search ? { search: this.state.search } : {});
+  },
+
+  onKeyUp: function(e) {
+    if (e.key === 'Enter') {
+      this.handleSearch();
+    }
   },
 
   render: function() {
+    console.log('state', this.state);
     return (
       <div>
         <header className="site-header-categories">
@@ -41,7 +72,7 @@ module.exports = React.createClass({
         <header className={this.state.searchToggle ? 'site-header-secondary search-toggle-active in' : 'site-header-secondary out'}>
           <div className="container">
             <div className="page-title-holder">
-              <h2 className="page-title">{this.props.category || 'Home'}</h2>
+              <h2 className="page-title">{this.props.category}</h2>
             </div>
             <div className="search-holder">
               <nav className="site-menu-trending">
@@ -57,7 +88,7 @@ module.exports = React.createClass({
                 <div className="articles-search-holder">
                   <div className="inner">
                     <button className="search-close" onClick={this.closeSearch}><span className="icon icon-close">Close</span></button>
-                    <input type="search" id="claims-filter" ref="searchTextInput" value={this.props.search} placeholder="Search" onChange={this.props.onChange}/>
+                    <input type="search" id="claims-filter" ref="searchTextInput" value={this.state.search} placeholder="Search" onKeyUp={this.onKeyUp} onChange={this.setSearch}/>
                   </div>
                 </div>
               </div>
