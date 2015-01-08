@@ -41829,16 +41829,15 @@ module.exports = React.createClass({displayName: 'exports',
           this.state.populated ?
             React.DOM.div({className: "page-content"}, 
               React.DOM.div({className: "container"}, 
-                React.DOM.section({className: "shares-over-time"}, 
-                  React.DOM.div({className: "section"}, 
-                    React.DOM.h3({className: "section-title"}, "Shares Over Time"), 
-                    React.DOM.div({className: "section-content"}, 
-                      Barchart({width: this.state.barChartWidth - 120, height: 200, ref: "chart", marginBottom: 20, marginTop: callout ? 75: 10, marginLeft: 100, marginRight: 20, ylabels: ylabels, labels: labels, series: data, colors: colors, fontSize: 12, gap: 0.6, callout: callout, color: "#252424"})
-                    )
-                  )
-                ), 
+                /*<section className="shares-over-time">
+                  <div className="section">
+                    <h3 className="section-title">Shares Over Time</h3>
+                    <div className="section-content">
+                      <Barchart width={this.state.barChartWidth - 120} height={200} ref="chart" marginBottom={20} marginTop={callout ? 75: 10} marginLeft={100} marginRight={20} ylabels={ylabels} labels={labels} series={data} colors={colors} fontSize={12} gap={0.6} callout={callout} color="#252424"/>
+                    </div>
+                  </div>
+                </section>*/
                 React.DOM.section({className: "page-articles"}, 
-                  React.DOM.h3({className: "section-title"}, "Sources"), 
                   React.DOM.ul({className: "articles"}, 
                     _.first(claim.articlesByStance(this.state.filter), 10).map(function(article) {
                       return (
