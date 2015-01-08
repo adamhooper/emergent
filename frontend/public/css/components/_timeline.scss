@@ -1,0 +1,23 @@
+.page-timeline {
+  .articles {
+
+  }
+
+  .article {
+    position: relative;
+    border-left: 1px solid palette(border, base);
+    padding: 1em 1em 1em 2em;
+    @extend %clearfix;
+
+    .article-description {
+      margin-bottom: 0;
+    }
+    .article-list-title {
+      margin-top: 0;
+    }
+
+    @include breakpoint($breakpoint-tablet) {
+      margin-left: 10.2em;
+    }
+  }
+}

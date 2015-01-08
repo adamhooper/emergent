@@ -182,6 +182,9 @@ module.exports = React.createClass({
                   <a href="#" className="navigation-link">Share on Twitter</a>
                   <a href="#" className="navigation-link">Share on Facebook</a>
                 </li>
+                <li>
+                  <a href="#" className="navigation-link">Dispute this claim</a>
+                </li>
               </ul>
             </nav>
           </div>
@@ -272,44 +275,51 @@ module.exports = React.createClass({
           {this.state.populated ?
             <div className="page-content">
               <div className="container">
-                {/*<section className="shares-over-time">
-                  <div className="section">
-                    <h3 className="section-title">Shares Over Time</h3>
-                    <div className="section-content">
-                      <Barchart width={this.state.barChartWidth - 120} height={200} ref="chart" marginBottom={20} marginTop={callout ? 75: 10} marginLeft={100} marginRight={20} ylabels={ylabels} labels={labels} series={data} colors={colors} fontSize={12} gap={0.6} callout={callout} color="#252424"/>
+                <div className="section section-with-sidebar">
+                  {/*<section className="shares-over-time">
+                    <div className="section">
+                      <h3 className="section-title">Shares Over Time</h3>
+                      <div className="section-content">
+                        <Barchart width={this.state.barChartWidth - 120} height={200} ref="chart" marginBottom={20} marginTop={callout ? 75: 10} marginLeft={100} marginRight={20} ylabels={ylabels} labels={labels} series={data} colors={colors} fontSize={12} gap={0.6} callout={callout} color="#252424"/>
+                      </div>
                     </div>
-                  </div>
-                </section>*/}
-                <section className="page-articles">
-                  <ul className="articles">
-                    {_.first(claim.articlesByStance(this.state.filter), 10).map(function(article) {
-                      return (
-                        <li key={article.id}>
-                          <article className="article with-stance">
-                            <header className="article-header">
+                  </section>*/}
+                  <section className="page-timeline">
+                    <ul className="articles">
+                      {_.first(claim.articlesByStance(this.state.filter), 10).map(function(article) {
+                        return (
+                          <li key={article.id}>
+                            <article className="article with-stance">
+                              <header className="article-header">
 
-                              {article.revised ?
-                                <div className={'stance stance-small stance-revised stance-' + article.revised}>
-                                  <span className="stance-value">{'Revised to ' + article.revised}</span>
-                                </div>
-                              :
-                                <div className={'stance stance-small stance-' + article.stance}>
-                                  <span className="stance-value">{article.stance}</span>
-                                </div>
-                              }
-                            </header>
-                            <div className="article-content">
-                              <h4 className="article-list-title"><a href={article.url}>{article.source}</a> - <time dateTime={article.createdAt}>{moment(article.createdAt).format('MMM D, YYYY')}</time>
-                                <span className="shares-label">Shares:</span> <span className="shares-value">{this.formatNumber(article.shares)}</span>
-                                </h4>
-                              <p className="article-description">{article.headline}</p>
-                            </div>
-                          </article>
-                        </li>
-                      )
-                    }, this)}
+                                {article.revised ?
+                                  <div className={'stance stance-small stance-revised stance-' + article.revised}>
+                                    <span className="stance-value">{'Revised to ' + article.revised}</span>
+                                  </div>
+                                :
+                                  null
+                                }
+                              </header>
+                              <div className="article-content">
+                                <h4 className="article-list-title"><span className={'indicator indicator-' + article.stance}></span> <a href={article.url}>{article.source}</a> - <time dateTime={article.createdAt}>{moment(article.createdAt).format('MMM D, YYYY')}</time>
+                                  <span className="shares-label">Shares:</span> <span className="shares-value">{this.formatNumber(article.shares)}</span>
+                                  </h4>
+                                <p className="article-description">{article.headline}</p>
+                              </div>
+                            </article>
+                          </li>
+                        )
+                      }, this)}
+                    </ul>
+                  </section>
+                </div>
+                <nav className="page-navigation">
+                  <ul className="navigation navigation-page">
+                    <li>
+                      <a href="#" className="navigation-link">Submit a source</a>
+                    </li>
                   </ul>
-                </section>
+                </nav>
               </div>
             </div>
           : null }

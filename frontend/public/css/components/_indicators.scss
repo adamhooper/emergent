@@ -31,17 +31,20 @@ $indicator-width:               6px;
   color: palette(base, lighter);
 }
 
-.indicator-true {
+.indicator-true,
+.indicator-for {
   background-color: palette(status, true);
   border-color: palette(status, true);
 }
 
-.indicator-false {
+.indicator-false,
+.indicator-against {
   background-color: palette(status, false);
   border-color: palette(status, false);
 }
 
-.indicator-unknown {
+.indicator-unknown,
+.indicator-observing {
   background-color: transparent;
   border-color: palette(status, unknown);
   color: palette(status, unknown);

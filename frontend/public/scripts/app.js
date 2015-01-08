@@ -41738,6 +41738,9 @@ module.exports = React.createClass({displayName: 'exports',
                   React.DOM.span({className: "navigation-label"}, "Share this claim:"), 
                   React.DOM.a({href: "#", className: "navigation-link"}, "Share on Twitter"), 
                   React.DOM.a({href: "#", className: "navigation-link"}, "Share on Facebook")
+                ), 
+                React.DOM.li(null, 
+                  React.DOM.a({href: "#", className: "navigation-link"}, "Dispute this claim")
                 )
               )
             )
@@ -41829,42 +41832,49 @@ module.exports = React.createClass({displayName: 'exports',
           this.state.populated ?
             React.DOM.div({className: "page-content"}, 
               React.DOM.div({className: "container"}, 
-                /*<section className="shares-over-time">
-                  <div className="section">
-                    <h3 className="section-title">Shares Over Time</h3>
-                    <div className="section-content">
-                      <Barchart width={this.state.barChartWidth - 120} height={200} ref="chart" marginBottom={20} marginTop={callout ? 75: 10} marginLeft={100} marginRight={20} ylabels={ylabels} labels={labels} series={data} colors={colors} fontSize={12} gap={0.6} callout={callout} color="#252424"/>
+                React.DOM.div({className: "section section-with-sidebar"}, 
+                  /*<section className="shares-over-time">
+                    <div className="section">
+                      <h3 className="section-title">Shares Over Time</h3>
+                      <div className="section-content">
+                        <Barchart width={this.state.barChartWidth - 120} height={200} ref="chart" marginBottom={20} marginTop={callout ? 75: 10} marginLeft={100} marginRight={20} ylabels={ylabels} labels={labels} series={data} colors={colors} fontSize={12} gap={0.6} callout={callout} color="#252424"/>
+                      </div>
                     </div>
-                  </div>
-                </section>*/
-                React.DOM.section({className: "page-articles"}, 
-                  React.DOM.ul({className: "articles"}, 
-                    _.first(claim.articlesByStance(this.state.filter), 10).map(function(article) {
-                      return (
-                        React.DOM.li({key: article.id}, 
-                          React.DOM.article({className: "article with-stance"}, 
-                            React.DOM.header({className: "article-header"}, 
+                  </section>*/
+                  React.DOM.section({className: "page-timeline"}, 
+                    React.DOM.ul({className: "articles"}, 
+                      _.first(claim.articlesByStance(this.state.filter), 10).map(function(article) {
+                        return (
+                          React.DOM.li({key: article.id}, 
+                            React.DOM.article({className: "article with-stance"}, 
+                              React.DOM.header({className: "article-header"}, 
 
-                              article.revised ?
-                                React.DOM.div({className: 'stance stance-small stance-revised stance-' + article.revised}, 
-                                  React.DOM.span({className: "stance-value"}, 'Revised to ' + article.revised)
-                                )
-                              :
-                                React.DOM.div({className: 'stance stance-small stance-' + article.stance}, 
-                                  React.DOM.span({className: "stance-value"}, article.stance)
-                                )
-                              
-                            ), 
-                            React.DOM.div({className: "article-content"}, 
-                              React.DOM.h4({className: "article-list-title"}, React.DOM.a({href: article.url}, article.source), " - ", React.DOM.time({dateTime: article.createdAt}, moment(article.createdAt).format('MMM D, YYYY')), 
-                                React.DOM.span({className: "shares-label"}, "Shares:"), " ", React.DOM.span({className: "shares-value"}, this.formatNumber(article.shares))
-                                ), 
-                              React.DOM.p({className: "article-description"}, article.headline)
+                                article.revised ?
+                                  React.DOM.div({className: 'stance stance-small stance-revised stance-' + article.revised}, 
+                                    React.DOM.span({className: "stance-value"}, 'Revised to ' + article.revised)
+                                  )
+                                :
+                                  null
+                                
+                              ), 
+                              React.DOM.div({className: "article-content"}, 
+                                React.DOM.h4({className: "article-list-title"}, React.DOM.span({className: 'indicator indicator-' + article.stance}), " ", React.DOM.a({href: article.url}, article.source), " - ", React.DOM.time({dateTime: article.createdAt}, moment(article.createdAt).format('MMM D, YYYY')), 
+                                  React.DOM.span({className: "shares-label"}, "Shares:"), " ", React.DOM.span({className: "shares-value"}, this.formatNumber(article.shares))
+                                  ), 
+                                React.DOM.p({className: "article-description"}, article.headline)
+                              )
                             )
                           )
                         )
-                      )
-                    }, this)
+                      }, this)
+                    )
+                  )
+                ), 
+                React.DOM.nav({className: "page-navigation"}, 
+                  React.DOM.ul({className: "navigation navigation-page"}, 
+                    React.DOM.li(null, 
+                      React.DOM.a({href: "#", className: "navigation-link"}, "Submit a source")
+                    )
                   )
                 )
               )
