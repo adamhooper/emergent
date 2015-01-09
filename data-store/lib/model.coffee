@@ -65,6 +65,12 @@ module.exports = class Model
     instance._impl.save()
       .then(-> instance)
 
+  # Returns a Promise of the number of updated rows
+  partialUpdate: (where, attrs, email) ->
+    attrs = @_formatUpdateAttrs(attrs, email)
+    @_impl.update(attrs, where)
+      .then((x) -> x[0])
+
   # Returns a Promise of null
   bulkCreate: (attrsArray, email) ->
     attrsArray = for attrs in attrsArray

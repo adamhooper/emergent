@@ -36,3 +36,6 @@ module.exports =
     'get /unparsed-urls': 'UnparsedUrlController.index'
 
     'get /dashboard/unparsed-domains': 'DashboardController.index_unparsed_domains'
+
+    'get /user-submitted-claims': 'UserSubmittedClaimController.index'
+    'patch /user-submitted-claims/:id': 'UserSubmittedClaimController.update'
