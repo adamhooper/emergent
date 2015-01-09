@@ -41571,7 +41571,6 @@ moment.locale('en', {
     sameDay : '[Today]',
     nextDay : '[Tomorrow]',
     lastWeek : '[Last Week]',
-    nextWeek : 'dddd [at] LT',
     sameElse : 'MMM D'
   }
 });
@@ -41717,6 +41716,8 @@ module.exports = React.createClass({displayName: 'exports',
       originDate = claim.originDate(),
       truthinessDate = claim.get('truthinessDate');
 
+    var lastDate;
+
     return (
 
       React.DOM.div({className: "page page-claim"}, 
@@ -41854,21 +41855,19 @@ module.exports = React.createClass({displayName: 'exports',
                   </section>*/
                   React.DOM.section({className: "page-timeline"}, 
                     React.DOM.ul({className: "articles"}, 
-                      _.first(claim.articlesByStance(this.state.filter), 10).map(function(article) {
+                      claim.articlesByStance(this.state.filter).map(function(article) {
 
-                        return (
+                        var date = moment(article.createdAt).calendar();
+
+                        var jsx = (
                           React.DOM.li({key: article.id}, 
-                            React.DOM.span(null, moment(article.createdAt).calendar()), 
+                            date !== lastDate ?
+                            React.DOM.span({className: "article-header-date"}, moment(article.createdAt).calendar())
+                            : null, 
                             React.DOM.article({className: "article with-stance"}, 
-                              React.DOM.header({className: "article-header"}
-
-                                /*}{article.revised ?
-                                  <div className={'stance stance-small stance-revised stance-' + article.revised}>
-                                    <span className="stance-value">{'Revised to ' + article.revised}</span>
-                                  </div>
-                                :
-                                  null
-                                }*/
+                              React.DOM.span({className: "icon icon-confirmed"}, "Resolved"), 
+                              React.DOM.div({className: 'stance stance-changing'}, 
+                                React.DOM.span({className: "stance-value"}, "Resolved")
                               ), 
                               React.DOM.div({className: "article-content"}, 
                                 React.DOM.h4({className: "article-list-title"}, React.DOM.span({className: 'indicator indicator-' + article.stance}), " ", React.DOM.a({href: article.url}, article.source), " - ", React.DOM.time({dateTime: article.createdAt}, moment(article.createdAt).format('MMM D')), 
@@ -41878,7 +41877,11 @@ module.exports = React.createClass({displayName: 'exports',
                               )
                             )
                           )
-                        )
+                        );
+
+                        lastDate = date;
+
+                        return jsx;
                       }, this)
                     )
                   )

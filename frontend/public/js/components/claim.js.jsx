@@ -14,7 +14,6 @@ moment.locale('en', {
     sameDay : '[Today]',
     nextDay : '[Tomorrow]',
     lastWeek : '[Last Week]',
-    nextWeek : 'dddd [at] LT',
     sameElse : 'MMM D'
   }
 });
@@ -160,6 +159,8 @@ module.exports = React.createClass({
       originDate = claim.originDate(),
       truthinessDate = claim.get('truthinessDate');
 
+    var lastDate;
+
     return (
 
       <div className="page page-claim">
@@ -297,22 +298,20 @@ module.exports = React.createClass({
                   </section>*/}
                   <section className="page-timeline">
                     <ul className="articles">
-                      {_.first(claim.articlesByStance(this.state.filter), 10).map(function(article) {
+                      {claim.articlesByStance(this.state.filter).map(function(article) {
 
-                        return (
+                        var date = moment(article.createdAt).calendar();
+
+                        var jsx = (
                           <li key={article.id}>
-                            <span>{moment(article.createdAt).calendar()}</span>
+                            {date !== lastDate ?
+                            <span className="article-header-date">{moment(article.createdAt).calendar()}</span>
+                            : null }
                             <article className="article with-stance">
-                              <header className="article-header">
-
-                                {/*}{article.revised ?
-                                  <div className={'stance stance-small stance-revised stance-' + article.revised}>
-                                    <span className="stance-value">{'Revised to ' + article.revised}</span>
-                                  </div>
-                                :
-                                  null
-                                }*/}
-                              </header>
+                              <span className="icon icon-confirmed">Resolved</span>
+                              <div className={'stance stance-changing'}>
+                                <span className="stance-value">Resolved</span>
+                              </div>
                               <div className="article-content">
                                 <h4 className="article-list-title"><span className={'indicator indicator-' + article.stance}></span> <a href={article.url}>{article.source}</a> - <time dateTime={article.createdAt}>{moment(article.createdAt).format('MMM D')}</time>
                                   <span className="shares-label">Shares:</span> <span className="shares-value">{this.formatNumber(article.shares)}</span>
@@ -321,7 +320,11 @@ module.exports = React.createClass({
                               </div>
                             </article>
                           </li>
-                        )
+                        );
+
+                        lastDate = date;
+
+                        return jsx;
                       }, this)}
                     </ul>
                   </section>
