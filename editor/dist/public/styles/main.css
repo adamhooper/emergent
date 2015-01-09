@@ -6697,6 +6697,23 @@ fieldset[disabled] .unseen-article-list-layout .articles ul.articles > li button
 .unseen-article-list-layout ul.article-versions fieldset.url-version.editing .read-only {
   display: none;
 }
+.user-submitted-claim-list-layout .user-submitted-claim {
+  min-height: 20px;
+  padding: 19px;
+  margin-bottom: 20px;
+  background-color: #f5f5f5;
+  border: 1px solid #e3e3e3;
+  border-radius: 4px;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+}
+.user-submitted-claim-list-layout .user-submitted-claim blockquote {
+  border-color: #ddd;
+  border-color: rgba(0, 0, 0, 0.15);
+}
+.user-submitted-claim-list-layout .user-submitted-claim .actions {
+  float: right;
+}
 .spin {
   -webkit-animation: spin 2s infinite linear;
   -moz-animation: spin 2s infinite linear;
