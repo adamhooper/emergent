@@ -1,4 +1,4 @@
-process.env.DEBUG='*'
+process.env.DEBUG='*' if !process.env.DEBUG
 
 fs = require('fs')
 debug = require('debug')('index')
@@ -11,6 +11,7 @@ TaskTimeChooser = require('./lib/task_time_chooser')
 UrlFetcher = require('./lib/url_fetcher')
 UrlPopularityFetcher = require('./lib/url_popularity_fetcher')
 UrlTaskQueue = require('./lib/url_task_queue')
+UserSubmittedClaimTracker = require('./lib/user_submitted_claim_tracker')
 
 Services = [ 'facebook', 'twitter', 'google' ]
 UrlSubJobs = [ 'fetch', 'facebook', 'twitter', 'google' ]
@@ -24,6 +25,8 @@ FetchLogic = {}
 debug('Emptying redis...')
 jobQueue = new JobQueue(key: 'urls')
 jobQueue.clear() # redis commands are queued: this will come before all others
+
+userSubmittedClaimTracker = new UserSubmittedClaimTracker(jobQueue: jobQueue)
 
 taskTimeChooser = (->
   # Build up "delays", a set of timeouts: 4x15min, 4x30min, 4x1h, ..., 4x256h
@@ -89,5 +92,8 @@ startup.run (err) ->
 
   for __, queue of queues
     queue.startHandling()
+
+  userSubmittedClaimTracker.trackRandomUntrackedUrl()
+  setTimeout((-> userSubmittedClaimTracker.trackRandomUntrackedUrl()), 10*60*1000) # one every 10min
 
   undefined
