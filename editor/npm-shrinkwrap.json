@@ -405,10 +405,12 @@
         "constantinople": {
           "version": "2.0.1",
           "from": "constantinople@2.0.1",
+          "resolved": "https://registry.npmjs.org/constantinople/-/constantinople-2.0.1.tgz",
           "dependencies": {
             "uglify-js": {
               "version": "2.4.15",
               "from": "uglify-js@2.4.15",
+              "resolved": "https://registry.npmjs.org/uglify-js/-/uglify-js-2.4.15.tgz",
               "dependencies": {
                 "async": {
                   "version": "0.2.10",
@@ -421,17 +423,20 @@
                   "dependencies": {
                     "amdefine": {
                       "version": "0.1.0",
-                      "from": "amdefine@0.1.0"
+                      "from": "amdefine@0.1.0",
+                      "resolved": "https://registry.npmjs.org/amdefine/-/amdefine-0.1.0.tgz"
                     }
                   }
                 },
                 "optimist": {
                   "version": "0.3.7",
                   "from": "optimist@0.3.7",
+                  "resolved": "https://registry.npmjs.org/optimist/-/optimist-0.3.7.tgz",
                   "dependencies": {
                     "wordwrap": {
                       "version": "0.0.2",
-                      "from": "wordwrap@0.0.2"
+                      "from": "wordwrap@0.0.2",
+                      "resolved": "https://registry.npmjs.org/wordwrap/-/wordwrap-0.0.2.tgz"
                     }
                   }
                 },
@@ -446,13 +451,12 @@
         },
         "mkdirp": {
           "version": "0.5.0",
-          "from": "mkdirp@0.5.0",
+          "from": "mkdirp@^0.5.0",
           "resolved": "https://registry.npmjs.org/mkdirp/-/mkdirp-0.5.0.tgz",
           "dependencies": {
             "minimist": {
               "version": "0.0.8",
-              "from": "minimist@0.0.8",
-              "resolved": "https://registry.npmjs.org/minimist/-/minimist-0.0.8.tgz"
+              "from": "minimist@0.0.8"
             }
           }
         },
@@ -522,6 +526,7 @@
             "uglify-js": {
               "version": "2.2.5",
               "from": "uglify-js@2.2.5",
+              "resolved": "https://registry.npmjs.org/uglify-js/-/uglify-js-2.2.5.tgz",
               "dependencies": {
                 "source-map": {
                   "version": "0.1.39",
@@ -530,17 +535,20 @@
                   "dependencies": {
                     "amdefine": {
                       "version": "0.1.0",
-                      "from": "amdefine@0.1.0"
+                      "from": "amdefine@0.1.0",
+                      "resolved": "https://registry.npmjs.org/amdefine/-/amdefine-0.1.0.tgz"
                     }
                   }
                 },
                 "optimist": {
                   "version": "0.3.7",
                   "from": "optimist@0.3.7",
+                  "resolved": "https://registry.npmjs.org/optimist/-/optimist-0.3.7.tgz",
                   "dependencies": {
                     "wordwrap": {
                       "version": "0.0.2",
-                      "from": "wordwrap@0.0.2"
+                      "from": "wordwrap@0.0.2",
+                      "resolved": "https://registry.npmjs.org/wordwrap/-/wordwrap-0.0.2.tgz"
                     }
                   }
                 }
@@ -561,6 +569,7 @@
             "uglify-js": {
               "version": "2.4.15",
               "from": "uglify-js@2.4.15",
+              "resolved": "https://registry.npmjs.org/uglify-js/-/uglify-js-2.4.15.tgz",
               "dependencies": {
                 "async": {
                   "version": "0.2.10",
@@ -573,17 +582,20 @@
                   "dependencies": {
                     "amdefine": {
                       "version": "0.1.0",
-                      "from": "amdefine@0.1.0"
+                      "from": "amdefine@0.1.0",
+                      "resolved": "https://registry.npmjs.org/amdefine/-/amdefine-0.1.0.tgz"
                     }
                   }
                 },
                 "optimist": {
                   "version": "0.3.7",
                   "from": "optimist@0.3.7",
+                  "resolved": "https://registry.npmjs.org/optimist/-/optimist-0.3.7.tgz",
                   "dependencies": {
                     "wordwrap": {
                       "version": "0.0.2",
-                      "from": "wordwrap@0.0.2"
+                      "from": "wordwrap@0.0.2",
+                      "resolved": "https://registry.npmjs.org/wordwrap/-/wordwrap-0.0.2.tgz"
                     }
                   }
                 },
@@ -656,7 +668,8 @@
       "dependencies": {
         "pkginfo": {
           "version": "0.2.3",
-          "from": "pkginfo@0.2.3"
+          "from": "pkginfo@0.2.3",
+          "resolved": "https://registry.npmjs.org/pkginfo/-/pkginfo-0.2.3.tgz"
         },
         "passport-oauth": {
           "version": "0.1.15",
@@ -686,8 +699,7 @@
     },
     "requirejs": {
       "version": "2.1.15",
-      "from": "requirejs@~2.1",
-      "resolved": "https://registry.npmjs.org/requirejs/-/requirejs-2.1.15.tgz"
+      "from": "requirejs@~2.1.11"
     },
     "validator": {
       "version": "3.18.0",
