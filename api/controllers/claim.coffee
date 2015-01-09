@@ -1,4 +1,5 @@
 Promise = require('bluebird')
+validator = require('validator')
 _ = require('lodash')
 
 models = require('../../data-store').models
@@ -167,6 +168,26 @@ module.exports =
       .then (json) ->
         res.header('cache-control', 'public, max-age=300')
         res.json(json)
+      .catch(next)
+
+  'post /claims': (req, res, next) ->
+    attributes =
+      requestIp: req.ip
+      claim: (req.param('claim') || '').trim()
+      url: (req.param('url') || '').trim()
+      urlId: null
+      spam: false
+      archived: false
+
+    if !validator.isLength(attributes.claim, 3, 1024)
+      return res.status(400).send(message: 'You must pass a "claim" attribute with length between 3 and 1024 characters')
+    if !validator.isURL(attributes.url, protocols: [ 'http', 'https' ], require_protocol: true)
+      return res.status(400).send(message: 'You must pass a "url" attribute with a valid URL')
+
+    models.Url.find(where: { url: attributes.url })
+      .tap((urlObject) -> attributes.urlId = urlObject.id if urlObject)
+      .then(-> models.UserSubmittedClaim.create(attributes, null))
+      .then((usc) -> res.status(201).json(usc.toJSON()))
       .catch(next)
 
   'get /claims/:id': (req, res, next) ->

@@ -21,6 +21,6 @@ beforeEach ->
   #
   # Delete them sequentially: if we do it all at once, we sometimes deadlock.
   p = Promise.resolve(null)
-  [ 'Story', 'Url', 'Category', 'Tag' ].forEach (tableName) ->
+  [ 'Story', 'UserSubmittedClaim', 'Url', 'Category', 'Tag' ].forEach (tableName) ->
     p = p.tap(-> global.models.sequelize.query("""DELETE FROM "#{tableName}" """))
   p

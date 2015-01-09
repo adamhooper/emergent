@@ -7,7 +7,7 @@ before (done) ->
 
 beforeEach (done) ->
   # Top-level object tables. CASCADE will wipe the others.
-  Tables = [ 'Story', 'Url', 'Category', 'Tag' ]
+  Tables = [ 'Story', 'UserSubmittedClaim', 'Url', 'Category', 'Tag' ]
   Promise.map(Tables, (tableName) ->
     global.models.sequelize.query("""DELETE FROM "#{tableName}" """)
   ).nodeify(done)
