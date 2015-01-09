@@ -13,7 +13,7 @@ module.exports = class UserSubmittedClaimTracker
 
   trackRandomUntrackedUrl: (done) ->
     log('Fetching a random untracked UserSubmittedClaim to track')
-    models.UserSubmittedClaim.find({ spam: false, urlId: null })
+    models.UserSubmittedClaim.find(where: { spam: false, urlId: null })
       .then (usc) =>
         if !usc?
           log('There are no untracked UserSubmittedClaims to track')

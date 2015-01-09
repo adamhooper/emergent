@@ -26,13 +26,13 @@ describe 'UserSubmittedClaimTracker', ->
   it 'should filter by spam', (done) ->
     @subject.trackRandomUntrackedUrl (err, res) ->
       expect(UserSubmittedClaim.find).to.have.been.called
-      expect(UserSubmittedClaim.find.args[0][0]).to.have.property('spam', false)
+      expect(UserSubmittedClaim.find.args[0][0].where).to.have.property('spam', false)
       done()
 
   it 'should filter by urlId IS NULL', (done) ->
     @subject.trackRandomUntrackedUrl (err, res) ->
       expect(UserSubmittedClaim.find).to.have.been.called
-      expect(UserSubmittedClaim.find.args[0][0]).to.have.property('urlId', null)
+      expect(UserSubmittedClaim.find.args[0][0].where).to.have.property('urlId', null)
       done()
 
   it 'should do nothing when there is no UserSubmittedClaim', (done) ->
