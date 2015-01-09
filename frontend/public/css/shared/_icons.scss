@@ -11,6 +11,15 @@
   vertical-align: top;
 }
 
+.icon-resolved {
+  background-color: #808080;
+  border: 1px solid #FFF;
+  display: inline-block;
+  height: 13px;
+  width: 13px;
+  border-radius: 50%;
+}
+
 .icon-most-shared {
   background-image: image-url('shared.png');
   background-repeat: no-repeat;

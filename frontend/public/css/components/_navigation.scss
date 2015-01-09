@@ -217,3 +217,31 @@
     margin-bottom: 0.5em;
   }
 }
+
+.navigation-footer-social {
+  border-top: 1px solid palette(border, base);
+  @extend %clearfix;
+  padding: 2em 0;
+
+  .navigation {
+    float: right;
+    @include breakpoint($breakpoint-tablet) {
+      margin-right: 25.53191%;
+    }
+
+    > li {
+      float: left;
+    }
+
+    .navigation-label {
+      color: palette(base, dark);
+      font-size: font(xs);
+      line-height: 1;
+      padding-top: 0.5em;
+    }
+
+    .navigation-link {
+      margin-left: 1em;
+    }
+  }
+}

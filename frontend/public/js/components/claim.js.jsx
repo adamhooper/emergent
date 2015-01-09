@@ -13,7 +13,7 @@ moment.locale('en', {
     lastDay : '[Yesterday]',
     sameDay : '[Today]',
     nextDay : '[Tomorrow]',
-    lastWeek : '[Last Week]',
+    lastWeek : 'MMM D',
     sameElse : 'MMM D'
   }
 });
@@ -308,7 +308,7 @@ module.exports = React.createClass({
                             <span className="article-header-date">{moment(article.createdAt).calendar()}</span>
                             : null }
                             <article className="article with-stance">
-                              <span className="icon icon-confirmed">Resolved</span>
+                              <span className="icon icon-resolved">Resolved</span>
                               <div className={'stance stance-changing'}>
                                 <span className="stance-value">Resolved</span>
                               </div>
@@ -339,6 +339,34 @@ module.exports = React.createClass({
               </div>
             </div>
           : null }
+        </div>
+
+        <nav className="navigation-footer-social">
+          <div className="container">
+            <ul className="navigation">
+              <li>
+                <span className="navigation-label">Share this claim:</span>
+              </li>
+              <li>
+                <a href="#" className="navigation-link"><span className="icon icon-twitter"></span></a>
+              </li>
+              <li>
+                <a href="#" className="navigation-link"><span className="icon icon-facebook"></span></a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+
+        <div className="claim-footer-next">
+          <div className="container">
+            <span className="next-label">Next in World News:</span>
+            <div className="next-link-holder">
+              <div className={'stance stance-small stance-true'}>
+                <span className="stance-value">True</span>
+              </div>
+              <a href="#">An armed convoy is moving toward the Ukrainian border</a>
+            </div>
+          </div>
         </div>
       </div>
     );

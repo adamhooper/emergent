@@ -41570,7 +41570,7 @@ moment.locale('en', {
     lastDay : '[Yesterday]',
     sameDay : '[Today]',
     nextDay : '[Tomorrow]',
-    lastWeek : '[Last Week]',
+    lastWeek : 'MMM D',
     sameElse : 'MMM D'
   }
 });
@@ -41865,7 +41865,7 @@ module.exports = React.createClass({displayName: 'exports',
                             React.DOM.span({className: "article-header-date"}, moment(article.createdAt).calendar())
                             : null, 
                             React.DOM.article({className: "article with-stance"}, 
-                              React.DOM.span({className: "icon icon-confirmed"}, "Resolved"), 
+                              React.DOM.span({className: "icon icon-resolved"}, "Resolved"), 
                               React.DOM.div({className: 'stance stance-changing'}, 
                                 React.DOM.span({className: "stance-value"}, "Resolved")
                               ), 
@@ -41896,6 +41896,34 @@ module.exports = React.createClass({displayName: 'exports',
               )
             )
           : null
+        ), 
+
+        React.DOM.nav({className: "navigation-footer-social"}, 
+          React.DOM.div({className: "container"}, 
+            React.DOM.ul({className: "navigation"}, 
+              React.DOM.li(null, 
+                React.DOM.span({className: "navigation-label"}, "Share this claim:")
+              ), 
+              React.DOM.li(null, 
+                React.DOM.a({href: "#", className: "navigation-link"}, React.DOM.span({className: "icon icon-twitter"}))
+              ), 
+              React.DOM.li(null, 
+                React.DOM.a({href: "#", className: "navigation-link"}, React.DOM.span({className: "icon icon-facebook"}))
+              )
+            )
+          )
+        ), 
+
+        React.DOM.div({className: "claim-footer-next"}, 
+          React.DOM.div({className: "container"}, 
+            React.DOM.span({className: "next-label"}, "Next in World News:"), 
+            React.DOM.div({className: "next-link-holder"}, 
+              React.DOM.div({className: 'stance stance-small stance-true'}, 
+                React.DOM.span({className: "stance-value"}, "True")
+              ), 
+              React.DOM.a({href: "#"}, "An armed convoy is moving toward the Ukrainian border")
+            )
+          )
         )
       )
     );
