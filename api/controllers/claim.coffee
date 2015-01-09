@@ -173,8 +173,8 @@ module.exports =
   'post /claims': (req, res, next) ->
     attributes =
       requestIp: req.ip
-      claim: (req.param('claim') || '').trim()
-      url: (req.param('url') || '').trim()
+      claim: (req.body.claim || '').trim()
+      url: (req.body.url || '').trim()
       urlId: null
       spam: false
       archived: false
