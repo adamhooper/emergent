@@ -1599,10 +1599,10 @@ button.navigation-link {
       display: block;
       float: none;
       padding: .4em;
-      width: 5.5em; }
-      .stance.stance-small {
-        padding: .2em .2em .3em;
-        width: 4.23077em; } }
+      width: 5.5em; } }
+  .stance.stance-small {
+    padding: .2em .2em .3em;
+    width: 4.23077em; }
 
 .stance-value {
   font-size: 0.8em;
