@@ -1,14 +1,13 @@
 module.exports =
-  version: 2
+  version: 3
   domains: [ 'dailycaller.com' ]
   parse: (url, $, h) ->
-    $dateline = $('.dateline')
-    $authors = $dateline.find('[rel=author]')
+    $authors = $('.dateline [rel=author], .author-box .name')
 
     $body = $('.article-content')
     $body.find('.wp-caption').remove()
 
     source: 'The Daily Caller'
-    headline: $('#single h1')
+    headline: $('#single h1, .full-page-article h1')
     byline: $authors
     body: $body.find('p')

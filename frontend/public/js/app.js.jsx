@@ -33,7 +33,8 @@ var app = {
     Claim: require('./components/claim.js.jsx'),
     Claims: require('./components/claims.js.jsx'),
     Article: require('./components/article.js.jsx'),
-    About: require('./components/about.js.jsx')
+    About: require('./components/about.js.jsx'),
+    Header: require('./components/header.js.jsx')
   },
 
   models: {

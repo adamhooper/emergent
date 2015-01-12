@@ -12,10 +12,14 @@ module.exports = React.createClass({
 
   getInitialState: function() {
     return {
-      filter: '',
       sort: null,
-      stance: null
+      stance: null,
+      search: this.props.query.search
     }
+  },
+
+  componentWillReceiveProps: function(props) {
+    this.setState({ search: props.query.search });
   },
 
   getDefaultProps: function() {
@@ -45,6 +49,10 @@ module.exports = React.createClass({
         {
           'name': 'Unverified',
           'value': 'unknown'
+        },
+        {
+          'name': 'Controversial',
+          'value': 'controversial'
         }
       ]
     };
@@ -69,8 +77,8 @@ module.exports = React.createClass({
     if (category=='US') { category = 'U.S.'; } // ugh
 
     var claims = this.props.claims.models;
-    if (this.props.search) {
-      claims = this.props.claims.filtered(claims, this.props.search);
+    if (this.state.search) {
+      claims = this.props.claims.filtered(claims, this.state.search);
     } else if (category) {
       claims = this.props.claims.byCategory(claims, category);
     } else if (tag) {
@@ -87,6 +95,19 @@ module.exports = React.createClass({
     return claims;
   },
 
+  heading: function() {
+    if (this.state.search) {
+      return 'Search results: ' + unescape(this.state.search);
+    }
+    if (this.props.params.category) {
+      return unescape(this.props.params.category);
+    }
+    if (this.props.params.tag) {
+      return unescape(this.props.params.tag);
+    }
+    return 'Home';
+  },
+
   formatNumber: function(str) {
     return new String(str).replace(/(\d)(?=(\d{3})+$)/g, '$1,');
   },
@@ -94,6 +115,7 @@ module.exports = React.createClass({
   render: function() {
     return (
       <div className="page">
+        <app.components.Header claims={this.props.claims} search={this.state.search || ''} category={this.heading()}/>
         <div className="page-content">
           <div className="articles-holder section-with-sidebar">
             <nav className="articles-filtering">
@@ -124,11 +146,7 @@ module.exports = React.createClass({
                           <span className="stance-value">{claim.truthinessText()}</span>
                         </div>
                         <div className="article-meta">
-                          {claim.get('categories').map(function(category, i) {
-                            return (
-                              (i > 0) ? <span className="article-category"> - {category}</span> : <span className="article-category">{category}</span>
-                            );
-                          })}
+                          <span className="article-category">{claim.get('categories') && claim.get('categories').join(' - ')}</span>
                           {claim.get('nShares') ?
                           <span className="article-shares hidden-mobile"><span className="label">Shares:</span> {this.formatNumber(claim.get('nShares'))}</span>
                           : null}

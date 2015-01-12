@@ -241,3 +241,45 @@ describe '/claims/:id', ->
       .then (res) ->
         expect(res.status).to.eq(404)
         expect(res.body).to.have.property('message', 'Claim not found')
+
+describe 'POST /claims', ->
+  # Spec: https://github.com/craigsilverman/emergent/wiki/User-submitted-claims
+  beforeEach ->
+    models.Url.create(url: 'http://example.org/foo')
+      .tap((u) => @url = u)
+
+  it 'should not create a new Url', ->
+    api.post('/claims', claim: 'foo', url: 'http://example.org/bar')
+      .then(-> models.Url.findAll())
+      .tap((urls) -> expect(urls.length).to.eq(1))
+
+  it 'should create a UserSubmittedClaim', ->
+    api.post('/claims', claim: 'foo', url: 'http://example.org/bar')
+      .then(-> models.UserSubmittedClaim.findAll())
+      .then((x) -> x[0])
+      .tap (usc) ->
+        expect(usc.id).to.exist
+        expect(usc.requestIp).to.eq('127.0.0.1')
+        expect(usc.claim).to.eq('foo')
+        expect(usc.url).to.eq('http://example.org/bar')
+        expect(usc.urlId).to.be.null
+        expect(usc.spam).to.be.false
+        expect(usc.archived).to.be.false
+
+  it 'should link an existing Url', ->
+    api.post('/claims', claim: 'foo', url: 'http://example.org/foo')
+      .then(-> models.UserSubmittedClaim.findAll())
+      .then((x) -> x[0])
+      .tap((usc) => expect(usc.urlId).to.eq(@url.id))
+
+  it 'should return Created', ->
+    api.post('/claims', claim: 'foo', url: 'http://example.org/bar')
+      .tap((res) -> expect(res.status).to.eq(201))
+
+  it 'should disallow an empty claim', ->
+    api.post('/claims', claim: '        ', url: 'http://example.org/bar')
+      .tap((res) -> expect(res.status).to.eq(400))
+
+  it 'should disallow an invalid url', ->
+    api.post('/claims', claim: 'foo', url: 'http:/example.org/bar')
+      .tap((res) -> expect(res.status).to.eq(400))

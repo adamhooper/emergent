@@ -1,4 +1,5 @@
 express = require('express')
+bodyParser = require('body-parser')
 fs = require('fs')
 
 app = express()
@@ -15,6 +16,7 @@ allowCors = (req, res, next) ->
   next()
 
 app.use(allowCors)
+app.use(bodyParser.json())
 
 for codeFile in fs.readdirSync("#{__dirname}/../controllers")
   [controllerName, ext] = codeFile.split(/\./)

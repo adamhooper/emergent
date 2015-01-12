@@ -21,3 +21,8 @@ promiseApi = (method) ->
 global.api =
   get: promiseApi('get')
   head: promiseApi('head')
+  post: (path, json) ->
+    req = api.post(path)
+      .set('Accept', 'application/json')
+      .send(json)
+    Promise.promisify(req.end, req)()

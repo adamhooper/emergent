@@ -3,7 +3,8 @@
 var React = require('react');
 var BackboneCollection = require('../mixins/backbone_collection.js');
 var Barchart = require('./bar_chart.js.jsx');
-var Link = require('react-router').Link;
+var Router = require('react-router');
+var Link = Router.Link;
 var _ = require('underscore');
 var moment = require('moment');
 var Autolinker = require('autolinker');
@@ -87,6 +88,10 @@ module.exports = React.createClass({
     }
   },
 
+  heading: function() {
+    return this.state.claim && this.state.claim.get('categories') && this.state.claim.get('categories').join(' - ');
+  },
+
   formatNumber: function(str) {
     return new String(str).replace(/(\d)(?=(\d{3})+$)/g, '$1,');
   },
@@ -163,6 +168,8 @@ module.exports = React.createClass({
 
     return (
 
+      <div>
+        <app.components.Header claims={this.props.claims} search="" category={this.heading()}/>
       <div className="page page-claim">
         <div className="page-header">
           <div className="container">
@@ -368,6 +375,7 @@ module.exports = React.createClass({
             </div>
           </div>
         </div>
+      </div>
       </div>
     );
   }
