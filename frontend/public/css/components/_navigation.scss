@@ -192,7 +192,19 @@
 
 .navigation-page {
   > li {
-    padding: 20px;
+    padding: 15px;
+
+    &:first-child {
+      border-top: 1px solid palette(base, light);
+    }
+
+    @include breakpoint($breakpoint-tablet) {
+      padding: 20px;
+
+      &:first-child {
+        border-top: none;
+      }
+    }
     border-bottom: 1px solid palette(base, light);
     @include breakpoint($breakpoint-desktop) {
       border-right: 1px solid palette(base, light);
@@ -222,6 +234,10 @@
   border-top: 1px solid palette(border, base);
   @extend %clearfix;
   padding: 2em 0;
+
+  @include breakpoint($breakpoint-mobile-only) {
+    @include gutter($gutters-mobile inside);
+  }
 
   .navigation {
     float: right;

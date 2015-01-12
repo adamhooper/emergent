@@ -32,6 +32,10 @@
   @extend %clearfix;
   padding: 2em 0;
 
+  @include breakpoint($breakpoint-mobile-only) {
+    @include gutter($gutters-mobile inside);
+  }
+
   .next-label {
     font-size: font(sm);
     color: palette(base, dark);

@@ -1,8 +1,16 @@
 .page-timeline {
+  @include breakpoint($breakpoint-mobile-only) {
+    @include gutter($gutters-mobile inside);
+  }
+  
   .article {
     position: relative;
     @extend %clearfix;
-    padding: 1em 1em 1em 2em;
+    padding: 1em 0 1em;
+
+    @include breakpoint($breakpoint-tablet) {
+      padding: 1em 1em 1em 2em;
+    }
 
     .article-description {
       margin-bottom: 0;
@@ -17,6 +25,12 @@
       margin-left: -7px;
       margin-top: 1px;
       z-index: 5;
+
+      display: none;
+
+      @include breakpoint($breakpoint-tablet) {
+          display: block;
+      }
     }
 
     .stance-changing {
@@ -45,14 +59,19 @@
     display: block;
     font-size: font(sm);
     font-weight: weight(medium);
-    padding: 1.5em 1em 0.5em 2em;
+
+    padding: 1.5em 0 0.5em;
+
+    @include breakpoint($breakpoint-tablet) {
+      padding: 1.5em 1em 0.5em 2em;
+    }
   }
 
   .articles {
       li {
-        border-left: 1px solid palette(border, base);
         @include breakpoint($breakpoint-tablet) {
           margin-left: 10.2em;
+          border-left: 1px solid palette(border, base);
         }
       }
       li:first-child {

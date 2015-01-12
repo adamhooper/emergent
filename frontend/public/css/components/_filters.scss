@@ -14,7 +14,15 @@
 
   &.sources-filtering {
     background-color: #fdfdfd;
-    margin-left: 5px;
+
+
+    @include breakpoint($breakpoint-tablet) {
+      margin-left: 5px;
+    }
+
+    @include breakpoint($breakpoint-mobile-only) {
+      @include gutter($gutters-mobile inside);
+    }
   }
 
   .navigation-filtering {
