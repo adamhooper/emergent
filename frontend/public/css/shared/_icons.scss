@@ -2,22 +2,23 @@
   text-indent: -9999px;
 }
 
-.icon-confirmed {
-  background-color: black;
-  background-image: image-url('confirmed.svg');
+.icon-confirmed,
+.icon-resolved {
+  background-image: image-url('verified.svg');
+  background-size: 15px 15px;
   display: inline-block;
-  height: 13px;
-  width: 13px;
+  height: 15px;
+  width: 15px;
   vertical-align: top;
 }
 
-.icon-resolved {
-  background-color: #808080;
-  border: 1px solid #FFF;
+.icon-added {
+  background-image: image-url('originated.svg');
+  background-size: 15px 15px;
   display: inline-block;
-  height: 13px;
-  width: 13px;
-  border-radius: 50%;
+  height: 15px;
+  width: 15px;
+  vertical-align: top;
 }
 
 .icon-most-shared {
@@ -77,4 +78,42 @@
   height: 11px;
   width: 11px;
   overflow: hidden;
+}
+
+.icon-facebook-round,
+.icon-twitter-round {
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: 21px 21px;
+  display: inline-block;
+  height: 21px;
+  vertical-align: top;
+  width: 21px;
+}
+
+.icon-facebook-round {
+  background-image: image-url('facebook-round.svg');
+}
+
+.icon-twitter-round {
+  background-image: image-url('twitter-round.svg');
+}
+
+.icon-dispute {
+  background-image: image-url('dispute.svg');
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: 17px 20px;
+  display: inline-block;
+  height: 20px;
+  width: 17px;
+}
+
+.icon-submit-a-source {
+  background-image: image-url('submit.svg');
+  background-position: center center;
+  background-repeat: no-repeat;
+  display: inline-block;
+  height: 20px;
+  width: 14px;
 }

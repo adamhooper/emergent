@@ -696,21 +696,22 @@ button:active, button:focus {
 .icon {
   text-indent: -9999px; }
 
-.icon-confirmed {
-  background-color: black;
-  background-image: url('/images/confirmed.svg');
+.icon-confirmed,
+.icon-resolved {
+  background-image: url('/images/verified.svg');
+  background-size: 15px 15px;
   display: inline-block;
-  height: 13px;
-  width: 13px;
+  height: 15px;
+  width: 15px;
   vertical-align: top; }
 
-.icon-resolved {
-  background-color: #808080;
-  border: 1px solid #FFF;
+.icon-added {
+  background-image: url('/images/originated.svg');
+  background-size: 15px 15px;
   display: inline-block;
-  height: 13px;
-  width: 13px;
-  border-radius: 50%; }
+  height: 15px;
+  width: 15px;
+  vertical-align: top; }
 
 .icon-most-shared {
   background-image: url('/images/shared.png');
@@ -762,6 +763,39 @@ button:active, button:focus {
   height: 11px;
   width: 11px;
   overflow: hidden; }
+
+.icon-facebook-round,
+.icon-twitter-round {
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: 21px 21px;
+  display: inline-block;
+  height: 21px;
+  vertical-align: top;
+  width: 21px; }
+
+.icon-facebook-round {
+  background-image: url('/images/facebook-round.svg'); }
+
+.icon-twitter-round {
+  background-image: url('/images/twitter-round.svg'); }
+
+.icon-dispute {
+  background-image: url('/images/dispute.svg');
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: 17px 20px;
+  display: inline-block;
+  height: 20px;
+  width: 17px; }
+
+.icon-submit-a-source {
+  background-image: url('/images/submit.svg');
+  background-position: center center;
+  background-repeat: no-repeat;
+  display: inline-block;
+  height: 20px;
+  width: 14px; }
 
 .list-unstyled {
   list-style-type: none;
@@ -1178,6 +1212,9 @@ ul.credits {
 .navigation-link {
   display: block;
   text-decoration: none; }
+  .navigation-link .icon {
+    margin-right: 10px;
+    vertical-align: top; }
 
 .navigation-label {
   display: block;
@@ -1328,8 +1365,9 @@ button.navigation-link {
   font-weight: 700;
   text-decoration: underline; }
 
-.navigation-social .navigation-label {
-  margin-bottom: 0.5em; }
+.navigation-social .navigation-link {
+  line-height: 21px;
+  margin-top: 0.5em; }
 
 .navigation-footer-social {
   border-top: 1px solid #ebebeb;
@@ -1352,6 +1390,8 @@ button.navigation-link {
       padding-top: 0.5em; }
     .navigation-footer-social .navigation .navigation-link {
       margin-left: 1em; }
+      .navigation-footer-social .navigation .navigation-link .icon {
+        margin-right: 0; }
 
 .page {
   background-color: #ffffff; }
@@ -1742,8 +1782,8 @@ button.navigation-link {
   .page-timeline .article .icon {
     position: absolute;
     left: 0;
-    margin-left: -7px;
-    margin-top: 1px;
+    margin-left: -8px;
+    margin-top: 0;
     z-index: 5;
     display: none; }
     @media (min-width: 48em) {

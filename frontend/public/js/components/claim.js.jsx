@@ -166,6 +166,10 @@ module.exports = React.createClass({
 
     var lastDate;
 
+    var resolvedClaim = claim.get('truthinessUrl');
+
+    var originClaim = claim.get('originUrl');
+
     return (
 
       <div>
@@ -198,11 +202,11 @@ module.exports = React.createClass({
                 <ul className="navigation navigation-page">
                   <li className="navigation-social">
                     <span className="navigation-label">Share this claim:</span>
-                    <a href="#" className="navigation-link">Share on Twitter</a>
-                    <a href="#" className="navigation-link">Share on Facebook</a>
+                    <a href="#" className="navigation-link"><span className="icon icon-twitter-round"></span>Share on Twitter</a>
+                    <a href="#" className="navigation-link"><span className="icon icon-facebook-round"></span>Share on Facebook</a>
                   </li>
                   <li>
-                    <a href="#" className="navigation-link">Dispute this claim</a>
+                    <a href="#" className="navigation-link"><span className="icon icon-dispute"></span>Dispute this claim</a>
                   </li>
                 </ul>
               </nav>
@@ -315,10 +319,22 @@ module.exports = React.createClass({
                               <span className="article-header-date">{moment(article.createdAt).calendar()}</span>
                               : null }
                               <article className="article with-stance">
-                                <span className="icon icon-resolved">Resolved</span>
-                                <div className={'stance stance-changing'}>
-                                  <span className="stance-value">Resolved</span>
+                                {resolvedClaim === article.url ?
+                                <div>
+                                  <span className="icon icon-resolved">Resolved</span>
+                                  <div className={'stance stance-changing'}>
+                                    <span className="stance-value">Resolved</span>
+                                  </div>
                                 </div>
+                                : null }
+                                {originClaim === article.url ?
+                                  <div>
+                                    <span className="icon icon-added">Originated</span>
+                                    <div className={'stance stance-changing'}>
+                                      <span className="stance-value">Originated</span>
+                                    </div>
+                                  </div>
+                                  : null }
                                 <div className="article-content">
                                   <h4 className="article-list-title"><span className={'indicator indicator-' + article.stance}></span> <a href={article.url}>{article.source}</a> - <time dateTime={article.createdAt}>{moment(article.createdAt).format('MMM D')}</time>
                                     <span className="shares-label">Shares:</span> <span className="shares-value">{this.formatNumber(article.shares)}</span>
@@ -339,7 +355,7 @@ module.exports = React.createClass({
                   <nav className="page-navigation">
                     <ul className="navigation navigation-page">
                       <li>
-                        <a href="#" className="navigation-link">Submit a source</a>
+                        <a href="#" className="navigation-link"><span className="icon icon-submit-a-source"></span>Submit a source</a>
                       </li>
                     </ul>
                   </nav>
@@ -355,10 +371,10 @@ module.exports = React.createClass({
                   <span className="navigation-label">Share this claim:</span>
                 </li>
                 <li>
-                  <a href="#" className="navigation-link"><span className="icon icon-twitter"></span></a>
+                  <a href="#" className="navigation-link"><span className="icon icon-twitter-round"></span></a>
                 </li>
                 <li>
-                  <a href="#" className="navigation-link"><span className="icon icon-facebook"></span></a>
+                  <a href="#" className="navigation-link"><span className="icon icon-facebook-round"></span></a>
                 </li>
               </ul>
             </div>

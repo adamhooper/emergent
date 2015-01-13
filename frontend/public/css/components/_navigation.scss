@@ -11,6 +11,11 @@
 .navigation-link {
   display: block;
   text-decoration: none;
+
+  .icon {
+    margin-right: 10px;
+    vertical-align: top;
+  }
 }
 
 .navigation-label {
@@ -225,8 +230,9 @@
 }
 
 .navigation-social {
-  .navigation-label {
-    margin-bottom: 0.5em;
+  .navigation-link {
+    line-height: 21px;
+    margin-top: 0.5em;
   }
 }
 
@@ -258,6 +264,10 @@
 
     .navigation-link {
       margin-left: 1em;
+
+      .icon {
+        margin-right: 0;
+      }
     }
   }
 }

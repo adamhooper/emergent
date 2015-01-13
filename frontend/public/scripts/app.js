@@ -41730,6 +41730,10 @@ module.exports = React.createClass({displayName: 'exports',
 
     var lastDate;
 
+    var resolvedClaim = claim.get('truthinessUrl');
+
+    var originClaim = claim.get('originUrl');
+
     return (
 
       React.DOM.div(null, 
@@ -41762,11 +41766,11 @@ module.exports = React.createClass({displayName: 'exports',
                 React.DOM.ul({className: "navigation navigation-page"}, 
                   React.DOM.li({className: "navigation-social"}, 
                     React.DOM.span({className: "navigation-label"}, "Share this claim:"), 
-                    React.DOM.a({href: "#", className: "navigation-link"}, "Share on Twitter"), 
-                    React.DOM.a({href: "#", className: "navigation-link"}, "Share on Facebook")
+                    React.DOM.a({href: "#", className: "navigation-link"}, React.DOM.span({className: "icon icon-twitter-round"}), "Share on Twitter"), 
+                    React.DOM.a({href: "#", className: "navigation-link"}, React.DOM.span({className: "icon icon-facebook-round"}), "Share on Facebook")
                   ), 
                   React.DOM.li(null, 
-                    React.DOM.a({href: "#", className: "navigation-link"}, "Dispute this claim")
+                    React.DOM.a({href: "#", className: "navigation-link"}, React.DOM.span({className: "icon icon-dispute"}), "Dispute this claim")
                   )
                 )
               )
@@ -41879,10 +41883,22 @@ module.exports = React.createClass({displayName: 'exports',
                               React.DOM.span({className: "article-header-date"}, moment(article.createdAt).calendar())
                               : null, 
                               React.DOM.article({className: "article with-stance"}, 
-                                React.DOM.span({className: "icon icon-resolved"}, "Resolved"), 
-                                React.DOM.div({className: 'stance stance-changing'}, 
-                                  React.DOM.span({className: "stance-value"}, "Resolved")
-                                ), 
+                                resolvedClaim === article.url ?
+                                React.DOM.div(null, 
+                                  React.DOM.span({className: "icon icon-resolved"}, "Resolved"), 
+                                  React.DOM.div({className: 'stance stance-changing'}, 
+                                    React.DOM.span({className: "stance-value"}, "Resolved")
+                                  )
+                                )
+                                : null, 
+                                originClaim === article.url ?
+                                  React.DOM.div(null, 
+                                    React.DOM.span({className: "icon icon-added"}, "Originated"), 
+                                    React.DOM.div({className: 'stance stance-changing'}, 
+                                      React.DOM.span({className: "stance-value"}, "Originated")
+                                    )
+                                  )
+                                  : null, 
                                 React.DOM.div({className: "article-content"}, 
                                   React.DOM.h4({className: "article-list-title"}, React.DOM.span({className: 'indicator indicator-' + article.stance}), " ", React.DOM.a({href: article.url}, article.source), " - ", React.DOM.time({dateTime: article.createdAt}, moment(article.createdAt).format('MMM D')), 
                                     React.DOM.span({className: "shares-label"}, "Shares:"), " ", React.DOM.span({className: "shares-value"}, this.formatNumber(article.shares))
@@ -41903,7 +41919,7 @@ module.exports = React.createClass({displayName: 'exports',
                   React.DOM.nav({className: "page-navigation"}, 
                     React.DOM.ul({className: "navigation navigation-page"}, 
                       React.DOM.li(null, 
-                        React.DOM.a({href: "#", className: "navigation-link"}, "Submit a source")
+                        React.DOM.a({href: "#", className: "navigation-link"}, React.DOM.span({className: "icon icon-submit-a-source"}), "Submit a source")
                       )
                     )
                   )
@@ -41919,10 +41935,10 @@ module.exports = React.createClass({displayName: 'exports',
                   React.DOM.span({className: "navigation-label"}, "Share this claim:")
                 ), 
                 React.DOM.li(null, 
-                  React.DOM.a({href: "#", className: "navigation-link"}, React.DOM.span({className: "icon icon-twitter"}))
+                  React.DOM.a({href: "#", className: "navigation-link"}, React.DOM.span({className: "icon icon-twitter-round"}))
                 ), 
                 React.DOM.li(null, 
-                  React.DOM.a({href: "#", className: "navigation-link"}, React.DOM.span({className: "icon icon-facebook"}))
+                  React.DOM.a({href: "#", className: "navigation-link"}, React.DOM.span({className: "icon icon-facebook-round"}))
                 )
               )
             )
