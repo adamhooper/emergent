@@ -1934,14 +1934,6 @@ button.navigation-link {
 @media (min-width: 68em) {
   .modal-lg {
     width: 900px; } }
-.addthis_toolbox {
-  margin-top: 2em; }
-  .addthis_toolbox.addthis_default_style .at300b {
-    padding-left: 0;
-    padding-right: 0; }
-    .addthis_toolbox.addthis_default_style .at300b + .at300b {
-      padding-left: 4px; }
-
 .mailchimp-title {
   margin-top: 0;
   margin-bottom: .5em; }

@@ -45,7 +45,7 @@ module.exports = React.createClass({
 
   componentDidMount: function() {
     this.setState({ barChartWidth: 926 });
-    addthis.toolbox('.addthis_toolbox');
+    // addthis.toolbox('.addthis_toolbox');
   },
 
   setFilter: function(filter) {
@@ -202,8 +202,8 @@ module.exports = React.createClass({
                 <ul className="navigation navigation-page">
                   <li className="navigation-social">
                     <span className="navigation-label">Share this claim:</span>
-                    <a href="#" className="navigation-link"><span className="icon icon-twitter-round"></span>Share on Twitter</a>
-                    <a href="#" className="navigation-link"><span className="icon icon-facebook-round"></span>Share on Facebook</a>
+                    <a href={'https://twitter.com/intent/tweet?text='+claim.get('headline')+'&via=emergentdotinfo&url='+encodeURIComponent(document.URL)} target="_blank" className="navigation-link"><span className="icon icon-twitter-round"></span>Share on Twitter</a>
+                    <a href={'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(document.URL)} target="_blank" className="navigation-link"><span className="icon icon-facebook-round"></span>Share on Facebook</a>
                   </li>
                   <li>
                     <app.components.Modal title="Dispute this claim" trigger={<a href="#" className="navigation-link"><span className="icon icon-dispute"></span>Dispute this claim</a>}>
@@ -375,10 +375,10 @@ module.exports = React.createClass({
                   <span className="navigation-label">Share this claim:</span>
                 </li>
                 <li>
-                  <a href="#" className="navigation-link"><span className="icon icon-twitter-round"></span></a>
+                  <a href={'https://twitter.com/intent/tweet?text='+claim.get('headline')+'&via=emergentdotinfo&url='+encodeURIComponent(document.URL)} target="_blank" className="navigation-link"><span className="icon icon-twitter-round"></span></a>
                 </li>
                 <li>
-                  <a href="#" className="navigation-link"><span className="icon icon-facebook-round"></span></a>
+                  <a href={'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(document.URL)} target="_blank" className="navigation-link"><span className="icon icon-facebook-round"></span></a>
                 </li>
               </ul>
             </div>

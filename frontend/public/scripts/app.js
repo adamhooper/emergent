@@ -41918,7 +41918,7 @@ module.exports = React.createClass({displayName: 'exports',
 
   componentDidMount: function() {
     this.setState({ barChartWidth: 926 });
-    addthis.toolbox('.addthis_toolbox');
+    // addthis.toolbox('.addthis_toolbox');
   },
 
   setFilter: function(filter) {
@@ -42075,8 +42075,8 @@ module.exports = React.createClass({displayName: 'exports',
                 React.DOM.ul({className: "navigation navigation-page"}, 
                   React.DOM.li({className: "navigation-social"}, 
                     React.DOM.span({className: "navigation-label"}, "Share this claim:"), 
-                    React.DOM.a({href: "#", className: "navigation-link"}, React.DOM.span({className: "icon icon-twitter-round"}), "Share on Twitter"), 
-                    React.DOM.a({href: "#", className: "navigation-link"}, React.DOM.span({className: "icon icon-facebook-round"}), "Share on Facebook")
+                    React.DOM.a({href: 'https://twitter.com/intent/tweet?text='+claim.get('headline')+'&via=emergentdotinfo&url='+encodeURIComponent(document.URL), target: "_blank", className: "navigation-link"}, React.DOM.span({className: "icon icon-twitter-round"}), "Share on Twitter"), 
+                    React.DOM.a({href: 'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(document.URL), target: "_blank", className: "navigation-link"}, React.DOM.span({className: "icon icon-facebook-round"}), "Share on Facebook")
                   ), 
                   React.DOM.li(null, 
                     app.components.Modal({title: "Dispute this claim", trigger: React.DOM.a({href: "#", className: "navigation-link"}, React.DOM.span({className: "icon icon-dispute"}), "Dispute this claim")}, 
@@ -42248,10 +42248,10 @@ module.exports = React.createClass({displayName: 'exports',
                   React.DOM.span({className: "navigation-label"}, "Share this claim:")
                 ), 
                 React.DOM.li(null, 
-                  React.DOM.a({href: "#", className: "navigation-link"}, React.DOM.span({className: "icon icon-twitter-round"}))
+                  React.DOM.a({href: 'https://twitter.com/intent/tweet?text='+claim.get('headline')+'&via=emergentdotinfo&url='+encodeURIComponent(document.URL), target: "_blank", className: "navigation-link"}, React.DOM.span({className: "icon icon-twitter-round"}))
                 ), 
                 React.DOM.li(null, 
-                  React.DOM.a({href: "#", className: "navigation-link"}, React.DOM.span({className: "icon icon-facebook-round"}))
+                  React.DOM.a({href: 'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(document.URL), target: "_blank", className: "navigation-link"}, React.DOM.span({className: "icon icon-facebook-round"}))
                 )
               )
             )
