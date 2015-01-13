@@ -42149,6 +42149,10 @@ module.exports = React.createClass({displayName: 'exports',
           React.DOM.nav({className: "page-navigation"}, 
             React.DOM.ul({className: "navigation navigation-page"}, 
               React.DOM.li(null, 
+                React.DOM.a({href: "#", className: "navigation-link"}, "Submit a claim"), 
+                React.DOM.p(null, "Lorem ipsum dolor sit amet pro patria mori through our special tool.")
+              ), 
+              React.DOM.li(null, 
                 React.DOM.a({href: "http://eepurl.com/3mb9T", className: "navigation-link"}, "Sign up for our newsletter"), 
                 React.DOM.p(null, "Our weekly newsletter is the best way to get updates on the rumors we're tracking. We never sell or share your info.")
               )
