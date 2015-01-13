@@ -186,7 +186,9 @@ module.exports = React.createClass({
           <nav className="page-navigation">
             <ul className="navigation navigation-page">
               <li>
-                <a href="#" className="navigation-link">Submit a claim</a>
+                <app.components.Modal title="Submit a claim" trigger={<a href="#submit-a-claim" className="navigation-link">Submit a claim</a>}>
+                  Lorem Ipsum
+                </app.components.Modal>
                 <p>Lorem ipsum dolor sit amet pro patria mori through our special tool.</p>
               </li>
               <li>

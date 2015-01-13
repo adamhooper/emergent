@@ -206,7 +206,9 @@ module.exports = React.createClass({
                     <a href="#" className="navigation-link"><span className="icon icon-facebook-round"></span>Share on Facebook</a>
                   </li>
                   <li>
-                    <a href="#" className="navigation-link"><span className="icon icon-dispute"></span>Dispute this claim</a>
+                    <app.components.Modal title="Dispute this claim" trigger={<a href="#" className="navigation-link"><span className="icon icon-dispute"></span>Dispute this claim</a>}>
+                      Lorem Ipsum
+                    </app.components.Modal>
                   </li>
                 </ul>
               </nav>
@@ -355,7 +357,9 @@ module.exports = React.createClass({
                   <nav className="page-navigation">
                     <ul className="navigation navigation-page">
                       <li>
-                        <a href="#" className="navigation-link"><span className="icon icon-submit-a-source"></span>Submit a source</a>
+                        <app.components.Modal title="Submit a source" trigger={<a href="#" className="navigation-link"><span className="icon icon-submit-a-source"></span>Submit a source</a>}>
+                          Lorem Ipsum
+                        </app.components.Modal>
                       </li>
                     </ul>
                   </nav>
