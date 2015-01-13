@@ -91,6 +91,10 @@ $article-padding:            2em;
   color: palette(base, dark);
   margin-bottom: 1em;
   font-weight: weight(medium);
+
+  .article-source {
+    margin-right: 15px;
+  }
 }
 
 .article-source {

@@ -37,7 +37,7 @@ module.exports = React.createClass({
       <div>
         <header className={this.state.navToggle ? 'site-header nav-toggle-active in' : 'site-header out'}>
           <div className="site-header-primary container">
-            <p className="site-logo"><Link to="claims">Emergent</Link></p>
+            <Link to="claims" className="site-logo">Emergent</Link>
             <nav className="site-menu">
               <button className="site-menu-toggle" href="#navigation" onClick={this.toggleNav}><span>Open Navigation</span></button>
               <ul className="navigation navigation-site">

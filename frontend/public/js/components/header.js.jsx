@@ -52,7 +52,7 @@ module.exports = React.createClass({
   },
 
   render: function() {
-    console.log('state', this.state);
+    // console.log('state', this.state);
     return (
       <div>
         <header className="site-header-categories">

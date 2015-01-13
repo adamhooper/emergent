@@ -42099,6 +42099,7 @@ module.exports = React.createClass({displayName: 'exports',
                         ), 
                         React.DOM.h2({className: "article-title"}, Link({to: "claim", params: { slug: claim.get('slug')}}, claim.get('headline'))), 
                         React.DOM.div({className: "article-byline"}, 
+                          React.DOM.span({className: "article-source"}, "Originating Source: ", React.DOM.span({className: "indicator indicator-true"}, " "), React.DOM.a({href: "#"}, "The Guardian")), 
                           React.DOM.span({className: "article-originated"}, "Added ", React.DOM.time({datetime: claim.get('createdAt')}, moment(claim.get('createdAt')).format('MMM D'))), 
                           React.DOM.span({className: "article-shares hidden-desktop"}, React.DOM.span({className: "label"}, "Shares:"), " ", this.formatNumber(claim.get('nShares')))
                         )
@@ -42201,7 +42202,7 @@ module.exports = React.createClass({displayName: 'exports',
   },
 
   render: function() {
-    console.log('state', this.state);
+    // console.log('state', this.state);
     return (
       React.DOM.div(null, 
         React.DOM.header({className: "site-header-categories"}, 
@@ -42289,7 +42290,7 @@ module.exports = React.createClass({displayName: 'exports',
       React.DOM.div(null, 
         React.DOM.header({className: this.state.navToggle ? 'site-header nav-toggle-active in' : 'site-header out'}, 
           React.DOM.div({className: "site-header-primary container"}, 
-            React.DOM.p({className: "site-logo"}, Link({to: "claims"}, "Emergent")), 
+            Link({to: "claims", className: "site-logo"}, "Emergent"), 
             React.DOM.nav({className: "site-menu"}, 
               React.DOM.button({className: "site-menu-toggle", href: "#navigation", onClick: this.toggleNav}, React.DOM.span(null, "Open Navigation")), 
               React.DOM.ul({className: "navigation navigation-site"}, 
