@@ -91,7 +91,9 @@ module.exports = Backbone.Model.extend({
           articles.push(article);
         }
         return articles;
-      }, [], this), 'shares').reverse();
+      }, [], this), function(o) {
+        return o.createdAt;
+      }).reverse();
     }
 
     var articles = {};
@@ -116,7 +118,7 @@ module.exports = Backbone.Model.extend({
         articles[articleId] = article;
       }, this);
     }, this);
-    return _.sortBy(_.filter(articles, function(article) { return article.shares; }), 'shares').reverse();
+    return _.sortBy(_.filter(articles, function(article) { return article.shares; }), function(o) { return o.createdAt; }).reverse();
   },
 
   /* returns list of slices, e.g. [{ time: Date, against: nnn, for: nnn }, ... ] */
