@@ -14,8 +14,9 @@ $stance-width:             5.5em;
   display: inline-block;
   float: left;
   line-height: 1;
-  padding: .2em .2em .3em;
+  padding: .4em;
   text-align: center;
+  width: $stance-width;
 
   // in article previews
   .with-stance & {
@@ -31,8 +32,6 @@ $stance-width:             5.5em;
   @include breakpoint($breakpoint-tablet) {
     display: block;
     float: none;
-    padding: .4em;
-    width: $stance-width;
   }
 
   &.stance-small {

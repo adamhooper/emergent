@@ -3,8 +3,7 @@
 // }
 
 .site-header {
-  background-color: palette(base, darker);
-  background-image: linear-gradient(#000, rgba(#D89EF7, .025) 20%, rgba(#6A5175, .05) 35%, #000);
+  background-color: #000;
   color: palette(type, light);
   position: relative;
 }
@@ -81,6 +80,7 @@
 .site-header-secondary {
   background: #f2f2f2 image-url('pattern.svg') top left repeat;
   border-bottom: 1px solid palette(border, base);
+  min-height: 52px;
 
   > .container {
     @extend %clearfix;
@@ -98,6 +98,7 @@
 
   .page-title-holder {
     float: left;
+    transition: opacity .15s ease-in-out;
   }
 
   .search-holder {
@@ -205,6 +206,12 @@
       display: block;
       opacity: 1;
       width: auto;
+    }
+
+    @include breakpoint($breakpoint-mobile-only) {
+      .page-title-holder {
+        opacity: 0;
+      }
     }
   }
 }
