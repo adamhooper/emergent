@@ -528,6 +528,9 @@ th {
   .hidden-desktop {
     display: none !important; } }
 
+.no-wrap {
+  white-space: nowrap; }
+
 @media (min-width: 0) {
   .container,
   .page-content {
@@ -873,8 +876,10 @@ ul.credits {
 
 .article-shares {
   color: #323232;
-  float: right;
   font-weight: 500; }
+  @media (min-width: 48em) {
+    .article-shares {
+      float: right; } }
   .article-shares .label {
     color: #7f7f7f; }
 
@@ -894,6 +899,9 @@ ul.credits {
 
 .article-originated {
   display: inline-block; }
+  @media (min-width: 0) and (max-width: 48em) {
+    .article-originated {
+      display: block; } }
 
 .article-content {
   font-size: 0.95em;
@@ -906,11 +914,8 @@ ul.credits {
 .article-tags,
 .article-tracked {
   font-size: 0.8em;
-  font-weight: 500; }
-  @media (min-width: 48em) {
-    .article-tags,
-    .article-tracked {
-      margin-top: 1em; } }
+  font-weight: 500;
+  margin-top: 1em; }
   .article-tags .label,
   .article-tracked .label {
     color: #7f7f7f; }

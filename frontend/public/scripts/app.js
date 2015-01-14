@@ -42211,8 +42211,8 @@ module.exports = React.createClass({displayName: 'exports',
                                   )
                                   : null, 
                                 React.DOM.div({className: "article-content"}, 
-                                  React.DOM.h4({className: "article-list-title"}, React.DOM.span({className: 'indicator indicator-' + article.stance}), " ", React.DOM.a({href: article.url}, article.source), " - ", React.DOM.time({dateTime: article.createdAt}, moment(article.createdAt).format('MMM D')), 
-                                    React.DOM.span({className: "shares-label"}, "Shares:"), " ", React.DOM.span({className: "shares-value"}, this.formatNumber(article.shares))
+                                  React.DOM.h4({className: "article-list-title"}, React.DOM.span({className: 'indicator indicator-' + article.stance}), " ", React.DOM.a({href: article.url}, article.source), " - ", React.DOM.time({className: "no-wrap", dateTime: article.createdAt}, moment(article.createdAt).format('MMM D')), 
+                                    React.DOM.span({className: "no-wrap"}, React.DOM.span({className: "shares-label"}, "Shares:"), " ", React.DOM.span({className: "shares-value"}, this.formatNumber(article.shares)))
                                     ), 
                                   React.DOM.p({className: "article-description"}, article.headline)
                                 )
