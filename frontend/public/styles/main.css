@@ -1049,7 +1049,12 @@ ul.credits {
 .card-category {
   display: table-cell;
   vertical-align: top;
-  border-right: 1px solid #ebebeb; }
+  border-right: 1px solid #ebebeb;
+  background-clip: padding-box; }
+  .card-category.card-category-for {
+    background-color: #f2fcf8; }
+  .card-category.card-category-against {
+    background-color: #fff2f2; }
   .card-category:last-child {
     border-right: none; }
   .card-categories-1 .card-category {
@@ -1065,7 +1070,20 @@ ul.credits {
   .card:last-child {
     margin-bottom: 0; }
   .card .sources {
-    font-size: 1em; }
+    font-size: 1.1em;
+    display: table;
+    width: 100%; }
+    .card .sources .sources-count,
+    .card .sources .indicator-holder {
+      vertical-align: top;
+      display: table-cell;
+      text-align: left; }
+    .card .sources .sources-count {
+      white-space: nowrap;
+      width: 5px; }
+    .card .sources .indicator-holder {
+      padding-top: 10px;
+      padding-left: 5px; }
   @media (min-width: 48em) {
     .card {
       margin-bottom: 0; } }
@@ -1083,7 +1101,8 @@ ul.credits {
   font-weight: 500;
   margin-bottom: 0;
   margin-top: 0;
-  color: #7f7f7f; }
+  color: #7f7f7f;
+  font-size: 1.1em; }
   .card-title .icon {
     margin-top: 0;
     margin-left: .5em; }
@@ -1701,6 +1720,10 @@ button.navigation-link {
   height: 6px;
   vertical-align: middle;
   margin-bottom: 0.2em; }
+
+.indicator-holder .indicator {
+  margin-right: 2px;
+  float: left; }
 
 .indicator-true,
 .indicator-false {

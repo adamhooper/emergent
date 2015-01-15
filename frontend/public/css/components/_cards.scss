@@ -21,6 +21,15 @@
   display: table-cell;
   vertical-align: top;
   border-right: 1px solid palette(border, base);
+  background-clip: padding-box;
+
+  &.card-category-for {
+    background-color: #f2fcf8;
+  }
+
+  &.card-category-against {
+    background-color: #fff2f2;
+  }
 
   &:last-child {
     border-right: none;
@@ -51,7 +60,30 @@
   }
 
   .sources {
-    font-size: font(md);
+    font-size: 1.1em;
+    display: table;
+    width: 100%;
+
+    .sources-count,
+    .indicator-holder {
+      vertical-align: top;
+      display: table-cell;
+      text-align: left;
+    }
+
+    .sources-count {
+      white-space: nowrap;
+      width: 5px;
+    }
+
+    .indicator-holder {
+      padding-top: 10px;
+      padding-left: 5px;
+
+      .indicator {
+
+      }
+    }
   }
 
   @include breakpoint($breakpoint-tablet) {
@@ -79,6 +111,7 @@
   margin-bottom: 0;
   margin-top: 0;
   color: #7f7f7f;
+  font-size: 1.1em;
 
   .icon {
     margin-top: 0;

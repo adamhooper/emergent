@@ -20,7 +20,13 @@ $indicator-width:               6px;
   margin-bottom: 0.2em;
 }
 
-
+// Holder for spacing
+.indicator-holder {
+  .indicator {
+    margin-right: 2px;
+    float: left;
+  }
+}
 
 //
 // Component variations

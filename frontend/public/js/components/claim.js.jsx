@@ -242,7 +242,7 @@ module.exports = React.createClass({
                         <p className="card-title">For{claim.get('truthiness') === 'true' ? <span className="icon icon-confirmed">Confirmed</span> : null}</p>
                       </div>
                       <div className="card-content">
-                        <p className="sources">{claim.articlesByStance('for').length} <span className="indicator indicator-true"></span></p>
+                        <div className="sources"><span className="sources-count">{claim.articlesByStance('for').length}</span><span className="indicator-holder" dangerouslySetInnerHTML={{__html: Array(claim.articlesByStance('for').length + 1).join('<span class="indicator indicator-true"></span>')}}/></div>
                         <div className="shares">
                           <span className="shares-label">Shares</span>
                           <span className="shares-value">{shares.for ? this.formatNumber(shares.for) : 0}</span>
@@ -257,7 +257,7 @@ module.exports = React.createClass({
                         <p className="card-title">Against{claim.get('truthiness') === 'false' ? <span className="icon icon-confirmed">Confirmed</span> : null}</p>
                       </div>
                       <div className="card-content">
-                        <p className="sources">{claim.articlesByStance('against').length} <span className="indicator indicator-false"></span></p>
+                        <div className="sources"><span className="sources-count">{claim.articlesByStance('against').length}</span><span className="indicator-holder" dangerouslySetInnerHTML={{__html: Array(claim.articlesByStance('against').length + 1).join('<span class="indicator indicator-false"></span>')}}/></div>
                         <div className="shares">
                           <span className="shares-label">Shares</span>
                           <span className="shares-value">{shares.against ? this.formatNumber(shares.against) : 0}</span>
@@ -272,7 +272,7 @@ module.exports = React.createClass({
                         <p className="card-title">Observing</p>
                       </div>
                       <div className="card-content">
-                        <p className="sources">{claim.articlesByStance('observing').length} <span className="indicator indicator-unknown"></span></p>
+                        <div className="sources"><span className="sources-count">{claim.articlesByStance('observing').length}</span><span className="indicator-holder" dangerouslySetInnerHTML={{__html: Array(claim.articlesByStance('observing').length + 1).join('<span class="indicator indicator-unknown"></span>')}}/></div>
                         <div className="shares">
                           <span className="shares-label">Shares</span>
                           <span className="shares-value">{shares.observing ? this.formatNumber(shares.observing) : 0}</span>

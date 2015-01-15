@@ -42115,7 +42115,7 @@ module.exports = React.createClass({displayName: 'exports',
                         React.DOM.p({className: "card-title"}, "For", claim.get('truthiness') === 'true' ? React.DOM.span({className: "icon icon-confirmed"}, "Confirmed") : null)
                       ), 
                       React.DOM.div({className: "card-content"}, 
-                        React.DOM.p({className: "sources"}, claim.articlesByStance('for').length, " ", React.DOM.span({className: "indicator indicator-true"})), 
+                        React.DOM.div({className: "sources"}, React.DOM.span({className: "sources-count"}, claim.articlesByStance('for').length), React.DOM.span({className: "indicator-holder", dangerouslySetInnerHTML: {__html: Array(claim.articlesByStance('for').length + 1).join('<span class="indicator indicator-true"></span>')}})), 
                         React.DOM.div({className: "shares"}, 
                           React.DOM.span({className: "shares-label"}, "Shares"), 
                           React.DOM.span({className: "shares-value"}, shares.for ? this.formatNumber(shares.for) : 0)
@@ -42130,7 +42130,7 @@ module.exports = React.createClass({displayName: 'exports',
                         React.DOM.p({className: "card-title"}, "Against", claim.get('truthiness') === 'false' ? React.DOM.span({className: "icon icon-confirmed"}, "Confirmed") : null)
                       ), 
                       React.DOM.div({className: "card-content"}, 
-                        React.DOM.p({className: "sources"}, claim.articlesByStance('against').length, " ", React.DOM.span({className: "indicator indicator-false"})), 
+                        React.DOM.div({className: "sources"}, React.DOM.span({className: "sources-count"}, claim.articlesByStance('against').length), React.DOM.span({className: "indicator-holder", dangerouslySetInnerHTML: {__html: Array(claim.articlesByStance('against').length + 1).join('<span class="indicator indicator-false"></span>')}})), 
                         React.DOM.div({className: "shares"}, 
                           React.DOM.span({className: "shares-label"}, "Shares"), 
                           React.DOM.span({className: "shares-value"}, shares.against ? this.formatNumber(shares.against) : 0)
@@ -42145,7 +42145,7 @@ module.exports = React.createClass({displayName: 'exports',
                         React.DOM.p({className: "card-title"}, "Observing")
                       ), 
                       React.DOM.div({className: "card-content"}, 
-                        React.DOM.p({className: "sources"}, claim.articlesByStance('observing').length, " ", React.DOM.span({className: "indicator indicator-unknown"})), 
+                        React.DOM.div({className: "sources"}, React.DOM.span({className: "sources-count"}, claim.articlesByStance('observing').length), React.DOM.span({className: "indicator-holder", dangerouslySetInnerHTML: {__html: Array(claim.articlesByStance('observing').length + 1).join('<span class="indicator indicator-unknown"></span>')}})), 
                         React.DOM.div({className: "shares"}, 
                           React.DOM.span({className: "shares-label"}, "Shares"), 
                           React.DOM.span({className: "shares-value"}, shares.observing ? this.formatNumber(shares.observing) : 0)
