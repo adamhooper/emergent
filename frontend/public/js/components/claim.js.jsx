@@ -211,15 +211,20 @@ module.exports = React.createClass({
 
                   {claim.get('origin') ? <p className="tracking"><span className="tracking-header">Originating Source{claim.get('originUrl') ? <span className="article-source">:<span className="spacer-10"></span><a href={claim.get('originUrl')}>{claim.prettyUrl()}</a></span> : null }
                   <span className="spacer-10"></span>Added {moment(originDate).format('MMM D')}</span><br /><span className="tracking-body" dangerouslySetInnerHTML={{__html: linker.link(claim.get('origin'))}}/></p> : null}
+                  <nav className="navigation-social-buttons">
+                    <ul className="navigation">
+                      <li>
+                        <a href={'https://twitter.com/intent/tweet?text='+claim.get('headline')+'&via=emergentdotinfo&url='+encodeURIComponent(document.URL)} target="_blank" className="navigation-link twitter"><span className="icon icon-twitter-white"></span>Share on Twitter</a>
+                      </li>
+                      <li>
+                        <a href={'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(document.URL)} target="_blank" className="navigation-link facebook"><span className="icon icon-facebook-white"></span>Share on Facebook</a>
+                      </li>
+                    </ul>
+                  </nav>
                 </header>
               </div>
               <nav className="page-navigation">
                 <ul className="navigation navigation-page">
-                  <li className="navigation-social">
-                    <span className="navigation-label">Share this claim:</span>
-                    <a href={'https://twitter.com/intent/tweet?text='+claim.get('headline')+'&via=emergentdotinfo&url='+encodeURIComponent(document.URL)} target="_blank" className="navigation-link"><span className="icon icon-twitter-round"></span>Share on Twitter</a>
-                    <a href={'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(document.URL)} target="_blank" className="navigation-link"><span className="icon icon-facebook-round"></span>Share on Facebook</a>
-                  </li>
                   {/*<li>
                     <app.components.Modal title="Dispute this claim" trigger={<a href="#" className="navigation-link"><span className="icon icon-dispute"></span>Dispute this claim</a>}>
                       Lorem Ipsum

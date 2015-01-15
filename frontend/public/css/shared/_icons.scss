@@ -108,6 +108,26 @@
   background-image: image-url('twitter-round.svg');
 }
 
+.icon-facebook-white,
+.icon-twitter-white {
+  background-position: center center;
+  background-repeat: no-repeat;
+  display: inline-block;
+  vertical-align: top;
+}
+
+.icon-facebook-white {
+  background-image: image-url('facebook-white.svg');
+  width: 9px;
+  height: 14px;
+}
+
+.icon-twitter-white {
+  background-image: image-url('twitter-white.svg');
+  width: 15px;
+  height: 14px;
+}
+
 .icon-dispute {
   background-image: image-url('dispute.svg');
   background-position: center center;

@@ -501,7 +501,7 @@ th {
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); }
 
 .article-footer:after, .claim-footer-next:after, .card-header:after, .articles-filtering:after,
-.sources-filtering:after, .navigation-footer-social:after, .site-header-secondary > .container:after, .section:after, .page-timeline .article:after {
+.sources-filtering:after, .navigation-footer-social:after, .navigation-social-buttons:after, .site-header-secondary > .container:after, .section:after, .page-timeline .article:after {
   clear: both;
   content: '';
   display: table; }
@@ -794,6 +794,23 @@ button:active, button:focus {
 
 .icon-twitter-round {
   background-image: url('/images/twitter-round.svg'); }
+
+.icon-facebook-white,
+.icon-twitter-white {
+  background-position: center center;
+  background-repeat: no-repeat;
+  display: inline-block;
+  vertical-align: top; }
+
+.icon-facebook-white {
+  background-image: url('/images/facebook-white.svg');
+  width: 9px;
+  height: 14px; }
+
+.icon-twitter-white {
+  background-image: url('/images/twitter-white.svg');
+  width: 15px;
+  height: 14px; }
 
 .icon-dispute {
   background-image: url('/images/dispute.svg');
@@ -1451,6 +1468,38 @@ button.navigation-link {
       margin-left: 1em; }
       .navigation-footer-social .navigation .navigation-link .icon {
         margin-right: 0; }
+
+.navigation-social-buttons {
+  border-top: 1px solid #ebebeb;
+  margin-top: 1em;
+  padding-top: 1em; }
+  .navigation-social-buttons li {
+    float: left;
+    margin-right: 10px;
+    margin-top: 0.5em; }
+    .navigation-social-buttons li:last-child {
+      margin-right: 0; }
+    .navigation-social-buttons li .navigation-link {
+      line-height: 1;
+      display: block;
+      padding: 1em 2em;
+      text-align: center;
+      background-color: #000;
+      color: #FFF;
+      font-weight: 600;
+      font-size: 0.95em;
+      transition: background .15s ease-in-out;
+      min-width: 250px; }
+      .navigation-social-buttons li .navigation-link .icon {
+        margin-right: 15px; }
+      .navigation-social-buttons li .navigation-link.facebook {
+        background-color: #3b5898; }
+        .navigation-social-buttons li .navigation-link.facebook:hover {
+          background-color: #344d86; }
+      .navigation-social-buttons li .navigation-link.twitter {
+        background-color: #01aced; }
+        .navigation-social-buttons li .navigation-link.twitter:hover {
+          background-color: #019ad4; }
 
 .page {
   background-color: #ffffff; }

@@ -42083,16 +42083,21 @@ module.exports = React.createClass({displayName: 'exports',
                   React.DOM.span({className: "spacer-10"}), "Added ", moment(truthinessDate).format('MMM D')), React.DOM.br(null), React.DOM.span({className: "tracking-body"}, claim.get('truthinessDescription'))) : null, 
 
                   claim.get('origin') ? React.DOM.p({className: "tracking"}, React.DOM.span({className: "tracking-header"}, "Originating Source", claim.get('originUrl') ? React.DOM.span({className: "article-source"}, ":", React.DOM.span({className: "spacer-10"}), React.DOM.a({href: claim.get('originUrl')}, claim.prettyUrl())) : null, 
-                  React.DOM.span({className: "spacer-10"}), "Added ", moment(originDate).format('MMM D')), React.DOM.br(null), React.DOM.span({className: "tracking-body", dangerouslySetInnerHTML: {__html: linker.link(claim.get('origin'))}})) : null
+                  React.DOM.span({className: "spacer-10"}), "Added ", moment(originDate).format('MMM D')), React.DOM.br(null), React.DOM.span({className: "tracking-body", dangerouslySetInnerHTML: {__html: linker.link(claim.get('origin'))}})) : null, 
+                  React.DOM.nav({className: "navigation-social-buttons"}, 
+                    React.DOM.ul({className: "navigation"}, 
+                      React.DOM.li(null, 
+                        React.DOM.a({href: 'https://twitter.com/intent/tweet?text='+claim.get('headline')+'&via=emergentdotinfo&url='+encodeURIComponent(document.URL), target: "_blank", className: "navigation-link twitter"}, React.DOM.span({className: "icon icon-twitter-white"}), "Share on Twitter")
+                      ), 
+                      React.DOM.li(null, 
+                        React.DOM.a({href: 'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(document.URL), target: "_blank", className: "navigation-link facebook"}, React.DOM.span({className: "icon icon-facebook-white"}), "Share on Facebook")
+                      )
+                    )
+                  )
                 )
               ), 
               React.DOM.nav({className: "page-navigation"}, 
-                React.DOM.ul({className: "navigation navigation-page"}, 
-                  React.DOM.li({className: "navigation-social"}, 
-                    React.DOM.span({className: "navigation-label"}, "Share this claim:"), 
-                    React.DOM.a({href: 'https://twitter.com/intent/tweet?text='+claim.get('headline')+'&via=emergentdotinfo&url='+encodeURIComponent(document.URL), target: "_blank", className: "navigation-link"}, React.DOM.span({className: "icon icon-twitter-round"}), "Share on Twitter"), 
-                    React.DOM.a({href: 'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(document.URL), target: "_blank", className: "navigation-link"}, React.DOM.span({className: "icon icon-facebook-round"}), "Share on Facebook")
-                  )
+                React.DOM.ul({className: "navigation navigation-page"}
                   /*<li>
                     <app.components.Modal title="Dispute this claim" trigger={<a href="#" className="navigation-link"><span className="icon icon-dispute"></span>Dispute this claim</a>}>
                       Lorem Ipsum
