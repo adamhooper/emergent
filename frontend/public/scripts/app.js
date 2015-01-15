@@ -42067,8 +42067,13 @@ module.exports = React.createClass({displayName: 'exports',
                     }.bind(this))
                   )
                   : null, 
-                  claim.get('truthiness') != 'unknown' ? React.DOM.p({className: "tracking"}, React.DOM.span({className: "tracking-header"}, "Resolved:    ", claim.get('truthinessUrl') ? React.DOM.a({href: claim.get('truthinessUrl'), target: "_blank"}, "View Article") : null, "   Added ", moment(truthinessDate).format('MMM D')), React.DOM.br(null), React.DOM.span({className: "tracking-body"}, claim.get('truthinessDescription'))) : null, 
-                  claim.get('origin') ? React.DOM.p({className: "tracking"}, React.DOM.span({className: "tracking-header"}, "Originating Source:   ", claim.get('originUrl') ? React.DOM.a({href: claim.get('originUrl'), target: "_blank"}, "View Article") : null, "   Added ", moment(originDate).format('MMM D')), React.DOM.br(null), React.DOM.span({className: "tracking-body", dangerouslySetInnerHTML: {__html: linker.link(claim.get('origin'))}})) : null
+
+
+                  claim.get('truthiness') != 'unknown' ? React.DOM.p({className: "tracking"}, React.DOM.span({className: "tracking-header"}, "Resolved", claim.get('truthinessUrl') ? React.DOM.span({className: "article-source"}, ":", React.DOM.span({className: "spacer-10"}), React.DOM.a({href: claim.get('truthinessUrl')}, claim.prettyUrl(claim.get('truthinessUrl')))) : null, 
+                  React.DOM.span({className: "spacer-10"}), "Added ", moment(truthinessDate).format('MMM D')), React.DOM.br(null), React.DOM.span({className: "tracking-body"}, claim.get('truthinessDescription'))) : null, 
+
+                  claim.get('origin') ? React.DOM.p({className: "tracking"}, React.DOM.span({className: "tracking-header"}, "Originating Source", claim.get('originUrl') ? React.DOM.span({className: "article-source"}, ":", React.DOM.span({className: "spacer-10"}), React.DOM.a({href: claim.get('originUrl')}, claim.prettyUrl())) : null, 
+                  React.DOM.span({className: "spacer-10"}), "Added ", moment(originDate).format('MMM D')), React.DOM.br(null), React.DOM.span({className: "tracking-body", dangerouslySetInnerHTML: {__html: linker.link(claim.get('origin'))}})) : null
                 )
               ), 
               React.DOM.nav({className: "page-navigation"}, 
@@ -42077,12 +42082,12 @@ module.exports = React.createClass({displayName: 'exports',
                     React.DOM.span({className: "navigation-label"}, "Share this claim:"), 
                     React.DOM.a({href: 'https://twitter.com/intent/tweet?text='+claim.get('headline')+'&via=emergentdotinfo&url='+encodeURIComponent(document.URL), target: "_blank", className: "navigation-link"}, React.DOM.span({className: "icon icon-twitter-round"}), "Share on Twitter"), 
                     React.DOM.a({href: 'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(document.URL), target: "_blank", className: "navigation-link"}, React.DOM.span({className: "icon icon-facebook-round"}), "Share on Facebook")
-                  ), 
-                  React.DOM.li(null, 
-                    app.components.Modal({title: "Dispute this claim", trigger: React.DOM.a({href: "#", className: "navigation-link"}, React.DOM.span({className: "icon icon-dispute"}), "Dispute this claim")}, 
-                      "Lorem Ipsum"
-                    )
                   )
+                  /*<li>
+                    <app.components.Modal title="Dispute this claim" trigger={<a href="#" className="navigation-link"><span className="icon icon-dispute"></span>Dispute this claim</a>}>
+                      Lorem Ipsum
+                    </app.components.Modal>
+                  </li>*/
                 )
               )
             )
@@ -42211,7 +42216,7 @@ module.exports = React.createClass({displayName: 'exports',
                                   )
                                   : null, 
                                 React.DOM.div({className: "article-content"}, 
-                                  React.DOM.h4({className: "article-list-title"}, React.DOM.span({className: 'indicator indicator-' + article.stance}), " ", React.DOM.a({href: article.url}, article.source), " - ", React.DOM.time({className: "no-wrap", dateTime: article.createdAt}, moment(article.createdAt).format('MMM D')), 
+                                  React.DOM.h4({className: "article-list-title"}, React.DOM.span({className: 'indicator indicator-' + article.stance}), " ", React.DOM.a({href: article.url}, claim.prettyUrl(article.url)), " - ", React.DOM.time({className: "no-wrap", dateTime: article.createdAt}, moment(article.createdAt).format('MMM D')), 
                                     React.DOM.span({className: "no-wrap"}, React.DOM.span({className: "shares-label"}, "Shares:"), " ", React.DOM.span({className: "shares-value"}, this.formatNumber(article.shares)))
                                     ), 
                                   React.DOM.p({className: "article-description"}, article.headline)
@@ -42227,14 +42232,14 @@ module.exports = React.createClass({displayName: 'exports',
                       )
                     )
                   ), 
-                  React.DOM.nav({className: "page-navigation"}, 
-                    React.DOM.ul({className: "navigation navigation-page"}, 
-                      React.DOM.li(null, 
-                        app.components.Modal({title: "Submit a source", trigger: React.DOM.a({href: "#", className: "navigation-link"}, React.DOM.span({className: "icon icon-submit-a-source"}), "Submit a source")}, 
-                          "Lorem Ipsum"
-                        )
-                      )
-                    )
+                  React.DOM.nav({className: "page-navigation"}
+                    /*<ul className="navigation navigation-page">
+                      <li>
+                        <app.components.Modal title="Submit a source" trigger={<a href="#" className="navigation-link"><span className="icon icon-submit-a-source"></span>Submit a source</a>}>
+                          Lorem Ipsum
+                        </app.components.Modal>
+                      </li>
+                    </ul>*/
                   )
                 )
               )
@@ -42368,7 +42373,10 @@ module.exports = React.createClass({displayName: 'exports',
 
     if (this.state.sort) {
       claims = _.sortBy(claims, function(claim) { return claim.get(this.state.sort); }, this).reverse();
+    } else {
+      claims = _.sortBy(claims, function(claim) { return claim.get('publishedAt'); }, this).reverse();
     }
+
     return claims;
   },
 
@@ -42430,8 +42438,10 @@ module.exports = React.createClass({displayName: 'exports',
                         ), 
                         React.DOM.h2({className: "article-title"}, Link({to: "claim", params: { slug: claim.get('slug')}}, claim.get('headline'))), 
                         React.DOM.div({className: "article-byline"}, 
-                          React.DOM.span({className: "article-source"}, "Originating Source: ", React.DOM.span({className: "indicator indicator-true"}, " "), React.DOM.a({href: "#"}, "The Guardian")), 
-                          React.DOM.span({className: "article-originated"}, "Added ", React.DOM.time({datetime: claim.get('createdAt')}, moment(claim.get('createdAt')).format('MMM D'))), 
+                          claim.get('originUrl') ?
+                            React.DOM.span({className: "article-source"}, "Originating Source: ", /*<span className="indicator indicator-true"> </span>*/React.DOM.a({href: claim.get('originUrl')}, claim.prettyUrl()))
+                          : null, 
+                          React.DOM.span({className: "article-originated"}, "Added ", React.DOM.time({datetime: claim.get('publishedAt')}, moment(claim.get('publishedAt')).format('MMM D'))), 
                           React.DOM.span({className: "article-shares hidden-desktop"}, React.DOM.span({className: "label"}, "Shares:"), " ", this.formatNumber(claim.get('nShares')))
                         )
                       ), 
@@ -42462,12 +42472,12 @@ module.exports = React.createClass({displayName: 'exports',
           ), 
           React.DOM.nav({className: "page-navigation"}, 
             React.DOM.ul({className: "navigation navigation-page"}, 
-              React.DOM.li(null, 
-                app.components.Modal({title: "Submit a claim", trigger: React.DOM.a({href: "#submit-a-claim", className: "navigation-link"}, "Submit a claim")}, 
-                  "Lorem Ipsum"
-                ), 
-                React.DOM.p(null, "Lorem ipsum dolor sit amet pro patria mori through our special tool.")
-              ), 
+              /*<li>
+                <app.components.Modal title="Submit a claim" trigger={<a href="#submit-a-claim" className="navigation-link">Submit a claim</a>}>
+                  Lorem Ipsum
+                </app.components.Modal>
+                <p>Lorem ipsum dolor sit amet pro patria mori through our special tool.</p>
+              </li>*/
               React.DOM.li(null, 
                 React.DOM.a({href: "http://eepurl.com/3mb9T", className: "navigation-link"}, "Sign up for our newsletter"), 
                 React.DOM.p(null, "Our weekly newsletter is the best way to get updates on the rumors we're tracking. We never sell or share your info.")
@@ -42499,7 +42509,7 @@ module.exports = React.createClass({displayName: 'exports',
   },
 
   componentWillReceiveProps: function(props) {
-    console.log(props);
+    // console.log(props);
     this.setState({
       search: props.search,
       searchToggle: !!props.search
@@ -42966,7 +42976,20 @@ module.exports = Backbone.Model.extend({
 
   domain: function(article) {
     return $('<a>', { href: article.url })[0].hostname;
-  }
+  },
+
+  prettyUrl: function(url) {
+    if (!url) {
+      var url = this.get('originUrl');
+    }
+    var match = url.match(/:\/\/(www[0-9]?\.)?(.[^/:]+)/i);
+    if (match != null && match.length > 2 &&
+      typeof match[2] === 'string' && match[2].length > 0) {
+        return match[2];
+      } else {
+        return null;
+      }
+    },
 });
 
 },{"backbone":2,"jquery":10,"underscore":198}]},{},[199]);

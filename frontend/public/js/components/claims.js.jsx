@@ -91,7 +91,10 @@ module.exports = React.createClass({
 
     if (this.state.sort) {
       claims = _.sortBy(claims, function(claim) { return claim.get(this.state.sort); }, this).reverse();
+    } else {
+      claims = _.sortBy(claims, function(claim) { return claim.get('publishedAt'); }, this).reverse();
     }
+
     return claims;
   },
 
@@ -153,8 +156,10 @@ module.exports = React.createClass({
                         </div>
                         <h2 className="article-title"><Link to="claim" params={{ slug: claim.get('slug') }}>{claim.get('headline')}</Link></h2>
                         <div className="article-byline">
-                          <span className="article-source">Originating Source: <span className="indicator indicator-true"> </span><a href="#">The Guardian</a></span>
-                          <span className="article-originated">Added <time datetime={claim.get('createdAt')}>{moment(claim.get('createdAt')).format('MMM D')}</time></span>
+                          {claim.get('originUrl') ?
+                            <span className="article-source">Originating Source: {/*<span className="indicator indicator-true"> </span>*/}<a href={claim.get('originUrl')}>{claim.prettyUrl()}</a></span>
+                          : null }
+                          <span className="article-originated">Added <time datetime={claim.get('publishedAt')}>{moment(claim.get('publishedAt')).format('MMM D')}</time></span>
                           <span className="article-shares hidden-desktop"><span className="label">Shares:</span> {this.formatNumber(claim.get('nShares'))}</span>
                         </div>
                       </header>
@@ -185,12 +190,12 @@ module.exports = React.createClass({
           </div>
           <nav className="page-navigation">
             <ul className="navigation navigation-page">
-              <li>
+              {/*<li>
                 <app.components.Modal title="Submit a claim" trigger={<a href="#submit-a-claim" className="navigation-link">Submit a claim</a>}>
                   Lorem Ipsum
                 </app.components.Modal>
                 <p>Lorem ipsum dolor sit amet pro patria mori through our special tool.</p>
-              </li>
+              </li>*/}
               <li>
                 <a href="http://eepurl.com/3mb9T" className="navigation-link">Sign up for our newsletter</a>
                 <p>Our weekly newsletter is the best way to get updates on the rumors we're tracking. We never sell or share your info.</p>

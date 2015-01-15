@@ -194,8 +194,13 @@ module.exports = React.createClass({
                     }.bind(this))}
                   </div>
                   : null}
-                  {claim.get('truthiness') != 'unknown' ? <p className="tracking"><span className="tracking-header">Resolved:&nbsp;&nbsp;  {claim.get('truthinessUrl') ? <a href={claim.get('truthinessUrl')} target="_blank">View Article</a> : null} &nbsp;&nbsp;Added {moment(truthinessDate).format('MMM D')}</span><br /><span className="tracking-body">{claim.get('truthinessDescription')}</span></p> : null}
-                  {claim.get('origin') ? <p className="tracking"><span className="tracking-header">Originating Source:&nbsp;&nbsp; {claim.get('originUrl') ? <a href={claim.get('originUrl')} target="_blank">View Article</a> : null} &nbsp;&nbsp;Added {moment(originDate).format('MMM D')}</span><br /><span className="tracking-body" dangerouslySetInnerHTML={{__html: linker.link(claim.get('origin'))}}/></p> : null}
+
+
+                  {claim.get('truthiness') != 'unknown' ? <p className="tracking"><span className="tracking-header">Resolved{claim.get('truthinessUrl') ? <span className="article-source">:<span className="spacer-10"></span><a href={claim.get('truthinessUrl')}>{claim.prettyUrl(claim.get('truthinessUrl'))}</a></span> : null }
+                  <span className="spacer-10"></span>Added {moment(truthinessDate).format('MMM D')}</span><br /><span className="tracking-body">{claim.get('truthinessDescription')}</span></p> : null}
+
+                  {claim.get('origin') ? <p className="tracking"><span className="tracking-header">Originating Source{claim.get('originUrl') ? <span className="article-source">:<span className="spacer-10"></span><a href={claim.get('originUrl')}>{claim.prettyUrl()}</a></span> : null }
+                  <span className="spacer-10"></span>Added {moment(originDate).format('MMM D')}</span><br /><span className="tracking-body" dangerouslySetInnerHTML={{__html: linker.link(claim.get('origin'))}}/></p> : null}
                 </header>
               </div>
               <nav className="page-navigation">
@@ -205,11 +210,11 @@ module.exports = React.createClass({
                     <a href={'https://twitter.com/intent/tweet?text='+claim.get('headline')+'&via=emergentdotinfo&url='+encodeURIComponent(document.URL)} target="_blank" className="navigation-link"><span className="icon icon-twitter-round"></span>Share on Twitter</a>
                     <a href={'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(document.URL)} target="_blank" className="navigation-link"><span className="icon icon-facebook-round"></span>Share on Facebook</a>
                   </li>
-                  <li>
+                  {/*<li>
                     <app.components.Modal title="Dispute this claim" trigger={<a href="#" className="navigation-link"><span className="icon icon-dispute"></span>Dispute this claim</a>}>
                       Lorem Ipsum
                     </app.components.Modal>
-                  </li>
+                  </li>*/}
                 </ul>
               </nav>
             </div>
@@ -338,7 +343,7 @@ module.exports = React.createClass({
                                   </div>
                                   : null }
                                 <div className="article-content">
-                                  <h4 className="article-list-title"><span className={'indicator indicator-' + article.stance}></span> <a href={article.url}>{article.source}</a> - <time className="no-wrap" dateTime={article.createdAt}>{moment(article.createdAt).format('MMM D')}</time>
+                                  <h4 className="article-list-title"><span className={'indicator indicator-' + article.stance}></span> <a href={article.url}>{claim.prettyUrl(article.url)}</a> - <time className="no-wrap" dateTime={article.createdAt}>{moment(article.createdAt).format('MMM D')}</time>
                                     <span className="no-wrap"><span className="shares-label">Shares:</span> <span className="shares-value">{this.formatNumber(article.shares)}</span></span>
                                     </h4>
                                   <p className="article-description">{article.headline}</p>
@@ -355,13 +360,13 @@ module.exports = React.createClass({
                     </section>
                   </div>
                   <nav className="page-navigation">
-                    <ul className="navigation navigation-page">
+                    {/*<ul className="navigation navigation-page">
                       <li>
                         <app.components.Modal title="Submit a source" trigger={<a href="#" className="navigation-link"><span className="icon icon-submit-a-source"></span>Submit a source</a>}>
                           Lorem Ipsum
                         </app.components.Modal>
                       </li>
-                    </ul>
+                    </ul>*/}
                   </nav>
                 </div>
               </div>

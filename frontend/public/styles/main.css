@@ -531,6 +531,10 @@ th {
 .no-wrap {
   white-space: nowrap; }
 
+.spacer-10 {
+  width: 10px;
+  display: inline-block; }
+
 @media (min-width: 0) {
   .container,
   .page-content {
