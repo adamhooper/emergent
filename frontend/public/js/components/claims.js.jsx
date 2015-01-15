@@ -197,19 +197,13 @@ module.exports = React.createClass({
                 <p>Lorem ipsum dolor sit amet pro patria mori through our special tool.</p>
               </li>*/}
               <li>
-                {/*<a href="http://eepurl.com/3mb9T" className="navigation-link">Sign up for our newsletter</a>*/}
                 <strong>Sign up for our newsletter</strong>
                 <p>Our weekly newsletter is the best way to get updates on the rumors we're tracking. We never sell or share your info.</p>
                 <div id="mc_embed_signup">
                   <form action="//emergent.us2.list-manage.com/subscribe/post?u=657b595bbd3c63e045787f019&amp;id=80df098e56" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" target="_blank">
-                    <div id="mc_embed_signup_scroll">
-                      <div className="mc-field-group">
-                        <label for="mce-EMAIL">Email Address</label>
-                        <input type="email" name="EMAIL" id="mce-EMAIL"/>
-                      </div>
-                      <input type="hidden" name="b_657b595bbd3c63e045787f019_80df098e56" tabindex="-1" value=""/>
-                      <input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" className="button"/>
-                    </div>
+                    <input type="email" name="EMAIL" id="mce-EMAIL" placeholder="Your Email"/>
+                    <input type="hidden" name="b_657b595bbd3c63e045787f019_80df098e56" tabindex="-1" value=""/>
+                    <button type="submit" name="subscribe" className="button" id="mc-embedded-subscribe">Sign Up</button>
                   </form>
                 </div>
               </li>

@@ -42500,19 +42500,13 @@ module.exports = React.createClass({displayName: 'exports',
                 <p>Lorem ipsum dolor sit amet pro patria mori through our special tool.</p>
               </li>*/
               React.DOM.li(null, 
-                /*<a href="http://eepurl.com/3mb9T" className="navigation-link">Sign up for our newsletter</a>*/
                 React.DOM.strong(null, "Sign up for our newsletter"), 
                 React.DOM.p(null, "Our weekly newsletter is the best way to get updates on the rumors we're tracking. We never sell or share your info."), 
                 React.DOM.div({id: "mc_embed_signup"}, 
                   React.DOM.form({action: "//emergent.us2.list-manage.com/subscribe/post?u=657b595bbd3c63e045787f019&id=80df098e56", method: "post", id: "mc-embedded-subscribe-form", name: "mc-embedded-subscribe-form", target: "_blank"}, 
-                    React.DOM.div({id: "mc_embed_signup_scroll"}, 
-                      React.DOM.div({className: "mc-field-group"}, 
-                        React.DOM.label({for: "mce-EMAIL"}, "Email Address"), 
-                        React.DOM.input({type: "email", name: "EMAIL", id: "mce-EMAIL"})
-                      ), 
-                      React.DOM.input({type: "hidden", name: "b_657b595bbd3c63e045787f019_80df098e56", tabindex: "-1", value: ""}), 
-                      React.DOM.input({type: "submit", value: "Subscribe", name: "subscribe", id: "mc-embedded-subscribe", className: "button"})
-                    )
+                    React.DOM.input({type: "email", name: "EMAIL", id: "mce-EMAIL", placeholder: "Your Email"}), 
+                    React.DOM.input({type: "hidden", name: "b_657b595bbd3c63e045787f019_80df098e56", tabindex: "-1", value: ""}), 
+                    React.DOM.button({type: "submit", name: "subscribe", className: "button", id: "mc-embedded-subscribe"}, "Sign Up")
                   )
                 )
               )

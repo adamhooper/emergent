@@ -1,4 +1,55 @@
-.mailchimp-title {
-  margin-top: 0;
-  margin-bottom: .5em;
+#mc_embed_signup {
+  margin-top: 1em;
+  position: relative;
+  padding-right: 75px;
+
+  input,
+  .button {
+    height: 33px;
+    font-size: 12px;
+    box-sizing: border-box;
+    border-radius: 0;
+  }
+
+  input {
+    -webkit-appearance: none;
+    border: none;
+    margin: 0;
+    background-color: #FFF;
+    color: #656565;
+    border: 1px solid #cccccc;
+    width: 100%;
+    padding: 0.2em 1em 0;
+    line-height: 1;
+    display: block;
+
+    &:focus {
+      outline: none;
+      border-color: #999;
+    }
+  }
+
+  .button {
+    transition: background .15s ease-in-out;
+    -webkit-appearance: none;
+    border: none;
+    margin: 0;
+    background-color: #e0e0e0;
+    color: #656565;
+    font-weight: weight(bold);
+    border: 1px solid transparent;
+    width: 71px;
+    text-align: center;
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding: 0.1em 0 0;
+    vertical-align: top;
+    line-height: 1;
+
+    &:hover {
+      background-color: #d6d6d6;
+      color: #656565;
+    }
+  }
 }
