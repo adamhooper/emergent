@@ -16,7 +16,6 @@ module.exports = React.createClass({
   },
 
   componentWillReceiveProps: function(props) {
-    // console.log(props);
     this.setState({
       search: props.search,
       searchToggle: !!props.search
