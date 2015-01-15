@@ -31,21 +31,30 @@ module.exports = React.createClass({
   },
 
   componentWillMount: function() {
-    var claim = this.props.claims.findWhere({ slug: this.props.params.slug });
-    this.subscribeTo(claim);
-    this.setState({
-      claim: claim,
-      populated: false
-    });
-    claim.populate().done(function() {
-      this.setState({ populated: true });
-    }.bind(this));
-    window.claim = claim;
+    this.update(this.props.params.slug);
+  },
+
+  componentWillReceiveProps: function(props) {
+    this.update(props.params.slug);
+  },
+
+  update: function(slug) {
+    if (slug != this.state.slug) {
+      var claim = this.props.claims.findWhere({ slug: slug });
+      this.subscribeTo(claim);
+      this.setState({
+        slug: slug,
+        claim: claim,
+        populated: false
+      });
+      claim.populate().done(function() {
+        this.setState({ populated: true });
+      }.bind(this));
+    }
   },
 
   componentDidMount: function() {
     this.setState({ barChartWidth: 926 });
-    // addthis.toolbox('.addthis_toolbox');
   },
 
   setFilter: function(filter) {
@@ -169,6 +178,7 @@ module.exports = React.createClass({
     var resolvedClaim = claim.get('truthinessUrl');
 
     var originClaim = claim.get('originUrl');
+    var nextClaim = claim.nextByCategory();
 
     return (
 
@@ -323,10 +333,7 @@ module.exports = React.createClass({
                           var jsx = (
                             <li key={article.id}>
                               {date !== lastDate ?
-                              <div className="article-header-date">
-                                <hr/>
-                                <span>{moment(article.createdAt).calendar()}</span>
-                              </div>
+                              <span className="article-header-date">{moment(article.createdAt).calendar()}</span>
                               : null }
                               <article className="article with-stance">
                                 {resolvedClaim === article.url ?
@@ -346,7 +353,7 @@ module.exports = React.createClass({
                                   </div>
                                   : null }
                                 <div className="article-content">
-                                  <h4 className="article-list-title"><span className={'indicator indicator-' + article.stance}></span> <a href={article.url}>{claim.prettyUrl(article.url)}</a><span className="spacer-10"></span>{/*- <time className="no-wrap" dateTime={article.createdAt}>{moment(article.createdAt).format('MMM D')}</time>*/}
+                                  <h4 className="article-list-title"><span className={'indicator indicator-' + article.stance}></span> <a href={article.url}>{claim.prettyUrl(article.url)}</a> - <time className="no-wrap" dateTime={article.createdAt}>{moment(article.createdAt).format('MMM D')}</time>
                                     <span className="no-wrap"><span className="shares-label">Shares:</span> <span className="shares-value">{this.formatNumber(article.shares)}</span></span>
                                     </h4>
                                   <p className="article-description">{article.headline}</p>
@@ -392,17 +399,20 @@ module.exports = React.createClass({
             </div>
           </nav>
 
+          {nextClaim ?
           <div className="claim-footer-next">
             <div className="container">
-              <span className="next-label">Next in World News:</span>
+              <span className="next-label">Next in {claim.get('categories')[0]}:</span>
               <div className="next-link-holder">
                 <div className={'stance stance-small stance-true'}>
                   <span className="stance-value">True</span>
                 </div>
-                <a href="#">An armed convoy is moving toward the Ukrainian border</a>
+                <Link to="claim" params={{ slug: nextClaim.get('slug') }}>{nextClaim.get('headline')}</Link>
               </div>
             </div>
           </div>
+          : null}
+
         </div>
       </div>
     );
