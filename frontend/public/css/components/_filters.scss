@@ -10,6 +10,11 @@
   &.articles-filtering {
     background-color: #fafafa;
     @extend %page-gutters;
+
+    @include breakpoint($breakpoint-mobile-only) {
+      padding-left: 0;
+      padding-right: 0;
+    }
   }
 
   &.sources-filtering {
@@ -28,6 +33,10 @@
   .navigation-filtering {
     float: left;
     margin-left: -2px;
+
+    @include breakpoint($breakpoint-mobile-only) {
+      @include gutter($gutters-mobile inside);
+    }
 
     li {
       float: left;
@@ -60,12 +69,17 @@
     }
 
     + .navigation-filtering {
-      padding-left: 11px;
       margin-left: 0;
 
-      border-left: 1px solid palette(border, base);
+      @include breakpoint($breakpoint-mobile-only) {
+        float: none;
+        clear: both;
+        border-top: 1px solid palette(border, base);
+      }
 
-      @include breakpoint($breakpoint-mobile-large) {
+      @include breakpoint($breakpoint-tablet) {
+        padding-left: 11px;
+        border-left: 1px solid palette(border, base);
         border-right: 1px solid palette(border, base);
       }
 

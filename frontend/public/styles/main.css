@@ -1129,6 +1129,11 @@ ul.credits {
   .articles-filtering.articles-filtering,
   .sources-filtering.articles-filtering {
     background-color: #fafafa; }
+    @media (min-width: 0) and (max-width: 48em) {
+      .articles-filtering.articles-filtering,
+      .sources-filtering.articles-filtering {
+        padding-left: 0;
+        padding-right: 0; } }
   .articles-filtering.sources-filtering,
   .sources-filtering.sources-filtering {
     background-color: #fdfdfd; }
@@ -1145,6 +1150,11 @@ ul.credits {
   .sources-filtering .navigation-filtering {
     float: left;
     margin-left: -2px; }
+    @media (min-width: 0) and (max-width: 48em) {
+      .articles-filtering .navigation-filtering,
+      .sources-filtering .navigation-filtering {
+        padding-left: 15px;
+        padding-right: 15px; } }
     .articles-filtering .navigation-filtering li,
     .sources-filtering .navigation-filtering li {
       float: left;
@@ -1172,12 +1182,18 @@ ul.credits {
         border-bottom-color: #323232; }
     .articles-filtering .navigation-filtering + .navigation-filtering,
     .sources-filtering .navigation-filtering + .navigation-filtering {
-      padding-left: 11px;
-      margin-left: 0;
-      border-left: 1px solid #ebebeb; }
-      @media (min-width: 30em) {
+      margin-left: 0; }
+      @media (min-width: 0) and (max-width: 48em) {
         .articles-filtering .navigation-filtering + .navigation-filtering,
         .sources-filtering .navigation-filtering + .navigation-filtering {
+          float: none;
+          clear: both;
+          border-top: 1px solid #ebebeb; } }
+      @media (min-width: 48em) {
+        .articles-filtering .navigation-filtering + .navigation-filtering,
+        .sources-filtering .navigation-filtering + .navigation-filtering {
+          padding-left: 11px;
+          border-left: 1px solid #ebebeb;
           border-right: 1px solid #ebebeb; } }
       @media (min-width: 48em) {
         .articles-filtering .navigation-filtering + .navigation-filtering,
@@ -1869,7 +1885,7 @@ button.navigation-link {
         padding: 2em 1em 1em 2em; } }
 @media (min-width: 48em) {
   .page-timeline .articles li {
-    margin-left: 9.8em;
+    margin-left: 9.6em;
     border-left: 1px solid #ebebeb; } }
 .page-timeline .articles li:first-child .article-header-date hr {
   display: none; }
