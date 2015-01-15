@@ -239,7 +239,7 @@ module.exports = React.createClass({
                   { claim.articlesByStance('for').length > 0 ?
                     <div onClick={this.setFilter.bind(this, 'for')} className={'card card-category card-category-for' + (this.state.filter === 'for' ? ' is-selected' : '')}>
                       <div className="card-header">
-                        <p className="card-title">For{claim.get('truthiness') === 'true' ? <span className="icon icon-confirmed">Confirmed</span> : null}</p>
+                        <p className="card-title">For{claim.get('truthiness') === 'true' ? <span className="icon icon-confirmed-stance">Confirmed</span> : null}</p>
                       </div>
                       <div className="card-content">
                         <div className="sources"><span className="sources-count">{claim.articlesByStance('for').length}</span><span className="indicator-holder" dangerouslySetInnerHTML={{__html: Array(claim.articlesByStance('for').length + 1).join('<span class="indicator indicator-true"></span>')}}/></div>
@@ -254,7 +254,7 @@ module.exports = React.createClass({
                   { claim.articlesByStance('against').length > 0 ?
                     <div onClick={this.setFilter.bind(this, 'against')} className={'card card-category card-category-against' + (this.state.filter === 'against' ? ' is-selected' : '')}>
                       <div className="card-header">
-                        <p className="card-title">Against{claim.get('truthiness') === 'false' ? <span className="icon icon-confirmed">Confirmed</span> : null}</p>
+                        <p className="card-title">Against{claim.get('truthiness') === 'false' ? <span className="icon-confirmed-stance">Confirmed</span> : null}</p>
                       </div>
                       <div className="card-content">
                         <div className="sources"><span className="sources-count">{claim.articlesByStance('against').length}</span><span className="indicator-holder" dangerouslySetInnerHTML={{__html: Array(claim.articlesByStance('against').length + 1).join('<span class="indicator indicator-false"></span>')}}/></div>

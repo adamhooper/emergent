@@ -11,31 +11,35 @@
 .site-header-primary {
   @extend %page-gutters;
   height: 3.3em;
-  padding-top: 1.1em;
+  padding-top: 1em;
 
   @include breakpoint($breakpoint-tablet) {
-    padding-top: 2.7em;
+    padding-top: 2em;
     height: 6em;
+
+    .site-menu {
+      padding-top: 1.1em;
+    }
   }
 }
 
 .site-logo {
   background: image-url('emergent.png') no-repeat;
   background-size: contain;
-  height: 21px;
+  height: 22px;
   line-height: 1;
   margin-bottom: 0;
   padding-top: 0.35em;
   text-indent: -9999px;
-  width: 99px;
+  width: 74px;
   display: block;
 
   @include image-2x('emergent@2x.png');
 
   @include breakpoint($breakpoint-tablet) {
-    height: 28px;
+    // height: 42px;
     padding-top: 0;
-    width: 122px;
+    // width: 141px;
   }
 
   a {

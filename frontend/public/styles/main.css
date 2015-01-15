@@ -712,6 +712,14 @@ button:active, button:focus {
   width: 15px;
   vertical-align: top; }
 
+.icon-confirmed-stance {
+  background-image: url('/images/verified-stance.svg');
+  background-size: 15px 15px;
+  display: inline-block;
+  height: 15px;
+  width: 15px;
+  vertical-align: top; }
+
 .icon-added {
   background-image: url('/images/originated.svg');
   background-size: 15px 15px;
@@ -1476,30 +1484,30 @@ button.navigation-link {
 
 .site-header-primary {
   height: 3.3em;
-  padding-top: 1.1em; }
+  padding-top: 1em; }
   @media (min-width: 48em) {
     .site-header-primary {
-      padding-top: 2.7em;
-      height: 6em; } }
+      padding-top: 2em;
+      height: 6em; }
+      .site-header-primary .site-menu {
+        padding-top: 1.1em; } }
 
 .site-logo {
   background: url('/images/emergent.png') no-repeat;
   background-size: contain;
-  height: 21px;
+  height: 22px;
   line-height: 1;
   margin-bottom: 0;
   padding-top: 0.35em;
   text-indent: -9999px;
-  width: 99px;
+  width: 74px;
   display: block; }
   @media (min--moz-device-pixel-ratio: 1.3), (-o-min-device-pixel-ratio: 2.6 / 2), (-webkit-min-device-pixel-ratio: 1.3), (min-device-pixel-ratio: 1.3), (min-resolution: 1.3dppx) {
     .site-logo {
       background-image: url('/images/emergent@2x.png'); } }
   @media (min-width: 48em) {
     .site-logo {
-      height: 28px;
-      padding-top: 0;
-      width: 122px; } }
+      padding-top: 0; } }
   .site-logo a {
     color: #ffffff;
     text-decoration: none; }
