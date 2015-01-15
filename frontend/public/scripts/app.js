@@ -42196,7 +42196,10 @@ module.exports = React.createClass({displayName: 'exports',
                           var jsx = (
                             React.DOM.li({key: article.id}, 
                               date !== lastDate ?
-                              React.DOM.span({className: "article-header-date"}, moment(article.createdAt).calendar())
+                              React.DOM.div({className: "article-header-date"}, 
+                                React.DOM.hr(null), 
+                                React.DOM.span(null, moment(article.createdAt).calendar())
+                              )
                               : null, 
                               React.DOM.article({className: "article with-stance"}, 
                                 resolvedClaim === article.url ?
@@ -42216,7 +42219,7 @@ module.exports = React.createClass({displayName: 'exports',
                                   )
                                   : null, 
                                 React.DOM.div({className: "article-content"}, 
-                                  React.DOM.h4({className: "article-list-title"}, React.DOM.span({className: 'indicator indicator-' + article.stance}), " ", React.DOM.a({href: article.url}, claim.prettyUrl(article.url)), " - ", React.DOM.time({className: "no-wrap", dateTime: article.createdAt}, moment(article.createdAt).format('MMM D')), 
+                                  React.DOM.h4({className: "article-list-title"}, React.DOM.span({className: 'indicator indicator-' + article.stance}), " ", React.DOM.a({href: article.url}, claim.prettyUrl(article.url)), React.DOM.span({className: "spacer-10"}), /*- <time className="no-wrap" dateTime={article.createdAt}>{moment(article.createdAt).format('MMM D')}</time>*/
                                     React.DOM.span({className: "no-wrap"}, React.DOM.span({className: "shares-label"}, "Shares:"), " ", React.DOM.span({className: "shares-value"}, this.formatNumber(article.shares)))
                                     ), 
                                   React.DOM.p({className: "article-description"}, article.headline)

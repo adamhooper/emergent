@@ -1037,14 +1037,22 @@ ul.credits {
     .claim-footer-next .container {
       padding-left: 10.2em; } }
 
+.cards {
+  max-width: 445px; }
+
 .card-categories {
   display: table;
   border: 1px solid #ebebeb;
   border-radius: 5px;
   width: 100%;
-  max-width: 445px;
   background-clip: padding-box;
   background-color: #ffffff; }
+  .card-categories.card-categories-1 {
+    width: 33.3%; }
+  .card-categories.card-categories-2 {
+    width: 66.6%; }
+  .card-categories.card-categories-3 {
+    width: 100%; }
 
 .card-category {
   display: table-cell;
@@ -1808,10 +1816,10 @@ button.navigation-link {
     padding-right: 15px; } }
 .page-timeline .article {
   position: relative;
-  padding: 1em 0 1em; }
+  padding: 0 0 1.4em; }
   @media (min-width: 48em) {
     .page-timeline .article {
-      padding: 1em 1em 1em 2em; } }
+      padding: 0 1em 1.2em 2em; } }
   .page-timeline .article .article-description {
     margin-bottom: 0; }
   .page-timeline .article .article-list-title {
@@ -1843,21 +1851,28 @@ button.navigation-link {
       left: 100%;
       top: 50%; }
 .page-timeline .article-header-date {
-  border-top: 1px solid #ebebeb;
-  display: block;
-  font-size: 0.95em;
-  font-weight: 500;
-  padding: 1.5em 0 0.5em; }
-  @media (min-width: 48em) {
-    .page-timeline .article-header-date {
-      padding: 1.5em 1em 0.5em 2em; } }
+  overflow: auto; }
+  .page-timeline .article-header-date hr {
+    border: none;
+    width: 100%;
+    height: 1px;
+    background-color: #ebebeb;
+    margin: 15px 0 5px;
+    padding: 0; }
+  .page-timeline .article-header-date span {
+    display: block;
+    font-size: 0.95em;
+    font-weight: 500;
+    padding: 2em 0 1em; }
+    @media (min-width: 48em) {
+      .page-timeline .article-header-date span {
+        padding: 2em 1em 1em 2em; } }
 @media (min-width: 48em) {
   .page-timeline .articles li {
     margin-left: 9.8em;
     border-left: 1px solid #ebebeb; } }
-.page-timeline .articles li:first-child .article-header-date {
-  border-top: none;
-  margin-top: 0; }
+.page-timeline .articles li:first-child .article-header-date hr {
+  display: none; }
 
 .modal-open {
   overflow: hidden; }

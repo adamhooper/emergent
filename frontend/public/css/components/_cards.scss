@@ -1,7 +1,9 @@
 //
 // Multiple cards
 
-.cards {}
+.cards {
+  max-width: 445px;
+}
 
 .cards-section {
   //@extend %clearfix;
@@ -12,9 +14,20 @@
   border: 1px solid palette(border, base);
   border-radius: 5px;
   width: 100%;
-  max-width: 445px;
   background-clip: padding-box;
   background-color: palette(base, lighter);
+
+  &.card-categories-1 {
+    width: 33.3%;
+  }
+
+  &.card-categories-2 {
+    width: 66.6%;
+  }
+
+  &.card-categories-3 {
+    width: 100%;
+  }
 }
 
 .card-category {

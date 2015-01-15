@@ -6,10 +6,10 @@
   .article {
     position: relative;
     @extend %clearfix;
-    padding: 1em 0 1em;
+    padding: 0 0 1.4em;
 
     @include breakpoint($breakpoint-tablet) {
-      padding: 1em 1em 1em 2em;
+      padding: 0 1em 1.2em 2em;
     }
 
     .article-description {
@@ -55,15 +55,25 @@
   }
 
   .article-header-date {
-    border-top: 1px solid palette(border, base);
-    display: block;
-    font-size: font(sm);
-    font-weight: weight(medium);
+    overflow: auto;
+    hr {
+      border: none;
+      width: 100%;
+      height: 1px;
+      background-color: palette(border, base);
+      margin: 15px 0 5px;
+      padding: 0;
+    }
 
-    padding: 1.5em 0 0.5em;
+    span {
+      display: block;
+      font-size: font(sm);
+      font-weight: weight(medium);
+      padding: 2em 0 1em;
 
-    @include breakpoint($breakpoint-tablet) {
-      padding: 1.5em 1em 0.5em 2em;
+      @include breakpoint($breakpoint-tablet) {
+        padding: 2em 1em 1em 2em;
+      }
     }
   }
 
@@ -76,8 +86,9 @@
       }
       li:first-child {
         .article-header-date {
-          border-top: none;
-          margin-top: 0;
+          hr {
+            display: none;
+          }
         }
       }
   }
