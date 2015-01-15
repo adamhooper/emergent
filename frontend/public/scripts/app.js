@@ -41904,21 +41904,30 @@ module.exports = React.createClass({displayName: 'exports',
   },
 
   componentWillMount: function() {
-    var claim = this.props.claims.findWhere({ slug: this.props.params.slug });
-    this.subscribeTo(claim);
-    this.setState({
-      claim: claim,
-      populated: false
-    });
-    claim.populate().done(function() {
-      this.setState({ populated: true });
-    }.bind(this));
-    window.claim = claim;
+    this.update(this.props.params.slug);
+  },
+
+  componentWillReceiveProps: function(props) {
+    this.update(props.params.slug);
+  },
+
+  update: function(slug) {
+    if (slug != this.state.slug) {
+      var claim = this.props.claims.findWhere({ slug: slug });
+      this.subscribeTo(claim);
+      this.setState({
+        slug: slug,
+        claim: claim,
+        populated: false
+      });
+      claim.populate().done(function() {
+        this.setState({ populated: true });
+      }.bind(this));
+    }
   },
 
   componentDidMount: function() {
     this.setState({ barChartWidth: 926 });
-    // addthis.toolbox('.addthis_toolbox');
   },
 
   setFilter: function(filter) {
@@ -42042,6 +42051,7 @@ module.exports = React.createClass({displayName: 'exports',
     var resolvedClaim = claim.get('truthinessUrl');
 
     var originClaim = claim.get('originUrl');
+    var nextClaim = claim.nextByCategory();
 
     return (
 
@@ -42112,7 +42122,7 @@ module.exports = React.createClass({displayName: 'exports',
                    claim.articlesByStance('for').length > 0 ?
                     React.DOM.div({onClick: this.setFilter.bind(this, 'for'), className: 'card card-category card-category-for' + (this.state.filter === 'for' ? ' is-selected' : '')}, 
                       React.DOM.div({className: "card-header"}, 
-                        React.DOM.p({className: "card-title"}, "For", claim.get('truthiness') === 'true' ? React.DOM.span({className: "icon icon-confirmed"}, "Confirmed") : null)
+                        React.DOM.p({className: "card-title"}, "For", claim.get('truthiness') === 'true' ? React.DOM.span({className: "icon icon-confirmed-stance"}, "Confirmed") : null)
                       ), 
                       React.DOM.div({className: "card-content"}, 
                         React.DOM.div({className: "sources"}, React.DOM.span({className: "sources-count"}, claim.articlesByStance('for').length), React.DOM.span({className: "indicator-holder", dangerouslySetInnerHTML: {__html: Array(claim.articlesByStance('for').length + 1).join('<span class="indicator indicator-true"></span>')}})), 
@@ -42127,7 +42137,7 @@ module.exports = React.createClass({displayName: 'exports',
                    claim.articlesByStance('against').length > 0 ?
                     React.DOM.div({onClick: this.setFilter.bind(this, 'against'), className: 'card card-category card-category-against' + (this.state.filter === 'against' ? ' is-selected' : '')}, 
                       React.DOM.div({className: "card-header"}, 
-                        React.DOM.p({className: "card-title"}, "Against", claim.get('truthiness') === 'false' ? React.DOM.span({className: "icon icon-confirmed"}, "Confirmed") : null)
+                        React.DOM.p({className: "card-title"}, "Against", claim.get('truthiness') === 'false' ? React.DOM.span({className: "icon-confirmed-stance"}, "Confirmed") : null)
                       ), 
                       React.DOM.div({className: "card-content"}, 
                         React.DOM.div({className: "sources"}, React.DOM.span({className: "sources-count"}, claim.articlesByStance('against').length), React.DOM.span({className: "indicator-holder", dangerouslySetInnerHTML: {__html: Array(claim.articlesByStance('against').length + 1).join('<span class="indicator indicator-false"></span>')}})), 
@@ -42196,10 +42206,7 @@ module.exports = React.createClass({displayName: 'exports',
                           var jsx = (
                             React.DOM.li({key: article.id}, 
                               date !== lastDate ?
-                              React.DOM.div({className: "article-header-date"}, 
-                                React.DOM.hr(null), 
-                                React.DOM.span(null, moment(article.createdAt).calendar())
-                              )
+                              React.DOM.span({className: "article-header-date"}, moment(article.createdAt).calendar())
                               : null, 
                               React.DOM.article({className: "article with-stance"}, 
                                 resolvedClaim === article.url ?
@@ -42219,7 +42226,7 @@ module.exports = React.createClass({displayName: 'exports',
                                   )
                                   : null, 
                                 React.DOM.div({className: "article-content"}, 
-                                  React.DOM.h4({className: "article-list-title"}, React.DOM.span({className: 'indicator indicator-' + article.stance}), " ", React.DOM.a({href: article.url}, claim.prettyUrl(article.url)), React.DOM.span({className: "spacer-10"}), /*- <time className="no-wrap" dateTime={article.createdAt}>{moment(article.createdAt).format('MMM D')}</time>*/
+                                  React.DOM.h4({className: "article-list-title"}, React.DOM.span({className: 'indicator indicator-' + article.stance}), " ", React.DOM.a({href: article.url}, claim.prettyUrl(article.url)), " - ", React.DOM.time({className: "no-wrap", dateTime: article.createdAt}, moment(article.createdAt).format('MMM D')), 
                                     React.DOM.span({className: "no-wrap"}, React.DOM.span({className: "shares-label"}, "Shares:"), " ", React.DOM.span({className: "shares-value"}, this.formatNumber(article.shares)))
                                     ), 
                                   React.DOM.p({className: "article-description"}, article.headline)
@@ -42265,17 +42272,20 @@ module.exports = React.createClass({displayName: 'exports',
             )
           ), 
 
+          nextClaim ?
           React.DOM.div({className: "claim-footer-next"}, 
             React.DOM.div({className: "container"}, 
-              React.DOM.span({className: "next-label"}, "Next in World News:"), 
+              React.DOM.span({className: "next-label"}, "Next in ", claim.get('categories')[0], ":"), 
               React.DOM.div({className: "next-link-holder"}, 
                 React.DOM.div({className: 'stance stance-small stance-true'}, 
                   React.DOM.span({className: "stance-value"}, "True")
                 ), 
-                React.DOM.a({href: "#"}, "An armed convoy is moving toward the Ukrainian border")
+                Link({to: "claim", params: { slug: nextClaim.get('slug')}}, nextClaim.get('headline'))
               )
             )
           )
+          : null
+
         )
       )
     );
@@ -42525,7 +42535,6 @@ module.exports = React.createClass({displayName: 'exports',
   },
 
   componentWillReceiveProps: function(props) {
-    // console.log(props);
     this.setState({
       search: props.search,
       searchToggle: !!props.search
@@ -42994,18 +43003,29 @@ module.exports = Backbone.Model.extend({
     return $('<a>', { href: article.url })[0].hostname;
   },
 
+  nextByCategory: function() {
+    if (!this.get('categories').length) {
+      return null;
+    }
+    return _.last(_.sortBy(this.collection.filter(function(claim) {
+      return _.contains(claim.get('categories'), this.get('categories')[0]) && claim.get('publishedAt') <= this.get('publishedAt') && claim.id != this.id;
+    }, this), function(claim) {
+      return claim.get('publishedAt');
+    }, this));
+  },
+
   prettyUrl: function(url) {
     if (!url) {
       var url = this.get('originUrl');
     }
     var match = url.match(/:\/\/(www[0-9]?\.)?(.[^/:]+)/i);
     if (match != null && match.length > 2 &&
-      typeof match[2] === 'string' && match[2].length > 0) {
-        return match[2];
-      } else {
-        return null;
-      }
-    },
+        typeof match[2] === 'string' && match[2].length > 0) {
+      return match[2];
+    } else {
+      return null;
+    }
+  }
 });
 
 },{"backbone":2,"jquery":10,"underscore":198}]},{},[199]);
