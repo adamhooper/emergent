@@ -1102,7 +1102,8 @@ ul.credits {
   margin-bottom: 0;
   margin-top: 0;
   color: #7f7f7f;
-  font-size: 1.1em; }
+  font-size: 1.1em;
+  color: #323232; }
   .card-title .icon {
     margin-top: 0;
     margin-left: .5em; }
@@ -1374,8 +1375,7 @@ button.navigation-link {
       opacity: .75; }
 
 .navigation-page > li {
-  padding: 15px;
-  border-bottom: 1px solid #eaeaea; }
+  padding: 15px; }
   .navigation-page > li:first-child {
     border-top: 1px solid #eaeaea; }
   @media (min-width: 48em) {
@@ -1383,9 +1383,6 @@ button.navigation-link {
       padding: 20px; }
       .navigation-page > li:first-child {
         border-top: none; } }
-  @media (min-width: 68em) {
-    .navigation-page > li {
-      border-right: 1px solid #eaeaea; } }
 .navigation-page p {
   margin-bottom: 0;
   margin-top: 0.5em;
@@ -1601,7 +1598,9 @@ button.navigation-link {
     border-right: 1px solid #eaeaea; } }
 @media (min-width: 68em) {
   .section-with-sidebar {
-    border-left: 1px solid #eaeaea; } }
+    border-left: 1px solid transparent; }
+    .section-with-sidebar.articles-holder {
+      border-left-color: #eaeaea; } }
 
 .shares-over-time {
   display: none; }
@@ -1854,7 +1853,7 @@ button.navigation-link {
       padding: 1.5em 1em 0.5em 2em; } }
 @media (min-width: 48em) {
   .page-timeline .articles li {
-    margin-left: 10.2em;
+    margin-left: 9.8em;
     border-left: 1px solid #ebebeb; } }
 .page-timeline .articles li:first-child .article-header-date {
   border-top: none;

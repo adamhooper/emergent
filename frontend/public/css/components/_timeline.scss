@@ -70,7 +70,7 @@
   .articles {
       li {
         @include breakpoint($breakpoint-tablet) {
-          margin-left: 10.2em;
+          margin-left: 9.8em;
           border-left: 1px solid palette(border, base);
         }
       }

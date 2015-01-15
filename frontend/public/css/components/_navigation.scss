@@ -210,10 +210,10 @@
         border-top: none;
       }
     }
-    border-bottom: 1px solid palette(base, light);
-    @include breakpoint($breakpoint-desktop) {
-      border-right: 1px solid palette(base, light);
-    }
+    // border-bottom: 1px solid palette(base, light);
+    // @include breakpoint($breakpoint-desktop) {
+    //   border-right: 1px solid palette(base, light);
+    // }
   }
 
   p {

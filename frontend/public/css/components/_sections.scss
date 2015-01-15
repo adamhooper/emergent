@@ -18,7 +18,11 @@
   }
 
   @include breakpoint($breakpoint-desktop) {
-    border-left: 1px solid palette(base, light);
+    border-left: 1px solid transparent;
+
+    &.articles-holder {
+      border-left-color: palette(base, light);
+    }
   }
 }
 
