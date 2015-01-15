@@ -333,7 +333,10 @@ module.exports = React.createClass({
                           var jsx = (
                             <li key={article.id}>
                               {date !== lastDate ?
-                              <span className="article-header-date">{moment(article.createdAt).calendar()}</span>
+                                <div className="article-header-date">
+                                  <hr/>
+                                  <span>{moment(article.createdAt).calendar()}</span>
+                                </div>
                               : null }
                               <article className="article with-stance">
                                 {resolvedClaim === article.url ?
@@ -353,7 +356,7 @@ module.exports = React.createClass({
                                   </div>
                                   : null }
                                 <div className="article-content">
-                                  <h4 className="article-list-title"><span className={'indicator indicator-' + article.stance}></span> <a href={article.url}>{claim.prettyUrl(article.url)}</a> - <time className="no-wrap" dateTime={article.createdAt}>{moment(article.createdAt).format('MMM D')}</time>
+                                  <h4 className="article-list-title"><span className={'indicator indicator-' + article.stance}></span> <a href={article.url}>{claim.prettyUrl(article.url)}</a><span className="spacer-10"></span>{/*- <time className="no-wrap" dateTime={article.createdAt}>{moment(article.createdAt).format('MMM D')}</time>*/}
                                     <span className="no-wrap"><span className="shares-label">Shares:</span> <span className="shares-value">{this.formatNumber(article.shares)}</span></span>
                                     </h4>
                                   <p className="article-description">{article.headline}</p>
