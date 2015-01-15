@@ -209,16 +209,27 @@ module.exports = Backbone.Model.extend({
     return $('<a>', { href: article.url })[0].hostname;
   },
 
+  nextByCategory: function() {
+    if (!this.get('categories').length) {
+      return null;
+    }
+    return _.last(_.sortBy(this.collection.filter(function(claim) {
+      return _.contains(claim.get('categories'), this.get('categories')[0]) && claim.get('publishedAt') <= this.get('publishedAt') && claim.id != this.id;
+    }, this), function(claim) {
+      return claim.get('publishedAt');
+    }, this));
+  },
+
   prettyUrl: function(url) {
     if (!url) {
       var url = this.get('originUrl');
     }
     var match = url.match(/:\/\/(www[0-9]?\.)?(.[^/:]+)/i);
     if (match != null && match.length > 2 &&
-      typeof match[2] === 'string' && match[2].length > 0) {
-        return match[2];
-      } else {
-        return null;
-      }
-    },
+        typeof match[2] === 'string' && match[2].length > 0) {
+      return match[2];
+    } else {
+      return null;
+    }
+  }
 });
