@@ -501,7 +501,7 @@ th {
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); }
 
 .article-footer:after, .claim-footer-next:after, .card-header:after, .articles-filtering:after,
-.sources-filtering:after, .navigation-footer-social:after, .navigation-social-buttons:after, .site-header-secondary > .container:after, .section:after, .page-timeline .article:after {
+.sources-filtering:after, .navigation-footer-social:after, .navigation-social-buttons:after, .site-header-secondary > .container:after, .site-footer .container:after, .section:after, .page-timeline .article:after {
   clear: both;
   content: '';
   display: table; }
@@ -571,17 +571,17 @@ th {
 
 @media (min-width: 0) {
   .section-with-sidebar .section-header, .page-about > .container, .articles-filtering,
-  .sources-filtering.articles-filtering, .page-meta > .container, .site-header-primary, .site-header-categories > .container, .site-header-secondary > .container {
+  .sources-filtering.articles-filtering, .page-meta > .container, .site-header-primary, .site-header-categories > .container, .site-header-secondary > .container, .site-footer .container {
     padding-left: 15px;
     padding-right: 15px; } }
 @media (min-width: 48em) {
   .section-with-sidebar .section-header, .page-about > .container, .articles-filtering,
-  .sources-filtering.articles-filtering, .page-meta > .container, .site-header-primary, .site-header-categories > .container, .site-header-secondary > .container {
+  .sources-filtering.articles-filtering, .page-meta > .container, .site-header-primary, .site-header-categories > .container, .site-header-secondary > .container, .site-footer .container {
     padding-left: 20px;
     padding-right: 20px; } }
 @media (min-width: 68em) {
   .section-with-sidebar .section-header, .page-about > .container, .articles-filtering,
-  .sources-filtering.articles-filtering, .page-meta > .container, .site-header-primary, .site-header-categories > .container, .site-header-secondary > .container {
+  .sources-filtering.articles-filtering, .page-meta > .container, .site-header-primary, .site-header-categories > .container, .site-header-secondary > .container, .site-footer .container {
     padding-left: 40px;
     padding-right: 40px; } }
 
@@ -856,6 +856,9 @@ ul.credits {
   padding-top: 2em;
   padding-bottom: 2em; }
 
+.page-articles {
+  padding-bottom: 0; }
+
 .articles-title {
   margin-bottom: 1em; }
 
@@ -987,6 +990,9 @@ ul.credits {
   @media (min-width: 48em) {
     .article-preview {
       padding: 1.5em 2em 1.5em 10.2em; } }
+
+.articles li:last-child .article-preview {
+  border-bottom: none; }
 
 .article-source-title {
   color: #7f7f7f;
@@ -1501,6 +1507,15 @@ button.navigation-link {
         .navigation-social-buttons li .navigation-link.twitter:hover {
           background-color: #019ad4; }
 
+.navigation-footer li {
+  float: left;
+  margin-left: 30px; }
+  .navigation-footer li a {
+    font-size: 0.8em;
+    color: #7f7f7f; }
+  .navigation-footer li:first-child {
+    margin-left: 0; }
+
 .page {
   background-color: #ffffff; }
 
@@ -1513,6 +1528,8 @@ button.navigation-link {
 
 .page-content {
   padding-bottom: 2em; }
+  .page-content.page-claims-parent {
+    padding-bottom: 0; }
 
 .page-meta {
   background-color: #fcfcfc;
@@ -1677,6 +1694,22 @@ button.navigation-link {
 @media (min-width: 0) and (max-width: 48em) {
   .site-header-secondary.search-toggle-active .page-title-holder {
     opacity: 0; } }
+
+.site-footer {
+  border-top: 1px solid #ebebeb; }
+  .site-footer .container .copyright {
+    padding: 1em 0 0;
+    font-size: 0.8em;
+    color: #7f7f7f; }
+  .site-footer .container .footer-menu {
+    padding: 1em 0 2em; }
+  @media (min-width: 48em) {
+    .site-footer .container .copyright {
+      float: left;
+      padding: 1em 0; }
+    .site-footer .container .footer-menu {
+      float: right;
+      padding: 1em 0 2em; } }
 
 .section-title {
   margin-bottom: .75em; }
@@ -2071,7 +2104,8 @@ button.navigation-link {
   #mc_embed_signup .button {
     height: 33px;
     font-size: 12px;
-    box-sizing: border-box; }
+    box-sizing: border-box;
+    border-radius: 0; }
   #mc_embed_signup input {
     -webkit-appearance: none;
     border: none;

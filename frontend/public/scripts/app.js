@@ -42422,7 +42422,7 @@ module.exports = React.createClass({displayName: 'exports',
     return (
       React.DOM.div({className: "page"}, 
         app.components.Header({claims: this.props.claims, search: this.state.search || '', category: this.heading()}), 
-        React.DOM.div({className: "page-content"}, 
+        React.DOM.div({className: "page-content page-claims-parent"}, 
           React.DOM.div({className: "articles-holder section-with-sidebar"}, 
             React.DOM.nav({className: "articles-filtering"}, 
               React.DOM.ul({className: "navigation navigation-filtering navigation-filtering-sort"}, 
@@ -42726,7 +42726,18 @@ module.exports = React.createClass({displayName: 'exports',
             )
           )
         ), 
-        this.props.activeRouteHandler({claims: this.props.claims})
+        this.props.activeRouteHandler({claims: this.props.claims}), 
+        React.DOM.footer({className: "site-footer"}, 
+          React.DOM.div({className: "container"}, 
+            React.DOM.div({className: "copyright"}, "© Emergent 2015"), 
+            React.DOM.nav({className: "footer-menu"}, 
+              React.DOM.ul({className: "navigation navigation-footer"}, 
+                React.DOM.li(null, React.DOM.a({href: "http://emergentinfo.tumblr.com/", className: "navigation-link"}, "Blog")), 
+                React.DOM.li(null, Link({to: "about", className: "navigation-link"}, "About Emergent"))
+              )
+            )
+          )
+        )
       )
     );
   }

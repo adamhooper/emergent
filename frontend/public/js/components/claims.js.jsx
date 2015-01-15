@@ -119,7 +119,7 @@ module.exports = React.createClass({
     return (
       <div className="page">
         <app.components.Header claims={this.props.claims} search={this.state.search || ''} category={this.heading()}/>
-        <div className="page-content">
+        <div className="page-content page-claims-parent">
           <div className="articles-holder section-with-sidebar">
             <nav className="articles-filtering">
               <ul className="navigation navigation-filtering navigation-filtering-sort">

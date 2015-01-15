@@ -20,6 +20,10 @@
 .page-content {
   padding-bottom: 2em;
   // padding-top: 2em;
+
+  &.page-claims-parent {
+    padding-bottom: 0;
+  }
 }
 
 // TODO: don't do this

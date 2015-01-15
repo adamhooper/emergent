@@ -321,3 +321,19 @@
     }
   }
 }
+
+.navigation-footer {
+  li {
+    float: left;
+    margin-left: 30px;
+
+    a {
+      font-size: font(xs);
+      color: palette(base, dark);
+    }
+
+    &:first-child {
+      margin-left: 0;
+    }
+  }
+}

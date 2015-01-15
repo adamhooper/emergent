@@ -8,6 +8,10 @@ $article-padding:            2em;
 // Components
 // ------------------------------
 
+.page-articles {
+  padding-bottom: 0;
+}
+
 .articles-title {
   @extend %section-title;
   margin-bottom: 1em;
@@ -201,6 +205,12 @@ $article-padding:            2em;
 
   @include breakpoint($breakpoint-tablet) {
     padding: 1.5em $article-padding 1.5em ($article-padding + 8.2em);
+  }
+}
+
+.articles li:last-child {
+  .article-preview {
+    border-bottom: none;
   }
 }
 
