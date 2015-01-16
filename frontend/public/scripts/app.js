@@ -41483,7 +41483,7 @@ window._ = require('underscore');
 window.app = app;
 window.React = React;
 
-},{"./collections/claims.js":200,"./components/about.js.jsx":201,"./components/article.js.jsx":202,"./components/claim.js.jsx":204,"./components/claims.js.jsx":205,"./components/header.js.jsx":206,"./components/modal.js.jsx":207,"./components/root.js.jsx":208,"./models/claim.js":210,"jquery":10,"react":197,"react-router":21,"underscore":198}],200:[function(require,module,exports){
+},{"./collections/claims.js":200,"./components/about.js.jsx":201,"./components/article.js.jsx":202,"./components/claim.js.jsx":203,"./components/claims.js.jsx":204,"./components/header.js.jsx":205,"./components/modal.js.jsx":206,"./components/root.js.jsx":207,"./models/claim.js":209,"jquery":10,"react":197,"react-router":21,"underscore":198}],200:[function(require,module,exports){
 var Backbone = require('backbone');
 var _ = require('underscore');
 var $ = Backbone.$ = require('jquery');
@@ -41540,7 +41540,7 @@ module.exports = Backbone.Collection.extend({
   }
 });
 
-},{"../models/claim.js":210,"backbone":2,"jquery":10,"underscore":198}],201:[function(require,module,exports){
+},{"../models/claim.js":209,"backbone":2,"jquery":10,"underscore":198}],201:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
@@ -41725,157 +41725,11 @@ module.exports = React.createClass({displayName: 'exports',
   }
 });
 
-},{"../mixins/backbone_collection.js":209,"moment":11,"react":197,"react-router":21,"underscore":198}],203:[function(require,module,exports){
-/** @jsx React.DOM */
-
-var React = require('react');
-var _ = require('underscore');
-
-module.exports = React.createClass({displayName: 'exports',
-
-  propTypes: {
-    width: React.PropTypes.number,
-    height: React.PropTypes.number,
-    marginTop: React.PropTypes.number,
-    marginBottom: React.PropTypes.number,
-    marginLeft: React.PropTypes.number,
-    marginRight: React.PropTypes.number,
-    gap: React.PropTypes.number,
-    fontSize: React.PropTypes.number,
-    minLength: React.PropTypes.number,
-    color: React.PropTypes.string,
-    series: React.PropTypes.arrayOf(React.PropTypes.arrayOf(React.PropTypes.number)),
-    colors: React.PropTypes.arrayOf(React.PropTypes.string),
-    labels: React.PropTypes.arrayOf(React.PropTypes.string),
-    ylabels: React.PropTypes.arrayOf(React.PropTypes.number)
-  },
-
-  getDefaultProps: function() {
-    return {
-      width: 100,
-      height: 100,
-      marginTop: 20,
-      marginBottom: 50,
-      marginLeft: 10,
-      marginRight: 20,
-      fontSize: 20,
-      minLength: 10, // minimum number of bars to leave space for
-      gap: 0, // gap width as a percentage of bar width
-      series: [[]], // array of arrays of data
-      color: 'black', // main color for text/lines
-      colors: ['black'] // array of colors for each series
-    };
-  },
-
-  barWidth: function() {
-    return this.props.width / (this.seriesSize() + this.seriesSize() * this.props.gap - this.props.gap);
-  },
-
-  seriesSize: function() {
-    return _.max([this.props.minLength, _.max(_.pluck(this.props.series, 'length'))]);
-  },
-
-  heights: function() {
-    return this.props.series.reduce(function(heights, data) {
-      data.forEach(function(amount, i) {
-        heights[i] = (heights[i]||0) + amount;
-      });
-      return heights;
-    }, []);
-  },
-
-  highest: function() {
-    return _.max(this.heights());
-  },
-
-  render: function() {
-    var heights = [];
-    var width = this.barWidth();
-    var gap = width * this.props.gap;
-    var heightFactor = this.props.height ? this.props.height / this.highest() : 0;
-    var colors = this.props.colors;
-    var height = this.props.height;
-
-    if (!width || isNaN(width)) return null;
-
-    var bars = _.flatten(this.props.series.map(function(data, s) {
-      return data.map(function(amount, i) {
-        heights[i] = (heights[i]||0) + amount * heightFactor;
-        return {
-          y: height - (heights[i]||0) + this.props.marginTop,
-          x: (width + gap) * i + this.props.marginLeft,
-          width: width,
-          height: _.max([amount ? 1 : 0, amount * heightFactor]),
-          fill: colors[s],
-          key: "bar_" + s + "_" + i
-        };
-        return attrs;
-      }.bind(this));
-    }.bind(this)));
-
-    var labels = this.props.labels.map(function(label, i) {
-      return {
-        y: height + this.props.fontSize*1.2 + this.props.marginTop,
-        x: (width + gap) * i + (width/2) + this.props.marginLeft,
-        fontSize: this.props.fontSize,
-        textAnchor: 'middle',
-        fill: this.props.color,
-        __html: label,
-        key: "label_" + i
-      };
-    }.bind(this));
-
-    var ylabels = this.props.ylabels.map(function(label) {
-      var y = label.y!==undefined ? label.y : label;
-      label = label.label ? label.label : label;
-      return {
-        y: height - (y * heightFactor) + this.props.marginTop + this.props.fontSize/2,
-        x: this.props.marginLeft - 18,
-        fontSize: this.props.fontSize,
-        fill: this.props.color,
-        textAnchor: 'end',
-        __html: label,
-        key: "ylabel_" + y
-      };
-    }.bind(this));
-
-    var callout, calloutText;
-    if (this.props.callout) {
-      var x = (width + gap) * this.props.callout.position + this.props.marginLeft - (gap / 2);
-      var alignRight = x > this.props.width*.75; 
-      var callout = React.DOM.line({x1: x, x2: x, y1: "0", y2: height + this.props.marginTop, stroke: "#999", strokeWidth: "2", strokeDasharray: "2,7"})
-      var calloutText = (
-        React.DOM.text({y: this.props.fontSize + 10, fontSize: this.props.fontSize, fill: this.props.color}, 
-          this.props.callout.text.map(function(tspan) {
-            return React.DOM.tspan({x: x + (alignRight ? -5 : 5), dy: 1.2*this.props.fontSize, textAnchor: alignRight ? 'end' : 'start'}, tspan)
-          }.bind(this))
-        )
-      );
-    }
-
-    return (
-      React.DOM.svg({width: this.props.width + this.props.marginLeft + this.props.marginRight, height: this.props.height + this.props.marginTop + this.props.marginBottom}, 
-        React.DOM.g(null, 
-          bars.map(function(bar) { return React.DOM.rect(bar); }), 
-          React.DOM.line({x1: this.props.marginLeft, x2: this.props.width + this.props.marginLeft, y1: this.props.marginTop + this.props.height, y2: this.props.marginTop + this.props.height, stroke: "#999"})
-        ), 
-        React.DOM.g(null, 
-          labels.map(function(label) { return React.DOM.text(label, label.__html); }), 
-          ylabels.map(function(label) { return React.DOM.text(label, label.__html); }), 
-          callout, 
-          calloutText
-        )
-      )
-    );
-  }
-});
-
-},{"react":197,"underscore":198}],204:[function(require,module,exports){
+},{"../mixins/backbone_collection.js":208,"moment":11,"react":197,"react-router":21,"underscore":198}],203:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
 var BackboneCollection = require('../mixins/backbone_collection.js');
-var Barchart = require('./bar_chart.js.jsx');
 var Router = require('react-router');
 var Link = Router.Link;
 var _ = require('underscore');
@@ -41980,6 +41834,10 @@ module.exports = React.createClass({displayName: 'exports',
 
   truncateString: function(str) {
     return str.length > 70 ? str.substring(0, str.lastIndexOf(' ', 70)) + '...' : str;
+  },
+
+  tracking: function(type, name) {
+    ga('send', 'event', type, name);
   },
 
   render: function() {
@@ -42087,10 +41945,10 @@ module.exports = React.createClass({displayName: 'exports',
                   React.DOM.nav({className: "navigation-social-buttons"}, 
                     React.DOM.ul({className: "navigation"}, 
                       React.DOM.li(null, 
-                        React.DOM.a({href: 'https://twitter.com/intent/tweet?text='+claim.get('headline')+'&via=emergentdotinfo&url='+encodeURIComponent(document.URL), target: "_blank", className: "navigation-link twitter"}, React.DOM.span({className: "icon icon-twitter-white"}), "Share on Twitter")
+                        React.DOM.a({href: 'https://twitter.com/intent/tweet?text='+claim.get('headline')+'&via=emergentdotinfo&url='+encodeURIComponent(document.URL), target: "_blank", className: "navigation-link twitter", onClick: this.tracking('social', 'twitter')}, React.DOM.span({className: "icon icon-twitter-white"}), "Share on Twitter")
                       ), 
                       React.DOM.li(null, 
-                        React.DOM.a({href: 'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(document.URL), target: "_blank", className: "navigation-link facebook"}, React.DOM.span({className: "icon icon-facebook-white"}), "Share on Facebook")
+                        React.DOM.a({href: 'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(document.URL), target: "_blank", className: "navigation-link facebook", onClick: this.tracking('social', 'facebook')}, React.DOM.span({className: "icon icon-facebook-white"}), "Share on Facebook")
                       )
                     )
                   )
@@ -42271,10 +42129,10 @@ module.exports = React.createClass({displayName: 'exports',
                   React.DOM.span({className: "navigation-label"}, "Share this claim:")
                 ), 
                 React.DOM.li(null, 
-                  React.DOM.a({href: 'https://twitter.com/intent/tweet?text='+claim.get('headline')+'&via=emergentdotinfo&url='+encodeURIComponent(document.URL), target: "_blank", className: "navigation-link twitter"}, React.DOM.span({className: "icon icon-twitter-white"}))
+                  React.DOM.a({href: 'https://twitter.com/intent/tweet?text='+claim.get('headline')+'&via=emergentdotinfo&url='+encodeURIComponent(document.URL), target: "_blank", className: "navigation-link twitter", onClick: this.tracking('social', 'twitter')}, React.DOM.span({className: "icon icon-twitter-white"}))
                 ), 
                 React.DOM.li(null, 
-                  React.DOM.a({href: 'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(document.URL), target: "_blank", className: "navigation-link facebook"}, React.DOM.span({className: "icon icon-facebook-white"}))
+                  React.DOM.a({href: 'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(document.URL), target: "_blank", className: "navigation-link facebook", onClick: this.tracking('social', 'facebook')}, React.DOM.span({className: "icon icon-facebook-white"}))
                 )
               )
             )
@@ -42300,7 +42158,7 @@ module.exports = React.createClass({displayName: 'exports',
   }
 });
 
-},{"../mixins/backbone_collection.js":209,"./bar_chart.js.jsx":203,"autolinker":1,"moment":11,"react":197,"react-router":21,"underscore":198}],205:[function(require,module,exports){
+},{"../mixins/backbone_collection.js":208,"autolinker":1,"moment":11,"react":197,"react-router":21,"underscore":198}],204:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
@@ -42518,7 +42376,7 @@ module.exports = React.createClass({displayName: 'exports',
   }
 });
 
-},{"../mixins/backbone_collection.js":209,"moment":11,"react":197,"react-router":21,"underscore":198}],206:[function(require,module,exports){
+},{"../mixins/backbone_collection.js":208,"moment":11,"react":197,"react-router":21,"underscore":198}],205:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
@@ -42620,7 +42478,7 @@ module.exports = React.createClass({displayName: 'exports',
   }
 });
 
-},{"react":197,"react-router":21}],207:[function(require,module,exports){
+},{"react":197,"react-router":21}],206:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
@@ -42676,7 +42534,7 @@ module.exports = React.createClass({displayName: 'exports',
   }
 });
 
-},{"bootstrap/js/modal":3,"jquery":10,"react":197}],208:[function(require,module,exports){
+},{"bootstrap/js/modal":3,"jquery":10,"react":197}],207:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
@@ -42743,7 +42601,7 @@ module.exports = React.createClass({displayName: 'exports',
   }
 });
 
-},{"react":197,"react-router":21}],209:[function(require,module,exports){
+},{"react":197,"react-router":21}],208:[function(require,module,exports){
 /**
  * Ensure that changes to a components models/collections trigger reconciles
  */
@@ -42804,7 +42662,7 @@ module.exports = {
   }
 };
 
-},{"backbone":2,"underscore":198}],210:[function(require,module,exports){
+},{"backbone":2,"underscore":198}],209:[function(require,module,exports){
 var Backbone = require('backbone');
 var _ = require('underscore');
 var $ = Backbone.$ = require('jquery');
