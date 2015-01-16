@@ -415,8 +415,8 @@ module.exports = React.createClass({
             <div className="container">
               <span className="next-label">Next in {claim.get('categories')[0]}:</span>
               <div className="next-link-holder">
-                <div className={'stance stance-small stance-true'}>
-                  <span className="stance-value">True</span>
+                <div className={'stance stance-small stance-'+claim.get('truthiness')}>
+                  <span className="stance-value">{claim.truthinessText()}</span>
                 </div>
                 <Link to="claim" params={{ slug: nextClaim.get('slug') }}>{nextClaim.get('headline')}</Link>
               </div>

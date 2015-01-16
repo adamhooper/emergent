@@ -29,32 +29,30 @@
 }
 
 .site-logo {
-  background: image-url('emergent-mobile.png') no-repeat;
-  background-size: 122px 28px;
-  height: 28px;
-  line-height: 1;
-  margin-bottom: 0;
-  padding-top: 0.35em;
-  text-indent: -9999px;
-  width: 122px;
-  display: block;
 
-  @include image-2x('emergent-mobile@2x.png');
+  .emergent {
+    background: image-url('emergent-mobile.png') no-repeat;
+    background-size: 122px 28px;
+    height: 28px;
+    line-height: 1;
+    margin-bottom: 0;
+    padding-top: 0.35em;
+    text-indent: -9999px;
+    width: 122px;
+    display: block;
 
-  @include breakpoint($breakpoint-tablet) {
-    background: image-url('emergent.png') no-repeat;
+    @include image-2x('emergent-mobile@2x.png');
 
-    @include image-2x('emergent@2x.png');
+    @include breakpoint($breakpoint-tablet) {
+      background: image-url('emergent.png') no-repeat;
 
-    background-size: 141px 42px;
-    height: 42px;
-    padding-top: 0;
-    width: 141px;
-  }
+      @include image-2x('emergent@2x.png');
 
-  a {
-    color: palette(type, light);
-    text-decoration: none;
+      background-size: 141px 42px;
+      height: 42px;
+      padding-top: 0;
+      width: 141px;
+    }
   }
 }
 

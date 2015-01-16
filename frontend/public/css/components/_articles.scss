@@ -120,6 +120,7 @@ $article-padding:            2em;
 
   @include breakpoint($breakpoint-mobile-only) {
     display: block;
+    margin: 0.4em 0;
   }
 }
 

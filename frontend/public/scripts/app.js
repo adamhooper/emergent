@@ -42143,8 +42143,8 @@ module.exports = React.createClass({displayName: 'exports',
             React.DOM.div({className: "container"}, 
               React.DOM.span({className: "next-label"}, "Next in ", claim.get('categories')[0], ":"), 
               React.DOM.div({className: "next-link-holder"}, 
-                React.DOM.div({className: 'stance stance-small stance-true'}, 
-                  React.DOM.span({className: "stance-value"}, "True")
+                React.DOM.div({className: 'stance stance-small stance-'+claim.get('truthiness')}, 
+                  React.DOM.span({className: "stance-value"}, claim.truthinessText())
                 ), 
                 Link({to: "claim", params: { slug: nextClaim.get('slug')}}, nextClaim.get('headline'))
               )
@@ -42574,7 +42574,7 @@ module.exports = React.createClass({displayName: 'exports',
       React.DOM.div(null, 
         React.DOM.header({className: this.state.navToggle ? 'site-header nav-toggle-active in' : 'site-header out'}, 
           React.DOM.div({className: "site-header-primary container"}, 
-            Link({to: "claims", className: "site-logo"}, "Emergent"), 
+            Link({to: "claims", className: "site-logo"}, React.DOM.span({className: "emergent"}, "Emergent")), 
             React.DOM.nav({className: "site-menu"}, 
               React.DOM.button({className: "site-menu-toggle", href: "#navigation", onClick: this.toggleNav}, React.DOM.span(null, "Open Navigation")), 
               React.DOM.ul({className: "navigation navigation-site"}, 
