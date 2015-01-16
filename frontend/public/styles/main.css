@@ -1586,7 +1586,8 @@ button.navigation-link {
     color: #FFF;
     font-size: 13px;
     line-height: 1;
-    display: block; }
+    display: block;
+    margin-top: 0.2em; }
   .site-logo .emergent {
     background: url('/images/emergent-mobile.png') no-repeat;
     background-size: 122px 28px;
