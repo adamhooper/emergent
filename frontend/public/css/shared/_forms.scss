@@ -3,7 +3,8 @@
 
 input[type="text"],
 input[type="email"],
-input[type="search"] {
+input[type="search"],
+input[type="url"] {
   box-shadow: 0;
   padding: .5em .75em;
 }
@@ -16,4 +17,48 @@ input[type="submit"] {
   border: 0;
   border-radius: 2px;
   padding: .5em .75em;
+}
+
+
+// Default form (.form)
+
+.form {
+  .input-group {
+    margin: 1.5em 0;
+    label {
+      display: block;
+      margin-bottom: 0.3em;
+    }
+
+    input[type="text"],
+    input[type="url"],
+    input[type="email"] {
+      width: 100%;
+    }
+  }
+
+  .button-group {
+    margin: 1.5em 0;
+  }
+
+  label {
+    font-size: font(lg);
+  }
+
+  input[type="text"],
+  input[type="url"],
+  input[type="email"] {
+    font-size: font(md);
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  .button {
+    -webkit-appearance: none;
+    &-submit {
+
+    }
+  }
 }

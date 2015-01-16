@@ -115,6 +115,22 @@ module.exports = React.createClass({
     return new String(str).replace(/(\d)(?=(\d{3})+$)/g, '$1,');
   },
 
+  submitClaim: function(e) {
+    e.preventDefault();
+    var serialize = $(this.refs.submitClaim.getDOMNode()).serialize();
+    // $.ajax({
+    //   url: 'http://api.emergent.info/claims',
+    //   dataType: "jsonp",
+    //   data: serialize,
+    //   type: 'post'
+    // }).done(function(result) {
+    //   console.log(result);
+    // });
+    // $.post('http://api.emergent.info/claims', serialize, function(result) {
+    //   console.log(result);
+    // });
+  },
+
   render: function() {
     return (
       <div className="page">
@@ -190,12 +206,24 @@ module.exports = React.createClass({
           </div>
           <nav className="page-navigation">
             <ul className="navigation navigation-page">
-              {/*<li>
+              <li>
                 <app.components.Modal title="Submit a claim" trigger={<a href="#submit-a-claim" className="navigation-link">Submit a claim</a>}>
-                  Lorem Ipsum
+                  <form className="form" ref="submitClaim" onSubmit={this.submitClaim}>
+                    <div className="input-group">
+                      <label htmlFor="submit-what">What's the claim</label>
+                      <input name="claim" id="submit-what" type="text" required/>
+                    </div>
+                    <div className="input-group">
+                      <label htmlFor="submit-url">What source should we look at?</label>
+                      <input name="url" id="submit-url" placeholder="URL" type="url" required/>
+                    </div>
+                    <div className="button-group">
+                      <button type="submit" name="submit" className="button button-submit">Submit this claim</button>
+                    </div>
+                  </form>
                 </app.components.Modal>
                 <p>Lorem ipsum dolor sit amet pro patria mori through our special tool.</p>
-              </li>*/}
+              </li>
               <li>
                 <strong>Sign up for our newsletter</strong>
                 <p>Our weekly newsletter is the best way to get updates on the rumors we're tracking. We never sell or share your info.</p>

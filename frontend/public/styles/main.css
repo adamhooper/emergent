@@ -835,7 +835,8 @@ button:active, button:focus {
 
 input[type="text"],
 input[type="email"],
-input[type="search"] {
+input[type="search"],
+input[type="url"] {
   box-shadow: 0;
   padding: .5em .75em; }
 
@@ -846,6 +847,30 @@ input[type="submit"] {
   border: 0;
   border-radius: 2px;
   padding: .5em .75em; }
+
+.form .input-group {
+  margin: 1.5em 0; }
+  .form .input-group label {
+    display: block;
+    margin-bottom: 0.3em; }
+  .form .input-group input[type="text"],
+  .form .input-group input[type="url"],
+  .form .input-group input[type="email"] {
+    width: 100%; }
+.form .button-group {
+  margin: 1.5em 0; }
+.form label {
+  font-size: 1.2em; }
+.form input[type="text"],
+.form input[type="url"],
+.form input[type="email"] {
+  font-size: 1em; }
+  .form input[type="text"]:focus,
+  .form input[type="url"]:focus,
+  .form input[type="email"]:focus {
+    outline: none; }
+.form .button {
+  -webkit-appearance: none; }
 
 ul.credits {
   list-style-type: none;
