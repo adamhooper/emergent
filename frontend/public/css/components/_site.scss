@@ -6,6 +6,11 @@
   background-color: #000;
   color: palette(type, light);
   position: relative;
+
+  background: image-url('background-header.png') repeat-x;
+  @include image-2x('background-header@2x.png');
+  background-size: 1px 90px;
+  background-position: center center;
 }
 
 .site-header-primary {
@@ -25,7 +30,7 @@
 
 .site-logo {
   background: image-url('emergent-mobile.png') no-repeat;
-  background-size: 122px 28px;;
+  background-size: 122px 28px;
   height: 28px;
   line-height: 1;
   margin-bottom: 0;
