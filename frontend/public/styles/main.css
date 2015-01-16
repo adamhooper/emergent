@@ -1458,22 +1458,35 @@ button.navigation-link {
     .navigation-footer-social {
       padding-left: 15px;
       padding-right: 15px; } }
-  .navigation-footer-social .navigation {
-    float: right; }
-    @media (min-width: 48em) {
-      .navigation-footer-social .navigation {
-        margin-right: 25.53191%; } }
-    .navigation-footer-social .navigation > li {
-      float: left; }
-    .navigation-footer-social .navigation .navigation-label {
-      color: #7f7f7f;
-      font-size: 0.8em;
-      line-height: 1;
-      padding-top: 0.5em; }
-    .navigation-footer-social .navigation .navigation-link {
-      margin-left: 1em; }
-      .navigation-footer-social .navigation .navigation-link .icon {
-        margin-right: 0; }
+  @media (min-width: 48em) {
+    .navigation-footer-social .navigation {
+      margin-left: 10.2em; } }
+  .navigation-footer-social .navigation > li {
+    float: left; }
+    .navigation-footer-social .navigation > li:first-child {
+      float: none; }
+  .navigation-footer-social .navigation .navigation-label {
+    color: #7f7f7f;
+    font-size: 0.8em;
+    line-height: 1;
+    display: block;
+    margin-bottom: 0.5em; }
+  .navigation-footer-social .navigation .navigation-link {
+    margin-right: 0.5em;
+    width: 25px;
+    height: 25px;
+    overflow: hidden;
+    background-color: #000; }
+    .navigation-footer-social .navigation .navigation-link.facebook {
+      padding: 5px 0 0 7px;
+      background-color: #3b5898; }
+      .navigation-footer-social .navigation .navigation-link.facebook:hover {
+        background-color: #344d86; }
+    .navigation-footer-social .navigation .navigation-link.twitter {
+      padding: 5px 0 0 5px;
+      background-color: #01aced; }
+      .navigation-footer-social .navigation .navigation-link.twitter:hover {
+        background-color: #019ad4; }
 
 .navigation-social-buttons {
   border-top: 1px solid #ebebeb;
@@ -1560,7 +1573,7 @@ button.navigation-link {
 
 .site-logo {
   background: url('/images/emergent-mobile.png') no-repeat;
-  background-size: contain;
+  background-size: 122px 28px;
   height: 28px;
   line-height: 1;
   margin-bottom: 0;
@@ -1574,6 +1587,7 @@ button.navigation-link {
   @media (min-width: 48em) {
     .site-logo {
       background: url('/images/emergent.png') no-repeat;
+      background-size: 141px 42px;
       height: 42px;
       padding-top: 0;
       width: 141px; } }

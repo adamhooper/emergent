@@ -246,27 +246,50 @@
   }
 
   .navigation {
-    float: right;
     @include breakpoint($breakpoint-tablet) {
-      margin-right: 25.53191%;
+      margin-left: 10.2em;
     }
 
     > li {
       float: left;
+
+      &:first-child {
+        float: none;
+      }
     }
 
     .navigation-label {
       color: palette(base, dark);
       font-size: font(xs);
       line-height: 1;
-      padding-top: 0.5em;
+      display: block;
+      margin-bottom: 0.5em;
     }
 
     .navigation-link {
-      margin-left: 1em;
+      margin-right: 0.5em;
+      width: 25px;
+      height: 25px;
+      overflow: hidden;
 
-      .icon {
-        margin-right: 0;
+      background-color: #000;
+
+      &.facebook {
+        padding: 5px 0 0 7px;
+        background-color: #3b5898;
+
+        &:hover {
+          background-color: darken(#3b5898, 5%);
+        }
+      }
+
+      &.twitter {
+        padding: 5px 0 0 5px;
+        background-color: #01aced;
+
+        &:hover {
+          background-color: darken(#01aced, 5%);
+        }
       }
     }
   }

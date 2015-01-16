@@ -42142,7 +42142,7 @@ module.exports = React.createClass({displayName: 'exports',
                    claim.articlesByStance('against').length > 0 ?
                     React.DOM.div({onClick: this.setFilter.bind(this, 'against'), className: 'card card-category card-category-against' + (this.state.filter === 'against' ? ' is-selected' : '')}, 
                       React.DOM.div({className: "card-header"}, 
-                        React.DOM.p({className: "card-title"}, "Against", claim.get('truthiness') === 'false' ? React.DOM.span({className: "icon-confirmed-stance"}, "Confirmed") : null)
+                        React.DOM.p({className: "card-title"}, "Against", claim.get('truthiness') === 'false' ? React.DOM.span({className: "icon icon-confirmed-stance"}, "Confirmed") : null)
                       ), 
                       React.DOM.div({className: "card-content"}, 
                         React.DOM.div({className: "sources"}, React.DOM.span({className: "sources-count"}, claim.articlesByStance('against').length), React.DOM.span({className: "indicator-holder", dangerouslySetInnerHTML: {__html: Array(claim.articlesByStance('against').length + 1).join('<span class="indicator indicator-false"></span>')}})), 
@@ -42271,10 +42271,10 @@ module.exports = React.createClass({displayName: 'exports',
                   React.DOM.span({className: "navigation-label"}, "Share this claim:")
                 ), 
                 React.DOM.li(null, 
-                  React.DOM.a({href: 'https://twitter.com/intent/tweet?text='+claim.get('headline')+'&via=emergentdotinfo&url='+encodeURIComponent(document.URL), target: "_blank", className: "navigation-link"}, React.DOM.span({className: "icon icon-twitter-round"}))
+                  React.DOM.a({href: 'https://twitter.com/intent/tweet?text='+claim.get('headline')+'&via=emergentdotinfo&url='+encodeURIComponent(document.URL), target: "_blank", className: "navigation-link twitter"}, React.DOM.span({className: "icon icon-twitter-white"}))
                 ), 
                 React.DOM.li(null, 
-                  React.DOM.a({href: 'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(document.URL), target: "_blank", className: "navigation-link"}, React.DOM.span({className: "icon icon-facebook-round"}))
+                  React.DOM.a({href: 'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(document.URL), target: "_blank", className: "navigation-link facebook"}, React.DOM.span({className: "icon icon-facebook-white"}))
                 )
               )
             )

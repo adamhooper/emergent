@@ -269,7 +269,7 @@ module.exports = React.createClass({
                   { claim.articlesByStance('against').length > 0 ?
                     <div onClick={this.setFilter.bind(this, 'against')} className={'card card-category card-category-against' + (this.state.filter === 'against' ? ' is-selected' : '')}>
                       <div className="card-header">
-                        <p className="card-title">Against{claim.get('truthiness') === 'false' ? <span className="icon-confirmed-stance">Confirmed</span> : null}</p>
+                        <p className="card-title">Against{claim.get('truthiness') === 'false' ? <span className="icon icon-confirmed-stance">Confirmed</span> : null}</p>
                       </div>
                       <div className="card-content">
                         <div className="sources"><span className="sources-count">{claim.articlesByStance('against').length}</span><span className="indicator-holder" dangerouslySetInnerHTML={{__html: Array(claim.articlesByStance('against').length + 1).join('<span class="indicator indicator-false"></span>')}}/></div>
@@ -398,10 +398,10 @@ module.exports = React.createClass({
                   <span className="navigation-label">Share this claim:</span>
                 </li>
                 <li>
-                  <a href={'https://twitter.com/intent/tweet?text='+claim.get('headline')+'&via=emergentdotinfo&url='+encodeURIComponent(document.URL)} target="_blank" className="navigation-link"><span className="icon icon-twitter-round"></span></a>
+                  <a href={'https://twitter.com/intent/tweet?text='+claim.get('headline')+'&via=emergentdotinfo&url='+encodeURIComponent(document.URL)} target="_blank" className="navigation-link twitter"><span className="icon icon-twitter-white"></span></a>
                 </li>
                 <li>
-                  <a href={'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(document.URL)} target="_blank" className="navigation-link"><span className="icon icon-facebook-round"></span></a>
+                  <a href={'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(document.URL)} target="_blank" className="navigation-link facebook"><span className="icon icon-facebook-white"></span></a>
                 </li>
               </ul>
             </div>
