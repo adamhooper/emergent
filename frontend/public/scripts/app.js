@@ -42143,8 +42143,8 @@ module.exports = React.createClass({displayName: 'exports',
             React.DOM.div({className: "container"}, 
               React.DOM.span({className: "next-label"}, "Next in ", claim.get('categories')[0], ":"), 
               React.DOM.div({className: "next-link-holder"}, 
-                React.DOM.div({className: 'stance stance-small stance-'+claim.get('truthiness')}, 
-                  React.DOM.span({className: "stance-value"}, claim.truthinessText())
+                React.DOM.div({className: 'stance stance-small stance-' + nextClaim.get('truthiness')}, 
+                  React.DOM.span({className: "stance-value"}, nextClaim.truthinessText())
                 ), 
                 Link({to: "claim", params: { slug: nextClaim.get('slug')}}, nextClaim.get('headline'))
               )
