@@ -50,7 +50,7 @@ module.exports = React.createClass({
         <this.props.activeRouteHandler claims={this.props.claims}/>
         <footer className="site-footer">
           <div className="container">
-            <div className="copyright">© Emergent 2015</div>
+            <div className="copyright">&copy; Emergent 2015</div>
             <nav className="footer-menu">
               <ul className="navigation navigation-footer">
                 <li><a href="http://emergentinfo.tumblr.com/" className="navigation-link">Blog</a></li>
