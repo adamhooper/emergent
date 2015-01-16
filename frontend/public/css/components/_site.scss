@@ -49,6 +49,8 @@
     @include breakpoint($breakpoint-tablet) {
       margin-top: 0.2em;
       margin-bottom: 0;
+      padding-top: 2px;
+      padding-bottom: 0;
       float: none;
       font-size: 11px;
       margin-left: 0;
