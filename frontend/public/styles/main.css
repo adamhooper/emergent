@@ -1056,7 +1056,7 @@ ul.credits {
     font-weight: 500; }
   .claim-footer-next .next-link-holder {
     position: relative;
-    padding-left: 5em;
+    padding-left: 5.5em;
     margin-top: 0.5em; }
     .claim-footer-next .next-link-holder .stance {
       position: absolute;
@@ -1577,28 +1577,36 @@ button.navigation-link {
       padding-top: 1.9em;
       height: 6em; }
       .site-header-primary .site-menu {
-        padding-top: 1.2em; } }
+        padding-top: 1.25em; } }
 
-.site-logo .emergent {
-  background: url('/images/emergent-mobile.png') no-repeat;
-  background-size: 122px 28px;
-  height: 28px;
-  line-height: 1;
-  margin-bottom: 0;
-  padding-top: 0.35em;
-  text-indent: -9999px;
-  width: 122px;
-  display: block; }
-  @media (min--moz-device-pixel-ratio: 1.3), (-o-min-device-pixel-ratio: 2.6 / 2), (-webkit-min-device-pixel-ratio: 1.3), (min-device-pixel-ratio: 1.3), (min-resolution: 1.3dppx) {
-    .site-logo .emergent {
-      background-image: url('/images/emergent-mobile@2x.png'); } }
-  @media (min-width: 48em) {
-    .site-logo .emergent {
-      background: url('/images/emergent.png') no-repeat;
-      background-size: 141px 42px;
-      height: 42px;
-      padding-top: 0;
-      width: 141px; } }
+.site-logo {
+  text-decoration: none; }
+  .site-logo .tagline {
+    text-decoration: none;
+    color: #FFF;
+    font-size: 13px;
+    line-height: 1;
+    display: block; }
+  .site-logo .emergent {
+    background: url('/images/emergent-mobile.png') no-repeat;
+    background-size: 122px 28px;
+    height: 28px;
+    line-height: 1;
+    margin-bottom: 0;
+    padding-top: 0.35em;
+    text-indent: -9999px;
+    width: 122px;
+    display: block; }
+    @media (min--moz-device-pixel-ratio: 1.3), (-o-min-device-pixel-ratio: 2.6 / 2), (-webkit-min-device-pixel-ratio: 1.3), (min-device-pixel-ratio: 1.3), (min-resolution: 1.3dppx) {
+      .site-logo .emergent {
+        background-image: url('/images/emergent-mobile@2x.png'); } }
+    @media (min-width: 48em) {
+      .site-logo .emergent {
+        background: url('/images/emergent.png') no-repeat;
+        background-size: 122px 28px;
+        height: 28px;
+        padding-top: 0;
+        width: 122px; } }
   @media (min-width: 48em) and (min--moz-device-pixel-ratio: 1.3), (min-width: 48em) and (-o-min-device-pixel-ratio: 2.6 / 2), (min-width: 48em) and (-webkit-min-device-pixel-ratio: 1.3), (min-width: 48em) and (min-device-pixel-ratio: 1.3), (min-width: 48em) and (min-resolution: 1.3dppx) {
     .site-logo .emergent {
       background-image: url('/images/emergent@2x.png'); } }
@@ -1814,7 +1822,7 @@ button.navigation-link {
       float: none; } }
   .stance.stance-small {
     padding: .2em .2em .3em;
-    width: 4.58333em; }
+    width: 5em; }
 
 .stance-value {
   font-size: 0.8em;

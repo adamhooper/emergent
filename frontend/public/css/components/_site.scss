@@ -23,12 +23,23 @@
     height: 6em;
 
     .site-menu {
-      padding-top: 1.2em;
+      padding-top: 1.25em;
     }
   }
 }
 
 .site-logo {
+
+  text-decoration: none;
+
+  .tagline {
+    text-decoration: none;
+    color: #FFF;
+    font-weight: weight(light);
+    font-size: 13px;
+    line-height: 1;
+    display: block;
+  }
 
   .emergent {
     background: image-url('emergent-mobile.png') no-repeat;
@@ -48,10 +59,10 @@
 
       @include image-2x('emergent@2x.png');
 
-      background-size: 141px 42px;
-      height: 42px;
+      background-size: 122px 28px;
+      height: 28px;
       padding-top: 0;
-      width: 141px;
+      width: 122px;
     }
   }
 }
