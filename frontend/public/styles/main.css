@@ -1066,7 +1066,8 @@ ul.credits {
       font-size: 1.2em; }
   @media (min-width: 48em) {
     .claim-footer-next .container {
-      padding-left: 10.2em; } }
+      padding-left: 10.2em;
+      padding-right: 19%; } }
 
 .cards {
   max-width: 445px; }
@@ -1473,17 +1474,17 @@ button.navigation-link {
     margin-bottom: 0.5em; }
   .navigation-footer-social .navigation .navigation-link {
     margin-right: 0.5em;
-    width: 25px;
-    height: 25px;
+    width: 31px;
+    height: 31px;
     overflow: hidden;
     background-color: #000; }
     .navigation-footer-social .navigation .navigation-link.facebook {
-      padding: 5px 0 0 7px;
+      padding: 8px 0 0 10px;
       background-color: #3b5898; }
       .navigation-footer-social .navigation .navigation-link.facebook:hover {
         background-color: #344d86; }
     .navigation-footer-social .navigation .navigation-link.twitter {
-      padding: 5px 0 0 5px;
+      padding: 8px 0 0 8px;
       background-color: #01aced; }
       .navigation-footer-social .navigation .navigation-link.twitter:hover {
         background-color: #019ad4; }
@@ -1793,7 +1794,7 @@ button.navigation-link {
   display: inline-block;
   float: left;
   line-height: 1;
-  padding: .4em;
+  padding: .4em .4em .5em;
   text-align: center;
   width: 5.5em; }
   .with-stance .stance {
@@ -1920,7 +1921,9 @@ button.navigation-link {
 .tracking-header {
   font-size: 0.8em;
   font-weight: 500;
-  color: #7f7f7f; }
+  color: #7f7f7f;
+  display: inline-block;
+  margin-bottom: 0.5em; }
   .tracking-header a {
     font-weight: 600;
     text-decoration: none; }
@@ -1946,11 +1949,12 @@ button.navigation-link {
   padding: 0 0 1.4em; }
   @media (min-width: 48em) {
     .page-timeline .article {
-      padding: 0 1em 1.2em 2em; } }
+      padding: 0 1em 1.4em 2em; } }
   .page-timeline .article .article-description {
     margin-bottom: 0; }
   .page-timeline .article .article-list-title {
-    margin-top: 0; }
+    margin-top: 0;
+    margin-bottom: 0.3em; }
   .page-timeline .article .icon {
     position: absolute;
     left: 0;
@@ -1994,6 +1998,9 @@ button.navigation-link {
     @media (min-width: 48em) {
       .page-timeline .article-header-date span {
         padding: 2em 1em 1em 2em; } }
+.page-timeline .articles li .shares-label,
+.page-timeline .articles li .shares-value {
+  font-size: 12px; }
 @media (min-width: 48em) {
   .page-timeline .articles li {
     margin-left: 9.6em;

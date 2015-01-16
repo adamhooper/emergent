@@ -9,7 +9,7 @@
     padding: 0 0 1.4em;
 
     @include breakpoint($breakpoint-tablet) {
-      padding: 0 1em 1.2em 2em;
+      padding: 0 1em 1.4em 2em;
     }
 
     .article-description {
@@ -17,6 +17,7 @@
     }
     .article-list-title {
       margin-top: 0;
+      margin-bottom: 0.3em;
     }
 
     .icon {
@@ -79,6 +80,11 @@
 
   .articles {
       li {
+        .shares-label,
+        .shares-value {
+          font-size: 12px;
+        }
+
         @include breakpoint($breakpoint-tablet) {
           margin-left: 9.6em;
           border-left: 1px solid palette(border, base);

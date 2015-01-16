@@ -13,6 +13,8 @@
   font-size: font(xs);
   font-weight: weight(medium);
   color: palette(base, dark);
+  display: inline-block;
+  margin-bottom: 0.5em;
 
   a {
     font-weight: weight(bold);

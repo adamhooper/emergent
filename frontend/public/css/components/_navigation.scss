@@ -268,14 +268,14 @@
 
     .navigation-link {
       margin-right: 0.5em;
-      width: 25px;
-      height: 25px;
+      width: 31px;
+      height: 31px;
       overflow: hidden;
 
       background-color: #000;
 
       &.facebook {
-        padding: 5px 0 0 7px;
+        padding: 8px 0 0 10px;
         background-color: #3b5898;
 
         &:hover {
@@ -284,7 +284,7 @@
       }
 
       &.twitter {
-        padding: 5px 0 0 5px;
+        padding: 8px 0 0 8px;
         background-color: #01aced;
 
         &:hover {
