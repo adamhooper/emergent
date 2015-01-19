@@ -118,17 +118,15 @@ module.exports = React.createClass({
   submitClaim: function(e) {
     e.preventDefault();
     var serialize = $(this.refs.submitClaim.getDOMNode()).serialize();
-    // $.ajax({
-    //   url: 'http://api.emergent.info/claims',
-    //   dataType: "jsonp",
-    //   data: serialize,
-    //   type: 'post'
-    // }).done(function(result) {
-    //   console.log(result);
-    // });
-    // $.post('http://api.emergent.info/claims', serialize, function(result) {
-    //   console.log(result);
-    // });
+    console.log(serialize);
+    $.ajax({
+      url: 'http://api.emergent.info/claims',
+      crossDomain: true,
+      data: serialize,
+      type: 'post'
+    }).done(function(result) {
+      console.log(result);
+    });
   },
 
   render: function() {

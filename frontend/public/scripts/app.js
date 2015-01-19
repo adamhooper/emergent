@@ -42276,6 +42276,20 @@ module.exports = React.createClass({displayName: 'exports',
     return new String(str).replace(/(\d)(?=(\d{3})+$)/g, '$1,');
   },
 
+  submitClaim: function(e) {
+    e.preventDefault();
+    var serialize = $(this.refs.submitClaim.getDOMNode()).serialize();
+    console.log(serialize);
+    $.ajax({
+      url: 'http://api.emergent.info/claims',
+      crossDomain: true,
+      data: serialize,
+      type: 'post'
+    }).done(function(result) {
+      console.log(result);
+    });
+  },
+
   render: function() {
     return (
       React.DOM.div({className: "page"}, 
@@ -42351,12 +42365,24 @@ module.exports = React.createClass({displayName: 'exports',
           ), 
           React.DOM.nav({className: "page-navigation"}, 
             React.DOM.ul({className: "navigation navigation-page"}, 
-              /*<li>
-                <app.components.Modal title="Submit a claim" trigger={<a href="#submit-a-claim" className="navigation-link">Submit a claim</a>}>
-                  Lorem Ipsum
-                </app.components.Modal>
-                <p>Lorem ipsum dolor sit amet pro patria mori through our special tool.</p>
-              </li>*/
+              React.DOM.li(null, 
+                app.components.Modal({title: "Submit a claim", trigger: React.DOM.a({href: "#submit-a-claim", className: "navigation-link"}, "Submit a claim")}, 
+                  React.DOM.form({className: "form", ref: "submitClaim", onSubmit: this.submitClaim}, 
+                    React.DOM.div({className: "input-group"}, 
+                      React.DOM.label({htmlFor: "submit-what"}, "What's the claim"), 
+                      React.DOM.input({name: "claim", id: "submit-what", type: "text", required: true})
+                    ), 
+                    React.DOM.div({className: "input-group"}, 
+                      React.DOM.label({htmlFor: "submit-url"}, "What source should we look at?"), 
+                      React.DOM.input({name: "url", id: "submit-url", placeholder: "URL", type: "url", required: true})
+                    ), 
+                    React.DOM.div({className: "button-group"}, 
+                      React.DOM.button({type: "submit", name: "submit", className: "button button-submit"}, "Submit this claim")
+                    )
+                  )
+                ), 
+                React.DOM.p(null, "Lorem ipsum dolor sit amet pro patria mori through our special tool.")
+              ), 
               React.DOM.li(null, 
                 React.DOM.strong(null, "Sign up for our newsletter"), 
                 React.DOM.p(null, "Our weekly newsletter is the best way to get updates on the rumors we're tracking. We never sell or share your info."), 
