@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+process.chdir(__dirname);
+
 var express = require('express')
 var morgan = require('morgan');
 var serveStatic = require('serve-static');

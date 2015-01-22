@@ -1,13 +1,13 @@
 #!/bin/sh
 
-# This script is used by awsbox to install dependencies for all apps.
+# This script installs npm dependencies for all apps.
 
+DIR="$(dirname "$0")/.."
 NPM_ARGS="--production --cache-min 1209600" # 2 weeks
 
-(cd api && npm install $NPM_ARGS)
-(cd data-store && npm install $NPM_ARGS)
-(cd job-queue && npm install $NPM_ARGS)
-(cd editor && npm install $NPM_ARGS)
-(cd url-fetcher && npm install $NPM_ARGS)
-(cd frontend && npm install $NPM_ARGS)
-(cd bin && npm install --cache-min 1209600 kexec)
+(cd "$DIR"/api && npm install $NPM_ARGS)
+(cd "$DIR"/data-store && npm install $NPM_ARGS)
+(cd "$DIR"/editor && npm install $NPM_ARGS)
+(cd "$DIR"/frontend && npm install $NPM_ARGS)
+(cd "$DIR"/job-queue && npm install $NPM_ARGS)
+(cd "$DIR"/url-fetcher && npm install $NPM_ARGS)

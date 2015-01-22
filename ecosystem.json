@@ -1,0 +1,32 @@
+{
+  "apps": [
+    {
+      "name": "api",
+      "script": "api/server.js",
+      "env": { "PORT": "1338" },
+      "env_production": { "NODE_ENV": "production" }
+    },
+    {
+      "name": "www",
+      "script": "frontend/server.js",
+      "env": { "PORT": "1339" },
+      "env_production": { "NODE_ENV": "production" }
+    },
+    {
+      "name": "edit",
+      "script": "editor/server.js",
+      "env": { "PORT": "1337" },
+      "env_production": { "NODE_ENV": "production" }
+    }
+  ],
+  "deploy": {
+    "production": {
+      "user": "pm2",
+      "host": "web.us-central1-a.emergent-dot-info",
+      "ref": "origin/master",
+      "repo": "https://source.developers.google.com/p/emergent-dot-info/",
+      "path": "/opt/emergent/code",
+      "post-deploy" : "deploy/compile-then-start-or-restart.sh"
+    }
+  }
+}

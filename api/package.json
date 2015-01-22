@@ -2,9 +2,9 @@
   "name": "truthmaker-api",
   "version": "0.0.0",
   "description": "Serves up data from Truthmaker for the masses",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "start": "./index.js",
+    "start": "./server.js",
     "test": "node_modules/mocha/bin/mocha"
   },
   "repository": {

@@ -3,9 +3,10 @@
   "private": true,
   "version": "0.0.0",
   "description": "Truthmaker interface for editors",
+  "main": "server.js",
   "keywords": [],
   "scripts": {
-    "start": "node_modules/coffee-script/bin/coffee index.coffee",
+    "start": "node_modules/coffee-script/bin/coffee server.js",
     "test": "node_modules/mocha/bin/mocha",
     "test-js": "node_modules/karma/bin/karma start"
   },

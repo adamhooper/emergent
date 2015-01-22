@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+process.chdir(__dirname);
+
 require('coffee-script/register');
 
 var app = require('./app');
