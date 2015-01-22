@@ -10,4 +10,4 @@ DIR="$(dirname "$0")/.."
 (cd "$DIR"/data-store && env NODE_ENV=production bin/sequelize db:migrate)
 "$DIR"/bin/test-all.sh
 
-pm2 startOrRestart ecosystem.json
+pm2 startOrRestart ecosystem.json --env production
