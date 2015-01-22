@@ -17,6 +17,12 @@
       "script": "editor/server.js",
       "env": { "PORT": "1337" },
       "env_production": { "NODE_ENV": "production" }
+    },
+    {
+      "name": "url-fetcher",
+      "script": "url-fetcher/server.js",
+      "env": {},
+      "env_production": { "NODE_ENV": "production" }
     }
   ],
   "deploy": {
