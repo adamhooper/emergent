@@ -1,5 +1,5 @@
 {
-  "clientSecret":"K_FVxHMuQvkUnF2v5ZDuHIC0",
-  "clientID": "512181785429-0agvv2v36krfnh5gfl7i5bf83pad441m.apps.googleusercontent.com",
+  "clientSecret":"et74AY3iSinP85cerF8Hd4ye",
+  "clientID": "753273555658-l5jbljt82q3ntla2nhgtfrlvjuk7fjov.apps.googleusercontent.com",
   "callbackURL": "http://localhost:1337/auth/google/callback"
 }

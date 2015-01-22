@@ -42313,6 +42313,7 @@ module.exports = React.createClass({displayName: 'exports',
   },
 
   render: function() {
+    var filteredClaims = this.filteredClaims();
     return (
       React.DOM.div({className: "page"}, 
         app.components.Header({claims: this.props.claims, search: this.state.search || '', category: this.heading()}), 
@@ -42337,7 +42338,11 @@ module.exports = React.createClass({displayName: 'exports',
               )
             ), 
             React.DOM.ul({className: "articles"}, 
-              this.filteredClaims().map(function(claim, i) {
+              filteredClaims.length === 0 ?
+                React.DOM.li({className: "no-result"}, 
+                  React.DOM.p(null, "Sorry – no results match the selected criteria.")
+                )
+              : filteredClaims.map(function(claim, i) {
                 return (
                   React.DOM.li({key: claim.id}, 
                     React.DOM.article({className: "article article-preview with-stance"}, 

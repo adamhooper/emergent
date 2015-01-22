@@ -215,6 +215,19 @@ $article-padding:            2em;
   }
 }
 
+//
+// No result
+.no-result {
+  padding-top: $article-padding;
+  padding-bottom: $article-padding;
+
+  @extend %page-gutters;
+
+  @include breakpoint($breakpoint-tablet) {
+    min-height: 200px;
+  }
+}
+
 
 //
 // Filter source article

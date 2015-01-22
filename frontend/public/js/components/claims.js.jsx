@@ -134,6 +134,7 @@ module.exports = React.createClass({
   },
 
   render: function() {
+    var filteredClaims = this.filteredClaims();
     return (
       <div className="page">
         <app.components.Header claims={this.props.claims} search={this.state.search || ''} category={this.heading()}/>
@@ -158,7 +159,11 @@ module.exports = React.createClass({
               </ul>
             </nav>
             <ul className="articles">
-              {this.filteredClaims().map(function(claim, i) {
+              {filteredClaims.length === 0 ?
+                <li className="no-result">
+                  <p>Sorry – no results match the selected criteria.</p>
+                </li>
+              : filteredClaims.map(function(claim, i) {
                 return (
                   <li key={claim.id}>
                     <article className="article article-preview with-stance">
