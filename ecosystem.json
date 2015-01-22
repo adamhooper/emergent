@@ -23,8 +23,9 @@
     "production": {
       "user": "pm2",
       "host": "web.us-central1-a.emergent-dot-info",
-      "ref": "origin/master",
-      "repo": "https://source.developers.google.com/p/emergent-dot-info/",
+      "forward-agent": "true",
+      "ref": "origin/feature/gcloud",
+      "repo": "git@github.com:craigsilverman/emergent.git",
       "path": "/opt/emergent/code",
       "post-deploy" : "deploy/compile-then-start-or-restart.sh"
     }
