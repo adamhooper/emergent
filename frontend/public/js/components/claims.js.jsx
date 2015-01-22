@@ -117,12 +117,16 @@ module.exports = React.createClass({
 
   submitClaim: function(e) {
     e.preventDefault();
-    var serialize = $(this.refs.submitClaim.getDOMNode()).serialize();
-    console.log(serialize);
+    var formData = $(this.refs.submitClaim.getDOMNode()).serializeArray();
+    var jsonData = {};
+    formData.forEach(function(d) {
+      jsonData[d.name] = d.value;
+    });
+
     $.ajax({
-      url: 'http://api.emergent.info/claims',
-      crossDomain: true,
-      data: serialize,
+      url: this.props.claims.url,
+      contentType: 'application/json',
+      data: JSON.stringify(jsonData),
       type: 'post'
     }).done(function(result) {
       console.log(result);
