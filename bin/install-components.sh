@@ -3,4 +3,4 @@
 DIR="$(dirname "$0")/.."
 
 "$DIR"/bin/npm-install-components.sh
-(cd "$DIR"/frontend && bundle install)
+(cd "$DIR"/frontend && bundle install --path ../../shared/bundle)
