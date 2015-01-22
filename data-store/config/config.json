@@ -1,9 +1,9 @@
 {
   "development": {
     "coffee": true,
-    "username": "truthmaker",
-    "password": "truthmaker",
-    "database": "truthmaker_dev",
+    "username": "emergent",
+    "password": "emergent",
+    "database": "emergent_dev",
     "host": "127.0.0.1",
     "dialect": "postgres",
     "native": true,
@@ -11,9 +11,9 @@
   },
   "test": {
     "coffee": true,
-    "username": "truthmaker",
-    "password": "truthmaker",
-    "database": "truthmaker_test",
+    "username": "emergent_test",
+    "password": "emergent_test",
+    "database": "emergent_test",
     "host": "127.0.0.1",
     "dialect": "postgres",
     "native": true,
@@ -21,9 +21,9 @@
   },
   "production": {
     "coffee": true,
-    "username": "truthmaker",
-    "password": "truthmaker",
-    "database": "truthmaker",
+    "username": "emergent",
+    "password": "emergent",
+    "database": "emergent",
     "host": "127.0.0.1",
     "dialect": "postgres",
     "native": true,
