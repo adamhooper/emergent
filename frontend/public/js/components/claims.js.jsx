@@ -5,6 +5,8 @@ var BackboneCollection = require('../mixins/backbone_collection.js');
 var Link = require('react-router').Link;
 var _ = require('underscore');
 var moment = require('moment');
+window.$ = window.jQuery = require('jquery');
+var Parsley = require('parsleyjs');
 
 module.exports = React.createClass({
 
@@ -60,6 +62,10 @@ module.exports = React.createClass({
 
   componentWillMount: function() {
     this.subscribeTo(this.props.claims);
+  },
+
+  componentDidMount: function() {
+    $(this.refs.submitClaim.getDOMNode()).parsley();
   },
 
   setStanceFilter: function(stance) {
@@ -118,11 +124,14 @@ module.exports = React.createClass({
   submitClaim: function(e) {
     e.preventDefault();
     var serialize = $(this.refs.submitClaim.getDOMNode()).serialize();
-    console.log(serialize);
     $.ajax({
       url: 'http://api.emergent.info/claims',
       crossDomain: true,
-      data: serialize,
+      data: JSON.stringify({
+        "claim": "test",
+        "url": "http://www.google.com"
+      }),
+      contentType: "application/json; charset=utf-8",
       type: 'post'
     }).done(function(result) {
       console.log(result);
@@ -209,11 +218,11 @@ module.exports = React.createClass({
                   <form className="form" ref="submitClaim" onSubmit={this.submitClaim}>
                     <div className="input-group">
                       <label htmlFor="submit-what">What's the claim</label>
-                      <input name="claim" id="submit-what" type="text" required/>
+                      <input name="claim" id="submit-what" type="text" required data-parsley-error-message="This field is required."/>
                     </div>
                     <div className="input-group">
                       <label htmlFor="submit-url">What source should we look at?</label>
-                      <input name="url" id="submit-url" placeholder="URL" type="url" required/>
+                      <input name="url" id="submit-url" placeholder="URL" type="url" required data-parsley-error-message="A valid URL is required."/>
                     </div>
                     <div className="button-group">
                       <button type="submit" name="submit" className="button button-submit">Submit this claim</button>
