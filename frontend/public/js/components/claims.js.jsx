@@ -123,15 +123,16 @@ module.exports = React.createClass({
 
   submitClaim: function(e) {
     e.preventDefault();
-    var serialize = $(this.refs.submitClaim.getDOMNode()).serialize();
+    var formData = $(this.refs.submitClaim.getDOMNode()).serializeArray();
+    var jsonData = {};
+    formData.forEach(function(d) {
+      jsonData[d.name] = d.value;
+    });
+
     $.ajax({
-      url: 'http://api.emergent.info/claims',
-      crossDomain: true,
-      data: JSON.stringify({
-        "claim": "test",
-        "url": "http://www.google.com"
-      }),
-      contentType: "application/json; charset=utf-8",
+      url: this.props.claims.url,
+      contentType: 'application/json',
+      data: JSON.stringify(jsonData),
       type: 'post'
     }).done(function(result) {
       console.log(result);
@@ -139,6 +140,7 @@ module.exports = React.createClass({
   },
 
   render: function() {
+    var filteredClaims = this.filteredClaims();
     return (
       <div className="page">
         <app.components.Header claims={this.props.claims} search={this.state.search || ''} category={this.heading()}/>
@@ -163,7 +165,11 @@ module.exports = React.createClass({
               </ul>
             </nav>
             <ul className="articles">
-              {this.filteredClaims().map(function(claim, i) {
+              {filteredClaims.length === 0 ?
+                <li className="no-result">
+                  <p>Sorry – no results match the selected criteria.</p>
+                </li>
+              : filteredClaims.map(function(claim, i) {
                 return (
                   <li key={claim.id}>
                     <article className="article article-preview with-stance">
