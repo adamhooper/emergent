@@ -44262,7 +44262,8 @@ module.exports = React.createClass({displayName: 'exports',
     return {
       sort: null,
       stance: null,
-      search: this.props.query.search
+      search: this.props.query.search,
+      submitted: false
     }
   },
 
@@ -44380,9 +44381,18 @@ module.exports = React.createClass({displayName: 'exports',
       contentType: 'application/json',
       data: JSON.stringify(jsonData),
       type: 'post'
-    }).done(function(result) {
-      console.log(result);
-    });
+    }).done(function(result, status) {
+      if (status === 'success') {
+        this.setState({ submitted: true });
+      } else {
+        this.setState({ submitted: 'error' });
+      }
+    }.bind(this));
+  },
+
+  resetSubmitClaim: function(e) {
+    e.preventDefault();
+    this.setState({ submitted: false });
   },
 
   render: function() {
@@ -44467,19 +44477,32 @@ module.exports = React.createClass({displayName: 'exports',
             React.DOM.ul({className: "navigation navigation-page"}, 
               React.DOM.li(null, 
                 app.components.Modal({title: "Submit a claim", trigger: React.DOM.a({href: "#submit-a-claim", className: "navigation-link"}, "Submit a claim")}, 
-                  React.DOM.form({className: "form", ref: "submitClaim", onSubmit: this.submitClaim}, 
-                    React.DOM.div({className: "input-group"}, 
-                      React.DOM.label({htmlFor: "submit-what"}, "What's the claim"), 
-                      React.DOM.input({name: "claim", id: "submit-what", type: "text", required: true, 'data-parsley-error-message': "This field is required."})
-                    ), 
-                    React.DOM.div({className: "input-group"}, 
-                      React.DOM.label({htmlFor: "submit-url"}, "What source should we look at?"), 
-                      React.DOM.input({name: "url", id: "submit-url", placeholder: "URL", type: "url", required: true, 'data-parsley-error-message': "A valid URL is required."})
-                    ), 
-                    React.DOM.div({className: "button-group"}, 
-                      React.DOM.button({type: "submit", name: "submit", className: "button button-submit"}, "Submit this claim")
+                  this.state.submitted === true ?
+                    React.DOM.div(null, 
+                      React.DOM.strong(null, "Claim successfully submitted!"), 
+                      React.DOM.p(null, "Thank you for submitting a claim to Emergent."), 
+                      React.DOM.p(null, React.DOM.a({href: "#", onClick: this.resetSubmitClaim}, React.DOM.strong(null, "Submit another claim")))
                     )
-                  )
+                  :
+                    React.DOM.form({className: "form", ref: "submitClaim", onSubmit: this.submitClaim}, 
+                      this.state.submitted === 'error' ?
+                        React.DOM.div({className: "input-group error-message"}, 
+                          "Sorry, there was an error with your submission, please try again later."
+                        )
+                      : null, 
+                      React.DOM.div({className: "input-group"}, 
+                        React.DOM.label({htmlFor: "submit-what"}, "What's the claim"), 
+                        React.DOM.input({name: "claim", id: "submit-what", type: "text", required: true, 'data-parsley-error-message': "This field is required."})
+                      ), 
+                      React.DOM.div({className: "input-group"}, 
+                        React.DOM.label({htmlFor: "submit-url"}, "What source should we look at?"), 
+                        React.DOM.input({name: "url", id: "submit-url", placeholder: "URL", type: "url", required: true, 'data-parsley-error-message': "A valid URL is required."})
+                      ), 
+                      React.DOM.div({className: "button-group"}, 
+                        React.DOM.button({type: "submit", name: "submit", className: "button button-submit"}, "Submit this claim")
+                      )
+                    )
+                  
                 ), 
                 React.DOM.p(null, "Lorem ipsum dolor sit amet pro patria mori through our special tool.")
               ), 

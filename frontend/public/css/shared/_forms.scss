@@ -56,9 +56,23 @@ input[type="submit"] {
   }
 
   .button {
+    transition: background .15s ease-in-out;
     -webkit-appearance: none;
-    &-submit {
+    border: none;
+    margin: 0;
+    background-color: #e0e0e0;
+    color: #656565;
+    font-weight: weight(bold);
+    border: 1px solid transparent;
+    text-align: center;
+    padding: 1em 1em;
+    vertical-align: top;
+    line-height: 1;
+    font-size: font(sm);
 
+    &:hover {
+      background-color: #d6d6d6;
+      color: #656565;
     }
   }
 }
@@ -75,6 +89,10 @@ input[type="submit"] {
   &.filled {
     display: block;
   }
+}
+
+.error-message {
+  color: red;
 }
 
 input[type="text"],

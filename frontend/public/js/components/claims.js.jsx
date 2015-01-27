@@ -16,7 +16,8 @@ module.exports = React.createClass({
     return {
       sort: null,
       stance: null,
-      search: this.props.query.search
+      search: this.props.query.search,
+      submitted: false
     }
   },
 
@@ -134,9 +135,18 @@ module.exports = React.createClass({
       contentType: 'application/json',
       data: JSON.stringify(jsonData),
       type: 'post'
-    }).done(function(result) {
-      console.log(result);
-    });
+    }).done(function(result, status) {
+      if (status === 'success') {
+        this.setState({ submitted: true });
+      } else {
+        this.setState({ submitted: 'error' });
+      }
+    }.bind(this));
+  },
+
+  resetSubmitClaim: function(e) {
+    e.preventDefault();
+    this.setState({ submitted: false });
   },
 
   render: function() {
@@ -221,19 +231,32 @@ module.exports = React.createClass({
             <ul className="navigation navigation-page">
               <li>
                 <app.components.Modal title="Submit a claim" trigger={<a href="#submit-a-claim" className="navigation-link">Submit a claim</a>}>
-                  <form className="form" ref="submitClaim" onSubmit={this.submitClaim}>
-                    <div className="input-group">
-                      <label htmlFor="submit-what">What's the claim</label>
-                      <input name="claim" id="submit-what" type="text" required data-parsley-error-message="This field is required."/>
+                  {this.state.submitted === true ?
+                    <div>
+                      <strong>Claim successfully submitted!</strong>
+                      <p>Thank you for submitting a claim to Emergent.</p>
+                      <p><a href="#" onClick={this.resetSubmitClaim}><strong>Submit another claim</strong></a></p>
                     </div>
-                    <div className="input-group">
-                      <label htmlFor="submit-url">What source should we look at?</label>
-                      <input name="url" id="submit-url" placeholder="URL" type="url" required data-parsley-error-message="A valid URL is required."/>
-                    </div>
-                    <div className="button-group">
-                      <button type="submit" name="submit" className="button button-submit">Submit this claim</button>
-                    </div>
-                  </form>
+                  :
+                    <form className="form" ref="submitClaim" onSubmit={this.submitClaim}>
+                      {this.state.submitted === 'error' ?
+                        <div className="input-group error-message">
+                          Sorry, there was an error with your submission, please try again later.
+                        </div>
+                      : null }
+                      <div className="input-group">
+                        <label htmlFor="submit-what">What's the claim</label>
+                        <input name="claim" id="submit-what" type="text" required data-parsley-error-message="This field is required."/>
+                      </div>
+                      <div className="input-group">
+                        <label htmlFor="submit-url">What source should we look at?</label>
+                        <input name="url" id="submit-url" placeholder="URL" type="url" required data-parsley-error-message="A valid URL is required."/>
+                      </div>
+                      <div className="button-group">
+                        <button type="submit" name="submit" className="button button-submit">Submit this claim</button>
+                      </div>
+                    </form>
+                  }
                 </app.components.Modal>
                 <p>Lorem ipsum dolor sit amet pro patria mori through our special tool.</p>
               </li>

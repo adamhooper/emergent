@@ -870,7 +870,22 @@ input[type="submit"] {
   .form input[type="email"]:focus {
     outline: none; }
 .form .button {
-  -webkit-appearance: none; }
+  transition: background .15s ease-in-out;
+  -webkit-appearance: none;
+  border: none;
+  margin: 0;
+  background-color: #e0e0e0;
+  color: #656565;
+  font-weight: 600;
+  border: 1px solid transparent;
+  text-align: center;
+  padding: 1em 1em;
+  vertical-align: top;
+  line-height: 1;
+  font-size: 0.95em; }
+  .form .button:hover {
+    background-color: #d6d6d6;
+    color: #656565; }
 
 .parsley-errors-list {
   display: none;
@@ -881,6 +896,9 @@ input[type="submit"] {
   font-size: 0.8em; }
   .parsley-errors-list.filled {
     display: block; }
+
+.error-message {
+  color: red; }
 
 input[type="text"].parsley-error,
 input[type="url"].parsley-error,
