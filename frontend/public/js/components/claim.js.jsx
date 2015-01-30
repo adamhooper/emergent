@@ -108,8 +108,8 @@ module.exports = React.createClass({
     return str.length > 70 ? str.substring(0, str.lastIndexOf(' ', 70)) + '...' : str;
   },
 
-  tracking: function(type, name) {
-    ga('send', 'event', type, name);
+  buildTrackingOnClick: function(type, name) {
+    return function() { ga('send', 'event', type, name); };
   },
 
   render: function() {
@@ -217,10 +217,10 @@ module.exports = React.createClass({
                   <nav className="navigation-social-buttons">
                     <ul className="navigation">
                       <li>
-                        <a href={'https://twitter.com/intent/tweet?text='+claim.get('headline')+'&via=emergentdotinfo&url='+encodeURIComponent(document.URL)} target="_blank" className="navigation-link twitter" onClick={this.tracking('social', 'twitter')}><span className="icon icon-twitter-white"></span>Share on Twitter</a>
+                        <a href={'https://twitter.com/intent/tweet?text='+claim.get('headline')+'&via=emergentdotinfo&url='+encodeURIComponent(document.URL)} target="_blank" className="navigation-link twitter" onClick={this.buildTrackingOnClick('social', 'twitter')}><span className="icon icon-twitter-white"></span>Share on Twitter</a>
                       </li>
                       <li>
-                        <a href={'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(document.URL)} target="_blank" className="navigation-link facebook" onClick={this.tracking('social', 'facebook')}><span className="icon icon-facebook-white"></span>Share on Facebook</a>
+                        <a href={'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(document.URL)} target="_blank" className="navigation-link facebook" onClick={this.buildTrackingOnClick('social', 'facebook')}><span className="icon icon-facebook-white"></span>Share on Facebook</a>
                       </li>
                     </ul>
                   </nav>
@@ -401,10 +401,10 @@ module.exports = React.createClass({
                   <span className="navigation-label">Share this claim:</span>
                 </li>
                 <li>
-                  <a href={'https://twitter.com/intent/tweet?text='+claim.get('headline')+'&via=emergentdotinfo&url='+encodeURIComponent(document.URL)} target="_blank" className="navigation-link twitter" onClick={this.tracking('social', 'twitter')}><span className="icon icon-twitter-white"></span></a>
+                  <a href={'https://twitter.com/intent/tweet?text='+claim.get('headline')+'&via=emergentdotinfo&url='+encodeURIComponent(document.URL)} target="_blank" className="navigation-link twitter" onClick={this.buildTrackingOnClick('social', 'twitter')}><span className="icon icon-twitter-white"></span></a>
                 </li>
                 <li>
-                  <a href={'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(document.URL)} target="_blank" className="navigation-link facebook" onClick={this.tracking('social', 'facebook')}><span className="icon icon-facebook-white"></span></a>
+                  <a href={'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(document.URL)} target="_blank" className="navigation-link facebook" onClick={this.buildTrackingOnClick('social', 'facebook')}><span className="icon icon-facebook-white"></span></a>
                 </li>
               </ul>
             </div>
