@@ -173,7 +173,7 @@ module.exports =
   'options /claims': (req, res, next) ->
     res.header('Access-Control-Allow-Methods', 'GET,POST,OPTIONS')
     res.header('Access-Control-Allow-Headers', 'Content-Type')
-    res.status(200).end()
+    res.status(204).end()
 
   'post /claims': (req, res, next) ->
     attributes =
