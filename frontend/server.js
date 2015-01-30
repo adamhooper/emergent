@@ -8,7 +8,18 @@ var serveStatic = require('serve-static');
 
 var app = express();
 
-app.use(morgan('dev'));
+switch (app.get('env')) {
+  case 'production':
+    app.use(morgan('combined'));
+    app.enable('trust proxy');
+    break;
+  case 'test':
+    break;
+    logMode = 'combined'; break;
+  default:
+    app.use(morgan('dev'));
+}
+
 app.use(serveStatic(__dirname + '/public'));
 app.use(function(req, res) {
   res.sendFile(__dirname + '/views/' + (process.env.NODE_ENV=='development' ? 'dev.html' : 'index.html'));
