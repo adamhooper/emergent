@@ -1,2 +1,5 @@
 /.sass-cache
 node_modules
+public/scripts/app.js
+public/scripts/app.min.js
+public/styles
