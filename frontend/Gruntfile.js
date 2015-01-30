@@ -54,6 +54,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-autoprefixer');
 
-  grunt.registerTask('default', ['browserify', 'uglify', 'watch']);
+  grunt.registerTask('default', ['browserify', 'uglify', 'sass', 'watch']);
   grunt.registerTask('dist', ['browserify', 'uglify', 'sass']);
 };
