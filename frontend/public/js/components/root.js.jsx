@@ -4,7 +4,7 @@ var React = require('react');
 var Router = require('react-router');
 var Link = Router.Link;
 
-var nUpdatesToIgnore = 2;
+var lastPathname = window.location.pathname;
 
 module.exports = React.createClass({
   mixins: [ Router.ActiveState ],
@@ -16,15 +16,10 @@ module.exports = React.createClass({
   },
 
   updateActiveState: function() {
-    // react-router sends two updates on page load. We want zero, because
-    // our first call to window.ga() happens when window.ga() actually
-    // loads.
-    if (nUpdatesToIgnore > 0) {
-      nUpdatesToIgnore -= 1;
-    } else {
-      if (window.ga) {
-        window.ga('send', 'pageview');
-      }
+    if (lastPathname != window.location.pathname) {
+      console.log('New pathname', lastPathname, window.location.pathname);
+      lastPathname = window.location.pathname;
+      window.ga('send', 'pageview')
     }
   },
 
