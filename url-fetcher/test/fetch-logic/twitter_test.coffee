@@ -26,9 +26,3 @@ describe 'fetch-logic/twitter', ->
     f 'http://example.org', (err, data) ->
       expect(data.n).to.equal(2)
       done()
-
-  it 'should give "rawData" as original data', (done) ->
-    f.request.get.callsArgWith(1, null, 200, '{"count":229,"url":"http:\\/\\/example.org\\/"}')
-    f 'http://example.org', (err, data) ->
-      expect(data.rawData).to.equal('{"count":229,"url":"http:\\/\\/example.org\\/"}')
-      done()

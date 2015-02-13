@@ -12,7 +12,7 @@ describe 'UrlPopularityFetcher', ->
     @queue =
       queue: sinon.spy()
 
-    @fetchLogic = sinon.stub().callsArgWith(1, null, { n: 10, rawData: { foo: 'bar' }})
+    @fetchLogic = sinon.stub().callsArgWith(1, null, { n: 10 })
 
     @timeChooser =
       chooseTime: sinon.stub().returns(1000)
@@ -47,7 +47,7 @@ describe 'UrlPopularityFetcher', ->
   it 'should create a UrlPopularityGet', (done) ->
     id = '04808471-2828-467c-a6f3-c36754b2406d'
     @fetch id, 'http://example.org', 0, =>
-      expect(UrlPopularityGet.create).to.have.been.calledWith(urlId: id, shares: 10, service: 'facebook', rawData: { foo: 'bar' })
+      expect(UrlPopularityGet.create).to.have.been.calledWith(urlId: id, shares: 10, service: 'facebook')
       done()
 
   it 'should error when the urlFetches insertion errors', (done) ->

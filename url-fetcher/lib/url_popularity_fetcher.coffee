@@ -36,7 +36,6 @@ module.exports = class UrlPopularityFetcher
           urlId: urlId
           service: @service
           shares: data.n
-          rawData: '{}' # TODO nix this column
       .finally =>
         nFetches = nPreviousFetches + 1
         nextDate = @taskTimeChooser.chooseTime(nFetches, new Date())

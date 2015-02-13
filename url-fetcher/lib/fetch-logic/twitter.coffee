@@ -3,9 +3,7 @@ f = (url, done) ->
     return done(err) if err?
 
     data = JSON.parse(body)
-    done null,
-      n: data.count || 0
-      rawData: body
+    done(null, n: data.count || 0)
 
 f.request = require('request')
 

@@ -31,13 +31,6 @@ describe 'fetch-logic/google', ->
       expect(data.n).to.equal(23)
       done()
 
-  it 'should give "rawData" as original data', (done) ->
-    rawData = [{"result":{"metadata":{"globalCounts":{"count":23.0}}}}]
-    f.request.post.callsArgWith(1, null, 200, rawData)
-    f 'http://example.org', (err, data) ->
-      expect(data.rawData).to.equal(rawData)
-      done()
-
   it 'should give "n" as 0 when there are no shares', (done) ->
     f.request.post.callsArgWith(1, null, 200, [{}])
     f 'http://example.org', (err, data) ->

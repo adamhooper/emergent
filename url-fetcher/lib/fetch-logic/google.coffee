@@ -8,7 +8,7 @@ f = (url, done) ->
 
     n = body?[0]?.result?.metadata?.globalCounts?.count || 0
 
-    done(null, n: n, rawData: body)
+    done(null, n: n)
 
 f.request = require('request')
 

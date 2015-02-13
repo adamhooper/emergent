@@ -28,13 +28,6 @@ describe 'fetch-logic/facebook', ->
       expect(data.n).to.equal(4)
       done()
 
-  it 'should give "rawData" as original data', (done) ->
-    rawData = '{ "shares": 4 }'
-    f.request.get.callsArgWith(1, null, 200, rawData)
-    f 'http://example.org', (err, data) ->
-      expect(data.rawData).to.equal(rawData)
-      done()
-
   it 'should give "n" as 0 when there are no shares', (done) ->
     f.request.get.callsArgWith(1, null, 200, '{ "id": "http://example.org" }')
     f 'http://example.org', (err, data) ->

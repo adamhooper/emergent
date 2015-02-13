@@ -14,18 +14,13 @@ module.exports =
       allowNull: true
       comment: 'when we received this count'
 
-    # createdBy not necessary: it's always Truthmaker.
+    # createdBy not necessary: it's always Emergent.
 
     service:
       type: Sequelize.ENUM('facebook', 'twitter', 'google')
       allowNull: false
 
-    rawData:
-      type: Sequelize.TEXT
-      allowNull: false
-      comment: 'body of HTTP response from server'
-
     shares:
       type: Sequelize.INTEGER
       allowNull: false
-      comment: 'number of shares (parsed from rawData)'
+      comment: 'number of shares (parsed from HTTP response, which we do not save)'

@@ -193,15 +193,15 @@ describe '/claims', ->
       .then (url1) =>
         Promise.all([
           models.Article.create({ storyId: @claim1.id, urlId: url1.id }, 'user@example.org')
-          models.UrlPopularityGet.create(urlId: url1.id, service: 'facebook', rawData: '', shares: 10)
-          models.UrlPopularityGet.create(urlId: url1.id, service: 'facebook', rawData: '', shares: 20) # a higher count should make the lower one disappear
-          models.UrlPopularityGet.create(urlId: url1.id, service: 'twitter', rawData: '', shares: 14)
+          models.UrlPopularityGet.create(urlId: url1.id, service: 'facebook', shares: 10)
+          models.UrlPopularityGet.create(urlId: url1.id, service: 'facebook', shares: 20) # a higher count should make the lower one disappear
+          models.UrlPopularityGet.create(urlId: url1.id, service: 'twitter', shares: 14)
         ])
       .then -> models.Url.create(url: 'http://example.org/2')
       .then (url2) =>
         Promise.all([
           models.Article.create({ storyId: claim2.id, urlId: url2.id }, 'user@example.org')
-          models.UrlPopularityGet.create(urlId: url2.id, service: 'facebook', rawData: '', shares: 30) # should not affect claim1 count
+          models.UrlPopularityGet.create(urlId: url2.id, service: 'facebook', shares: 30) # should not affect claim1 count
         ])
       .then -> api.get('/claims')
       .then (res) =>

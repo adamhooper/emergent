@@ -29,7 +29,6 @@ createPopularity = (urlId, service, shares, at) ->
     urlId: urlId
     service: service
     shares: shares
-    rawData: ''
     createdAt: at
   }, raw: true)
 
