@@ -72,7 +72,7 @@ module.exports =
 
   find: (req, res) ->
     slug = req.param('slug') || ''
-    models.sequelize.query("""
+    models.sequelize.query('''
       SELECT
         s."id",
         s."slug",
@@ -103,7 +103,7 @@ module.exports =
         ) AS "tags"
       FROM "Story" s
       WHERE s."slug" = ?
-    """, null, { raw: true }, [ slug ])
+    ''', null, raw: true, type: 'SELECT', replacements: [ slug ])
       .then (arr) -> arr[0]
       .then (val) ->
         if val?
@@ -122,7 +122,7 @@ module.exports =
 
       Promise.all([
         Story.create(attributes, req.user.email)
-        Category.findAll(where: { name: reqCategories })
+        if reqCategories.length then Category.findAll(where: { name: reqCategories }) else []
         Promise.all(Tag.upsert({ name: tag }, req.user.email) for tag in reqTags)
       ])
         .tap ([story, categories, tagUpserts]) ->
@@ -148,7 +148,7 @@ module.exports =
     slug = req.param('slug') || ''
     # The ON DELETE CASCADE on the foreign key automatically destroys
     # CategoryStory and Article children.
-    Story.destroy(slug: slug)
+    Story.destroy(where: { slug: slug })
       .then -> models.sequelize.query('DELETE FROM "Tag" t WHERE NOT EXISTS (SELECT 1 FROM "StoryTag" WHERE "tagId" = t.id)')
       .then -> res.json({})
       .catch (err) -> res.status(500).json(err)
@@ -164,7 +164,7 @@ module.exports =
 
       Promise.all([
         Story.find(where: { slug: slug })
-        Category.findAll(where: { name: reqCategories })
+        if reqCategories.length then Category.findAll(where: { name: reqCategories }) else []
         Promise.all(Tag.upsert({ name: tag }, req.user.email) for tag in reqTags)
       ])
         .spread (story, wantedCategories, tagUpserts) ->
@@ -191,8 +191,8 @@ module.exports =
 
             Promise.all([
               Story.update(story, attributes, req.user.email)
-              CategoryStory.destroy(deleteCategoryWhere)
-              StoryTag.destroy(deleteTagWhere)
+              CategoryStory.destroy(where: deleteCategoryWhere)
+              StoryTag.destroy(where: deleteTagWhere)
               Promise.map(wantedCategoryStories, (cs) -> CategoryStory.upsert(cs, req.user.email))
               Promise.map(wantedStoryTags, (st) -> StoryTag.upsert(st, req.user.email))
             ])

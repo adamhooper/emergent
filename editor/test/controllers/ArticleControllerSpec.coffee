@@ -158,7 +158,7 @@ describe 'ArticleController', ->
                 @existingArticle = a
                 @existingUrlVersion = uv
                 ArticleVersion.create({ urlVersionId: uv.id, articleId: a.id }, 'user@example.org')
-                  .then (av) -> @existingArticleVersion = av
+                  .tap (av) => @existingArticleVersion = av
           .catch (e) -> console.warn(e)
 
       it 'should succeed', ->
@@ -177,7 +177,7 @@ describe 'ArticleController', ->
           .then -> ArticleVersion.findAll()
           .tap (arr) =>
             expect(arr.length).to.eq(2)
-            newVersions = arr.filter((av) -> av.id != @existingArticleVersion.id)
+            newVersions = arr.filter((av) => av.id != @existingArticleVersion.id)
             expect(newVersions.length).to.eq(1)
             expect(newVersions[0].urlVersionId).to.eq(@existingUrlVersion.id)
             expect(newVersions[0].articleId).not.to.eq(@existingArticle.id)

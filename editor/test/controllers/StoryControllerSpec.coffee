@@ -135,6 +135,7 @@ describe 'StoryController', ->
         .send(object)
 
       Promise.promisify(ret.end, ret)()
+        .tap (res) -> throw res.body if res.status == 500
 
     it 'should create the story in the database', ->
       req(slug: 'slug-a')

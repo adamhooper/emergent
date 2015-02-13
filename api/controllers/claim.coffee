@@ -35,7 +35,7 @@ getCategories = (claimIds) ->
     WHERE cs."storyId" IN (#{sqlClaimIds})
     ORDER BY cs."storyId", c.name
   """
-  models.sequelize.query(q, null, raw: true)
+  models.sequelize.query(q, null, raw: true, type: 'SELECT')
     .then (rows) ->
       ret = {}
       (ret[claimId] = []) for claimId in claimIds
@@ -54,7 +54,7 @@ getTags = (claimIds) ->
     WHERE st."storyId" IN (#{sqlClaimIds})
     ORDER BY st."storyId", t.name
   """
-  models.sequelize.query(q, null, raw: true)
+  models.sequelize.query(q, null, raw: true, type: 'SELECT')
     .then (rows) ->
       ret = {}
       (ret[claimId] = []) for claimId in claimIds
@@ -93,7 +93,7 @@ getStanceCounts = (claimIds) ->
     WHERE av.rank = 1
     GROUP BY "claimId", stance
   """
-  models.sequelize.query(q, null, raw: true)
+  models.sequelize.query(q, null, raw: true, type: 'SELECT')
     .then (rows) ->
       ret = {}
       # Set defaults
@@ -130,7 +130,7 @@ getShareCounts = (claimIds) ->
     WHERE a."storyId" IN (SELECT id FROM "ClaimIds")
     GROUP BY a."storyId"
   """
-  models.sequelize.query(q, null, raw: true)
+  models.sequelize.query(q, null, raw: true, type: 'SELECT')
     .then (rows) ->
       ret = {}
       # Set defaults

@@ -24,6 +24,6 @@ module.exports = class UserSubmittedClaimTracker
         models.Url.upsert({ url: usc.url }, null)
           .tap ([ url, isNew ]) => @_queue(url) if isNew
           .tap ([ url, isNew ]) ->
-            models.UserSubmittedClaim.partialUpdate({ id: usc.id }, { urlId: url.id }, null)
+            models.UserSubmittedClaim.bulkUpdate({ urlId: url.id }, { id: usc.id }, null)
           .tap(-> log('Done tracking.'))
       .then(-> null).nodeify(done)

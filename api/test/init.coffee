@@ -1,9 +1,5 @@
-before (done) ->
-  migrator = global.models.sequelize.getMigrator
-    path: __dirname + '/../../data-store/migrations'
-    filesFilter: /\.coffee$/
-
-  migrator.migrate().complete(done)
+before ->
+  require('../../data-store').migrate()
 
 beforeEach (done) ->
   # Top-level object tables. CASCADE will wipe the others.

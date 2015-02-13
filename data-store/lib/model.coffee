@@ -1,5 +1,6 @@
 Instance = require('./instance')
 Promise = require('sequelize').Promise
+Sequelize = require('sequelize')
 _ = require('sequelize').Utils._
 
 module.exports = class Model
@@ -65,12 +66,6 @@ module.exports = class Model
     instance._impl.save()
       .then(-> instance)
 
-  # Returns a Promise of the number of updated rows
-  partialUpdate: (where, attrs, email) ->
-    attrs = @_formatUpdateAttrs(attrs, email)
-    @_impl.update(attrs, where)
-      .then((x) -> x[0])
-
   # Returns a Promise of null
   bulkCreate: (attrsArray, email) ->
     attrsArray = for attrs in attrsArray
@@ -79,11 +74,11 @@ module.exports = class Model
 
   # Returns a Promise of number of affected rows
   bulkUpdate: (attrs, where, email, options) ->
-    attrs = _.extend({}, attrs)
-    attrs.updatedAt = new Date() if 'updatedAt' of @_impl.attributes
-    attrs.updatedBy = email if 'updatedBy' of @_impl.attributes
+    attrs = @_formatUpdateAttrs(attrs, email)
+    options = _.extend({ where: where }, options)
 
-    @_impl.update(attrs, where, options)
+    @_impl.update(attrs, options)
+      .then((res) -> res[0])
 
   # Returns a Promise of [Instance, isNew].
   #
@@ -95,7 +90,7 @@ module.exports = class Model
     @create(instance, email)
       .then((x) -> [ x, true ])
       .catch (e) =>
-        if (e.code == 'SQLITE_CONSTRAINT' && e.errno == 19) || (e.severity == 'ERROR' && e.code == '23505')
+        if e instanceof Sequelize.UniqueConstraintError
           uniqueCols = (col for col, props of @_impl.attributes when props.unique)
           where = {}
           (where[col] = instance[col]) for col in uniqueCols
@@ -105,8 +100,13 @@ module.exports = class Model
           Promise.reject(e)
 
   # Returns a Promise of undefined
-  destroy: (where) ->
-    @_impl.destroy(arguments...)
+  #
+  # Usage: Model.destroy(where: { foo: 'bar' })
+  destroy: (options) ->
+    options ||= {}
+    if !options.where && !options.truncate
+      options = _.extend({ where: '1=1' }, options)
+    @_impl.destroy(options)
 
   # Returns the maximum of a column
   max: (column, options) ->

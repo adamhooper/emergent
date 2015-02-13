@@ -33,6 +33,228 @@ createPopularity = (urlId, service, shares, at) ->
     createdAt: at
   }, raw: true)
 
+describe 'GET /claims/:claimId/articles', ->
+  beforeEach ->
+    @go = =>
+      api.get("/claims/#{@claim.id}/articles")
+        .tap((res) -> throw new Error(res.body) if res.status == 500)
+
+    models.Story.create({
+      slug: 'a-slug'
+      headline: 'claim-headline'
+      description: 'claim-description'
+    }, 'admin@example.org')
+      .tap((x) => @claim = x)
+
+  describe 'when the claim is missing', ->
+    it 'should return 404', ->
+      api.get('/claims/99cb4e57-44a3-4d8b-bf09-dbda8e09d9df/articles')
+        .tap((res) -> expect(res.status).to.eq(404))
+
+  describe 'when the :claimId parameter is not a UUID', ->
+    it 'should return 404', ->
+      api.get('/claims/99cb4e57-44a3-4d8b-bf09-dbda8e09d9d/articles')
+        .tap((res) -> expect(res.status).to.eq(404))
+
+  describe 'when the claim has no Articles', ->
+    it 'should return an empty Array', ->
+      @go().tap((res) -> expect(res.body).to.deep.eq([]))
+
+  describe 'with one Article', ->
+    beforeEach ->
+      models.Url.create(url: 'http://example.org')
+        .then((x) => @url1 = x)
+        .then => models.Article.create({ storyId: @claim.id, urlId: @url1.id, createdAt: new Date(1000) }, 'admin@example.org')
+        .then((x) => @article = x)
+
+    it 'should show nulls when there are no ArticleVersions', ->
+      @go()
+        .tap (res) =>
+          expect(res.body).to.deep.eq([{
+            id: @article.id
+            url: 'http://example.org'
+            articleVersionId: null # TODO nix
+            source: null # TODO nix
+            headline: null
+            byline: null # TODO nix
+            createdAt: '1970-01-01T00:00:01.000Z'
+            firstVersion:
+              articleVersionId: null
+              byline: null
+              createdAt: null
+              headline: null
+              urlGetId: null
+              urlVersionId: null
+            latestVersion:
+              articleVersionId: null
+              byline: null
+              createdAt: null
+              headline: null
+              urlGetId: null
+              urlVersionId: null
+          }])
+
+    it 'should show first and lass ArticleVersion as one when there is one ArticleVersion', ->
+      createArticleVersion(@article.id, { createdAt: new Date(2000) }, @url1.id, { headline: 'h1', byline: 'b1', source: 'deleteme', createdAt: new Date(2000) })
+        .then((x) => @av1 = x)
+        .then(=> @go())
+        .tap (res) =>
+          expect(res.body).to.deep.eq([{
+            id: @article.id
+            url: 'http://example.org'
+            articleVersionId: @av1.id # TODO nix
+            source: 'deleteme' # TODO nix
+            headline: 'h1' # TODO nix
+            byline: 'b1' # TODO nix
+            createdAt: '1970-01-01T00:00:01.000Z'
+            firstVersion:
+              articleVersionId: @av1.id
+              byline: 'b1'
+              createdAt: '1970-01-01T00:00:02.000Z'
+              headline: 'h1'
+              urlGetId: null
+              urlVersionId: @av1.urlVersionId
+            latestVersion:
+              articleVersionId: @av1.id
+              byline: 'b1'
+              createdAt: '1970-01-01T00:00:02.000Z'
+              headline: 'h1'
+              urlGetId: null
+              urlVersionId: @av1.urlVersionId
+          }])
+
+    it 'should show first and last ArticleVersion when there are two', ->
+      Promise.all([
+        createArticleVersion(@article.id, { createdAt: new Date(2000) }, @url1.id, { headline: 'h1', byline: 'b1', source: 'deleteme', createdAt: new Date(2000) })
+        createArticleVersion(@article.id, { createdAt: new Date(3000) }, @url1.id, { headline: 'h2', byline: 'b2', source: 'deleteme', createdAt: new Date(3000) })
+      ])
+        .then(([x1, x2]) => @av1 = x1; @av2 = x2)
+        .then(=> @go())
+        .tap (res) =>
+          expect(res.body).to.deep.eq([{
+            id: @article.id
+            url: 'http://example.org'
+            articleVersionId: @av2.id # TODO nix
+            source: 'deleteme' # TODO nix
+            headline: 'h2' # TODO nix
+            byline: 'b2' # TODO nix
+            createdAt: '1970-01-01T00:00:01.000Z'
+            firstVersion:
+              articleVersionId: @av1.id
+              byline: 'b1'
+              createdAt: '1970-01-01T00:00:02.000Z'
+              headline: 'h1'
+              urlGetId: null
+              urlVersionId: @av1.urlVersionId
+            latestVersion:
+              articleVersionId: @av2.id
+              byline: 'b2'
+              createdAt: '1970-01-01T00:00:03.000Z'
+              headline: 'h2'
+              urlGetId: null
+              urlVersionId: @av2.urlVersionId
+          }])
+
+    it 'should show first and last ArticleVersion when there are more than two', ->
+      Promise.all([
+        createArticleVersion(@article.id, { createdAt: new Date(2000) }, @url1.id, { headline: 'h1', byline: 'b1', source: 'deleteme', createdAt: new Date(2000) })
+        createArticleVersion(@article.id, { createdAt: new Date(2400) }, @url1.id, { headline: 'hmid', byline: 'bmid', source: 'deleteme', createdAt: new Date(2400) })
+        createArticleVersion(@article.id, { createdAt: new Date(3000) }, @url1.id, { headline: 'h2', byline: 'b2', source: 'deleteme', createdAt: new Date(3000) })
+      ])
+        .then(([x1, xmid, x2]) => @av1 = x1; @av2 = x2)
+        .then(=> @go())
+        .tap (res) =>
+          expect(res.body).to.deep.eq([{
+            id: @article.id
+            url: 'http://example.org'
+            articleVersionId: @av2.id # TODO nix
+            source: 'deleteme' # TODO nix
+            headline: 'h2' # TODO nix
+            byline: 'b2' # TODO nix
+            createdAt: '1970-01-01T00:00:01.000Z'
+            firstVersion:
+              articleVersionId: @av1.id
+              byline: 'b1'
+              createdAt: '1970-01-01T00:00:02.000Z'
+              headline: 'h1'
+              urlGetId: null
+              urlVersionId: @av1.urlVersionId
+            latestVersion:
+              articleVersionId: @av2.id
+              byline: 'b2'
+              createdAt: '1970-01-01T00:00:03.000Z'
+              headline: 'h2'
+              urlGetId: null
+              urlVersionId: @av2.urlVersionId
+          }])
+
+  describe 'with two Articles', ->
+    beforeEach ->
+      Promise.all([
+        models.Url.create(url: 'http://example.org/1')
+        models.Url.create(url: 'http://example.org/2')
+      ])
+        .then(([ x1, x2 ]) => @url1 = x1; @url2 = x2)
+        .then(=> Promise.all([
+          models.Article.create({ storyId: @claim.id, urlId: @url1.id, createdAt: new Date(1001) }, 'admin@example.org')
+          models.Article.create({ storyId: @claim.id, urlId: @url2.id, createdAt: new Date(1002) }, 'admin@example.org')
+        ]))
+        .then(([ x1, x2 ]) => @article1 = x1; @article2 = x2)
+
+    it 'should group data by Article', ->
+      Promise.all([
+        createArticleVersion(@article1.id, { createdAt: new Date(2001) }, @url1.id, { headline: 'h1', byline: 'b1', source: 'deleteme', createdAt: new Date(2001) })
+        createArticleVersion(@article2.id, { createdAt: new Date(3002) }, @url2.id, { headline: 'h2', byline: 'b2', source: 'deleteme', createdAt: new Date(3002) })
+      ])
+        .then(([x1, x2]) => @av1 = x1; @av2 = x2)
+        .then(=> @go())
+        .tap (res) =>
+          expect(res.body).to.deep.eq([{
+            id: @article2.id
+            url: 'http://example.org/2'
+            articleVersionId: @av2.id # TODO nix
+            source: 'deleteme' # TODO nix
+            headline: 'h2' # TODO nix
+            byline: 'b2' # TODO nix
+            createdAt: '1970-01-01T00:00:01.002Z'
+            firstVersion:
+              articleVersionId: @av2.id
+              byline: 'b2'
+              createdAt: '1970-01-01T00:00:03.002Z'
+              headline: 'h2'
+              urlGetId: null
+              urlVersionId: @av2.urlVersionId
+            latestVersion:
+              articleVersionId: @av2.id
+              byline: 'b2'
+              createdAt: '1970-01-01T00:00:03.002Z'
+              headline: 'h2'
+              urlGetId: null
+              urlVersionId: @av2.urlVersionId
+          }, {
+            id: @article1.id
+            url: 'http://example.org/1'
+            articleVersionId: @av1.id # TODO nix
+            source: 'deleteme' # TODO nix
+            headline: 'h1' # TODO nix
+            byline: 'b1' # TODO nix
+            createdAt: '1970-01-01T00:00:01.001Z'
+            firstVersion:
+              articleVersionId: @av1.id
+              byline: 'b1'
+              createdAt: '1970-01-01T00:00:02.001Z'
+              headline: 'h1'
+              urlGetId: null
+              urlVersionId: @av1.urlVersionId
+            latestVersion:
+              articleVersionId: @av1.id
+              byline: 'b1'
+              createdAt: '1970-01-01T00:00:02.001Z'
+              headline: 'h1'
+              urlGetId: null
+              urlVersionId: @av1.urlVersionId
+          }])
+
 describe '/articles/:id/stances-over-time', ->
   beforeEach ->
     models.Story.create({

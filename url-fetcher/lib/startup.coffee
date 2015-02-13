@@ -30,7 +30,7 @@ module.exports = class Startup
   addAllUrlsToQueues: (done) ->
     serviceAndIdToNextDate = {} # service -> url id -> { at, nPreviousFetches }
 
-    models.sequelize.query("""
+    models.sequelize.query('''
       SELECT
         'fetch' AS service,
         COALESCE(ug."urlId", uv."urlId") AS id,
@@ -49,18 +49,18 @@ module.exports = class Startup
         MAX("createdAt") AS "lastDate"
       FROM "UrlPopularityGet"
       GROUP BY "urlId", service
-    """)
+    ''', null, type: 'SELECT')
       .then (rows) =>
         now = new Date().valueOf()
         for row in rows
           nPreviousFetches = @taskTimeChooser.guessNPreviousInvocations(row.firstDate, row.lastDate)
           nextDate = @taskTimeChooser.chooseTime(nPreviousFetches, row.lastDate)
-          debug('%s handler fetched %s %s and %s, worth %s gets; next is in %s',
+          debug('did %s %s %s and %s ago; get #%s is in %s',
             row.service,
             row.id,
-            bold("#{ms(now - row.firstDate)} ago"),
-            bold("#{ms(now - row.lastDate)} ago"),
-            bold(nPreviousFetches)
+            bold(ms(now - row.firstDate)),
+            bold(ms(now - row.lastDate)),
+            bold(nPreviousFetches + 1)
             bold("#{ms(nextDate - now)}")
           )
           serviceAndIdToNextDate[row.service] ?= {}
@@ -70,7 +70,8 @@ module.exports = class Startup
         null
       .then -> models.Url.findAllRaw()
       .then (urls) =>
-        debug('URLS', urls)
+        now = new Date().valueOf()
+        debug("Queueing #{urls.length} URLs...")
         for url in urls
           for service in Services
             nextDate = if url.id not of serviceAndIdToNextDate[service]
@@ -80,14 +81,15 @@ module.exports = class Startup
             else
               serviceAndIdToNextDate[service][url.id]
 
-            debug(url.url, service, nextDate)
-
             if nextDate.at?
+              debug("queue #{bold(service)} ##{(nextDate.nPreviousFetches ? 0) + 1} for URL #{bold(url.id)} in #{bold(ms(nextDate.at - now))}")
               @queues[service].queue
                 urlId: url.id
                 url: url.url
                 at: nextDate.at
                 nPreviousFetches: nextDate.nPreviousFetches
+            else
+              debug("do not queue #{service} for URL #{url.id}")
       .nodeify(done)
 
   runNewParsers: (done) ->

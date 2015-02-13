@@ -27,6 +27,6 @@ module.exports =
       FROM unparsed_unaggregated_domains_with_popularity
       GROUP BY domain
       ORDER BY SUM(shares) DESC
-    ''')
+    ''', null, type: 'SELECT')
     .then((rows) -> res.json(rows))
     .catch((e) -> res.status(e.status || 500).json(e))

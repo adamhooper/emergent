@@ -48,7 +48,7 @@ module.exports = class UrlTaskQueue
     throw 'Must pass job.at' if !job.at?
     throw 'Must pass job.nPreviousFetches' if !job.nPreviousFetches?
 
-    @log("queueing #{job.urlId} #{job.url} in #{ms(job.at - new Date())}")
+    @log("queueing #{job.urlId} in #{ms(job.at - new Date())}")
 
     @priorityQueue.queue(job)
 

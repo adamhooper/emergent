@@ -44,7 +44,9 @@ describe 'ArticleVersionController', ->
       .catch(console.error)
 
   describe '#index', ->
-    indexReq = (articleId) -> req('get', "/articles/#{articleId}/versions")
+    indexReq = (articleId) ->
+      req('get', "/articles/#{articleId}/versions")
+        .tap (res) -> throw res.body if res.status == 500
 
     it 'should return 404 when the Article does not exist', ->
       indexReq('ae5ac7d3-cc98-408a-83df-bf6b50774ada')
@@ -73,7 +75,9 @@ describe 'ArticleVersionController', ->
           expect(json[0].comment).to.eq('')
 
   describe '#create', ->
-    createReq = (articleId, object) -> req('post', "/articles/#{articleId}/versions", object)
+    createReq = (articleId, object) ->
+      req('post', "/articles/#{articleId}/versions", object)
+        .tap (res) -> throw res.body if res.status == 500
 
     candidateVersion =
       stance: 'observing'
@@ -172,13 +176,18 @@ describe 'ArticleVersionController', ->
             expect(uv).to.have.property('body', 'body1\n\nbody1\n\nbody1')
 
   describe '#destroy', ->
-    destroyReq = (articleId, versionId) -> req('delete', "/articles/#{articleId}/versions/#{versionId}")
+    destroyReq = (articleId, versionId) ->
+      req('delete', "/articles/#{articleId}/versions/#{versionId}")
+        .tap (res) -> throw res.body if res.status == 500
 
-    it 'should delete an ArticleVersion and accompanying UrlVersion', ->
+    it 'should delete an ArticleVersion', ->
       destroyReq(@article.id, @articleVersion.id)
         .should.eventually.have.property('status', 204)
         .then(=> ArticleVersion.find(@articleVersion.id)).should.eventually.be.null
-        .then(=> UrlVersion.find(@urlVersion.id)).should.eventually.be.null
+
+    it 'should not delete UrlVersions', ->
+      destroyReq(@article.id, @articleVersion.id)
+        .then(=> UrlVersion.find(@urlVersion.id)).should.not.eventually.be.null
 
     it 'should return 404 when the ArticleVersion does not exist', ->
       destroyReq(@article.id, 'f208fbd6-d6c9-4446-a1cd-0b1a8819b6b4')

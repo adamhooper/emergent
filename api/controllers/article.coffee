@@ -1,4 +1,5 @@
 _ = require('lodash')
+uuid = require('node-uuid')
 Promise = require('bluebird')
 
 models = require('../../data-store').models
@@ -50,28 +51,70 @@ popularitiesToShareCurves = (popularities) ->
 
 module.exports =
   'get /claims/:claimId/articles': (req, res, next) ->
-    models.sequelize.query('''
-      WITH
-      "rankedArticleVersion" AS (
-        SELECT id, "articleId", "urlVersionId", "createdAt", stance, "headlineStance", RANK() OVER (PARTITION BY "articleId" ORDER BY "createdAt" DESC) AS rank
-        FROM "ArticleVersion"
-      )
-      SELECT
-        a.id,
-        u.url,
-        av.id AS "articleVersionId",
-        uv.headline AS headline,
-        uv.byline AS byline,
-        uv.source AS source,
-        uv."createdAt" AS "createdAt"
-      FROM "Article" a
-      INNER JOIN "Url" u ON a."urlId" = u.id
-      LEFT JOIN "rankedArticleVersion" av ON a.id = av."articleId" AND av.rank = 1
-      LEFT JOIN "UrlVersion" uv ON av."urlVersionId" = uv.id
-      WHERE a."storyId" = ?
-    ''', null, null, [ req.params.claimId ])
-      .then((json) -> res.json(json))
-      .catch(next)
+    claimId = uuid.unparse(uuid.parse(req.params.claimId))
+    Promise.all([
+      models.Story.find(claimId)
+      models.sequelize.query('''
+        WITH
+        "RankedArticleVersion" AS (
+          SELECT
+            id,
+            "articleId",
+            "urlVersionId",
+            "createdAt",
+            stance,
+            "headlineStance",
+            RANK() OVER (PARTITION BY "articleId" ORDER BY "createdAt" ASC) AS "rankAsc",
+            RANK() OVER (PARTITION BY "articleId" ORDER BY "createdAt" DESC) AS "rankDesc"
+          FROM "ArticleVersion"
+        )
+        SELECT
+          a.id,
+          u.url,
+          a."createdAt",
+
+          -- TODO: add "nShares"
+
+          -- TODO: remove these top-level numbers
+          "lastAv".id AS "articleVersionId",
+          "lastUv".headline AS headline,
+          "lastUv".byline AS byline,
+          "lastUv".source AS source,
+
+          -- "firstVersion"
+          "firstAv".id          AS "firstVersion.articleVersionId",
+          "firstUv".id          AS "firstVersion.urlVersionId",
+          "firstUv"."urlGetId"  AS "firstVersion.urlGetId",
+          "firstUv"."createdAt" AS "firstVersion.createdAt",
+          "firstUv"."headline"  AS "firstVersion.headline",
+          "firstUv"."byline"    AS "firstVersion.byline",
+
+          -- "latestVersion"
+          "lastAv".id          AS "latestVersion.articleVersionId",
+          "lastUv".id          AS "latestVersion.urlVersionId",
+          "lastUv"."urlGetId"  AS "latestVersion.urlGetId",
+          "lastUv"."createdAt" AS "latestVersion.createdAt",
+          "lastUv"."headline"  AS "latestVersion.headline",
+          "lastUv"."byline"    AS "latestVersion.byline"
+
+        FROM "Article" a
+        INNER JOIN "Url" u ON a."urlId" = u.id
+        LEFT JOIN "RankedArticleVersion" "firstAv" ON a.id = "firstAv"."articleId" AND "firstAv"."rankAsc" = 1
+        LEFT JOIN "RankedArticleVersion" "lastAv" ON a.id = "lastAv"."articleId" AND "lastAv"."rankDesc" = 1
+        LEFT JOIN "UrlVersion" "firstUv" ON "firstAv"."urlVersionId" = "firstUv".id
+        LEFT JOIN "UrlVersion" "lastUv" ON "lastAv"."urlVersionId" = "lastUv".id
+        WHERE a."storyId" = ?
+        ORDER BY a."createdAt" DESC
+      ''', null, raw: true, nest: true, type: 'SELECT', replacements: [ claimId ])
+    ])
+      .then ([ claim, json ]) ->
+        if claim?
+          res.json(json)
+        else
+          res.status(404).json(message: "Claim #{claimId} not found")
+      .catch (err) ->
+        console.warn(err)
+        next(err)
 
   'get /articles/:articleId/stances-over-time': (req, res, next) ->
     models.Article.find(id: req.params.articleId)

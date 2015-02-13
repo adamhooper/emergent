@@ -24,7 +24,7 @@ module.exports =
         INNER JOIN "ArticleVersion" av ON a.id = av."articleId"
         WHERE a."storyId" = ?
         ORDER BY av."createdAt"
-      ''', null, { raw: true }, [ req.params.claimId ])
+      ''', null, raw: true, type: 'SELECT', replacements: [ req.params.claimId ])
       models.sequelize.query('''
         SELECT
           a.id,
@@ -35,7 +35,7 @@ module.exports =
         INNER JOIN "UrlPopularityGet" p ON a."urlId" = p."urlId"
         WHERE a."storyId" = ?
         ORDER BY p."createdAt"
-      ''', null, { raw: true }, [ req.params.claimId ])
+      ''', null, raw: true, type: 'SELECT', replacements: [ req.params.claimId ])
     ])
       .spread (articleVersions, popularities) ->
         return [] if !articleVersions.length && !popularities.length

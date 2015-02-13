@@ -92,7 +92,7 @@ module.exports = self =
           .tap((json) -> upsertArticleVersions(json, req.user.email))
           .then((json) -> res.status(201).json(json))
           .catch (err) ->
-            if /^Validation/.test(err?.url?[0]?.message || '')
+            if /^Validation/.test(err.message)
               res.status(400).json(err)
             else
               # If the Url wasn't created, we return that error.
@@ -109,6 +109,6 @@ module.exports = self =
     articleId = req.param('id')
 
     findStoryThen req, res, (story) ->
-      Article.destroy(storyId: story.id, id: articleId)
+      Article.destroy(where: { storyId: story.id, id: articleId })
         .then(-> res.json({}))
         .catch((e) -> res.status(e.status || 500).json(e))

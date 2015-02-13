@@ -9,12 +9,8 @@ chai.use(require('sinon-chai'))
 before ->
   global.app = require('../app')
 
-before (done) ->
-  migrator = global.models.sequelize.getMigrator
-    path: __dirname + '/../../data-store/migrations'
-    filesFilter: /\.coffee$/
-
-  migrator.migrate().complete(done)
+before ->
+  require('../../data-store').migrate()
 
 beforeEach ->
   # Top-level object tables. CASCADE will wipe the others.

@@ -69,8 +69,8 @@ module.exports = class UrlReparser
 
   _destroyUrlVersion: (urlVersion, transaction) ->
     @_log("UrlVersion.destroy urlId #{urlVersion.urlId}, urlGetId #{urlVersion.urlGetId}, sha1 #{urlVersion.sha1}")
-    models.ArticleVersion.destroy({ urlVersionId: urlVersion.id }, transaction: transaction)
-      .then(-> models.UrlVersion.destroy({ id: urlVersion.id }, transaction: transaction))
+    models.ArticleVersion.destroy(where: { urlVersionId: urlVersion.id }, transaction: transaction)
+      .then(-> models.UrlVersion.destroy(where: { id: urlVersion.id }, transaction: transaction))
 
   _merge: (urlId, url, urlGets, urlVersions) ->
     @_log("Reparsing #{urlGets.length} gets, overwriting #{urlVersions.length} parsed versions...")

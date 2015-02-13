@@ -10,7 +10,7 @@ module.exports = class UrlsToReparseFinder
       FROM "Url" u 
       LEFT JOIN "UrlVersion" uv ON u.id = uv."urlId"
       GROUP BY u.id, u.url
-    ''')
+    ''', null, type: 'SELECT')
       .then (rows) =>
         for row in rows
           siteParser = @htmlParser.urlToSiteParser(row.url)

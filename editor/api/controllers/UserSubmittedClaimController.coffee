@@ -22,7 +22,7 @@ module.exports =
     if !attributes.spam? && !attributes.archived?
       return res.status(400).json(message: 'You must set a "spam" or "archived" boolean attribute')
 
-    models.UserSubmittedClaim.partialUpdate({ id: req.params.id }, attributes, req.user.email)
+    models.UserSubmittedClaim.bulkUpdate(attributes, { id: req.params.id }, req.user.email)
       .then (nRows) -> 
         if nRows == 0
           res.status(404).json(message: "There is no UserSubmittedClaim with id=#{req.params.id}")

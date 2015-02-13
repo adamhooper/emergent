@@ -14,7 +14,7 @@ describe 'UserSubmittedClaimTracker', ->
     @sandbox = sinon.sandbox.create()
     @sandbox.stub(Url, 'upsert').returns(Promise.resolve([ { id: @urlId, url: @url }, true ]))
     @sandbox.stub(UserSubmittedClaim, 'find').returns(Promise.resolve({ id: @uscId, url: @url }))
-    @sandbox.stub(UserSubmittedClaim, 'partialUpdate').returns(Promise.resolve(0))
+    @sandbox.stub(UserSubmittedClaim, 'bulkUpdate').returns(Promise.resolve(0))
     @jobQueue = { queue: @sandbox.stub().callsArg(1) }
 
     @subject = new UserSubmittedClaimTracker
@@ -39,7 +39,7 @@ describe 'UserSubmittedClaimTracker', ->
     UserSubmittedClaim.find.returns(Promise.resolve(null))
     @subject.trackRandomUntrackedUrl (err, res) ->
       expect(Url.upsert).not.to.have.been.called
-      expect(UserSubmittedClaim.partialUpdate).not.to.have.been.called
+      expect(UserSubmittedClaim.bulkUpdate).not.to.have.been.called
       done()
 
   it 'should upsert a Url', (done) ->
@@ -54,7 +54,7 @@ describe 'UserSubmittedClaimTracker', ->
 
   it 'should set urlId on the UserSubmittedClaim', (done) ->
     @subject.trackRandomUntrackedUrl (err, res) =>
-      expect(UserSubmittedClaim.partialUpdate).to.have.been.calledWith({ id: @uscId }, { urlId: @urlId }, null)
+      expect(UserSubmittedClaim.bulkUpdate).to.have.been.calledWith({ urlId: @urlId }, { id: @uscId }, null)
       done()
 
   describe 'when the Url was created after we created the UserSubmittedClaim but before we tried tracking it', ->
@@ -68,7 +68,7 @@ describe 'UserSubmittedClaimTracker', ->
 
     it 'should set urlId on the UserSubmittedClaim', (done) ->
       @subject.trackRandomUntrackedUrl (err, res) =>
-        expect(UserSubmittedClaim.partialUpdate).to.have.been.calledWith({ id: @uscId }, { urlId: @urlId }, null)
+        expect(UserSubmittedClaim.bulkUpdate).to.have.been.calledWith({ urlId: @urlId }, { id: @uscId }, null)
         done()
 
   it 'should return null', (done) ->

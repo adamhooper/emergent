@@ -40,15 +40,18 @@ module.exports =
       .then((article) -> ArticleVersion.findAll(where: { articleId: article.id }, order: '(SELECT "createdAt" FROM "UrlVersion" WHERE id = "urlVersionId")'))
       .then((versions) -> (v.toJSON() for v in versions))
       .then (versions) ->
-        # Join UrlVersion
-        urlVersionIds = (v.urlVersionId for v in versions)
-        UrlVersion.findAll(where: { id: { in: urlVersionIds } })
-          .then (urlVersions) ->
-            idToUrlVersion = {}
-            (idToUrlVersion[v.id] = v.toJSON()) for v in urlVersions
-            for v in versions
-              v.urlVersion = idToUrlVersion[v.urlVersionId]
-              v
+        if versions.length
+          # Join UrlVersion
+          urlVersionIds = (v.urlVersionId for v in versions)
+          UrlVersion.findAll(where: { id: { in: urlVersionIds } })
+            .then (urlVersions) ->
+              idToUrlVersion = {}
+              (idToUrlVersion[v.id] = v.toJSON()) for v in urlVersions
+              for v in versions
+                v.urlVersion = idToUrlVersion[v.urlVersionId]
+                v
+        else
+          versions
       .then((versions) -> res.json(versions))
       .catch((e) -> res.status(e.status || 500).json(e))
 
@@ -96,8 +99,6 @@ module.exports =
 
   destroy: (req, res) ->
     validArticleVersion(req)
-      .then (av) ->
-        ArticleVersion.destroy(id: av.id)
-          .then -> UrlVersion.destroy(id: av.urlVersionId)
+      .then((av) -> ArticleVersion.destroy(where: { id: av.id }))
       .then(-> res.status(204).send(''))
       .catch((e) -> res.status(e.status || 500).json(e))
