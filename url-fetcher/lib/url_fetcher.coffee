@@ -34,13 +34,7 @@ class UrlFetcher
         responseHeaders: JSON.stringify(response.headers)
         body: response.body
 
-      UrlGet.create(data)
-        .catch (err) =>
-          # TODO: get rid of Sequelize here. It doesn't escape strings properly.
-          console.warn(err)
-          console.warn(err.stack)
-          throw err
-        .nodeify(done)
+      UrlGet.create(data).nodeify(done)
 
 UrlFetcher.request = require('request') # so we can stub it out during tests
 
