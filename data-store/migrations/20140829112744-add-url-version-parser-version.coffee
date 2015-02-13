@@ -4,7 +4,7 @@ module.exports =
       type: DataTypes.INTEGER
       allowNull: true
     })
-      .then(-> migration.migrator.sequelize.query('UPDATE "UrlVersion" SET "parserVersion" = 1 WHERE "createdBy" IS NULL'))
+      .then(-> migration.sequelize.query('UPDATE "UrlVersion" SET "parserVersion" = 1 WHERE "createdBy" IS NULL'))
       .nodeify(done)
 
   down: (migration, DataTypes, done) ->

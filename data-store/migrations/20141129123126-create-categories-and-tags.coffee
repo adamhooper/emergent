@@ -5,10 +5,10 @@ Tables = [
 
 module.exports = 
   up: (migration, DataTypes, done) ->
-    Promise = migration.migrator.sequelize.Promise
+    Promise = migration.sequelize.Promise
     Promise.map(Tables, (arr) ->
       [ tableName, joinTableName, joinTable1, joinColumn1, joinTable2, joinColumn2 ] = arr
-      migration.migrator.sequelize.query("""
+      migration.sequelize.query("""
         CREATE TABLE "#{tableName}" (
           id UUID NOT NULL,
           name VARCHAR NOT NULL,
@@ -16,7 +16,7 @@ module.exports =
           UNIQUE (name)
         )
       """)
-        .then -> migration.migrator.sequelize.query("""
+        .then -> migration.sequelize.query("""
           CREATE TABLE "#{joinTableName}" (
             "#{joinColumn1}" UUID NOT NULL REFERENCES "#{joinTable1}" (id) ON DELETE CASCADE,
             "#{joinColumn2}" UUID NOT NULL REFERENCES "#{joinTable2}" (id) ON DELETE CASCADE,
@@ -25,16 +25,16 @@ module.exports =
             PRIMARY KEY ("#{joinColumn1}", "#{joinColumn2}")
           )
         """)
-        .then -> migration.migrator.sequelize.query("""
+        .then -> migration.sequelize.query("""
           CREATE INDEX ON "#{joinTableName}" ("#{joinColumn2}")
         """)
     ).nodeify(done)
 
   down: (migration, DataTypes, done) ->
-    Promise = migration.migrator.sequelize.Promise
+    Promise = migration.sequelize.Promise
     Promise.map(Tables, (arr) ->
       [ tableName, joinTableName, joinTable1, joinColumn1, joinTable2, joinColumn2 ] = arr
-      migration.migrator.sequelize.query("""DROP TABLE "#{joinTableName}" """)
-        .then -> migration.migrator.sequelize.query("""DROP TABLE "#{tableName}" """)
+      migration.sequelize.query("""DROP TABLE "#{joinTableName}" """)
+        .then -> migration.sequelize.query("""DROP TABLE "#{tableName}" """)
     )
       .nodeify(done)

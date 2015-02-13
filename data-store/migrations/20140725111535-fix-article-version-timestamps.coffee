@@ -20,9 +20,9 @@ module.exports =
       type: 'TIMESTAMP WITH TIME ZONE' # DataTypes.DATE
       allowNull: true
     })
-      .then -> migration.migrator.sequelize.query("""UPDATE "ArticleVersion" SET "createdAt" = "updatedAt" WHERE "createdAt" IS NULL""")
-      .then -> migration.migrator.sequelize.query('UPDATE "ArticleVersion" SET "publishedAt" = "createdAt"')
-      .then -> migration.migrator.sequelize.query("""UPDATE "ArticleVersion" SET "updatedBy" = '[DB migration]' WHERE "updatedBy" IS NULL""")
+      .then -> migration.sequelize.query("""UPDATE "ArticleVersion" SET "createdAt" = "updatedAt" WHERE "createdAt" IS NULL""")
+      .then -> migration.sequelize.query('UPDATE "ArticleVersion" SET "publishedAt" = "createdAt"')
+      .then -> migration.sequelize.query("""UPDATE "ArticleVersion" SET "updatedBy" = '[DB migration]' WHERE "updatedBy" IS NULL""")
       .then -> migration.changeColumn('ArticleVersion', 'updatedAt', {
         type: 'TIMESTAMP WITH TIME ZONE' # DataTypes.DATE
         allowNull: false

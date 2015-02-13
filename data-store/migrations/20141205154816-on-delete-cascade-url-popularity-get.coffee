@@ -1,6 +1,6 @@
 module.exports = 
   up: (migration, DataTypes, done) ->
-    q = (s) -> migration.migrator.sequelize.query(s)
+    q = (s) -> migration.sequelize.query(s)
 
     q('''
         ALTER TABLE "UrlPopularityGet" DROP CONSTRAINT IF EXISTS "UrlPopularityGet_urlId_fkey"
@@ -15,7 +15,7 @@ module.exports =
       .nodeify(done)
 
   down: (migration, DataTypes, done) ->
-    q = (s) -> migration.migrator.sequelize.query(s)
+    q = (s) -> migration.sequelize.query(s)
 
     q('''
         ALTER TABLE "UrlPopularityGet" DROP CONSTRAINT IF EXISTS "UrlPopularityGet_urlId_fkey"

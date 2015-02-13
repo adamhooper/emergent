@@ -1,6 +1,6 @@
 module.exports = 
   up: (migration, DataTypes, done) ->
-    q = (s) -> migration.migrator.sequelize.query(s)
+    q = (s) -> migration.sequelize.query(s)
 
     q(           '''ALTER TABLE "Category" ADD COLUMN slug VARCHAR''')
       .then -> q('''UPDATE "Category" SET slug = REGEXP_REPLACE(LOWER(REPLACE(name, '.', '')), '[^a-z0-9]+', '-')''')

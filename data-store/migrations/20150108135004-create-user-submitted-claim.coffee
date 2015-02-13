@@ -1,6 +1,6 @@
 module.exports = 
   up: (migration, DataTypes, done) ->
-    q = (s) -> migration.migrator.sequelize.query(s)
+    q = (s) -> migration.sequelize.query(s)
 
     migration.createTable('UserSubmittedClaim', {
       id:

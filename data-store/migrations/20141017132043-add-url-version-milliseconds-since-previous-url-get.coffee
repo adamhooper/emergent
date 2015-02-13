@@ -1,6 +1,6 @@
 module.exports =
   up: (migration, DataTypes, done) ->
-    sequelize = migration.migrator.sequelize
+    sequelize = migration.sequelize
     q = sequelize.query.bind(sequelize)
 
     migration.addColumn('UrlVersion', 'millisecondsSincePreviousUrlGet', DataTypes.BIGINT)

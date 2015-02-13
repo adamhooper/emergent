@@ -1,8 +1,8 @@
 runQueries = (migration, queries, done) ->
-  Promise = migration.migrator.sequelize.Promise
+  Promise = migration.sequelize.Promise
   p = Promise.resolve(null)
   queries.forEach (q) ->
-    p = p.then(-> migration.migrator.sequelize.query(q))
+    p = p.then(-> migration.sequelize.query(q))
   p.nodeify(done)
 
 module.exports = 

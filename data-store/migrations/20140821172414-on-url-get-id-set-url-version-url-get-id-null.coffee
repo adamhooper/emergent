@@ -1,7 +1,7 @@
 module.exports = 
   up: (migration, DataTypes, done) ->
-    migration.migrator.sequelize.query('''ALTER TABLE "UrlVersion" DROP CONSTRAINT IF EXISTS "UrlVersion_urlGetId_fkey"''')
-      .then(-> migration.migrator.sequelize.query('''
+    migration.sequelize.query('''ALTER TABLE "UrlVersion" DROP CONSTRAINT IF EXISTS "UrlVersion_urlGetId_fkey"''')
+      .then(-> migration.sequelize.query('''
         ALTER TABLE "UrlVersion"
           ADD CONSTRAINT "UrlVersion_urlGetId_fkey"
           FOREIGN KEY ("urlGetId")
@@ -11,8 +11,8 @@ module.exports =
       .nodeify(done)
 
   down: (migration, DataTypes, done) ->
-    migration.migrator.sequelize.query('''ALTER TABLE "UrlVersion" DROP CONSTRAINT IF EXISTS "UrlVersion_urlGetId_fkey"''')
-      .then(-> migration.migrator.sequelize.query('''
+    migration.sequelize.query('''ALTER TABLE "UrlVersion" DROP CONSTRAINT IF EXISTS "UrlVersion_urlGetId_fkey"''')
+      .then(-> migration.sequelize.query('''
         ALTER TABLE "UrlVersion"
           ADD CONSTRAINT "UrlVersion_urlGetId_fkey"
           FOREIGN KEY ("urlGetId")

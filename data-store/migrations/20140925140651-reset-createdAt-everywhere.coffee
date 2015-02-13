@@ -1,6 +1,6 @@
 module.exports = 
   up: (migration, DataTypes, done) ->
-    q = (s) -> migration.migrator.sequelize.query(s)
+    q = (s) -> migration.sequelize.query(s)
 
     q('''
         WITH x AS (SELECT "storyId", MIN("createdAt") FROM "Article" GROUP BY "storyId")

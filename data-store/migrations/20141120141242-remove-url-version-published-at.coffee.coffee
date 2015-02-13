@@ -12,7 +12,7 @@ module.exports =
     # Oh, and the "\\\\" ends up being a single "\" by the time it makes it
     # to Postgres: the String CoffeeScript parses has "\\", and the string
     # Postgres parses has "\".
-    migration.migrator.sequelize.query('''
+    migration.sequelize.query('''
       UPDATE "UrlVersion"
       SET sha1 =
         DIGEST(

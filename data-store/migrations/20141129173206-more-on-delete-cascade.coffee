@@ -1,6 +1,6 @@
 module.exports = 
   up: (migration, DataTypes, done) ->
-    q = (s) -> migration.migrator.sequelize.query(s)
+    q = (s) -> migration.sequelize.query(s)
 
     q('''
         ALTER TABLE "Article" DROP CONSTRAINT IF EXISTS "Article_urlId_fkey"
@@ -35,7 +35,7 @@ module.exports =
       .nodeify(done)
 
   down: (migration, DataTypes, done) ->
-    q = (s) -> migration.migrator.sequelize.query(s)
+    q = (s) -> migration.sequelize.query(s)
 
     q('''
         ALTER TABLE "Article" DROP CONSTRAINT IF EXISTS "Article_urlId_fkey"
