@@ -78,10 +78,6 @@ describe 'GET /claims/:claimId/articles', ->
           expect(res.body).to.deep.eq([{
             id: @article.id
             url: 'http://example.org'
-            articleVersionId: null # TODO nix
-            source: null # TODO nix
-            headline: null
-            byline: null # TODO nix
             createdAt: '1970-01-01T00:00:01.000Z'
             nShares:
               facebook: 1
@@ -115,10 +111,6 @@ describe 'GET /claims/:claimId/articles', ->
           expect(res.body).to.deep.eq([{
             id: @article.id
             url: 'http://example.org'
-            articleVersionId: @av1.id # TODO nix
-            source: 'deleteme' # TODO nix
-            headline: 'h1' # TODO nix
-            byline: 'b1' # TODO nix
             createdAt: '1970-01-01T00:00:01.000Z'
             nShares:
               facebook: 1
@@ -155,10 +147,6 @@ describe 'GET /claims/:claimId/articles', ->
           expect(res.body).to.deep.eq([{
             id: @article.id
             url: 'http://example.org'
-            articleVersionId: @av2.id # TODO nix
-            source: 'deleteme' # TODO nix
-            headline: 'h2' # TODO nix
-            byline: 'b2' # TODO nix
             createdAt: '1970-01-01T00:00:01.000Z'
             nShares:
               facebook: 1
@@ -196,10 +184,6 @@ describe 'GET /claims/:claimId/articles', ->
           expect(res.body).to.deep.eq([{
             id: @article.id
             url: 'http://example.org'
-            articleVersionId: @av2.id # TODO nix
-            source: 'deleteme' # TODO nix
-            headline: 'h2' # TODO nix
-            byline: 'b2' # TODO nix
             createdAt: '1970-01-01T00:00:01.000Z'
             nShares:
               facebook: 1
@@ -236,10 +220,6 @@ describe 'GET /claims/:claimId/articles', ->
           expect(res.body).to.deep.eq([{
             id: @article.id
             url: 'http://example.org'
-            articleVersionId: @av1.id # TODO nix
-            source: 'deleteme' # TODO nix
-            headline: 'h1' # TODO nix
-            byline: 'b1' # TODO nix
             createdAt: '1970-01-01T00:00:01.000Z'
             nShares:
               facebook: 1
@@ -289,10 +269,6 @@ describe 'GET /claims/:claimId/articles', ->
           expect(res.body).to.deep.eq([{
             id: @article2.id
             url: 'http://example.org/2'
-            articleVersionId: @av2.id # TODO nix
-            source: 'deleteme' # TODO nix
-            headline: 'h2' # TODO nix
-            byline: 'b2' # TODO nix
             createdAt: '1970-01-01T00:00:01.002Z'
             nShares:
               facebook: 0
@@ -319,10 +295,6 @@ describe 'GET /claims/:claimId/articles', ->
           }, {
             id: @article1.id
             url: 'http://example.org/1'
-            articleVersionId: @av1.id # TODO nix
-            source: 'deleteme' # TODO nix
-            headline: 'h1' # TODO nix
-            byline: 'b1' # TODO nix
             createdAt: '1970-01-01T00:00:01.001Z'
             nShares:
               facebook: 0

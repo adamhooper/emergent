@@ -79,12 +79,6 @@ module.exports =
           u."cachedNSharesGoogle" AS "nShares.google",
           u."cachedNSharesTwitter" AS "nShares.twitter",
 
-          -- TODO: remove these top-level numbers
-          "lastAv".id AS "articleVersionId",
-          "lastUv".headline AS headline,
-          "lastUv".byline AS byline,
-          "lastUv".source AS source,
-
           -- "firstVersion"
           "firstAv".id               AS "firstVersion.articleVersionId",
           "firstUv".id               AS "firstVersion.urlVersionId",
