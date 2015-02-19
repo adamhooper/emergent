@@ -1,6 +1,7 @@
 Promise = require('bluebird')
 models = require('../../data-store').models
 
+Url = models.Url
 UrlPopularityGet = models.UrlPopularityGet
 
 DelayInMs = 1 * 3600 * 1000 # 1hr
@@ -31,11 +32,15 @@ module.exports = class UrlPopularityFetcher
     url = job.url
     nPreviousFetches = job.nPreviousFetches
     @fetchLogicPromise(url)
-      .then (data) =>
+      .tap (data) =>
         UrlPopularityGet.create
           urlId: urlId
           service: @service
           shares: data.n
+      .tap (data) =>
+        attrs = {}
+        attrs["cachedNShares#{@service.charAt(0).toUpperCase()}#{@service.substring(1)}"] = data.n
+        Url.bulkUpdate(attrs, { id: urlId }, null)
       .finally =>
         nFetches = nPreviousFetches + 1
         nextDate = @taskTimeChooser.chooseTime(nFetches, new Date())

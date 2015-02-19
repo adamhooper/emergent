@@ -13,6 +13,21 @@ module.exports =
       unique: true
       validate: { isUrl: true }
 
+    cachedNSharesFacebook:
+      type: Sequelize.BIGINT
+      allowNull: false
+      defaultValue: 0
+
+    cachedNSharesGoogle:
+      type: Sequelize.BIGINT
+      allowNull: false
+      defaultValue: 0
+
+    cachedNSharesTwitter:
+      type: Sequelize.BIGINT
+      allowNull: false
+      defaultValue: 0
+
   classMethods:
     findAllUnparsed: (options={}, queryOptions={}) ->
       options = _.extend({

@@ -2,12 +2,14 @@ UrlPopularityFetcher = require('../lib/url_popularity_fetcher')
 Promise = require('bluebird')
 models = require('../../data-store').models
 
+Url = models.Url
 UrlPopularityGet = models.UrlPopularityGet
 
 describe 'UrlPopularityFetcher', ->
   beforeEach ->
     @sandbox = sinon.sandbox.create(useFakeTimers: true)
     @sandbox.stub(UrlPopularityGet, 'create').returns(Promise.resolve(null))
+    @sandbox.stub(Url, 'bulkUpdate').returns(Promise.resolve(null))
 
     @queue =
       queue: sinon.spy()
@@ -50,8 +52,20 @@ describe 'UrlPopularityFetcher', ->
       expect(UrlPopularityGet.create).to.have.been.calledWith(urlId: id, shares: 10, service: 'facebook')
       done()
 
-  it 'should error when the urlFetches insertion errors', (done) ->
+  it 'should call Url.bulkUpdate to set the share count', (done) ->
+    id = '04808471-2828-467c-a6f3-c36754b2406d'
+    @fetch id, 'http://example.org', 0, =>
+      expect(Url.bulkUpdate).to.have.been.calledWith({ cachedNSharesFacebook: 10 }, { id: id }, null)
+      done()
+
+  it 'should error when the UrlPopularityGet creation fails', (done) ->
     UrlPopularityGet.create.returns(Promise.reject('err'))
+    @fetch '04808471-2828-467c-a6f3-c36754b2406d', 'http://example.org', 0, (err) ->
+      expect(err).to.equal('err')
+      done()
+
+  it 'should error when Url update fails', (done) ->
+    Url.bulkUpdate.returns(Promise.reject('err'))
     @fetch '04808471-2828-467c-a6f3-c36754b2406d', 'http://example.org', 0, (err) ->
       expect(err).to.equal('err')
       done()
