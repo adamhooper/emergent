@@ -73,7 +73,9 @@ module.exports =
           u.url,
           a."createdAt",
 
-          -- TODO: add "nShares"
+          u."cachedNSharesFacebook" AS "nShares.facebook",
+          u."cachedNSharesGoogle" AS "nShares.google",
+          u."cachedNSharesTwitter" AS "nShares.twitter",
 
           -- TODO: remove these top-level numbers
           "lastAv".id AS "articleVersionId",
@@ -109,6 +111,13 @@ module.exports =
     ])
       .then ([ claim, json ]) ->
         if claim?
+          # Convert nShares to Numbers (Sequelize gives Strings)
+          for article in json
+            numbers = {}
+            for k, v of article.nShares
+              numbers[k] = Number(v)
+            article.nShares = numbers
+
           res.json(json)
         else
           res.status(404).json(message: "Claim #{claimId} not found")

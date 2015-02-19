@@ -61,7 +61,12 @@ describe 'GET /claims/:claimId/articles', ->
 
   describe 'with one Article', ->
     beforeEach ->
-      models.Url.create(url: 'http://example.org')
+      models.Url.create(
+        url: 'http://example.org'
+        cachedNSharesFacebook: 1
+        cachedNSharesGoogle: 2
+        cachedNSharesTwitter: 3
+      )
         .then((x) => @url1 = x)
         .then => models.Article.create({ storyId: @claim.id, urlId: @url1.id, createdAt: new Date(1000) }, 'admin@example.org')
         .then((x) => @article = x)
@@ -77,6 +82,10 @@ describe 'GET /claims/:claimId/articles', ->
             headline: null
             byline: null # TODO nix
             createdAt: '1970-01-01T00:00:01.000Z'
+            nShares:
+              facebook: 1
+              google: 2
+              twitter: 3
             firstVersion:
               articleVersionId: null
               byline: null
@@ -106,6 +115,10 @@ describe 'GET /claims/:claimId/articles', ->
             headline: 'h1' # TODO nix
             byline: 'b1' # TODO nix
             createdAt: '1970-01-01T00:00:01.000Z'
+            nShares:
+              facebook: 1
+              google: 2
+              twitter: 3
             firstVersion:
               articleVersionId: @av1.id
               byline: 'b1'
@@ -138,6 +151,10 @@ describe 'GET /claims/:claimId/articles', ->
             headline: 'h2' # TODO nix
             byline: 'b2' # TODO nix
             createdAt: '1970-01-01T00:00:01.000Z'
+            nShares:
+              facebook: 1
+              google: 2
+              twitter: 3
             firstVersion:
               articleVersionId: @av1.id
               byline: 'b1'
@@ -171,6 +188,10 @@ describe 'GET /claims/:claimId/articles', ->
             headline: 'h2' # TODO nix
             byline: 'b2' # TODO nix
             createdAt: '1970-01-01T00:00:01.000Z'
+            nShares:
+              facebook: 1
+              google: 2
+              twitter: 3
             firstVersion:
               articleVersionId: @av1.id
               byline: 'b1'
@@ -216,6 +237,10 @@ describe 'GET /claims/:claimId/articles', ->
             headline: 'h2' # TODO nix
             byline: 'b2' # TODO nix
             createdAt: '1970-01-01T00:00:01.002Z'
+            nShares:
+              facebook: 0
+              google: 0
+              twitter: 0
             firstVersion:
               articleVersionId: @av2.id
               byline: 'b2'
@@ -238,6 +263,10 @@ describe 'GET /claims/:claimId/articles', ->
             headline: 'h1' # TODO nix
             byline: 'b1' # TODO nix
             createdAt: '1970-01-01T00:00:01.001Z'
+            nShares:
+              facebook: 0
+              google: 0
+              twitter: 0
             firstVersion:
               articleVersionId: @av1.id
               byline: 'b1'
