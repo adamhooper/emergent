@@ -76,11 +76,6 @@ module.exports = Backbone.Model.extend({
     }
   },
 
-  /* stance of an article when we must pick one */
-  bestStance: function(article) {
-    return article.headlineStance!='for' && article.headlineStance!='against' && _.contains(this.stances, article.stance) ? article.stance : article.headlineStance;
-  },
-
   domain: function(article) {
     return $('<a>', { href: article.url })[0].hostname;
   },
