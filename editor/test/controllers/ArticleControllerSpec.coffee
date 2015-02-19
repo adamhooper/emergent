@@ -42,7 +42,6 @@ describe 'ArticleController', ->
         @article1 = null
         @article2 = null
 
-        # Create Articles in series, so they stay in this order
         Url.create({ url: 'http://example.org' }, 'user@example.org')
           .then((u) => Article.create({ storyId: @story1.id, urlId: u.id }, 'user@example.org'))
           .then((a) => @article1 = a)
@@ -53,7 +52,7 @@ describe 'ArticleController', ->
       it 'should return the Articles', (done) ->
         req()
           .expect (res) ->
-            res.body.map((x) -> x.url).should.deep.equal(['http://example.org', 'http://example2.org'])
+            res.body.map((x) -> x.url).sort().should.deep.equal(['http://example.org', 'http://example2.org'])
             undefined
           .end(done)
 

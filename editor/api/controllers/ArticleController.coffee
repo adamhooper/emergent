@@ -15,7 +15,7 @@ upsertUrl = (url, email) ->
     .tap ([ urlObject, isNew ]) ->
       if isNew
         queueJob = Promise.promisify(global.urlJobQueue.queue, global.urlJobQueue)
-        queueJob(urlObject.toJSON())
+        queueJob(id: urlObject.id, url: url)
     .then ([ urlObject ]) -> urlObject
 
 # Returns Article, a JSON object that _inclues_ url: url.url and urlId: url.id
