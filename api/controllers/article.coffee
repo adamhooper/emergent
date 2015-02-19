@@ -86,6 +86,7 @@ module.exports =
           -- "firstVersion"
           "firstAv".id          AS "firstVersion.articleVersionId",
           "firstUv".id          AS "firstVersion.urlVersionId",
+          "firstAv".stance      AS "firstVersion.stance",
           "firstUv"."urlGetId"  AS "firstVersion.urlGetId",
           "firstUv"."createdAt" AS "firstVersion.createdAt",
           "firstUv"."headline"  AS "firstVersion.headline",
@@ -94,6 +95,7 @@ module.exports =
           -- "latestVersion"
           "lastAv".id          AS "latestVersion.articleVersionId",
           "lastUv".id          AS "latestVersion.urlVersionId",
+          "lastAv".stance      AS "latestVersion.stance",
           "lastUv"."urlGetId"  AS "latestVersion.urlGetId",
           "lastUv"."createdAt" AS "latestVersion.createdAt",
           "lastUv"."headline"  AS "latestVersion.headline",

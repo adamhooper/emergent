@@ -91,6 +91,7 @@ describe 'GET /claims/:claimId/articles', ->
               byline: null
               createdAt: null
               headline: null
+              stance: null
               urlGetId: null
               urlVersionId: null
             latestVersion:
@@ -98,6 +99,7 @@ describe 'GET /claims/:claimId/articles', ->
               byline: null
               createdAt: null
               headline: null
+              stance: null
               urlGetId: null
               urlVersionId: null
           }])
@@ -124,6 +126,7 @@ describe 'GET /claims/:claimId/articles', ->
               byline: 'b1'
               createdAt: '1970-01-01T00:00:02.000Z'
               headline: 'h1'
+              stance: null
               urlGetId: null
               urlVersionId: @av1.urlVersionId
             latestVersion:
@@ -131,6 +134,7 @@ describe 'GET /claims/:claimId/articles', ->
               byline: 'b1'
               createdAt: '1970-01-01T00:00:02.000Z'
               headline: 'h1'
+              stance: null
               urlGetId: null
               urlVersionId: @av1.urlVersionId
           }])
@@ -160,6 +164,7 @@ describe 'GET /claims/:claimId/articles', ->
               byline: 'b1'
               createdAt: '1970-01-01T00:00:02.000Z'
               headline: 'h1'
+              stance: null
               urlGetId: null
               urlVersionId: @av1.urlVersionId
             latestVersion:
@@ -167,15 +172,16 @@ describe 'GET /claims/:claimId/articles', ->
               byline: 'b2'
               createdAt: '1970-01-01T00:00:03.000Z'
               headline: 'h2'
+              stance: null
               urlGetId: null
               urlVersionId: @av2.urlVersionId
           }])
 
     it 'should show first and last ArticleVersion when there are more than two', ->
       Promise.all([
-        createArticleVersion(@article.id, { createdAt: new Date(2000) }, @url1.id, { headline: 'h1', byline: 'b1', source: 'deleteme', createdAt: new Date(2000) })
+        createArticleVersion(@article.id, { createdAt: new Date(2000), stance: 'for' }, @url1.id, { headline: 'h1', byline: 'b1', source: 'deleteme', createdAt: new Date(2000) })
         createArticleVersion(@article.id, { createdAt: new Date(2400) }, @url1.id, { headline: 'hmid', byline: 'bmid', source: 'deleteme', createdAt: new Date(2400) })
-        createArticleVersion(@article.id, { createdAt: new Date(3000) }, @url1.id, { headline: 'h2', byline: 'b2', source: 'deleteme', createdAt: new Date(3000) })
+        createArticleVersion(@article.id, { createdAt: new Date(3000), stance: 'against' }, @url1.id, { headline: 'h2', byline: 'b2', source: 'deleteme', createdAt: new Date(3000) })
       ])
         .then(([x1, xmid, x2]) => @av1 = x1; @av2 = x2)
         .then(=> @go())
@@ -197,6 +203,7 @@ describe 'GET /claims/:claimId/articles', ->
               byline: 'b1'
               createdAt: '1970-01-01T00:00:02.000Z'
               headline: 'h1'
+              stance: 'for'
               urlGetId: null
               urlVersionId: @av1.urlVersionId
             latestVersion:
@@ -204,6 +211,7 @@ describe 'GET /claims/:claimId/articles', ->
               byline: 'b2'
               createdAt: '1970-01-01T00:00:03.000Z'
               headline: 'h2'
+              stance: 'against'
               urlGetId: null
               urlVersionId: @av2.urlVersionId
           }])
@@ -246,6 +254,7 @@ describe 'GET /claims/:claimId/articles', ->
               byline: 'b2'
               createdAt: '1970-01-01T00:00:03.002Z'
               headline: 'h2'
+              stance: null
               urlGetId: null
               urlVersionId: @av2.urlVersionId
             latestVersion:
@@ -253,6 +262,7 @@ describe 'GET /claims/:claimId/articles', ->
               byline: 'b2'
               createdAt: '1970-01-01T00:00:03.002Z'
               headline: 'h2'
+              stance: null
               urlGetId: null
               urlVersionId: @av2.urlVersionId
           }, {
@@ -272,6 +282,7 @@ describe 'GET /claims/:claimId/articles', ->
               byline: 'b1'
               createdAt: '1970-01-01T00:00:02.001Z'
               headline: 'h1'
+              stance: null
               urlGetId: null
               urlVersionId: @av1.urlVersionId
             latestVersion:
@@ -279,6 +290,7 @@ describe 'GET /claims/:claimId/articles', ->
               byline: 'b1'
               createdAt: '1970-01-01T00:00:02.001Z'
               headline: 'h1'
+              stance: null
               urlGetId: null
               urlVersionId: @av1.urlVersionId
           }])
