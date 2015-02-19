@@ -109,24 +109,12 @@ getShareCounts = (claimIds) ->
     "ClaimIds" AS (
       SELECT id
       FROM (VALUES#{sqlClaimIds}) AS t(id)
-    ),
-    "UrlIds" AS (
-      SELECT "urlId" AS id
-      FROM "Article"
-      WHERE "storyId" IN (SELECT id FROM "ClaimIds")
-    ),
-    "UrlMaxes" AS (
-      SELECT "urlId", service, MAX("shares") AS "nShares"
-      FROM "UrlPopularityGet"
-      WHERE "urlId" IN (SELECT id FROM "UrlIds")
-      GROUP BY "urlId", service
     )
     SELECT
       a."storyId" AS "claimId",
-      SUM(m."nShares") AS "nShares"
+      SUM(u."cachedNSharesFacebook" + u."cachedNSharesGoogle" + u."cachedNSharesTwitter") AS "nShares"
     FROM "Article" a
-    INNER JOIN "UrlMaxes" m
-            ON a."urlId" = m."urlId"
+    INNER JOIN "Url" u ON a."urlId" = u.id
     WHERE a."storyId" IN (SELECT id FROM "ClaimIds")
     GROUP BY a."storyId"
   """

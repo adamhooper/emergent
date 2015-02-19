@@ -189,28 +189,35 @@ describe '/claims', ->
 
     createClaim(slug: 'slug-2')
       .then((x) -> claim2 = x)
-      .then -> models.Url.create(url: 'http://example.org/1')
-      .then (url1) =>
+      .then ->
+        Promise.all([
+          models.Url.create
+            url: 'http://example.org/1'
+            cachedNSharesFacebook: 20
+            cachedNSharesTwitter: 14
+          models.Url.create
+            url: 'http://example.org/1/another'
+            cachedNSharesFacebook: 1
+        ])
+      .then ([ url1, url2 ]) =>
         Promise.all([
           models.Article.create({ storyId: @claim1.id, urlId: url1.id }, 'user@example.org')
-          models.UrlPopularityGet.create(urlId: url1.id, service: 'facebook', shares: 10)
-          models.UrlPopularityGet.create(urlId: url1.id, service: 'facebook', shares: 20) # a higher count should make the lower one disappear
-          models.UrlPopularityGet.create(urlId: url1.id, service: 'twitter', shares: 14)
+          models.Article.create({ storyId: @claim1.id, urlId: url2.id }, 'user@example.org')
         ])
-      .then -> models.Url.create(url: 'http://example.org/2')
-      .then (url2) =>
-        Promise.all([
-          models.Article.create({ storyId: claim2.id, urlId: url2.id }, 'user@example.org')
-          models.UrlPopularityGet.create(urlId: url2.id, service: 'facebook', shares: 30) # should not affect claim1 count
-        ])
+      .then ->
+        models.Url.create
+          url: 'http://example.org/2'
+          cachedNSharesFacebook: 30
+          cachedNSharesGoogle: 1
+      .then((url2) => models.Article.create({ storyId: claim2.id, urlId: url2.id }, 'user@example.org'))
       .then -> api.get('/claims')
       .then (res) =>
         claims = res.body.claims
         for claim in claims
           if claim.id == @claim1.id
-            expect(claim).to.have.property('nShares', 34)
+            expect(claim).to.have.property('nShares', 35)
           else
-            expect(claim).to.have.property('nShares', 30)
+            expect(claim).to.have.property('nShares', 31)
 
 describe '/claims/:id', ->
   beforeEach ->
