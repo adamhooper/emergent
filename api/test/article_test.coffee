@@ -22,6 +22,7 @@ createArticleVersion = (articleId, articleVersionAttrs, urlId, urlVersionAttrs) 
         createdAt: new Date()
         updatedAt: new Date()
       }, articleVersionAttrs)
+      attrs.headlineStance ?= attrs.stance
       models.ArticleVersion.create(attrs, raw: true)
 
 createPopularity = (urlId, service, shares, at) ->
@@ -91,6 +92,7 @@ describe 'GET /claims/:claimId/articles', ->
               byline: null
               createdAt: null
               headline: null
+              headlineStance: null
               stance: null
               urlGetId: null
               urlVersionId: null
@@ -99,13 +101,14 @@ describe 'GET /claims/:claimId/articles', ->
               byline: null
               createdAt: null
               headline: null
+              headlineStance: null
               stance: null
               urlGetId: null
               urlVersionId: null
           }])
 
     it 'should show first and lass ArticleVersion as one when there is one ArticleVersion', ->
-      createArticleVersion(@article.id, { createdAt: new Date(2000) }, @url1.id, { headline: 'h1', byline: 'b1', source: 'deleteme', createdAt: new Date(2000) })
+      createArticleVersion(@article.id, { createdAt: new Date(2000), stance: 'for' }, @url1.id, { headline: 'h1', byline: 'b1', source: 'deleteme', createdAt: new Date(2000) })
         .then((x) => @av1 = x)
         .then(=> @go())
         .tap (res) =>
@@ -126,7 +129,8 @@ describe 'GET /claims/:claimId/articles', ->
               byline: 'b1'
               createdAt: '1970-01-01T00:00:02.000Z'
               headline: 'h1'
-              stance: null
+              headlineStance: 'for'
+              stance: 'for'
               urlGetId: null
               urlVersionId: @av1.urlVersionId
             latestVersion:
@@ -134,15 +138,16 @@ describe 'GET /claims/:claimId/articles', ->
               byline: 'b1'
               createdAt: '1970-01-01T00:00:02.000Z'
               headline: 'h1'
-              stance: null
+              headlineStance: 'for'
+              stance: 'for'
               urlGetId: null
               urlVersionId: @av1.urlVersionId
           }])
 
     it 'should show first and last ArticleVersion when there are two', ->
       Promise.all([
-        createArticleVersion(@article.id, { createdAt: new Date(2000) }, @url1.id, { headline: 'h1', byline: 'b1', source: 'deleteme', createdAt: new Date(2000) })
-        createArticleVersion(@article.id, { createdAt: new Date(3000) }, @url1.id, { headline: 'h2', byline: 'b2', source: 'deleteme', createdAt: new Date(3000) })
+        createArticleVersion(@article.id, { createdAt: new Date(2000), stance: 'against' }, @url1.id, { headline: 'h1', byline: 'b1', source: 'deleteme', createdAt: new Date(2000) })
+        createArticleVersion(@article.id, { createdAt: new Date(3000), stance: 'for' }, @url1.id, { headline: 'h2', byline: 'b2', source: 'deleteme', createdAt: new Date(3000) })
       ])
         .then(([x1, x2]) => @av1 = x1; @av2 = x2)
         .then(=> @go())
@@ -164,7 +169,8 @@ describe 'GET /claims/:claimId/articles', ->
               byline: 'b1'
               createdAt: '1970-01-01T00:00:02.000Z'
               headline: 'h1'
-              stance: null
+              headlineStance: 'against'
+              stance: 'against'
               urlGetId: null
               urlVersionId: @av1.urlVersionId
             latestVersion:
@@ -172,7 +178,8 @@ describe 'GET /claims/:claimId/articles', ->
               byline: 'b2'
               createdAt: '1970-01-01T00:00:03.000Z'
               headline: 'h2'
-              stance: null
+              headlineStance: 'for'
+              stance: 'for'
               urlGetId: null
               urlVersionId: @av2.urlVersionId
           }])
@@ -203,6 +210,7 @@ describe 'GET /claims/:claimId/articles', ->
               byline: 'b1'
               createdAt: '1970-01-01T00:00:02.000Z'
               headline: 'h1'
+              headlineStance: 'for'
               stance: 'for'
               urlGetId: null
               urlVersionId: @av1.urlVersionId
@@ -211,9 +219,50 @@ describe 'GET /claims/:claimId/articles', ->
               byline: 'b2'
               createdAt: '1970-01-01T00:00:03.000Z'
               headline: 'h2'
+              headlineStance: 'against'
               stance: 'against'
               urlGetId: null
               urlVersionId: @av2.urlVersionId
+          }])
+
+    it 'should ignore any ArticleVersion with stance=null', ->
+      Promise.all([
+        createArticleVersion(@article.id, { createdAt: new Date(2000), stance: 'for' }, @url1.id, { headline: 'h1', byline: 'b1', source: 'deleteme', createdAt: new Date(2000) })
+        createArticleVersion(@article.id, { createdAt: new Date(2400) }, @url1.id, { headline: 'hmid', byline: 'bmid', source: 'deleteme', createdAt: new Date(2400) })
+      ])
+        .then(([x1, blah]) => @av1 = x1)
+        .then(=> @go())
+        .tap (res) =>
+          expect(res.body).to.deep.eq([{
+            id: @article.id
+            url: 'http://example.org'
+            articleVersionId: @av1.id # TODO nix
+            source: 'deleteme' # TODO nix
+            headline: 'h1' # TODO nix
+            byline: 'b1' # TODO nix
+            createdAt: '1970-01-01T00:00:01.000Z'
+            nShares:
+              facebook: 1
+              google: 2
+              twitter: 3
+            firstVersion:
+              articleVersionId: @av1.id
+              byline: 'b1'
+              createdAt: '1970-01-01T00:00:02.000Z'
+              headline: 'h1'
+              headlineStance: 'for'
+              stance: 'for'
+              urlGetId: null
+              urlVersionId: @av1.urlVersionId
+            latestVersion:
+              articleVersionId: @av1.id
+              byline: 'b1'
+              createdAt: '1970-01-01T00:00:02.000Z'
+              headline: 'h1'
+              headlineStance: 'for'
+              stance: 'for'
+              urlGetId: null
+              urlVersionId: @av1.urlVersionId
           }])
 
   describe 'with two Articles', ->
@@ -231,8 +280,8 @@ describe 'GET /claims/:claimId/articles', ->
 
     it 'should group data by Article', ->
       Promise.all([
-        createArticleVersion(@article1.id, { createdAt: new Date(2001) }, @url1.id, { headline: 'h1', byline: 'b1', source: 'deleteme', createdAt: new Date(2001) })
-        createArticleVersion(@article2.id, { createdAt: new Date(3002) }, @url2.id, { headline: 'h2', byline: 'b2', source: 'deleteme', createdAt: new Date(3002) })
+        createArticleVersion(@article1.id, { createdAt: new Date(2001), stance: 'against' }, @url1.id, { headline: 'h1', byline: 'b1', source: 'deleteme', createdAt: new Date(2001) })
+        createArticleVersion(@article2.id, { createdAt: new Date(3002), stance: 'for' }, @url2.id, { headline: 'h2', byline: 'b2', source: 'deleteme', createdAt: new Date(3002) })
       ])
         .then(([x1, x2]) => @av1 = x1; @av2 = x2)
         .then(=> @go())
@@ -254,7 +303,8 @@ describe 'GET /claims/:claimId/articles', ->
               byline: 'b2'
               createdAt: '1970-01-01T00:00:03.002Z'
               headline: 'h2'
-              stance: null
+              headlineStance: 'for'
+              stance: 'for'
               urlGetId: null
               urlVersionId: @av2.urlVersionId
             latestVersion:
@@ -262,7 +312,8 @@ describe 'GET /claims/:claimId/articles', ->
               byline: 'b2'
               createdAt: '1970-01-01T00:00:03.002Z'
               headline: 'h2'
-              stance: null
+              headlineStance: 'for'
+              stance: 'for'
               urlGetId: null
               urlVersionId: @av2.urlVersionId
           }, {
@@ -282,7 +333,8 @@ describe 'GET /claims/:claimId/articles', ->
               byline: 'b1'
               createdAt: '1970-01-01T00:00:02.001Z'
               headline: 'h1'
-              stance: null
+              headlineStance: 'against'
+              stance: 'against'
               urlGetId: null
               urlVersionId: @av1.urlVersionId
             latestVersion:
@@ -290,7 +342,8 @@ describe 'GET /claims/:claimId/articles', ->
               byline: 'b1'
               createdAt: '1970-01-01T00:00:02.001Z'
               headline: 'h1'
-              stance: null
+              headlineStance: 'against'
+              stance: 'against'
               urlGetId: null
               urlVersionId: @av1.urlVersionId
           }])

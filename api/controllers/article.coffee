@@ -67,6 +67,8 @@ module.exports =
             RANK() OVER (PARTITION BY "articleId" ORDER BY "createdAt" ASC) AS "rankAsc",
             RANK() OVER (PARTITION BY "articleId" ORDER BY "createdAt" DESC) AS "rankDesc"
           FROM "ArticleVersion"
+          WHERE stance IS NOT NULL
+            AND "headlineStance" IS NOT NULL
         )
         SELECT
           a.id,
@@ -84,22 +86,24 @@ module.exports =
           "lastUv".source AS source,
 
           -- "firstVersion"
-          "firstAv".id          AS "firstVersion.articleVersionId",
-          "firstUv".id          AS "firstVersion.urlVersionId",
-          "firstAv".stance      AS "firstVersion.stance",
-          "firstUv"."urlGetId"  AS "firstVersion.urlGetId",
-          "firstUv"."createdAt" AS "firstVersion.createdAt",
-          "firstUv"."headline"  AS "firstVersion.headline",
-          "firstUv"."byline"    AS "firstVersion.byline",
+          "firstAv".id               AS "firstVersion.articleVersionId",
+          "firstUv".id               AS "firstVersion.urlVersionId",
+          "firstAv".stance           AS "firstVersion.stance",
+          "firstAv"."headlineStance" AS "firstVersion.headlineStance",
+          "firstUv"."urlGetId"       AS "firstVersion.urlGetId",
+          "firstUv"."createdAt"      AS "firstVersion.createdAt",
+          "firstUv"."headline"       AS "firstVersion.headline",
+          "firstUv"."byline"         AS "firstVersion.byline",
 
           -- "latestVersion"
-          "lastAv".id          AS "latestVersion.articleVersionId",
-          "lastUv".id          AS "latestVersion.urlVersionId",
-          "lastAv".stance      AS "latestVersion.stance",
-          "lastUv"."urlGetId"  AS "latestVersion.urlGetId",
-          "lastUv"."createdAt" AS "latestVersion.createdAt",
-          "lastUv"."headline"  AS "latestVersion.headline",
-          "lastUv"."byline"    AS "latestVersion.byline"
+          "lastAv".id               AS "latestVersion.articleVersionId",
+          "lastUv".id               AS "latestVersion.urlVersionId",
+          "lastAv".stance           AS "latestVersion.stance",
+          "lastAv"."headlineStance" AS "latestVersion.headlineStance",
+          "lastUv"."urlGetId"       AS "latestVersion.urlGetId",
+          "lastUv"."createdAt"      AS "latestVersion.createdAt",
+          "lastUv"."headline"       AS "latestVersion.headline",
+          "lastUv"."byline"         AS "latestVersion.byline"
 
         FROM "Article" a
         INNER JOIN "Url" u ON a."urlId" = u.id
