@@ -292,8 +292,8 @@ module.exports = React.createClass({
                                   </div>
                                   : null }
                                 <div className="article-content">
-                                  <h4 className="article-list-title"><span className={'indicator indicator-' + article.stance}></span> <a href={article.url}>{claim.prettyUrl(article.url)}</a><span className="spacer-10"></span>{/*- <time className="no-wrap" dateTime={article.createdAt}>{moment(article.createdAt).format('MMM D')}</time>*/}
-                                    <span className="no-wrap"><span className="shares-label">Shares:</span> <span className="shares-value">{this.formatNumber(article.shares)}</span></span>
+                                  <h4 className="article-list-title"><span className={'indicator indicator-' + article.latestVersion.stance}></span> <a href={article.url}>{claim.prettyUrl(article.url)}</a><span className="spacer-10"></span>{/*- <time className="no-wrap" dateTime={article.createdAt}>{moment(article.createdAt).format('MMM D')}</time>*/}
+                                    <span className="no-wrap"><span className="shares-label">Shares:</span> <span className="shares-value">{this.formatNumber((article.nShares.facebook || 0) + (article.nShares.google || 0) + (article.nShares.twitter || 0))}</span></span>
                                     </h4>
                                   <p className="article-description">{article.headline}</p>
                                 </div>
