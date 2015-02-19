@@ -154,7 +154,7 @@ module.exports =
           null
       .then((claims) -> { claims: claims.map(claimToJson) })
       .then (json) ->
-        res.header('cache-control', 'public, max-age=300')
+        res.header('cache-control', 'public, max-age=60')
         res.json(json)
       .catch(next)
 
@@ -203,6 +203,6 @@ module.exports =
             null
       .then(claimToJson)
       .then (json) ->
-        res.header('cache-control', 'public, max-age=300')
+        res.header('cache-control', 'public, max-age=60')
         res.json(json)
       .catch(next)

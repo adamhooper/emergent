@@ -192,6 +192,6 @@ module.exports =
 
         slices
       .then (json) ->
-        res.header('cache-control', 'public, max-age=300')
+        res.header('cache-control', 'public, max-age=60')
         res.json(json)
       .catch(next)
