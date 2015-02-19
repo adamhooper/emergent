@@ -1,5 +1,8 @@
 #!/bin/sh
 
+set -x
+set -e
+
 DIR="$(dirname "$0")/.."
 
 (cd "$DIR"/api && npm test)
