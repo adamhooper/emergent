@@ -27,6 +27,24 @@ module.exports = class Startup
     @queues = options.queues
     @taskTimeChooser = options.taskTimeChooser
 
+  refreshCachedShareCounts: (done) ->
+    models.sequelize.query('''
+      WITH data AS (
+        SELECT
+          "urlId",
+          service,
+          MAX(shares) AS "nShares"
+        FROM "UrlPopularityGet"
+        GROUP BY "urlId", service
+      )
+      UPDATE "Url"
+      SET
+        "cachedNSharesFacebook" = COALESCE((SELECT "nShares" FROM data WHERE service = 'facebook' AND "urlId" = id), 0),
+        "cachedNSharesGoogle" = COALESCE((SELECT "nShares" FROM data WHERE service = 'google' AND "urlId" = id), 0),
+        "cachedNSharesTwitter" = COALESCE((SELECT "nShares" FROM data WHERE service = 'twitter' AND "urlId" = id), 0)
+    ''')
+      .nodeify(done)
+
   addAllUrlsToQueues: (done) ->
     serviceAndIdToNextDate = {} # service -> url id -> { at, nPreviousFetches }
 
@@ -112,10 +130,14 @@ module.exports = class Startup
       .nodeify(done)
 
   run: (done) ->
-    @addAllUrlsToQueues (err) =>
-      if !err?
-        debug("Spawning re-parsing handler in the background")
-        @runNewParsers (x) ->
-          debug("Finished running new parsers. Error (if any): ", x)
-
-      done(err)
+    debug("Recalculating URL share counts...")
+    @refreshCachedShareCounts (err) =>
+      return done(err) if err?
+      debug("Queueing URLs...")
+      @addAllUrlsToQueues (err) =>
+        return done(err) if err?
+        debug("Spawning re-parsing handler in the background...")
+        @runNewParsers (err) ->
+          return done(err) if err?
+          debug("Finished running new parsers.")
+          done(null)
