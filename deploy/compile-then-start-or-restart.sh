@@ -3,6 +3,9 @@
 # This gets run on a web server. It compiles assets and then restarts the
 # server.
 
+set -e
+set -x
+
 DIR="$(dirname "$0")/.."
 
 "$DIR"/bin/install-components.sh
