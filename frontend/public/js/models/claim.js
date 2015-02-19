@@ -14,7 +14,7 @@ module.exports = Backbone.Model.extend({
     return this.get('truthiness')=='true' || this.get('truthiness')=='false' ? this.get('truthiness') : 'Unverified';
   },
 
-  /* retrieve articles and timeslices if we just have a base object */
+  /* retrieve articles if we just have a base object */
   populate: function() {
     if (!this.get('articles')) {
       return $.when($.get(this.url() + '/articles')).done(function(articles) {
