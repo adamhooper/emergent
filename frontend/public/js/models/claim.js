@@ -57,10 +57,20 @@ module.exports = Backbone.Model.extend({
    */
   articlesByStance: function(stance) {
     if (this.get('articles')) {
+      var originUrl = this.get('originUrl');
+      function cmp(article1, article2) {
+        // Origin goes last; the rest are ordered newest first
+        // see https://github.com/craigsilverman/emergent/issues/136
+        return (
+          ((article1.url === originUrl ? 1 : 0) - (article2.url === originUrl ? 1 : 0))
+          || (article1.createdAt - article2.createdAt)
+        );
+      }
+
       var articles = _.filter(this.get('articles'), function(article) {
         return !stance || article.latestVersion.stance === stance;
       });
-      return _.sortBy(articles, 'createdAt').reverse();
+      return articles.sort(cmp);
     } else {
       return [];
     }
