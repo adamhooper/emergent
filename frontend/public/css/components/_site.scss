@@ -98,15 +98,11 @@
   background-color: #fafafa;
 
   overflow: hidden;
+  overflow-x: scroll;
+  -webkit-overflow-scrolling: touch;
 
-  html.touch & {
-    overflow-x: scroll;
-    overflow-y: hidden;
-    -webkit-overflow-scrolling: touch;
-
-    @include breakpoint($breakpoint-tablet) {
-      overflow: hidden;
-    }
+  @include breakpoint($breakpoint-tablet) {
+    overflow: hidden;
   }
 
   .navigation-link {
