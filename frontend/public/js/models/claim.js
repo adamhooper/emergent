@@ -34,7 +34,7 @@ module.exports = Backbone.Model.extend({
     }
 
     _.each(this.get('articles'), function(article) {
-      var stance = article.latestVersion.stance || '';
+      var stance = article.latestVersion.headlineStance || '';
       if (!shares[stance]) shares[stance] = 0;
 
       _.each(_.values(article.nShares), function(n) {
@@ -68,7 +68,7 @@ module.exports = Backbone.Model.extend({
       }
 
       var articles = _.filter(this.get('articles'), function(article) {
-        return !stance || article.latestVersion.stance === stance;
+        return !stance || article.latestVersion.headlineStance === stance;
       });
       return articles.sort(cmp);
     } else {
