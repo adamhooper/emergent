@@ -64,8 +64,8 @@ module.exports =
             "createdAt",
             stance,
             "headlineStance",
-            RANK() OVER (PARTITION BY "articleId" ORDER BY "createdAt" ASC) AS "rankAsc",
-            RANK() OVER (PARTITION BY "articleId" ORDER BY "createdAt" DESC) AS "rankDesc"
+            ROW_NUMBER() OVER (PARTITION BY "articleId" ORDER BY "createdAt" ASC) AS "rankAsc",
+            ROW_NUMBER() OVER (PARTITION BY "articleId" ORDER BY "createdAt" DESC) AS "rankDesc"
           FROM "ArticleVersion"
           WHERE stance IS NOT NULL
             AND "headlineStance" IS NOT NULL

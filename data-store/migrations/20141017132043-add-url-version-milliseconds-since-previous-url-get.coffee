@@ -6,7 +6,7 @@ module.exports =
     migration.addColumn('UrlVersion', 'millisecondsSincePreviousUrlGet', DataTypes.BIGINT)
       .then(-> q("""
         WITH gets AS (
-          SELECT "id", "urlId", "createdAt", RANK() OVER (PARTITION BY "urlId" ORDER BY "createdAt") AS "r"
+          SELECT "id", "urlId", "createdAt", ROW_NUMBER() OVER (PARTITION BY "urlId" ORDER BY "createdAt") AS "r"
           FROM "UrlGet"
         ), get_intervals AS (
           SELECT g2.id, EXTRACT(EPOCH FROM (g2."createdAt" - g1."createdAt")) * 1000 AS "ms"

@@ -93,7 +93,7 @@ getStanceCounts = (claimIds) ->
         "articleId",
         stance,
         "headlineStance",
-        RANK() OVER (PARTITION BY "articleId" ORDER BY "createdAt" DESC) AS rank
+        ROW_NUMBER() OVER (PARTITION BY "articleId" ORDER BY "createdAt" DESC) AS rank
       FROM "ArticleVersion"
       WHERE "articleId" IN (SELECT id FROM "ArticleIds")
         AND stance IS NOT NULL
