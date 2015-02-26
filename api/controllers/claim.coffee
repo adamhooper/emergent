@@ -21,6 +21,7 @@ claimToJson = (claim) ->
     'categories'
     'tags'
     'stances'
+    'headlineStances'
     'createdAt'
   ])
 
@@ -62,6 +63,17 @@ getTags = (claimIds) ->
         ret[row.claimId].push(row.name)
       ret
 
+# Returns Object with stances and headlineStances:
+#
+# ```
+# {
+#   'some-story-id': {
+#     stances: { for: 4, against: 6, observing: 2, null: 1 },
+#     headlineStances: { for: 4, against: 6, observing: 2, null: 1 }
+#   },
+#   ...
+# }
+# ```
 getStanceCounts = (claimIds) ->
   sqlClaimIds = claimIds.map((id) -> "('#{id}'::uuid)").join(',')
   q = """
@@ -80,26 +92,37 @@ getStanceCounts = (claimIds) ->
         id,
         "articleId",
         stance,
+        "headlineStance",
         RANK() OVER (PARTITION BY "articleId" ORDER BY "createdAt" DESC) AS rank
       FROM "ArticleVersion"
       WHERE "articleId" IN (SELECT id FROM "ArticleIds")
+        AND stance IS NOT NULL
+        AND "headlineStance" IS NOT NULL
+    ),
+    "BestArticleVersions" AS (
+      SELECT id, "articleId", stance, "headlineStance"
+      FROM "RankedArticleVersions"
+      WHERE rank = 1
     )
     SELECT
-      a."storyId" as "claimId",
+      a."storyId" AS "claimId",
       av.stance,
+      av."headlineStance",
       COUNT(*) AS "n"
-    FROM "RankedArticleVersions" av
-    INNER JOIN "Article" a ON av."articleId" = a.id
-    WHERE av.rank = 1
-    GROUP BY "claimId", stance
+    FROM "Article" a
+    INNER JOIN "BestArticleVersions" av ON a.id = av."articleId"
+    WHERE EXISTS (SELECT 1 FROM "ArticleIds" WHERE id = a.id)
+    GROUP BY a."storyId", av.stance, av."headlineStance"
   """
   models.sequelize.query(q, null, raw: true, type: 'SELECT')
     .then (rows) ->
       ret = {}
       # Set defaults
-      (ret[claimId] = {}) for claimId in claimIds
+      for claimId in claimIds
+        ret[claimId] = { stances: {}, headlineStances: {} }
       for row in rows
-        ret[row.claimId][row.stance] = +row.n
+        ret[row.claimId].stances[row.stance] = +row.n
+        ret[row.claimId].headlineStances[row.headlineStance] = +row.n
       ret
 
 getShareCounts = (claimIds) ->
@@ -146,7 +169,8 @@ module.exports =
             .spread (counts, stances, categories, tags) ->
               for claim in claims
                 claim.nShares = counts[claim.id]
-                claim.stances = stances[claim.id]
+                claim.stances = stances[claim.id].stances
+                claim.headlineStances = stances[claim.id].headlineStances
                 claim.categories = categories[claim.id]
                 claim.tags = tags[claim.id]
               null

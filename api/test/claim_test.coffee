@@ -21,7 +21,7 @@ createClaim = (attrs) ->
   attrs = _.extend({}, DefaultAttrs, attrs)
   models.Story.create(attrs, raw: true)
 
-describe '/claims', ->
+describe 'GET /claims', ->
   beforeEach ->
     createClaim()
       .then((x) => @claim1 = x)
@@ -122,7 +122,9 @@ describe '/claims', ->
 
   it 'should default to empty stances', ->
     api.get('/claims')
-      .then((res) -> expect(res.body.claims[0].stances).to.deep.eq({}))
+      .tap (res) ->
+        expect(res.body.claims[0].stances).to.deep.eq({})
+        expect(res.body.claims[0].headlineStances).to.deep.eq({})
 
   it 'should count stances', ->
     Promise.all([
@@ -139,14 +141,15 @@ describe '/claims', ->
         models.Article.create({ urlId: u3.id, storyId: @claim1.id }, 'user@example.org')
       ])
       .spread (uv1, uv2, uv3, a1, a2, a3) -> Promise.all([
-        models.ArticleVersion.create(urlVersionId: uv1.id, articleId: a1.id, stance: 'for')
-        models.ArticleVersion.create(urlVersionId: uv2.id, articleId: a2.id, stance: 'for')
-        models.ArticleVersion.create(urlVersionId: uv3.id, articleId: a3.id, stance: 'against')
+        models.ArticleVersion.create(urlVersionId: uv1.id, articleId: a1.id, stance: 'for', headlineStance: 'against')
+        models.ArticleVersion.create(urlVersionId: uv2.id, articleId: a2.id, stance: 'for', headlineStance: 'against')
+        models.ArticleVersion.create(urlVersionId: uv3.id, articleId: a3.id, stance: 'against', headlineStance: 'for')
       ])
       .then(-> api.get('/claims'))
       .tap (res) ->
         claims = res.body.claims
         expect(claims[0].stances).to.deep.eq(for: 2, against: 1)
+        expect(claims[0].headlineStances).to.deep.eq(for: 1, against: 2)
 
   it 'should not count stances from past ArticleVersions', ->
     models.Url.create(url: 'http://example.org/1')
@@ -157,26 +160,46 @@ describe '/claims', ->
       ])
       .spread (uv1, uv2, a) ->
         # Ensure version 2 comes later than version 1, so they can be sorted
-        models.ArticleVersion.create(urlVersionId: uv1.id, articleId: a.id, stance: 'for')
+        models.ArticleVersion.create(urlVersionId: uv1.id, articleId: a.id, stance: 'for', headlineStance: 'for')
           .delay(1) # Postgres stores times with millisecond precision
-          .then(-> models.ArticleVersion.create(urlVersionId: uv2.id, articleId: a.id, stance: 'against'))
+          .then(-> models.ArticleVersion.create(urlVersionId: uv2.id, articleId: a.id, stance: 'against', headlineStance: 'against'))
       .then(-> api.get('/claims'))
       .tap (res) ->
         claims = res.body.claims
         expect(claims[0].stances).to.deep.eq(against: 1)
+        expect(claims[0].headlineStances).to.deep.eq(against: 1)
 
-  it 'should count null stances', ->
+  it 'should not count null stances', ->
     models.Url.create(url: 'http://example.org/1')
       .then (u) => Promise.all([
         models.UrlVersion.create(urlId: u.id, source: '', headline: '', body: '', byline: '')
         models.Article.create({ urlId: u.id, storyId: @claim1.id }, 'user@example.org')
       ])
       .spread (uv, a) ->
-        models.ArticleVersion.create(urlVersionId: uv.id, articleId: a.id, stance: null)
+        models.ArticleVersion.create(urlVersionId: uv.id, articleId: a.id, stance: null, headlineStance: null)
       .then(-> api.get('/claims'))
       .tap (res) ->
         claims = res.body.claims
-        expect(claims[0].stances).to.deep.eq(null: 1)
+        expect(claims[0].stances).to.deep.eq({})
+        expect(claims[0].headlineStances).to.deep.eq({})
+
+  it 'should ignore null stances and choose previous non-null ones', ->
+    models.Url.create(url: 'http://example.org/1')
+      .then (u) => Promise.all([
+        models.UrlVersion.create(urlId: u.id, source: '', headline: '', body: '', byline: '')
+        models.UrlVersion.create(urlId: u.id, source: '', headline: '', body: '', byline: '')
+        models.Article.create({ urlId: u.id, storyId: @claim1.id }, 'user@example.org')
+      ])
+      .spread (uv1, uv2, a) ->
+        # Ensure version 2 comes later than version 1, so they can be sorted
+        models.ArticleVersion.create(urlVersionId: uv1.id, articleId: a.id, stance: 'for', headlineStance: 'for')
+          .delay(1) # Postgres stores times with millisecond precision
+          .then(-> models.ArticleVersion.create(urlVersionId: uv2.id, articleId: a.id, stance: null, headlineStance: null))
+      .then(-> api.get('/claims'))
+      .tap (res) ->
+        claims = res.body.claims
+        expect(claims[0].stances).to.deep.eq(for: 1)
+        expect(claims[0].headlineStances).to.deep.eq(for: 1)
 
   it 'should hide unpublished claims', ->
     createClaim(slug: 'slug-2', publishedAt: null)
