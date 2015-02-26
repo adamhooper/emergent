@@ -29,7 +29,7 @@ module.exports = Backbone.Collection.extend({
   byStance: function(collection, stance) {
     if (stance == 'controversial') {
       return _.filter(collection, function(claim) {
-        return claim.get('stances') && claim.get('stances').for > 1 && claim.get('stances').against > 1;
+        return claim.get('stances') && claim.get('stances')['for'] > 1 && claim.get('stances').against > 1;
       });
     } else {
       return _.filter(collection, function(claim) { return claim.get('truthiness')==stance; });

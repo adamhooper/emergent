@@ -115,6 +115,20 @@ module.exports = React.createClass({
     return new String(str).replace(/(\d)(?=(\d{3})+$)/g, '$1,');
   },
 
+  maybeRenderTrackedStance: function(claim, stance) {
+    var n = claim.get('headlineStances')[stance];
+    if (n) {
+      var indicator = {
+        'for': 'true',
+        'against': 'false',
+        'observing': 'observing'
+      }[stance];
+      return <span className="tracked-group">{n}<span className={"indicator indicator-" + indicator}></span></span>;
+    } else {
+      return "";
+    }
+  },
+
   render: function() {
     var filteredClaims = this.filteredClaims();
     return (
@@ -182,9 +196,9 @@ module.exports = React.createClass({
                         : null}
                         <div className="article-tracked">
                           <span className="label">Tracked:</span>
-                          {claim.get('stances')['for'] ? <span className="tracked-group">{claim.get('stances')['for']}<span className="indicator indicator-true"></span></span> : null}
-                          {claim.get('stances')['against'] ? <span className="tracked-group">{claim.get('stances')['against']}<span className="indicator indicator-false"></span></span> : null}
-                          {claim.get('stances')['observing'] ? <span className="tracked-group">{claim.get('stances')['observing']}<span className="indicator indicator-unknown"></span></span> : null}
+                          {this.maybeRenderTrackedStance(claim, 'for')}
+                          {this.maybeRenderTrackedStance(claim, 'against')}
+                          {this.maybeRenderTrackedStance(claim, 'observing')}
                         </div>
                       </footer>
                     </article>
