@@ -13,7 +13,6 @@ var app = {
     this.claims = new this.collections.Claims();
     this.claims.url = 'http://api.emergent.info/claims'
     this.claims.fetch().done(function() {
-      this.claims.sort();
       React.renderComponent(
         <Routes location="history">
           <Route path="/" handler={Root} claims={this.claims}>

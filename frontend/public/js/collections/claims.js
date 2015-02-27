@@ -14,10 +14,6 @@ module.exports = Backbone.Collection.extend({
     return _.filter(collection, function(claim) { return claim.searchableText().match(new RegExp(regex, 'gi')); });
   },
 
-  comparator: function(c1, c2) {
-    return c1.get('createdAt') < c2.get('createdAt') ? 1 : -1;
-  },
-
   byCategory: function(collection, category) {
     return _.filter(collection, function(claim) { return _.contains(claim.get('categories'), category); });
   },
