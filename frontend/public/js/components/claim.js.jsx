@@ -127,9 +127,9 @@ module.exports = React.createClass({
           <div className="page-header">
             <div className="container">
               <div className="section section-with-sidebar">
-                <header className="section-header with-stance">
-                  <div className={'stance stance-' + claim.get('truthiness')}>
-                    <span className="stance-value">{claim.truthinessText()}</span>
+                <header className="section-header with-truthiness">
+                  <div className={'truthiness truthiness-' + claim.get('truthiness')}>
+                    <span className="truthiness-value">{claim.truthinessText()}</span>
                   </div>
                   <h1 className="page-title">{claim.get('headline')}</h1>
                   <p className="article-content" dangerouslySetInnerHTML={{__html: linker.link(claim.get('description'))}}/>
@@ -193,7 +193,7 @@ module.exports = React.createClass({
                   { claim.articlesByStance('for').length > 0 ?
                     <div onClick={this.setFilter.bind(this, 'for')} className={'card card-category card-category-for' + (this.state.filter === 'for' ? ' is-selected' : '')}>
                       <div className="card-header">
-                        <p className="card-title">For{claim.get('truthiness') === 'true' ? <span className="icon icon-confirmed-stance">Confirmed</span> : null}</p>
+                        <p className="card-title">For{claim.get('truthiness') === 'true' ? <span className="icon icon-confirmed-truthiness">Confirmed</span> : null}</p>
                       </div>
                       <div className="card-content">
                         <div className="sources"><span className="sources-count">{claim.articlesByStance('for').length}</span><span className="indicator-holder" dangerouslySetInnerHTML={{__html: Array(claim.articlesByStance('for').length + 1).join('<span class="indicator indicator-true"></span>')}}/></div>
@@ -208,7 +208,7 @@ module.exports = React.createClass({
                   { claim.articlesByStance('against').length > 0 ?
                     <div onClick={this.setFilter.bind(this, 'against')} className={'card card-category card-category-against' + (this.state.filter === 'against' ? ' is-selected' : '')}>
                       <div className="card-header">
-                        <p className="card-title">Against{claim.get('truthiness') === 'false' ? <span className="icon icon-confirmed-stance">Confirmed</span> : null}</p>
+                        <p className="card-title">Against{claim.get('truthiness') === 'false' ? <span className="icon icon-confirmed-truthiness">Confirmed</span> : null}</p>
                       </div>
                       <div className="card-content">
                         <div className="sources"><span className="sources-count">{claim.articlesByStance('against').length}</span><span className="indicator-holder" dangerouslySetInnerHTML={{__html: Array(claim.articlesByStance('against').length + 1).join('<span class="indicator indicator-false"></span>')}}/></div>
@@ -343,8 +343,8 @@ module.exports = React.createClass({
             <div className="container">
               <span className="next-label">Next in {claim.get('categories')[0]}:</span>
               <div className="next-link-holder">
-                <div className={'stance stance-small stance-' + nextClaim.get('truthiness')}>
-                  <span className="stance-value">{nextClaim.truthinessText()}</span>
+                <div className={'truthiness truthiness-small truthiness-' + nextClaim.get('truthiness')}>
+                  <span className="truthiness-value">{nextClaim.truthinessText()}</span>
                 </div>
                 <Link to="claim" params={{ slug: nextClaim.get('slug') }}>{nextClaim.get('headline')}</Link>
               </div>

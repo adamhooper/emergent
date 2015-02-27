@@ -52,11 +52,11 @@
     margin-top: 2em;
     margin-bottom: 2em;
 
-    &.with-stance {
+    &.with-stance, &.with-truthiness {
       position: relative;
       @include breakpoint($breakpoint-tablet) {
         padding-left: 10.2em;
-        .stance {
+        .stance, .truthiness {
           top: 0.3em;
         }
       }

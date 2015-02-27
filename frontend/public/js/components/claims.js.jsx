@@ -13,7 +13,7 @@ module.exports = React.createClass({
   getInitialState: function() {
     return {
       sort: null,
-      stance: null,
+      truthiness: null,
       search: this.props.query.search
     }
   },
@@ -33,7 +33,7 @@ module.exports = React.createClass({
           'value': 'nShares'
         }
       ],
-      stances: [
+      truthinesses: [
         {
           'name': 'All',
           'value': null
@@ -62,8 +62,8 @@ module.exports = React.createClass({
     this.subscribeTo(this.props.claims);
   },
 
-  setStanceFilter: function(stance) {
-    this.setState({ stance: stance });
+  setTruthinessFilter: function(truthiness) {
+    this.setState({ truthiness: truthiness });
   },
 
   setSort: function(sort) {
@@ -85,8 +85,8 @@ module.exports = React.createClass({
       claims = this.props.claims.byTag(claims, tag);
     }
 
-    if (this.state.stance) {
-      claims = this.props.claims.byStance(claims, this.state.stance);
+    if (this.state.truthiness) {
+      claims = this.props.claims.byTruthiness(claims, this.state.truthiness);
     }
 
     if (this.state.sort) {
@@ -145,11 +145,11 @@ module.exports = React.createClass({
                   );
                 }.bind(this))}
               </ul>
-             <ul className="navigation navigation-filtering navigation-filtering-stance">
-                {this.props.stances.map(function(stance, i) {
-                  var classes = stance.value == this.state.stance ? 'active navigation-link' : 'navigation-link';
+             <ul className="navigation navigation-filtering navigation-filtering-truthiness">
+                {this.props.truthinesses.map(function(truthiness, i) {
+                  var classes = truthiness.value == this.state.truthiness ? 'active navigation-link' : 'navigation-link';
                   return (
-                    <li key={i}><button onClick={this.setStanceFilter.bind(this, stance.value )} className={classes}>{stance.name}</button></li>
+                    <li key={i}><button onClick={this.setTruthinessFilter.bind(this, truthiness.value )} className={classes}>{truthiness.name}</button></li>
                   );
                 }.bind(this))}
               </ul>
@@ -162,10 +162,10 @@ module.exports = React.createClass({
               : filteredClaims.map(function(claim, i) {
                 return (
                   <li key={claim.id}>
-                    <article className="article article-preview with-stance">
+                    <article className="article article-preview with-truthiness">
                       <header className="article-header">
-                        <div className={'stance stance-' + claim.get('truthiness')}>
-                          <span className="stance-value">{claim.truthinessText()}</span>
+                        <div className={'truthiness truthiness-' + claim.get('truthiness')}>
+                          <span className="truthiness-value">{claim.truthinessText()}</span>
                         </div>
                         <div className="article-meta">
                           <span className="article-category">{claim.get('categories') && claim.get('categories').join(' - ')}</span>

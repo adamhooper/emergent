@@ -8,7 +8,7 @@ $stance-width:             5.5em;
 // Component
 // ------------------------------
 
-.stance {
+.stance, .truthiness {
   border: 1px solid transparent;
   border-radius: 3px;
   display: inline-block;
@@ -19,7 +19,7 @@ $stance-width:             5.5em;
   width: $stance-width;
 
   // in article previews
-  .with-stance & {
+  .with-stance &, .with-truthiness & {
     margin-bottom: 1em;
     @include breakpoint($breakpoint-tablet) {
       left: 2.6em;
@@ -34,13 +34,13 @@ $stance-width:             5.5em;
     float: none;
   }
 
-  &.stance-small {
+  &.stance-small, &.truthiness-small {
     padding: .2em .2em .3em;
     width: $stance-width / 1.1;
   }
 }
 
-.stance-value {
+.stance-value, .truthiness-value {
   font-size: font(xs);
   font-weight: 700;
   letter-spacing: .025em;
@@ -53,27 +53,27 @@ $stance-width:             5.5em;
 // Component variations
 // ------------------------------
 
-.stance-true,
-.stance-false,
+.truthiness-true,
+.truthiness-false,
 .stance-for,
 .stance-against {
   color: palette(base, lighter);
   text-shadow: 0 1px 0 rgba(0, 0, 0, .2);
 }
 
-.stance-true,
+.truthiness-true,
 .stance-for {
   background-color: palette(status, true);
   border-color: palette(status, true);
 }
 
-.stance-false,
+.truthiness-false,
 .stance-against {
   background-color: palette(status, false);
   border-color: palette(status, false);
 }
 
-.stance-unknown,
+.truthiness-unknown,
 .stance-observing {
   background-color: transparent;
   border-color: #919191;
