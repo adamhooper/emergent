@@ -81,20 +81,24 @@ module.exports = React.createClass({
 
     if (this.state.search) {
       claims = Claims.bySearch(claims, this.state.search);
-    } else if (category) {
-      claims = Claims.byCategory(claims, category);
-    } else if (tag) {
+    }
+
+    if (tag) {
       claims = Claims.byTag(claims, tag);
-    } else {
-      var hiddenCategoryIds = _.chain(this.props.categories)
-        .filter(function(c) { return c.hidden; })
-        .pluck('id')
-        .value();
-      claims = Claims.byAllButHiddenCategories(claims, hiddenCategoryIds);
     }
 
     if (this.state.truthiness) {
       claims = Claims.byTruthiness(claims, this.state.truthiness);
+    }
+
+    if (category) {
+      claims = Claims.byCategory(claims, category);
+    } else {
+      var hiddenCategoryIds = {};
+      this.props.categories.forEach(function(c) {
+        if (c.hidden) { hiddenCategoryIds[c.id] = true; }
+      });
+      claims = Claims.byAllButHiddenCategories(claims, hiddenCategoryIds);
     }
 
     if (this.state.sort) {
