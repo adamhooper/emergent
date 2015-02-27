@@ -17,7 +17,6 @@ module.exports = React.createClass({
 
   updateActiveState: function() {
     if (lastPathname != window.location.pathname) {
-      console.log('New pathname', lastPathname, window.location.pathname);
       lastPathname = window.location.pathname;
       window.ga('send', 'pageview')
     }
@@ -42,7 +41,7 @@ module.exports = React.createClass({
             </nav>
           </div>
         </header>
-        <this.props.activeRouteHandler claims={this.props.claims}/>
+        <this.props.activeRouteHandler claims={this.props.claims} categories={this.props.categories}/>
         <footer className="site-footer">
           <div className="container">
             <div className="copyright">&copy; Emergent 2015</div>

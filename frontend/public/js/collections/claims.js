@@ -10,12 +10,23 @@ module.exports = Backbone.Collection.extend({
     return response.claims;
   },
 
-  filtered: function(collection, regex) {
+  bySearch: function(collection, regex) {
     return _.filter(collection, function(claim) { return claim.searchableText().match(new RegExp(regex, 'gi')); });
   },
 
   byCategory: function(collection, category) {
     return _.filter(collection, function(claim) { return _.contains(claim.get('categories'), category); });
+  },
+
+  byAllButHiddenCategories: function(collection, hiddenCategories) {
+    return _.filter(collection, function(claim) {
+      for (var category in claim.get('categories')) {
+        if (category in hiddenCategories) {
+          return false;
+        }
+      }
+      return true;
+    });
   },
 
   byTag: function(collection, tag) {

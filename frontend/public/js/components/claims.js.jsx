@@ -76,17 +76,25 @@ module.exports = React.createClass({
     var tag = this.props.params.tag ? unescape(this.props.params.tag) : null;
     if (category=='US') { category = 'U.S.'; } // ugh
 
+    var Claims = this.props.claims;
     var claims = this.props.claims.models;
+
     if (this.state.search) {
-      claims = this.props.claims.filtered(claims, this.state.search);
+      claims = Claims.bySearch(claims, this.state.search);
     } else if (category) {
-      claims = this.props.claims.byCategory(claims, category);
+      claims = Claims.byCategory(claims, category);
     } else if (tag) {
-      claims = this.props.claims.byTag(claims, tag);
+      claims = Claims.byTag(claims, tag);
+    } else {
+      var hiddenCategoryIds = _.chain(this.props.categories)
+        .filter(function(c) { return c.hidden; })
+        .pluck('id')
+        .value();
+      claims = Claims.byAllButHiddenCategories(claims, hiddenCategoryIds);
     }
 
     if (this.state.truthiness) {
-      claims = this.props.claims.byTruthiness(claims, this.state.truthiness);
+      claims = Claims.byTruthiness(claims, this.state.truthiness);
     }
 
     if (this.state.sort) {
@@ -133,7 +141,7 @@ module.exports = React.createClass({
     var filteredClaims = this.filteredClaims();
     return (
       <div className="page">
-        <app.components.Header claims={this.props.claims} search={this.state.search || ''} category={this.heading()}/>
+        <app.components.Header claims={this.props.claims} search={this.state.search || ''} category={this.heading()} categories={this.props.categories}/>
         <div className="page-content page-claims-parent">
           <div className="articles-holder section-with-sidebar">
             <nav className="articles-filtering">
@@ -178,7 +186,7 @@ module.exports = React.createClass({
                           {claim.get('originUrl') ?
                             <span className="article-source">Originating Source: {/*<span className="indicator indicator-true"> </span>*/}<a href={claim.get('originUrl')}>{claim.prettyUrl()}</a></span>
                           : null }
-                          <span className="article-originated">Added <time datetime={claim.get('publishedAt')}>{moment(claim.get('publishedAt')).format('MMM D')}</time></span>
+                          <span className="article-originated">Added <time dateTime={claim.get('publishedAt')}>{moment(claim.get('publishedAt')).format('MMM D')}</time></span>
                           <span className="article-shares hidden-desktop"><span className="label">Shares:</span> {this.formatNumber(claim.get('nShares'))}</span>
                         </div>
                       </header>
@@ -189,7 +197,7 @@ module.exports = React.createClass({
                             <span className="label">Tagged:</span>
                             {claim.get('tags').map(function(tag, i) {
                               return (
-                                <Link to="tag" params={{ tag: tag }}>{tag}</Link>
+                                <Link key={"article-tag-" + i} to="tag" params={{ tag: tag }}>{tag}</Link>
                               );
                             }.bind(this))}
                           </div>
@@ -221,7 +229,7 @@ module.exports = React.createClass({
                 <div id="mc_embed_signup">
                   <form action="//emergent.us2.list-manage.com/subscribe/post?u=657b595bbd3c63e045787f019&amp;id=80df098e56" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" target="_blank">
                     <input type="email" name="EMAIL" id="mce-EMAIL" placeholder="Your Email"/>
-                    <input type="hidden" name="b_657b595bbd3c63e045787f019_80df098e56" tabindex="-1" value=""/>
+                    <input type="hidden" name="b_657b595bbd3c63e045787f019_80df098e56" tabIndex="-1" value=""/>
                     <button type="submit" name="subscribe" className="button" id="mc-embedded-subscribe">Sign Up</button>
                   </form>
                 </div>

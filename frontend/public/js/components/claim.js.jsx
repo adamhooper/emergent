@@ -122,7 +122,7 @@ module.exports = React.createClass({
     return (
 
       <div>
-        <app.components.Header claims={this.props.claims} search="" category={this.heading()}/>
+        <app.components.Header claims={this.props.claims} search="" category={this.heading()} categories={this.props.categories}/>
         <div className="page page-claim">
           <div className="page-header">
             <div className="container">
@@ -138,7 +138,7 @@ module.exports = React.createClass({
                     <span className="label">Tagged:</span>
                     {claim.get('tags').map(function(tag, i) {
                       return (
-                        <Link to="tag" params={{ tag: tag }}>{tag}</Link>
+                        <Link key={"article-tag-" + i} to="tag" params={{ tag: tag }}>{tag}</Link>
                       );
                     }.bind(this))}
                   </div>
