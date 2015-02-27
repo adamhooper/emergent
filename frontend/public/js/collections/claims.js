@@ -19,13 +19,10 @@ module.exports = Backbone.Collection.extend({
   },
 
   byAllButHiddenCategories: function(collection, hiddenCategories) {
-    return _.filter(collection, function(claim) {
-      for (var category in claim.get('categories')) {
-        if (category in hiddenCategories) {
-          return false;
-        }
-      }
-      return true;
+    return collection.filter(function(claim) {
+      return !claim.get('categories').some(function(category) {
+        return hiddenCategories[category] == true;
+      });
     });
   },
 
