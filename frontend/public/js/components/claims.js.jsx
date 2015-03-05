@@ -171,7 +171,7 @@ module.exports = React.createClass({
                 <li className="no-result">
                   <p>Sorry – no results match the selected criteria.</p>
                 </li>
-              : filteredClaims.slice(0, 60).map(function(claim, i) {
+              : filteredClaims.slice(0, 75).map(function(claim, i) {
                 return (
                   <li key={claim.id}>
                     <article className="article article-preview with-truthiness">
