@@ -8,11 +8,7 @@ var NavCategory = React.createClass({
   render: function() {
     var category = this.props.category;
 
-    if (category.hidden) {
-      return null;
-    } else {
-      return <li><Link to="category" params={{ category: encodeURIComponent(category.id) }} className="navigation-link">{ category.navTitle }</Link></li>;
-    }
+    return <li><Link to="category" params={{ category: encodeURIComponent(category.id) }} className="navigation-link">{ category.navTitle }</Link></li>;
   }
 });
 

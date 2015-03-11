@@ -9,12 +9,12 @@ var DefaultRoute = Router.DefaultRoute;
 var Root = require('./components/root.js.jsx');
 
 var Categories = [
-  { id: "Apple", title: "Apple", navTitle: "Apple", hidden: true },
   { id: "Culture", title: "Culture", navTitle: "Culture", hidden: false },
   { id: "Business/Tech", title: "Business/Tech", navTitle: "Business", hidden: false },
   { id: "World", title: "World", navTitle: "World", hidden: false },
   { id: "US", title: "US", navTitle: "US", hidden: false },
-  { id: "Viral", title: "Viral", navTitle: "Viral", hidden: false }
+  { id: "Viral", title: "Viral", navTitle: "Viral", hidden: false },
+  { id: "Apple", title: "Apple", navTitle: "Apple", hidden: true },
 ];
 
 var app = {

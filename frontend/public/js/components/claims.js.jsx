@@ -93,7 +93,7 @@ module.exports = React.createClass({
 
     if (category) {
       claims = Claims.byCategory(claims, category);
-    } else {
+    } else if (!tag && !this.state.search) {
       var hiddenCategoryIds = {};
       this.props.categories.forEach(function(c) {
         if (c.hidden) { hiddenCategoryIds[c.id] = true; }
