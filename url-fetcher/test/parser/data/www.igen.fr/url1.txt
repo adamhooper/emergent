@@ -1,0 +1,11 @@
+En même temps que la bêta 3 d'iOS 8.3, Apple vient de lancer le programme de bêta publique d'iOS, qui permet aux personnes qui n'ont pas de compte développeur de tester les préversions du système. Pour participer, il faut s'inscrire sur le site Apple Seed, qui sert déjà aux bêtas publiques d'OS X Yosemite.
+
+Au moment de l'écriture de ces lignes, le site ne nous propose pas encore de tester les bêtas d'iOS, mais d'autres sites rapportent que le programme est bien lancé. Le déploiement est en cours et le programme iOS devrait bientôt être accessible à tout le monde.
+
+Apple donne plusieurs instructions aux bêta testeurs publics. Il faut déjà commencer par faire une sauvegarde de son terminal iOS, au cas où. Ensuite, il faut télécharger un profil de configuration qui va permettre à Apple de distribuer la bêta sur l'appareil.
+
+Vous recevrez alors les bêtas publiques d'iOS. Sur Mac, le rythme de sortie des préversions publiques de Yosemite n'est pas le même que celui des developer preview. Il y a généralement une bêta publique toutes les deux developer preview. Apple va visiblement adopter la même approche sur mobile. C'est iOS 8.3 bêta 1 qui est proposée en bêta publique, alors que les développeurs ont depuis ce soir iOS 8.3 bêta 3.
+
+Petit rappel utile : les bêtas sont sujettes à des bugs plus ou moins gênants (pas tout le temps, mais souvent). Si vous voulez éviter de vous retrouver avec des applications ou fonctions qui ne fonctionnent pas correctement, attendez les retours des autres utilisateurs. Ou sinon, installez les bêtas sur un terminal que vous utilisez occasionnellement.
+
+D'après 9to5Mac, Apple va également mettre en place ce programme pour iOS 9.
