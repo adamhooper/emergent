@@ -1,0 +1,37 @@
+Claim: Episodes of some syndicated TV series are sped up to fit more commercials into their time slots.
+
+TRUE
+
+Example: [Collected via Reddit, August 2014]
+
+Why is the dialogue sped up for the Seinfeld episodes on demand? It is so annoying! It almost sounds like they cut out half the word after they begin saying it. This is hard to listen to.
+
+Origins: It's an immutable fact of television life that local stations and cable networks typically run more commercials during the airing of syndicated series than broadcast networks airing first-run episodes of current series do, which requires the former to find ways to fit 30- or 60-minutes episodes into a shorter amount of air time. As well, the amount of air time given over to commercials (by both networks and cable channels) has grown in recent years, making it even more difficult to squeeze full episodes of syndicated series around commercial breaks:
+
+The number of commercials in the typical hour of television has grown steadily during the last five years, according to a new study from the ratings measurement firm Nielsen.
+
+The rise in commercials can be attributed to two factors: Broadcast and cable networks are allotting more time for commercials, and advertisers are increasingly using shorter spots to hawk their products.
+
+In 2009, the broadcast networks averaged 13 minutes and 25 seconds of commercial time per hour. In 2013, that figure grew to 14 minutes and 15 seconds.
+
+This issue has usually been dealt with by judiciously cutting scenes from episodes when they air in syndication — sometimes to the dismay of fans who have purchased DVDs of their favorite series, only to find those discs used the truncated syndicated versions of episodes rather than the original broadcast versions.
+
+But there's another way for stations to fit the same amount of televised material into a shorter time slot, one which has left many viewers puzzled and annoyed. It was demonstrated in a video posted to the AVS Forum on 13 September 2013, that the TBS cable network was airing sped-up (or "time compressed") versions of the popular half-hour sitcom Seinfeld in order to fit more commercials into its time slot:
+
+My computer has a tuner card. I used this tuner card to digitally record Seinfeld from Fox Chicago roughly 10 years ago (I archived the entire series). Then I found which episode was on TBS tonight. In the upper-right window is a live feed from the tuner card. The source is TBS's SD feed via Dish Network. The lower-right is video playback from the digital recording, also recorded from Dish Network in 2003. I fed the audio from both the live feed and the video clip as well as the video from the S-video out on my video card to an external DVD recorder, then uploaded the final result to youtube. After 202 seconds of playback, the TBS live feed had advanced a full 15 seconds over the recording. This amounts to nearly 2 minutes over the course of a full episode.
+
+I lined up the windows as closely as possible so you can also see cropping. Between that and the extreme speed increase, TBS is butchering a classic.
+
+Tech Times has also noted that the change is especially noticeable in shows from the Seinfeld era, which originally aired with an average run time of around 25 minutes, while modern sitcoms such as The Big Bang Theory have run times as short as 19 minutes:
+
+It may come as a surprise, but Seinfeld reruns are actually played much faster than the original broadcast versions. That might sound crazy, but all you need are modern and original versions of the same episode playing side-by-side to see how big of a difference there is.
+
+Back when Seinfeld was originally airing, the average run-time for a sitcom was 25 minutes. That was just how things were done: five minutes for commercials, 25 minutes for actual show. Now, things are different; shows run at around 21 or 22 minutes, with roughly eight minutes for ads. When it came time to run old Seinfeld episodes, TBS was faced with a conundrum: how do you get extra ad time out of a show that aired 15 years ago?
+
+TBS' apparent answer was, in this case, to speed the entire episode up. That way, none of the show's content would be cut, and the network would still get its ad time.
+
+TBS has not confirmed that it has time compressed episodes of Seinfeld in order to fit in more commercials, but the network does display an "edited for time" warning before some programs:
+
+It should also be noted that while TBS may have sped up some episodes of Seinfeld , it does not appear that the network does this for every syndicated series. Some episodes may air as originally intended, while others may have scenes added or deleted in order to fit time constraints.
+
+Last updated: 17 February 2015
