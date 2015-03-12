@@ -2,10 +2,21 @@ var Backbone = require('backbone');
 var _ = require('underscore');
 var $ = Backbone.$ = require('jquery');
 
+/* Returns headlineStance if it is for/against, bodyStance otherwise. */
+function bestStance(headlineStance, bodyStance) {
+  if (headlineStance == 'for' || headlineStance == 'against') {
+    return headlineStance;
+  } else {
+    return bodyStance;
+  }
+}
+
+function bestStanceForArticle(article) {
+  var version = article.latestVersion;
+  return bestStance(version.headlineStance, version.stance);
+}
+
 module.exports = Backbone.Model.extend({
-
-  stances: ['for', 'against', 'observing'],
-
   searchableText: function() {
     return this.get('headline') + " " + this.get('description');
   },
@@ -34,7 +45,7 @@ module.exports = Backbone.Model.extend({
     }
 
     _.each(this.get('articles'), function(article) {
-      var stance = article.latestVersion.headlineStance || '';
+      var stance = bestStanceForArticle(article) || '';
       if (!shares[stance]) shares[stance] = 0;
 
       _.each(_.values(article.nShares), function(n) {
@@ -50,6 +61,9 @@ module.exports = Backbone.Model.extend({
       return num > pair[1] ? [stance, num] : pair;
     }, ['', 0])[0];
   },
+
+  /* headlineStance if there is one; bodyStance otherwise */
+  bestStance: bestStanceForArticle,
 
   /* returns sorted list of articles for a given stance
    *
@@ -68,7 +82,7 @@ module.exports = Backbone.Model.extend({
       }
 
       var articles = _.filter(this.get('articles'), function(article) {
-        return !stance || article.latestVersion.headlineStance === stance;
+        return !stance || bestStanceForArticle(article) === stance;
       });
       return articles.sort(cmp);
     } else {
@@ -89,6 +103,8 @@ module.exports = Backbone.Model.extend({
   domain: function(article) {
     return $('<a>', { href: article.url })[0].hostname;
   },
+
+
 
   nextByCategory: function() {
     if (!this.get('categories').length) {
