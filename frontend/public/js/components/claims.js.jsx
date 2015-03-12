@@ -93,12 +93,13 @@ module.exports = React.createClass({
 
     if (category) {
       claims = Claims.byCategory(claims, category);
-    } else if (!tag && !this.state.search) {
-      var hiddenCategoryIds = {};
-      this.props.categories.forEach(function(c) {
-        if (c.hidden) { hiddenCategoryIds[c.id] = true; }
-      });
-      claims = Claims.byAllButHiddenCategories(claims, hiddenCategoryIds);
+    }
+
+    // Dumb curation: make sure 100 near-simultaneous Apple stories don't
+    // clobber some result pages. (They may clobber tags, e.g., "Apple Watch",
+    // and search results, e.g., "Apple".)
+    if (!category && !tag && !this.state.search) {
+      claims = Claims.byAllWithMaxPerCategory(claims, 10);
     }
 
     if (this.state.sort) {
@@ -171,7 +172,7 @@ module.exports = React.createClass({
                 <li className="no-result">
                   <p>Sorry – no results match the selected criteria.</p>
                 </li>
-              : filteredClaims.slice(0, 100).map(function(claim, i) {
+              : filteredClaims.slice(0, 60).map(function(claim, i) {
                 return (
                   <li key={claim.id}>
                     <article className="article article-preview with-truthiness">

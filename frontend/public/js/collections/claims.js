@@ -18,10 +18,21 @@ module.exports = Backbone.Collection.extend({
     return _.filter(collection, function(claim) { return _.contains(claim.get('categories'), category); });
   },
 
-  byAllButHiddenCategories: function(collection, hiddenCategories) {
-    return collection.filter(function(claim) {
-      return !claim.get('categories').some(function(category) {
-        return hiddenCategories[category] == true;
+  byAllWithMaxPerCategory: function(collection, nPerCategory) {
+    var categoryCounts = {};
+
+    return _.filter(collection, function(claim) {
+      // Increment categoryCounts for this claim's categories
+      claim.get('categories').forEach(function(category) {
+        if (category in categoryCounts) {
+          categoryCounts[category] += 1;
+        } else {
+          categoryCounts[category] = 1;
+        }
+      });
+      // Show the claim if there are categories worth showing it for
+      return claim.get('categories').some(function(category) {
+        return categoryCounts[category] <= nPerCategory;
       });
     });
   },
