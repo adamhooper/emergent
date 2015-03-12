@@ -1,0 +1,549 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<meta http-equiv="Pragma" content="no_cache"/>
+<meta name="Distribution" content="Global"/>
+<meta name="Robots" content="index,follow"/>
+<meta name="Revisit-After" content="1 Days"/>
+<meta name="Copyright" content="&copy; 2015 DIGITIMES Inc."/>
+<meta name="Publisher" content="DIGITIMES Inc."/>
+<meta name="Content-language" content="EN-US"/>
+<meta name="Author" content="Joanne Chien, DIGITIMES Research, Taipei"/>
+<meta name="Date" content="Wednesday 11 March 2015"/>
+<meta name="Description" content="Apple is set to ship its new 12-inch MacBook on April 10 and has also upgraded the specifications of its MacBook Pro/Air notebooks. At the same time, Apple is reducing the inventory of previous-generation products that are expected to be cannalized by the new offerings. During this transition period, Apple will see a shipment drop over 25% sequentially for its MacBook series products in the first quarter, higher than the notebook industry's overall decline of 20%, Digitimes Research estimates."/>
+<meta name="Keywords" content="12-inch, Apple, DIGITIMES, Digitimes Research, ICT manufacturing, IT + CE, MacBook, notebook, PC, CE, Portable, research extras, shipments, Taiwan mobile device, Taiwan mobile device research, Taiwan notebook ODMs"/>
+<meta name="Pragma" content="no_cache"/>
+<title>Digitimes Research: Apple notebook shipments to grow 30% sequentially in 2Q15 thanks to new MacBook products</title>
+
+<link href="/script/jquery-ui-1.8.1.custom.css" rel="stylesheet" type="text/css" />
+
+<link href="/script/global.css" rel="stylesheet" type="text/css" />
+
+<link href="/script/rt.css" rel="stylesheet" type="text/css" />
+
+<link href="/script/news.css" rel="stylesheet" type="text/css" />
+
+<script language="JavaScript" type="text/javascript" src="/script/js/jquery-1.4.2.min.js"></script>
+<script language="JavaScript" type="text/javascript" src="/script/js/jquery-ui-1.8.1.custom.min.js"></script>
+
+<script language="JavaScript" type="text/javascript">
+$(function(){
+	var dlg= $("#dialog").dialog({
+		autoOpen: false,
+		show: "slide",
+		hide: "slide",
+		width:120, 
+		height:48,
+		zIndex: 9999
+	});
+	var hideDelayTimer = null;
+	$(".memonly").click(function() {
+		if (hideDelayTimer) clearTimeout(hideDelayTimer);
+		dlg.dialog("open");
+		dlg.dialog("option", "dialogClass", "noTtldlg"); 	
+		var width = 120;
+		var height = 48;
+		var posX = $(this).offset().left - $(document).scrollLeft() + Math.round($(this).outerWidth()/2) -  Math.round(width/2);
+		var posY = $(this).offset().top - $(document).scrollTop() + $(this).outerHeight();
+		dlg.dialog({width:width, height:height ,position:[posX, posY]});		
+	}).mouseout(function() {
+		if (hideDelayTimer) clearTimeout(hideDelayTimer);
+		hideDelayTimer = setTimeout(function () {
+			hideDelayTimer = null;
+			dlg.dialog("close");
+		},500);
+		return false;
+	});
+	dlg.dialog().mouseenter(function(){
+		if (hideDelayTimer) clearTimeout(hideDelayTimer);
+	});
+	dlg.dialog().mouseleave(function(){
+		if (hideDelayTimer) clearTimeout(hideDelayTimer);
+		hideDelayTimer = setTimeout(function () {
+			hideDelayTimer = null;
+			dlg.dialog("close");
+		},500);
+		return false;
+	});
+
+		var brnewsplay = $('#rtnews').html();
+		$('#rtnews li').each(function(index){
+			
+			var hdltmp=$(this).find('p:first').text();
+			var	FChar=66;
+			
+			if (hdltmp.length>FChar){
+				if ((hdltmp.indexOf(" ",FChar)<(FChar+5))&&(hdltmp.indexOf(" ",FChar)>0)){
+					if (hdltmp.length>hdltmp.indexOf(" ",FChar)){
+						hdltmp = hdltmp.slice(0,hdltmp.indexOf(" ",FChar)) + "...";
+					}else{
+						hdltmp = hdltmp.slice(0,hdltmp.indexOf(" ",FChar));
+					}
+				}else{
+					hdltmp = hdltmp.slice(0,FChar);
+					if (hdltmp.lastIndexOf(" ")>(FChar-22)){
+						hdltmp = hdltmp.slice(0,hdltmp.lastIndexOf(" ")) + "...";
+					}else{
+						hdltmp = hdltmp + "...";
+					}
+				}
+				hdltmp=hdltmp.replace(",.",".").replace("?.",".").replace(":.",".").replace("-.",".").replace("&.",".").replace("!.",".").replace("'.",".").replace("\".",".").replace("+.",".");
+			}
+			
+			$(this).find('p:first').text(hdltmp);
+			
+		});
+		var shortbrnews = $('#rtnews').html();
+		var rt = function()
+		{
+			setTimeout(function(){
+				$('#rtnews li:first').animate( {marginTop: '-40px'}, 800, function()
+				{
+					$(this).detach().appendTo('ul#rtnews').removeAttr('style');	
+				});
+				rt();
+			}, 4000);
+		};
+		rt();
+		$("#hrpauseplay").click(function(){
+			if ($('#hrpauseplay').html()=='Pause'){
+				$('#hrpauseplay').html('Play');
+				$('#rtnews li:first').stop(); //remove animation?
+				$('#rtnews').html('<div id=hrpause>'+$('#rtnews li:first').html()+'</div>');
+			}else{
+				$('#hrpauseplay').html('Pause');
+				$('#rtnews').html(shortbrnews);
+			}
+		});	
+		$("#hrtime").click(function(event, ui){
+			if ($('#s0').is(":hidden")) {
+				$("#hrtime").html("View less");
+				$('#s0').html('<ul id=rtimeout>'+brnewsplay+'</div>').css('height','auto');
+				$('#s0').slideDown("slow");
+				$(".memonly").click(function() {
+					if (hideDelayTimer) clearTimeout(hideDelayTimer);
+					dlg.dialog("open");
+					dlg.dialog("option", "dialogClass", "noTtldlg"); 	
+					var width = 120;
+					var height = 48;
+					var posX = $(this).offset().left - $(document).scrollLeft() + Math.round($(this).outerWidth()/2) -  Math.round(width/2);
+					var posY = $(this).offset().top - $(document).scrollTop() - $(this).outerHeight() + height;
+					dlg.dialog({width:width, height:height ,position:[posX, posY]});		
+				}).mouseout(function() {
+					if (hideDelayTimer) clearTimeout(hideDelayTimer);
+					hideDelayTimer = setTimeout(function () {
+						hideDelayTimer = null;
+						dlg.dialog("close");
+					},500);
+					return false;
+				});
+			} else {
+				$("#hrtime").html("View more");
+				$('#s0').slideUp("slow");
+			}				
+		});
+		$('#rtbox').appendTo($('#rttop'));
+	
+	$.ajax({
+		type: "get",
+		url: "/include/ajax/jcontent.asp?datepublish=2015/03/10&pages=VL&seq=203",
+		cache: false,
+		context: this,
+		dataType: "html",
+		success: function(htmlstr) {
+		
+			$('#mbdtbox').html($(htmlstr).find('#jmbdtbox').html());
+			$('#mbmkbox').html($(htmlstr).find('#jmbmkbox').html());
+			$('#mbnlbox').html($(htmlstr).find('#jmbnlbox').html());
+			$('#rbrsbox').html($(htmlstr).find('#jrbrsbox').html());
+			$('#rbscbox').html($(htmlstr).find('#jrbscbox').html());
+			$('#rbphbox').html($(htmlstr).find('#jrbphbox').html());
+			$('#rbcnbox').html($(htmlstr).find('#jrbcnbox').html());
+			$('#rbtobox').html($(htmlstr).find('#jrbtobox').html());
+			$('#rbvlbox').html($(htmlstr).find('#jrbvlbox').html());
+			$('#rbtcbox').html($(htmlstr).find('#jrbtcbox').html());
+			$('#research').tabs({fx:{opacity: "toggle"}});
+			$('#research').tabs( "option", "selected", 1);
+
+			$('#value-added').tabs({fx:{opacity: "toggle"}});
+			$('#sponsor').tabs({fx:{opacity: "toggle"}});
+			
+			$('#channels').tabs({fx:{opacity: "toggle"}});
+		
+			$('#shipments-data ul li a').each(function(){
+				var subid = $('#shipments-data ul li a').index(this)+1;
+				if (subid>=6){subid=subid+1;} //skip odd
+				$(this).html("&nbsp;");
+				$(this).addClass("ric");
+				$(this).css({backgroundPosition: ($('#shipments-data ul li a').index(this)*(-30))+"px 0px"});
+				$(this).attr("href","/reports/chart/chart.aspx?rtype=trends&subid="+subid+"&subt=1&randomnumber=" + Math.floor(Math.random()*100000));
+			});
+			$('#sm1').load("/chart/chart.aspx?type=mkt&tab=TSE&h=125&w=250&randomnumber=" + Math.floor(Math.random()*100000));
+			$('#shipments-data').tabs({
+					fx:{opacity: "toggle"},
+					select: function(event,ui) {
+						var subid = ui.index+1;
+						if (subid>=6){subid=subid+1;} 
+						$('#sd-'+(ui.index+1)).html("<div style='height:180px; text-align:left; background:#fff;'><img src='/images/global/preloader.gif' /></div>");
+						var url = "/reports/chart/chart.aspx?rtype=trends&subid="+subid+"&subt=1&randomnumber=" + Math.floor(Math.random()*100000);
+						$('#sd-'+(ui.index+1)).load(url);
+						$('#shipments-data ul li a').each(function(){
+							if (ui.index==$('#shipments-data ul li a').index(this)){
+								$(this).addClass("ric");					
+								$(this).css({backgroundPosition: ($('#shipments-data ul li a').index(this)*(-30))+"px 0px"});
+								$(this).css({backgroundImage: "url(/images/global/rdim.jpg)"});
+							}else{
+								$(this).addClass("ric");					
+								$(this).css({backgroundPosition: ($('#shipments-data ul li a').index(this)*(-30))+"px 0px"});
+								$(this).css({backgroundImage: "url(/images/global/rdi.jpg)"});
+							}
+						});
+					},
+					selected: 3	
+			});
+			$('#pnav').tabs({fx:{opacity: "toggle"}});
+			$(".image_thumb ul li").click(function(){
+				window.location=$(this).find("a").attr("href"); return false;
+			}).hover(function(){
+				$(this).addClass('hover');
+				}, function() {
+				$(this).removeClass('hover');
+			});
+			$('#market').accordion({
+					event: "mouseover",
+					change: function(event, ui){
+						var mkt="TSE";			
+						var btn = $(this).find('.ui-accordion-content-active').attr('id');
+						switch(btn)
+						{
+						case "sm1":
+						  mkt="TSE"
+						  break;    
+						case "sm2":
+						  mkt="TSEElec"
+						  break;
+						case "sm3":
+						  mkt="OTC"
+						  break;
+						case "sm4":
+						  mkt="OTCElec"
+						  break;
+						default:
+						}		
+						var url = "/chart/chart.aspx?type=mkt&tab="+mkt+"&h=125&w=250&randomnumber=" + Math.floor(Math.random()*100000);
+						$('#'+btn).load(url);
+				}			
+			});
+			$("#slider").slider({  
+						min: 10,                                        
+						max: 180,                                        
+						step: 10,           
+						start: function(event, ui) {
+							var newValue = ui.value;
+							$("#lbl").text(newValue + " days cloud");
+							$("#tagList").html("<div style='height:200px; margin-top:10px; margin-left:10px'><img src='/images/global/preloader.gif' /></div>");
+						}, 
+						slide: function(event, ui) {
+							var newValue = ui.value;
+							$("#lbl").text(newValue + " days cloud");
+						}, 
+						stop: function(event, ui) {     
+								var newValue = ui.value; 
+								$("#lbl").text(newValue + " days cloud"); 
+								$("#tagList").load("/include/ajax/topictagcloud.asp", { 'dt' : newValue, 'ids' : "", 'chid' : "0", 'TopicID' : "3" }, function(data, url){ 
+								 }); 
+						} 
+				}); 
+		}
+	});
+});
+</script>
+
+</head>
+<body id="bm">
+		<div id="topheader">
+		<div id="nav-one">
+			<ul>
+				<li><a href="/index.asp" class="one-selected">News</a></li>
+				<li><a href="/reports/" class="one-link">Research</a></li>
+				<li><a href="/finance/" class="one-link">Finance</a></li>
+				<li><a href="/page_2/" class="one-link">Page 2</a></li>
+				<li><a href="/supply_chain_window/" class="one-link">Supply chain window</a></li>
+				<li><a href="/photogallery/" class="one-link">On Display</a></li>
+				<li><a href="/marketing/" class="one-link">Marketing</a></li>
+			</ul>
+	  	</div>
+        	<form style="margin:0; padding:0"  method="post" action="/tornado/v4/searchend.asp" name="sfrm" id="sfrm">
+	  	<div id="search">
+        	<a href="/adsearchnew.asp">Advanced</a>
+		<input class="lsb" type="text" name="q" />
+		<input name="go" type="submit" value="" class="spb" border="0" />
+		<input type="hidden" name="h" value=0 />
+		<input type="hidden" name="f" value=0 />
+		<input type="hidden" name="ch" value=0 />
+		<input type="hidden" name="b" value=1 />
+		<input type="hidden" name="a" value="" />
+		<input type="hidden" name="o" value=4 />
+		</div>
+        	</form>
+       		<div class="clear-both"></div>
+	</div>
+
+	<div id="mpage">
+    			<div id="tmpage">
+			<div id="logo">
+				<div style="margin:0; padding:0;"><a href="/index.asp"><img src="/images/logos/digitimes.gif" width="190" height="57" border="0" /></a></div>
+				<div id="lng">&#X4E2D;&#X6587; <a href="/tw/" class="uln" style="color:#cccccc">&#X7E41;&#X9AD4;</a> | <a class="uln" style="color:#cccccc" href="/cn/">&#X7C21;&#X9AD4;</a></div>
+			</div>
+			<div id="top-one">
+				<ul>
+					<li class="facebook"><a href="http://www.facebook.com/pages/DIGITIMES/89446733162" target="_blank" title="Follow DIGITIMES on Facebook">Facebook</a></li>
+					<li class="twitter"><a href="https://twitter.com/DigitimesDotCom" target="_blank" title="Follow DIGITIMES on Twitter">Twitter</a></li>
+                    		
+                        		<li class="register"><a href="/register/">Register</a></li>
+                        		<li class="login"><a href="/newregister/join.asp">Login</a></li>
+                    		
+				</ul>
+			</div>
+			<div style="float:right;">
+				
+                <div id="dtm">
+				Taipei, Friday, March 13, 2015 05:40 (GMT+8)
+				</div>
+				<div class="weather"><div class="wimg" style="display: inline-block; filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/weather/wr29.png');"><img src="/images/weather/wr29.png" width="45" height="26" alt="partly cloudy" style="filter:progid:DXImageTransform.Microsoft.Alpha(opacity=0);"/></div><div class="wtxt"><span class="tptxt">Taipei</span><br/>14&deg;C</div></div>
+        	</div>
+		</div>
+
+			<div class="clear-both"></div>
+			<div id="adspace" class="topad" >
+				<div id="banner" class="lbtop" ><div class="clclgjs" rel="53763"><a href='/webad/cnv.asp?Seq=53763' target='_blank' align=absmiddle><img src='http://ad.digitimes.com.tw/webadImg/Lilin20150225leader.gif' width=728 height=90 border=0 alt='LILIN new lite series NVRs'></a></div></div>
+				
+					<div id="banner_mid" class="mlbtop"><div class="clclgjs" rel="46594"><a href='/webad/cnv.asp?Seq=46594' target='_blank' align=absmiddle><img src='http://ad.digitimes.com.tw/webadImg/Globaltablet20141113button.gif' width=210 height=90 border=0 alt='Global tablet tracker'></a></div></div>
+				
+			</div>
+		
+            <div class="clear-both"></div>
+			
+                <div id="nav-two" style="font-size:0.9em">
+                    <ul>
+                        <li><a href="/index.asp" class="two-link" style="background-image:none;">Home</a></li>
+<li><a href="/topic/it+ce/" class="two-selected" >IT + CE</a></li>
+<li><a href="/topic/mobile+telecom/" class="two-link" >Mobile + telecom</a></li>
+<li><a href="/topic/bits+chips/" class="two-link" >Bits + chips</a></li>
+<li><a href="/topic/displays/" class="two-link" >Displays</a></li>
+<li><a href="/topic/led/" class="two-link" >LED</a></li>
+<li><a href="/topic/green_energy/" class="two-link" >Green energy</a></li>
+
+<span id="hottopics" style="padding-left:55px;">What's hot:</span>
+<li><a href="/tag/wearable/0018470.html" class="two-link">wearable</a></li> <li><a href="/tag/electronics/0014503.html" class="two-link">electronics</a></li> <li><a href="/tag/notebook/00161.html" class="two-link">notebook</a></li> <li><a href="/tag/apple_watch/0018743.html" class="two-link">Apple Watch</a></li> 
+                    </ul>
+                </div>
+                <div class="clear-both"></div>
+                <div id="subnav-one">
+<ul><li><a href="/topic/it+ce/pc_ce/" class="one-link">PC, CE</a></li>
+<li><a href="/topic/it+ce/portable/" class="one-link">Portable</a></li>
+<li><a href="/topic/it+ce/ict_manufacturing/" class="one-link">ICT manufacturing</a></li>
+<li><a href="/topic/it+ce/it_components_peripherals/" class="one-link">IT components, peripherals</a></li>
+<li><a href="/topic/it+ce/server_ipc_cloud_computing/" class="one-link">Server, IPC, cloud computing</a></li>
+<li><a href="/topic/it+ce/software/" class="one-link">Software</a></li>
+</ul>
+</div>
+<div class="clear-both"></div>
+
+		<div id="content">
+			<div id="midleft">
+				
+                        <div id="rttop" style="position:relative; display:inline;"></div>
+                    
+                    <div class="arcbox">
+                        <div id="archive">
+                            <ul>
+                                <li><a href="/news/a20150310VL203.html"  class="ar-selected" style="padding-left:15px;">
+								
+                                    Article
+                                
+                                </a></li>
+                                
+                                <li><a href="/newsshow/comment.asp?datePublish=2015/03/10&pages=VL&seq=203" class="ar">Comments (0)</a></li>
+                                
+                                    <li><a href="/newsshow/related.asp?datePublish=2015/03/10&pages=VL&seq=203" class="ar">Related content</a></li>
+                                    
+                            </ul>
+                        </div>
+                        <div id=artfunc style="float:right; margin-right:3px; border-top:1px solid #e6e6e6; border-left:1px solid #e6e6e6; border-right:1px solid #e6e6e6; font-family:Verdana, Arial, Helvetica, sans-serif; font-size:0.75em; text-transform:uppercase; padding-top:10px; padding-left:3px; padding-right:4px; padding-bottom:4px;color:#ccc; background-color:#fff;"><a href="/news/a20150310VL203.html?mod=0" class="prfr" target=_blank>Print</a> <a href="/newsshow/emailnews.asp?datePublish=2015/03/10&pages=VL&seq=203" class="emlto">Email</a>
+                                               
+                        </div>
+                    </div>
+                    <div class="clear-both"></div>
+				
+				<div id="midcontent">
+					<div style="float:left; padding-left:10px; padding-right:10px;" id=article>
+						<div class=H1>Digitimes Research: Apple notebook shipments to grow 30% sequentially in 2Q15 thanks to new MacBook products</div>
+                    	<div class=Author>Joanne Chien, DIGITIMES Research, Taipei&nbsp;[Wednesday 11 March 2015]</div> 
+						<p class=P1>Apple is set to ship its new 12-inch MacBook on April 10 and has also upgraded the specifications of its MacBook Pro/Air notebooks. At the same time, Apple is reducing the inventory of previous-generation products that are expected to be cannalized by the new offerings. During this transition period, Apple will see a shipment drop over 25% sequentially for its MacBook series products in the first quarter, higher than the notebook industry's overall decline of 20%, Digitimes Research estimates.</p><p class=P2>However, in the second quarter Apple's notebook shipments are expected to grow the most among the top-tier vendors at around 30%, far higher the industry's estimated sequential shipments growth of 3%.</p><p class=P1>The supply chain already started shipping the 12-inch MacBook in the first quarter. When Apple announced the device on March 9, its ultra-thin form factor, low power consumption and new Force Touch trackpad have received positive response from the market. The device is priced starting US$1,299 for the 256GB flash model, the same price point as the 13.3-inch MacBook Pro with Retina (128GB).</p><p class=P2>The 12-inch notebook will account for 15-20% of Apple's total MacBook shipments in 2015 and will be the growth driver of the MacBook product line in the year, according to Digitimes Research's findings from the upstream supply chain.</p><p class=P1>As for Apple's competitors, Wintel notebook vendors are expected to reduce their shipments for 15.6-inch entry-level models prior to the launch of Windows 10 in the third quarter, affected by Microsoft's adjustments in its licensing subsidy project.</p><p class=P2>At the same time, the vendors are also likely to turn conservative pushing 14-inch entry-level notebook products (US$249) to avoid impacting shipments of Windows 10-based notebooks in the third quarter.</p><p class=P1><a href="http://www.digitimes.com/reports/" target="_blank">Digitimes Research</a> estimates that the top-2 Wintel notebook vendors, Hewlett-Packard (HP) and Lenovo will see 5-10% sequential growths in the second quarter due to their dramatic inventory digestion in the first quarter.</p><p class=P2>However, most other brand vendors will continue to see their shipments stay flat or drop sequentially in the second quarter.</p>
+                	</div>
+                    <div class="clear-both"></div>
+					
+                        <div id=shareto>
+                           <div style="float:left; padding-left:10px; margin-bottom:10px;"><a href="https://twitter.com/share" class="twitter-share-button" data-count="horizontal">Tweet</a></div>
+                           <iframe src="//www.facebook.com/plugins/like.php?href=http%3A%2F%2Fwww.digitimes.com%2Fnews%2Fa20150310VL203.html&amp;send=false&amp;layout=button_count&amp;width=120&amp;show_faces=false&amp;font&amp;colorscheme=light&amp;action=like&amp;height=21" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:120px; height:21px;" allowTransparency="true"></iframe>
+                        </div>
+						
+                        <div class="clear-both"></div>
+                        <div style="float:left; padding-left:10px;" id=arttags>
+							<p class=TagCat><font color=#000066>Categories:</font> <a href="/topic/it+ce/ict_manufacturing/" class=uln>ICT manufacturing</a> <a href="/topic/it+ce/" class=uln>IT + CE</a> <a href="/topic/it+ce/pc_ce/" class=uln>PC, CE</a> <a href="/topic/it+ce/portable/" class=uln>Portable</a> </p><p class=TagCat><font color=#000066>Tags:</font> <a href="/tag/12-inch/001582.html" class=uln>12-inch</a> <a href="/tag/apple/001214.html" class=uln>Apple</a> <a href="/tag/digitimes/0011268.html" class=uln>DIGITIMES</a> <a href="/tag/digitimes_research/0015776.html" class=uln>Digitimes Research</a> <a href="/tag/macbook/0013304.html" class=uln>MacBook</a> <a href="/tag/notebook/00161.html" class=uln>notebook</a> <a href="/tag/research_extras/0018206.html" class=uln>research extras</a> <a href="/tag/shipments/0012467.html" class=uln>shipments</a> <a href="/tag/taiwan_mobile_device/0018198.html" class=uln>Taiwan mobile device</a> <a href="/tag/taiwan_mobile_device_research/001447.html" class=uln>Taiwan mobile device research</a> </p><p class=TagCat><font color=#000066>Topics:</font> <a href="/topic/taiwan_notebook_odms/a00176.html" class=uln>Taiwan notebook ODMs</a> <a href="/page_2/" class=uln>Page 2</a> </p>
+                        </div>
+                    
+                        <div class="clear-both"></div>
+                        <div style="float:left; padding-left:10px; padding-top:5px; padding-right:10px;width:96%;" id="artrelated">
+                            <ul>
+								 <span id=reldt>Related stories</span><li><a href="/news/a20150312PD206.html">HP unveils ultra-thin enterprise notebooks (Mar 12)</a></li><li><a href="/news/a20150310PR201.html">Apple unveils new ultra-thin 12-inch MacBook (Mar 10)</a></li><li><a href="/news/a20150204PD204.html">Apple PC shipments to grow 10-15% in 2015, say Taiwan makers (Feb 4)</a></li><li><a href="/news/a20141222PD202.html">Apple supply chain preparing for new MacBook Air and Apple Watch (Dec 22)</a></li><li><a href="/news/a20141112PD206.html">Order visibility highest for Apple, Lenovo notebook shipments for 2015, say Taiwan makers (Nov 12)</a></li><li><a href="/news/a20140623PD207.html">Apple to mass produce 12-inch MacBook Air in 3Q14 (Jun 23)</a></li>
+                             </ul>
+                        </div>
+                    
+                    	<div id="rtbox">
+                            <div class="clear-both"></div>
+                            <div style="float:left; width:100%; background-color:#fff;" id="rtbg">
+                                <div style="background-color:#666; margin-left:10px; margin-top:5px; border-top: 1px solid #e6e6e6; height:42px; margin-right:10px;">
+                                    <div style="width:128px; height:35px; float:left; margin:0; padding-top:7px; padding-left:5px; display:block; font-size:1.1em; font-family:Verdana, Arial, Helvetica, sans-serif; color:#fff; text-transform:uppercase;">Realtime news</div>
+                                    <div style="padding-left:5px; float:left; background-color:#fff;"  class="memonly">
+                                        <ul id="rtnews" style="margin:0; padding:0;"><li class=memonly><p class="H2">AUO eyeing QD panel development in 2015, says report</p><p class="info">Displays - Newswatch | 6h 42min ago</p></li><li class=memonly><p class="H2">TSMC affiliate Xintec to list on OTC in end-March, says report</p><p class="info">Bits + chips - Newswatch | 6h 47min ago</p></li><li class=memonly><p class="H2">Winbond intros 2 new high-density flash devices</p><p class="info">Bits + chips | 6h 48min ago</p></li><li class=memonly><p class="H2">Shin-Etsu poised to invest JPY20 billion to expand silicone production in Thailand</p><p class="info">Bits + chips | 6h 55min ago</p></li><li class=memonly><p class="H2">AOpen to cooperate with Google to develop Chrome-based digital signage solutions</p><p class="info">IT + CE | 6h 57min ago</p></li><li class=memonly><p class="H2">Taiwan market: HTC to launch HTC One M9</p><p class="info">Mobile + telecom | 7h 1min ago</p></li><li class=memonly><p class="H2">Japan makers eyeing wearable and health-related robots</p><p class="info">IT + CE | 7h 3min ago</p></li><li class=memonly><p class="H2">Taiwan market: Chunghwa Telecom expects 4G user base to reach 2 million at beginning of 2Q15</p><p class="info">Before Going to Press | 7h 29min ago</p></li><li class=memonly><p class="H2">Ledlink Optics to deal out 2014 dividend of NT$1.50</p><p class="info">Before Going to Press | 7h 30min ago</p></li><li class=memonly><p class="H2">ASMedia Technology to deal out 2014 dividend of NT$3</p><p class="info">Before Going to Press | 7h 34min ago</p></li><li class=memonly><p class="H2">Gamania to issue NT$700 million secured bonds</p><p class="info">Before Going to Press | 7h 35min ago</p></li><li class=memonly><p class="H2">LCD driver IC supply makers expect to see performances drive forward in 2Q15</p><p class="info">Before Going to Press | 7h 37min ago</p></li><li class=memonly><p class="H2">Nanya to pour NT$40 billion into technology transition</p><p class="info">Before Going to Press | 7h 38min ago</p></li><li class=memonly><p class="H2">Taiwan market: HTC expects HTC One M9 to account for 70-75% of smartphone sales in 2015</p><p class="info">Before Going to Press | 7h 38min ago</p></li></ul>
+                                    </div>
+                                </div>
+                                <div class="clear-both"></div>
+                                <div id="rtfn" style="margin-right:7px;">
+                                    <div id="hrpauseplay" style="background-color:#ffffff; text-transform:uppercase; color:#999; font-family:Verdana, Arial, Helvetica, sans-serif; font-size:0.66em; text-align:right; font-weight:bold; padding-right:3px;padding-top:5px; cursor:pointer; float:right; padding-left:3px">Pause</div><div style="float:right; color:#ccc; font-size:0.8em; padding-top:2px;">&nbsp;|&nbsp;</div>
+                                    <div id=hrtime style="background-color:#ffffff; text-transform:uppercase; color:#999; font-family:Verdana, Arial, Helvetica, sans-serif; font-size:0.66em; text-align:right; font-weight:bold; padding-right:3px;padding-top:5px; cursor:pointer; float:right;">View more</div>
+                                </div>
+                                <div class="clear-both"></div>
+                                <div id="s0" class="hmore" style="padding-left:10px; display:none;"></div>
+                            </div>
+                     	</div>
+                     
+				</div>
+            	
+                    <div class="clear-both"></div>
+                    <div id="midbottom">
+					
+                                <div style="width:635px;"><div id=mbdtbox></div></div>
+                                <div><div id=mbmkbox></div>
+								<div id=mbnlbox></div></div>
+                            
+                    </div>
+				
+			</div>
+            
+                <div id="midright">
+                    
+  								<div id=rbrsbox></div>
+                                <div class="clear-both"></div>
+                                <div class="mr-tabbox" style="margin-top:0px;"><div class="clclgjs" rel="52409"><a href='/webad/cnv.asp?Seq=52409' target='_blank' align=absmiddle><img src='http://ad.digitimes.com.tw/webadImg/AP20150206rect.gif' width=336 height=280 border=0 alt='2015 global AP market forecast and vendor analysis'></a></div></div>
+                                <div id=rbscbox></div>
+                                
+                                    <div class="mr-tabbox"><div class="clclgjs" rel="53497"><a href='/webad/cnv.asp?Seq=53497' target='_blank' align=absmiddle><img src='http://ad.digitimes.com.tw/webadImg/Chinasemi20140718rec.gif' width=336 height=280 border=0 alt='Analysis of China revised domestic semiconductor industry goals'></a></div></div>
+                                
+                                <div id=rbphbox></div>
+                                <div id=rbcnbox></div>
+                                
+                                    <div class="clear-both"></div>
+                                    <div class="mr-tabbox" style="padding-left:2px; margin-left:0; margin-top:0px;"><div class="clclgjs" rel="53501"><a href='/webad/cnv.asp?Seq=53501' target='_blank' align=absmiddle><img src='http://ad.digitimes.com.tw/webadImg/20131203OTTrec.gif' width=336 height=280 border=0 alt='Trends and developments in the OTT market'></a></div></div>
+                                
+                                <div id=rbtobox></div>
+                                <div id=rbvlbox></div>
+                                <div class="clear-both"></div>
+<div class="mr-box" style="background-color:#fff7ee;border-top:3px solid #f08200;">
+<div class="mr-hd" style="padding-bottom:10px;"><a href="#" style="background:none;">Sponsored links</a></div>
+<div class="channeltabs"><ul><li><a href="/webad/click.asp?Seq=43027" target="_blank">Wireless broadband developments in Southeast Asia markets</a><p class="fpara">As of 2013, the 10 ASEAN nations had a total of over 700 million mobile subscriptions, with the CAGR from 2003-2013 reaching 24%. This Digitimes Research Special Report analyzes the various mobile broadband markets in ASEAN and looks at the respective trends in 4G LTE development for those markets.</p></li><li><a href="/webad/click.asp?Seq=43340" target="_blank">2015 global tablet demand forecast</a><p class="fpara">This Digitimes Research Special Report provides a 2015 forecast for the global tablet market and analyzes the strategies of key market players such as Google, Apple, Intel, and Microsoft.</p></li><li><a href="/webad/click.asp?Seq=42887" target="_blank">2015 China smartphone panel trend forecast</a><p class="fpara">This Digitimes Research Special Report analyzes the strategies of key China-based major panel makers BOE, Tianma and IVO for attacking the different market segments through technology and pricing, and their relationship to local vendors Huawei, Lenovo, ZTE, Xiaomi and Coolpad.</p></li></ul></div>
+<div class="more"><a href="/ads.asp" target="_blank" class="l_rmore">Buy link</a></div></div>
+                                <div id=rbtcbox></div>
+                                                <div class="rcad" style="background-color:#fff; margin-left:5px; padding-left:0; border:none; margin-top:5px;">
+						<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+						<!-- DTSquare -->
+						<ins class="adsbygoogle"
+							 style="display:inline-block;width:336px;height:280px"
+							 data-ad-client="ca-pub-9450724093575296"
+							 data-ad-slot="1002527069"></ins>
+						<script>
+						(adsbygoogle = window.adsbygoogle || []).push({});
+						</script>
+                   </div>
+
+                </div>
+						
+		</div>
+				<div class="clear-both"></div>
+		<div id="footer">
+			<div id="siteinfo">
+				<div id="smp">
+					<ul id="dtsmap" class="c1">
+						<li class="smaphd">DIGITIMES</li><li class="smap"><a href="/about.asp">About</a></li><li class="smap"><a href="/ads.asp">Advertising</a></li><li class="smap"><a href="/marketing/">Marketing</a></li><li class="smap"><a href="/register/">Membership</a></li><li class="smap"><a href="/register/terms.asp">Terms & conditions</a></li><li class="smap"><a href="/register/privacypolicy.asp">Privacy policy</a></li><li class="smap"><a href="/contact.asp">Contact us</a></li><li class="smap"><a href="/backgrounders/features/sitenote.asp">Notes & corrections</a></li><li class="smap"><a href="/site_map.asp">Site map</a></li>
+					</ul>
+					<ul id="chcats" class="c1">
+						<li class="smaphd">Channels</li><li class="smap"><a href="/index.asp">News</a></li><li class="smap"><a href="/reports/">Research</a></li><li class="smap"><a href="/finance/">Finance</a></li><li class="smap"><a href="/overview/">Industry intros</a></li><li class="smap"><a href="/page_2/">Page 2</a></li><li class="smap"><a href="/supply_chain_window/">Supply chain window</a></li><li class="smap"><a href="/hot_systems/">Hot systems</a></li><li class="smap"><a href="/photogallery/">On display</a></li>
+					</ul>
+					<ul id="serv" class="c1">
+						<li class="smaphd">Tools & services</li><li class="smap"><a href="/backgrounders/features/snapshots.asp">Before going to press</a></li><li class="smap"><a href="/backgrounders/features/ondemand.asp">On demand</a></li><li class="smap"><a href="/backgrounders/features/interviews.asp">Frankly speaking</a></li><li class="smap"><a href="/backgrounders/features/newslinks.asp">Around the web</a></li><li class="smap"><a href="/topic/">Topics</a></li><li class="smap"><a href="/pda.asp">Mobile</a></li><li class="smap"><a href="/rss/daily.xml">RSS</a></li><li class="smap"><a href="http://www.facebook.com/pages/DIGITIMES/89446733162" target="_blank" title="Follow DIGITIMES on Facebook">Facebook</a></li><li class="smap"><a href="https://twitter.com/DigitimesDotCom" target="_blank" title="Follow DIGITIMES on Twitter">Twitter</a></li>
+					</ul>
+				</div>
+				<div id="subscribe">
+					<div id="account">
+						<ul id="register" class="c1">
+							<li>
+								<ul id="serv2" class="c1">
+									<li class="smaphd">Account</li>
+								
+                                    					<li class="smap"><a href="/register/">New user</a></li>
+                                    					<li class="smap"><a href="/newregister/join.asp?view=renew">Login</a></li>
+                                				
+								</ul>
+							</li>
+						</ul>
+					</div>
+					<div class="clear-both"></div>
+					<div id="dialog" title="Members only">
+						<div class="memonlytxt">Members only</div><div class="memonlylnk"><a href="/newregister/join.asp" class="uln">Login</a> to read more</div>
+					</div>						
+				</div>
+			</div>
+			<div class="clear-both"></div>
+			<div id="mediabg"></div>
+			<div class="clear-both"></div>
+			<div id="copyright">&copy;&nbsp;DIGITIMES Inc. All rights reserved.<br>Please do not republish, publicly broadcast or publicly transmit content from this website without written permission from DIGITIMES Inc. Please <a href="/contact.asp">contact us</a> if you have any questions.</div>
+		</div>
+		<script language="JavaScript" type="text/javascript">
+                if (window.jQuery){
+                    $(function(){
+                        $(".clclgjs").click(function(e) {
+                            var relseq = $(this).attr("rel");
+                            if (relseq.length>0) {
+                                $.ajax({
+                                    type: "post",
+                                    url: "/include/ajax/clg.asp",
+                                    cache: false,
+                                    dataType: "html",
+                                    data: {Seq: relseq}
+                                });			
+                            }
+                        });
+                    });
+                }
+                </script>
+		<script type="text/javascript">
+		  var _gaq = _gaq || [];
+		  _gaq.push(['_setAccount', 'UA-37290588-1']);
+		  _gaq.push(['_trackPageview']);
+		  (function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		  })();
+		</script>
+
+</div>
+
+<script type="text/javascript" src="//platform.twitter.com/widgets.js"></script>
+	
+</body>
+</html>
