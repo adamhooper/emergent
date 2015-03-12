@@ -1,0 +1,11 @@
+As with the OS X program, power users will be able to test new stuff sooner.
+
+Apple is beginning to open up its first-ever public beta program for iOS. Like the OS X beta program that launched last year, the program should offer pre-release access for minor and major upgrades to the operating system—it will begin with iOS 8.3 and will presumably move on to later versions as they become available.
+
+Not all users are apparently able to access the iOS-related parts of the beta site just yet (we haven't been able to), but 9to5Mac has a good rundown of the sign-up and installation process. Once you've signed up with your Apple ID, you have to install a profile from appleseed.apple.com/profile, which points your iPhone or iPad at the beta software update channel instead of the standard channel. You then download and install the newest iOS 8.3 beta as you would any over-the-air update.
+
+Apple recommends that you use iTunes to make a full backup of your phone before upgrading to beta software. The only way to downgrade to the current shipping version of iOS (8.2, at this writing) is to completely wipe the phone and restore that backup. Otherwise your phone or tablet will continue to install beta builds and, eventually, the final release of iOS 8.3.
+
+Apple has traditionally limited beta software access to its registered developers—anyone can sign up for an account whether they’re actually intending to develop apps or not, but the OS X and iOS programs each cost $99 a year.
+
+In the OS X betas, developers have still gotten access to beta updates sooner, and they receive updates more quickly. This is likely to remain true for the iOS program as well, since iOS 8.3 has already seen two developer-only betas.
