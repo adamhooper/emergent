@@ -1,0 +1,27 @@
+Apple is preparing to announce more information about its Apple Watch on Monday, but 9to5Mac's Mark Gurman may have already dug up some unannounced details about the device.
+
+Here's a rundown of what Gurman is currently reporting, citing sources with "hands-on Apple Watch experience:"
+
+The Apple Watch should be able to handle five hours of "heavy application usage," according to Gurman. With mixed use, it should be able to last a full day, although you'll still have to charge it nightly.
+
+The Apple Watch will come with a Power Reserve feature, just like The New York Times reported last week. The would cut down on optionals services to preserve the watch's battery life.
+
+A feature called Heart Rate Glance will allow you to see your heart rate at any time. This sounds like the same standard heart rate monitoring capability that other smartwatches and fitness bands like the Moto 360 and Fitbit Charge HR offer. It seems more like a confirmation than a revelation — we already knew the Apple Watch comes with a heart rate monitor, but Apple only previously said you'd be able to send your heartbeat to other watch wearers. It sounds like Gurman's source has confirmed that it will indeed be used for fitness use cases, too.
+
+The stock Apple apps that will come with the watch include Heart Rate, Battery Life, Fitness Stats, Activity, Clock, Weather, Music, Quick Settings, Calendar, and Maps.
+
+It may also have a full notification center like the iPhone.
+
+You'll be able to load music directly from your iPhone to the Apple Watch through the Companion app for iPhone. You can also stream music directly from your Apple Watch to external speakers, according to Gurman's report.
+
+You can also rearrange the app icons on the Apple Watch's home screen through the Companion app. This can be done on the watch too by long-pressing the home screen, according to Gurman.
+
+The "Force Touch" technology that Apple uses for the Apple Watch's screen sounds like it will be really impressive, according to Gurman's sources. One of his sources said it feels like "a giant button that you just want to press."
+
+You need to use the Digital Crown to zoom in, since Gurman says there's no pinch-to-zoom. You can only perform directional swipes and taps with the touchscreen.
+
+There's no keyboard either, all interaction will be based on swipes or voice dictations.
+
+Although the watch feels generally smooth to use, according to Gurman's sources, it was overwhelmed once a ton of apps were loaded on it. The source said an Apple Watch with more than 200 WatchKit apps became "noticeably sluggish on the Home screen."
+
+You'll be able to turn off the Apple Watch by long pressing the "Communication" button on the side of the watch.
